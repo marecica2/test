@@ -1,0 +1,150 @@
+#{extends 'main.html' /}
+#{set background:'true' /} 
+
+#{set 'moreScripts'}
+#{/set}
+
+<div id="fb-root"></div>
+<script>
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=117287758301883";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+function facebookLogin(){
+    FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          var uid = response.authResponse.userID;
+          var accessToken = response.authResponse.accessToken;
+          $(".spinner-fb").show();
+          console.log("ajax fb access token " + accessToken);
+          $.ajax({
+              type: "GET",
+              url: "/public/facebook/registration?accessToken="+accessToken,
+              success: userDetails,
+              error: function(data){
+                  		console.log("error" + data);$(".spinner-fb").hide();
+              },
+              contentType: "application/json"
+          });  
+          
+        } else if (response.status === 'not_authorized') {
+
+        } else {
+        
+        }
+    });    
+};
+
+function userDetails(data) {
+	$("#firstName").val(data.firstName);
+	$("#lastName").val(data.lastName);
+	$("#login").val(data.email);
+	$("#facebook").val(data.id);
+	$("#name").val(data.name);
+	$("#url").val(data.link);
+	$(".spinner-fb").hide();
+}
+
+</script>
+
+
+
+
+<br/>
+<div class="container">
+<div class="row shadow" style="background: white">
+	<div class="col-md-12">
+		<div style="padding:15px 0 15px 0;">
+				<form action="/registration" method="POST">
+						<br/>
+				    	<span class="segoe-bold-h1">&{'registration.registration'}</span>
+					    <hr>
+						
+					    #{if errors}
+					    	<div class="error">
+					    		#{error 'all' /}
+					    	</div>
+					    #{/if}
+			
+						<div class="form-group">
+							<label class="" for="login">&{'registration.login'}</label>
+							<input type="text" class="form-control" id="login" name="login" value="#{if request.params.email}${request.params.email}#{/if}#{else}${params.login}#{/else}" placeholder="&{'registration.login'}"/>
+							<input type="hidden" class="form-control" id="facebook" name="facebook"  />
+							<input type="hidden" class="form-control" id="registration" name="registration" value="#{if request.params.id}${request.params.id}#{/if}#{else}${params.registration}#{/else}" />
+							<div class="error">#{error 'login' /}</div>
+						</div>
+						<div class="form-group">
+							<label class="" for="firstName">&{'firstName'}</label>
+							<input type="text" class="form-control" id="firstName" name="firstName" value="${params.firstName}"  placeholder="&{'firstName'}"/>
+							<div class="error">#{error 'firstName' /}</div>
+						</div>
+						<div class="form-group">
+							<label class="" for="lastName">&{'lastName'}</label>
+							<input type="text" class="form-control" id="lastName" name="lastName" value="${params.lastName}"  placeholder="&{'lastName'}"/>
+							<div class="error">#{error 'lastName' /}</div>
+						</div>
+						<div class="form-group">
+							<label class="" for="login">&{'password'}</label>
+							<input type="password" class="form-control" id="password" name="password" value="${params.password}"  placeholder="&{'password'}"/>
+							<div class="error">#{error 'password' /}</div>
+						</div>
+						<div class="form-group">
+							<label class="" for="login">&{'password.repeat'}</label>
+							<input type="password" class="form-control" id="passwordRepeat" name="passwordRepeat" value="${params.passwordRepeat}"  placeholder="&{'password.repeat'}"/>
+							<div class="error">#{error 'passwordRepeat' /}</div>
+							<input type="hidden" name="offset" id="offset">
+							<script>
+								var d = new Date()
+								var n = d.getTimezoneOffset();
+								$("#offset").val(n);
+							</script>
+						</div>
+				
+						<!-- 
+						<div class="form-group">
+							<label class="segoe" for="event-type">Event type</label>
+							<select class="form-control" id="event-type">
+								<option>Peer to peer call</option>
+								<option>Livecast</option>
+							</select>
+						</div>
+				
+						<div class="form-group">
+							<label class="segoe">Something else</label>
+							<div class="checkbox">
+								<label> <input type="radio" name="event-privacy"
+									value="public"> Public
+								</label> 
+								<label> <input type="radio" name="event-privacy"
+									value="private"> Private
+								</label>
+							</div>
+						</div>
+						 -->
+						 
+						<div class="form-group">
+							<input type="hidden" value="${params.uuid}" name="uuid" />
+							<input type="text" placeholder="&{'captcha'}" class="form-control" style="display:inline !important;width:20%" name="captcha"/>
+							<img src="/captcha?uuid=${params.uuid}">
+							<div class="error">#{error 'captcha' /}</div>
+						</div>		
+				
+						<div class="form-group">
+							<button class="btn btn-primary pull-right">&{'register'}</button>
+							#{if isPublic}
+								<a href="/public/calendar?id=${request.params.id}">&{'cancel'}</a>
+							#{/if}
+						</div>
+						<div style="clear:both"></div>
+				</form>		
+		</div>
+	</div>
+</div>
+</div>
+
+
+

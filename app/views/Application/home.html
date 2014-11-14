@@ -1,0 +1,129 @@
+#{extends 'main.html' /} 
+#{set background:'true' /} 
+
+#{set 'moreScripts'}
+	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
+#{/set}
+
+#{set 'moreStyles'}
+<style>
+	.body-container {
+		padding:0px;
+	}
+</style>
+#{/set}
+
+<div class="shadow" style="">
+	<div style="height:500px;" class="bg-img"></div>
+</div>
+
+<div style="background: white">
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<h1 class="segoe-bold" style="font-size: 2.2em">What is Widgr?</h1>
+			<hr>
+			<div class="row">
+				<div class="col-md-4" style="padding:15px;">	
+					<div style="padding:25px;height:300px ">
+					<span class="segoe-bold-h2">Find Help</span>
+					<p>
+						With Helpouts you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.
+					</p>
+					<a href="" class="btn btn-primary">Read more</a>
+					</div>
+				</div>
+				<div class="col-md-4" style="padding:15px;">	
+					<div style="padding:25px;height:300px ">
+					<span class="segoe-bold-h2">Get Help</span>
+					<p>
+						You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a Helpout for later.
+					</p>	
+					<a href="" class="btn btn-primary">Read more</a>
+					</div>
+				</div>
+				<div class="col-md-4" style="padding:15px;">	
+					<div style="padding:25px;height:300px ">
+					<span class="segoe-bold-h2">Get paid</span>
+					<p>
+						While some Helpouts are free, you'll need to pay for some. Paying for help is easy using Google Wallet.			
+					</p>
+					<a href="" class="btn btn-primary">Read more</a>
+					</div>
+				</div>
+			</div>	
+			<br/>	
+			<br/>	
+		</div>
+	</div>
+</div>
+</div>
+
+<div style="background: #fafafa">
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<a name="channels"></a>
+			<h1 class="segoe-bold" style="font-size: 2.2em">Search by Category <small class="pull-right"><a href="/channels">View All</a></small></h1>
+			<hr>
+			<div style="text-align:center">
+				<a data-category="business" rel="tooltip" data-placement="bottom" title="Business" class="category segoe-bold #{if request.params.category =='business'}black#{/if}" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-suitcase"></i></a>
+				<a data-category="education" rel="tooltip" data-placement="bottom" title="Education" class="category segoe-bold " style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-graduation-cap"></i></a>
+				<a data-category="electronics" rel="tooltip" data-placement="bottom" title="Computers & Technicals" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-desktop"></i></a>
+				<a data-category="health" rel="tooltip" data-placement="bottom" title="Health & Nutrition" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-medkit"></i></a>
+				<a data-category="art" rel="tooltip" data-placement="bottom" title="Art & Music" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-music"></i></a>
+				<a data-category="sport" rel="tooltip" data-placement="bottom" title="Sport's & Fitness" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-futbol-o"></i></a>
+				<a data-category="household" rel="tooltip" data-placement="bottom" title="Household & Gardening" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-wrench"></i></a>
+				<a data-category="18plus" rel="tooltip" data-placement="bottom" title="18+ (Adults only)" class="category segoe-bold" style="cursor: pointer; text-decoration:none; font-size: 3em;margin:20px"><nobr>18<i style="font-size:0.5em" class="fa fa-plus"></i></nobr></a>
+			</div>
+			<br />
+
+
+			<br/>
+			<div style="text-align:center;width:100%">
+				<div id="itemsListListing" style="margin:auto;width:90%">
+				</div>
+				<div class="clearfix"></div>
+				<br/>
+				<div id="" style="margin:auto;width:90%">
+					<div class="btn-block" style="display:table">
+						<div style="height:60px;display:table-cell;vertical-align:middle;width:100%">
+							<div id="spinnerListing" style="display:none;height:60px;background: url(public/images/loading.gif) center no-repeat; background-size:60px"></div>
+							<div id="moreResultsListing" >
+								<i class="fa fa-plus fa-2x"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br/>
+			
+			<script>
+				var params = "";
+				star.initItems("Listing", params);
+				
+				$(document).ready(function(){
+			        if ($("[rel=tooltip]").length) {
+			        	$("[rel=tooltip]").tooltip();
+			        }
+				     
+				    $(document).on("click", ".link", function(){
+				        document.location = $(this).attr("data-href");
+				    });
+				    
+				    $(".category").click(function(){
+				        $(".category").removeClass("black");    
+				    	var category = $(this).attr("data-category"); 
+				    	$(this).addClass("black");
+				    	
+				    	$("#itemsListListing").html("");
+						var params = "&category="+category;
+						star.Listing.first = 0;
+						star.initItems("Listing", params);
+				    });
+				});				
+			</script>
+		</div>
+	</div>
+</div>
+</div>

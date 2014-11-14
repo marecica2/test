@@ -1,0 +1,6 @@
+#{if _format}
+	${new Date(_time.getTime() - (Integer.parseInt(request.cookies.timezoneJs.value)) * 60000).format("HH:mm")}
+#{/if}
+#{else}
+	${new Date(_time.getTime() - (Integer.parseInt(request.cookies.timezoneJs.value)) * 60000).format("h:mm a")}
+#{/else}

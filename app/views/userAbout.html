@@ -1,0 +1,24 @@
+#{if usr.userAbout}
+<p class="black">${usr.userAbout.nl2br()}</p>
+#{/if}
+
+#{if usr.userEducation}
+<h4 class="segoe-bold-h3 black">Education</h4>
+<p class="black ">${usr.userEducation.nl2br()}</p>
+#{/if}
+
+#{if usr.userExperiences}
+<h4 class="segoe-bold-h3 black">Experiences</h4>
+<p class="black ">${usr.userExperiences.nl2br()}</p>
+#{/if}
+
+#{if usr.account.url}
+<p class="black">&{'account.website'} <a href="${usr.account.url}" target="_blank">${usr.account.url}</a></p>
+#{/if}
+<p class="social">
+	#{if usr.facebook}<a class="color-link" target="_blank" href="${usr.facebook}"><i class="fa fa-facebook-square fa-2x"></i></a> #{/if}
+	#{if usr.googlePlus}<a class="color-link" target="_blank" href="${usr.googlePlus}"><i class="fa fa-google-plus-square fa-2x"></i></a> #{/if}
+	#{if usr.twitter}<a class="color-link" target="_blank" href="${usr.twitter}"><i class="fa fa-twitter-square fa-2x"></i></a> #{/if}
+	#{if usr.linkedIn}<a class="color-link" target="_blank" href="${usr.linkedIn}"><i class="fa fa-linkedin-square fa-2x"></i></a> #{/if}
+	#{if usr.skype}<span class="color-link" ><i class="fa fa-skype fa-2x"></i> <span style="position:relative;bottom:5px">${usr.skype}</span></span> #{/if}
+</p>

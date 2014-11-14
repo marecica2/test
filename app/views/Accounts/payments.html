@@ -1,0 +1,199 @@
+#{extends 'main.html' /} 
+#{set title:'Payments' /} 
+
+#{set 'moreScripts'}
+	<script src="@{'/public/javascripts/lib/canvasjs.min.js'}" type="text/javascript" ></script>
+#{/set}
+
+#{set background:'true' /} 
+
+<div style="padding:30px;min-height:100%;min-height:100vh;" class="transparent2">
+<div class="container">
+	<div class="row">
+	  	<div class="col-md-12 segoe">
+			<h2 class="segoe"><i class='fa fa-bar-chart-o fa-1.5x'></i> &{'payments.receivedPayments'}</h2>
+			<hr>
+
+			<form class="form-inline" role="form" method="POST">
+				<div class="form-group">
+					&{'payments.timeRange'}
+				</div>
+				<div class="form-group"> 
+					<select class="form-control" name="filterTime" id="filterTime">
+						<option #{if flash.filterTime == "month"}selected='selected'#{/if} value="month">&{'payments.thisMonth'}</option>
+						<option #{if flash.filterTime == "year"}selected='selected'#{/if} value="year">&{'payments.thisYear'}</option>
+						<option #{if flash.filterTime == "all"}selected='selected'#{/if} value="all">&{'payments.allTime'}</option>
+					</select>
+				</div>
+				<div class="form-group">
+					&{'from'}
+				</div>
+				<div class="form-group">
+					<input class="form-control" placeholder="From" name="filterTimeFrom" data-date-format="dd/mm/yyyy" id="dp1" value="${flash.filterTimeFrom}">
+				</div>
+				<div class="form-group">
+					&{'to'}
+				</div>
+				<div class="form-group">
+					<input class="form-control" placeholder="To" name="filterTimeTo" data-date-format="dd/mm/yyyy" id="dp2" value="${flash.filterTimeTo}">
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary">&{'submit'}</button>
+				</div>
+
+				<script>
+					$(document).ready(function(){
+						var setDate = function(elm){
+							var now = new Date();
+							if($(elm).val() == "month"){
+							    $('#dp1').val(new Date(now.getFullYear(), now.getMonth(), 1).format("dd/mm/yyyy"));	    
+								$('#dp2').val(new Date(now.getFullYear(), now.getMonth() + 1, 0).format("dd/mm/yyyy"));	    
+							}
+							if($(elm).val() == "year"){
+								$('#dp1').val(new Date(now.getFullYear(), 0, 1).format("dd/mm/yyyy"));	    
+								$('#dp2').val(new Date(now.getFullYear(), now.getMonth() + 1, 0).format("dd/mm/yyyy"));	    
+							}
+							if($(elm).val() == "all"){
+							    $('#dp1').val("");	    
+							    $('#dp2').val("");	    
+							}
+						};
+						$('#dp1').datepicker();
+						$('#dp2').datepicker();
+						$('#filterTime').change(function(){setDate(this)});
+						if($('#dp1').val() == "" && $('#dp2').val() == "")
+						    setDate($('#filterTime'));
+						
+					})
+				</script>
+			</form>
+			
+			<br/>
+			<h3 class="segoe">&{'payments.income'}</h3>
+			<dl class="dl-horizontal">
+				<dt>&{'payments.totalSales'}</dt>
+				<dd>${total}</dd>
+				<dt>&{'payments.income'}</dt>
+				<dd>${provider}</dd>
+				<dt>&{'payments.fee'}</dt>
+				<dd>${fee}</dd>
+			</dl>
+			
+			
+			<br/>
+			<div id="chartContainer" style="height: 300px; width: 100%;">
+			</div>			
+			<script>
+			
+			window.onload = function () {
+				var chart = new CanvasJS.Chart("chartContainer",
+				{
+
+					title:{
+						text: "",
+						fontSize: 30
+					},
+					axisX:{
+
+						gridColor: "Silver",
+						tickColor: "silver",
+						valueFormatString: "DD/MMM"
+
+					},                        
+		                        toolTip:{
+		                          shared:true
+		                        },
+					theme: "theme2",
+					axisY: {
+						gridColor: "Silver",
+						tickColor: "silver"
+					},
+					legend:{
+						verticalAlign: "center",
+						horizontalAlign: "right"
+					},
+					data: [
+					{        
+						type: "line",
+						showInLegend: true,
+						name: "USD",
+						color: "#20B2AA",
+						lineThickness: 2,
+
+						dataPoints: [
+						#{list items:mapTotal, as:'p'}
+							{ x: new Date(${p.key}), y: ${p.value} },
+						#{/list}						             
+						]
+					}
+					],
+		          legend:{
+		            cursor:"pointer",
+		            itemclick:function(e){
+		              if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+		              	e.dataSeries.visible = false;
+		              }
+		              else{
+		                e.dataSeries.visible = true;
+		              }
+		              chart.render();
+		            }
+		          }
+				});
+
+		chart.render();
+		}			
+			</script>
+
+			
+			<br/>
+			<h3 class="segoe">&{'payments.transactions'}</h3>
+			<table class="table table-striped" style="font-size:0.8em">
+				<thead>
+		        <tr>
+		          <th>&{'customer'}</th>
+		          <th>&{'event'}</th>
+		          <th>&{'payments.totalSales'}</th>
+		          <th>&{'payments.income'}</th>
+		          <th>&{'payments.fee'}</th>
+		          <th>&{'payments.transactionId'}</th>
+		          <th>&{'date'}</th>
+		          <th>&{'payments.yourPaypalAccount'}</th>
+		          <th>&{'account'}</th>
+		          <th></th>
+		        </tr>
+		      </thead>
+				#{list items:payments, as:'p'}
+				<tr>
+	    			<td>
+	    				#{if p.customer}
+	    				<a href="/Accounts/contact?id=${p.customer.uuid}">${p.customer.fullName}</a>
+	    				#{/if}
+	    			</td>
+	    			<td><a href="/?event=${p.event.uuid}&">${p.event.title}</a></td>
+	    			<td>${p.price} ${p.currency}</td>
+	    			<td>${p.providerPrice} ${p.currency}</td>
+	    			<td>${p.fee} ${p.currency}</td>
+	    			<td><nobr>${p.transactionId}</nobr></td>
+	    			<td>
+	    				#{if p.transactionDate}
+	    					${p.transactionDate.time}
+	    				#{/if}
+	    			</td>
+	    			<td>${p.paypalAccount}</td>
+	    			<td>${p.account.name}</td>
+	    			<td>
+	    				<!-- 
+		    				<button type="button" class="btn btn-default">Refund</button>
+	    				 -->
+	    			</td>
+				</tr>
+				#{/list}
+			</table>
+
+		</div>
+	</div>
+</div>
+</div>
+
+

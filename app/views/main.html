@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>widgr #{get 'title' /}</title>
+        <meta name="viewport" content="width=100,initial-scale=1, maximum-scale=1, minimum-scale=1"/>
+		<meta class="fb-app-id" property="fb:app_id" content="117287758301883" /> 
+		#{if user}<meta class="fb-meta-url" property="og:url" content='${request.base + "/public/calendar/" + user.uuid}' />#{/if}
+		<meta class="fb-meta-title" property="og:title" content="com-manager" /> 
+		<meta class="fb-meta-description" property="og:description" content="com-manager - tool for online communication" /> 
+		<meta class="fb-meta-image" property="og:image" content="${request.base}/public/images/logo.jpg" />  
+        <link href="@{'/public/images/favicon.png'}" rel="shortcut icon" type="image/png">
+        <!-- 
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:300,600&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+         -->
+        <link href="@{'/public/css/font-awesome.min.css'}" rel="stylesheet">
+        <link href="@{'/public/css/bootstrap.css'}" rel="stylesheet" media="screen">
+        <link href="@{'/public/css/datepicker.css'}" rel="stylesheet" media="screen">
+        <link href="@{'/public/stylesheets/main.css'}" rel="stylesheet" media="screen">
+        #{get 'moreStyles' /}
+        
+        <script>
+        	var starEvent = {};
+        	var starInit = {};
+    		var starCalendarInit = {}; 
+    	    var starCalendar = {};
+        	var star = {};
+        	var d = new Date()
+        	var timezoneOffset = d.getTimezoneOffset();
+        	document.cookie="timezoneJs="+timezoneOffset;
+        </script>
+        <script src="@{'/public/javascripts/lib/jquery.min.js'}" type="text/javascript"></script>
+        <script src="@{'/public/javascripts/lib/bootstrap.min.js'}" type="text/javascript" ></script>
+        <script src="@{'/public/javascripts/lib/bootstrap-datepicker.js'}" type="text/javascript" ></script>
+        <script src="@{'/public/javascripts/lib/bootstrap-typeahead.js'}" type="text/javascript"></script>
+        <script src="@{'/public/javascripts/lib/i18next-1.7.2.min.js'}" type="text/javascript"></script>
+        <script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>
+        <script>
+	    	$(document).ready(function(){
+	    	    setInterval(function(){
+	    	        $.ajax({
+	    	            type: "GET",
+	    	            url: "/check-connection",
+	    	            contentType: "application/json"
+	    	        });	    	        
+	    	    }, 20000);
+	    	});
+        </script>
+        #{get 'moreScripts' /}
+    </head>
+    
+	<body>
+	    <div class="bcg">
+	
+		<!-- header -->
+		#{include 'header.html' /}
+		
+		<!-- content -->
+		<div class="body">
+			<div class="body-container" >
+				#{if flash.success}
+				<div class="container">
+					<div class="row">
+						<div class="shadow alert alert-info alert-dismissible" role="alert">
+						  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						  <strong>Success!</strong> ${flash.success}
+						</div>
+					</div>
+				</div>
+				#{/if}
+				
+				#{if flash.warning}
+				<div class="container">
+					<div class="row">
+						<div class="shadow alert alert-warning alert-dismissible" role="alert">
+						  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						  <strong>Important!</strong> ${flash.warning}
+						</div>
+					</div>
+				</div>
+				#{/if}
+	
+				#{list items:errors, as:'error'}
+				<div class="container">
+					<div class="row">
+						<div class="shadow alert alert-danger alert-dismissible" role="alert">
+						  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						  <strong>Error!</strong> ${error} 
+						</div>				
+					</div>
+				</div>
+				#{/list}
+				
+		    	#{doLayout /}
+				<br/>
+				<br/>
+				<br/>		    	
+			</div>
+		    
+		    <div class="colorBg" style="text-align:center;color:white">
+				<strong>100% money back guarantee</strong> We guarantee that you'll love your Helpouts. 
+				<a href="" style="color:white">Learn more</a>
+		    </div>
+	     	<div style="width:100%;text-align:center;padding:50px;">
+	     		<div class="row">
+	     			<div class="col-md-3"></div>
+	     			<div class="col-md-6">
+			     		<div class="row">
+			     			<div class="col-md-4">
+		     					Rendvoo@2014
+		    				</div>
+			     			<div class="col-md-4">
+		     					About Us
+		    				</div>
+			     			<div class="col-md-4">
+		     					Contact Us
+		    				</div>
+	    				</div>
+	     			</div>
+	     			<div class="col-md-3"></div>
+	     		</div>
+	     	</div>
+		</div>  
+		</div>    
+        #{get 'moreHtml' /}
+    </body>
+</html>

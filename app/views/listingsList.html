@@ -1,0 +1,38 @@
+<script>
+	$(document).ready(function(){
+	    $(".link").click(function(){
+	        document.location = $(this).attr("data-href");
+	    });
+	});
+</script>
+#{list items:items, as:'item'}
+<div class="shadow-blur" style="background:white;  position:relative; width:100%; margin:0 0 15px 0;border-top:5px solid #{if item && item.color} ${item.color} #{/if} #{else} #3A87AD #{/else};">
+	
+	<div class="link" data-href="/listing-new?uuid=${item.uuid}" style="cursor:pointer;display:table; min-width:300px">
+   		<div style="display:table-cell;position:relative;vertical-align:middle; height:128px; width: 128px;background: url('/${item.imageUrl}') no-repeat center; background-size:cover">
+			<img class="img-circle" style="border:3px solid white;position:relative; right:-90px;" src="../${item.user.avatarUrl}_64x64">
+   		</div>
+   		
+   		<div style="display:table-cell;vertical-align:top;padding:10px;padding-left:40px">
+			<p class="black segoe-bold" style="font-size:1.2em">${item.title}</p>
+			<span class="segoe-bold black">${item.user.fullName}</span> &middot; ${item.category}
+			<p class="" style="font-size:1.0em; ">${item.description.trimDot(100)}</p>
+   		</div>
+   		<div style="display:table-cell;vertical-align:middle;padding:10px;max-width:140px">
+   			<p>
+	   			#{if item.charging}
+	   				<nobr>
+	   					<span class="segoe-bold" style="font-size:1.6em">${item.price}</span>
+	   					${item.currency}
+	   				</nobr>
+		   			<nobr class="segoe-bold">For 15 minutes</nobr>
+	   			#{/if}
+	   			#{else}
+	   				<span class="segoe-bold-h2">Free</span>
+	   			#{/else}
+   			</p>
+   		</div>
+   	</div>		
+</div>	   
+#{/list}	
+<div class="clearfix"></div>						

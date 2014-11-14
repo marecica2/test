@@ -1,0 +1,160 @@
+#{if ratings && ratings.size() > 0}
+<div class="row">
+	<div class="col-md-5">
+		<span class="segoe-bold-h2">User Reviews</span>
+		<p>
+       		#{list items:1..5, as:'i'}
+       			#{if stats.get("avgStars") >= i}
+				    <i style="font-size:2em" class="fa fa-star blue" data-value="1"></i>
+       			#{/if}
+       			#{else}
+				    <i style="font-size:2em" class="fa fa-star-o" data-value="1"></i>
+       			#{/else}
+			#{/list}
+			<strong style="position:relative;bottom:5px">from ${stats.get("totalStars")} reviews</strong>
+		</p>
+	</div>
+	<div class="col-md-7">
+		<div style="display:table;width:100%;margin-bottom:5px;">
+			<div style="display:table-cell">
+		    	<strong>5 stars</strong>
+			</div>
+			<div class="progress" style="display:table-cell;width:80%">
+			  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: ${stats.get("fiveStarsPercent")}%;"></div>
+		 	  <strong>&nbsp;${stats.get("fiveStars")}</strong>
+			</div>
+		</div>
+		<div style="display:table;width:100%;margin-bottom:5px;">
+			<div style="display:table-cell">
+		    	<strong>4 stars</strong>
+			</div>
+			<div class="progress" style="display:table-cell;width:80%">
+			  <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: ${stats.get("fourStarsPercent")}%;"></div>
+		      <strong>&nbsp;${stats.get("fourStars")}</strong>
+			</div>
+		</div>
+		<div style="display:table;width:100%;margin-bottom:5px;">
+			<div style="display:table-cell">
+		    	<strong>3 stars</strong>
+			</div>
+			<div class="progress" style="display:table-cell;width:80%">
+			  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: ${stats.get("threeStarsPercent")}%;"></div>
+			  <strong>&nbsp;${stats.get("threeStars")}</strong>
+			</div>
+		</div>
+		<div style="display:table;width:100%;margin-bottom:5px;">
+			<div style="display:table-cell">
+		    	<strong>2 stars</strong>
+			</div>
+			<div class="progress" style="display:table-cell;width:80%">
+			  <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: ${stats.get("twoStarsPercent")}%;"></div>
+			  <strong>&nbsp;${stats.get("twoStars")}</strong>
+			</div>
+		</div>
+		<div style="display:table;width:100%;margin-bottom:5px;">
+			<div style="display:table-cell">
+		    	<strong>1 star</strong>
+			</div>
+			<div class="progress" style="display:table-cell;width:80%">
+			  <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: ${stats.get("oneStarsPercent")}%;"></div>
+			  <strong>&nbsp;${stats.get("oneStars")}</strong>
+			</div>
+		</div>
+	</div>
+</div>
+#{/if}
+<br/>
+
+<div class="row">
+	<div class="col-md-12">
+		#{if user && !isOwner}
+		<div class="modal-comments">
+			<div class="well">
+				<form action="/rating?url=${request.url.urlEncode()}" method="post">
+					<p class="">
+			      		<img class=""  src="../${user.avatarUrl}_32x32">
+						Write your review
+					</p>
+					<input type="number" name="stars" data-max="4" id="stars" class="rating" data-icon-lib="fa" data-active-icon="fa-star blue" data-inactive-icon="fa-star-o" data-clearable-icon="fa-times"/>
+			      	<input type="hidden" name="type" value="${ratingType}">
+			      	#{if ratingType && ratingType != "user"}
+			      		<input type="hidden" name="userUuid" value="${object.user.uuid}">
+			      	#{/if}
+			      	#{else}
+			      		<input type="hidden" name="userUuid" value="${object.uuid}">
+			      	#{/else}
+			      	<input type="hidden" name="uuid" value="${object.uuid}">
+			    	<div class="form-group" style="margin-top:5px" >
+			    		<textarea style="height:64px" class="form-control" maxlength="900" placeholder="&{'dashboard.addComment'}" name="comment" id="dialog-comment-input"></textarea>
+			    	</div>
+		   	        <button class="btn btn-default btn-sm btn-primary pull-right" style="" id="dialog-comment-button" type="submit">Submit</button>
+		   	        <div class="clearfix"></div>
+				</form>
+			</div>
+			<br/>
+		</div>	
+		#{/if}
+		
+		#{if ratings && ratings.size() > 0}
+		<table class="table table-hover table-condensed">
+			#{list items:ratings, as:'item'}
+		       <tr class=''>
+		       	   <td>
+			       	   #{if user && item.user.uuid == user.uuid}
+					       	<a href="/rating/delete?uuid=${item.uuid}&url=${request.url.urlEncode()}"><i style="margin:10px" class='pull-right color-link fa fa-times delete-comment'></i></a>
+				       #{/if} 
+				       #{if user} 
+				       		<a href="/rating/${item.uuid}/abuse?url=${request.url.urlEncode()}"><i style="margin:10px" class='pull-right color-link fa fa-flag'></i></a>
+				       #{/if} 
+				        
+				       <div style='display:table-cell;padding-right:10px;padding-top:5px'>
+				       		<img class=''  src='../${item.user.avatarUrl}_32x32'> 
+				       </div>
+				
+				       <div style='display:table-cell;vertical-align:top;width:100%'>
+					       <div style='font-size:0.9em;width:100%;padding-top:5px'>
+					       		#{list items:1..5, as:'i'}
+					       			#{if item.stars >= i}
+									    <i style="font-size:1.5em" class="fa fa-star blue" data-value="1"></i>
+					       			#{/if}
+					       			#{else}
+									    <i style="font-size:1.5em" class="fa fa-star-o" data-value="1"></i>
+					       			#{/else}
+								#{/list}
+										
+						   		<span>${item.created.format("dd MMM, yyyy")} #{time time:item.created /}</span>
+					       </div>
+					       <div style="width:100%">
+					       		<p style='color:black;padding-top:5px;width:100%'>
+						       		${item.comment}<br/>  
+					       			<a class="segoe-bold" href='/public/user?id=${item.user.uuid}'>${item.user.fullName}</a>
+					       		</p>
+					       		
+					       		#{if item.comment && item.comment.length() > 10}
+						       		<div class="pull-left">
+	    				       		  <span style="position:relative;top:8px;">Was this rating helpful?</span>  
+						       		</div>
+						       		#{if user}
+										<div class="btn-group pull-right" style="">
+										  <a href="/rating/${item.uuid}/vote?url=${request.url.urlEncode()}" class="btn btn-default">Yes</a>
+										  <a href="/rating/${item.uuid}/unvote?url=${request.url.urlEncode()}" class="btn btn-default">No</a>
+										</div>
+									#{/if}					       			
+								#{/if}					       			
+
+								<div class="clearfix"></div>
+					       </div>
+				       </div>
+	       	   		</td>
+				</tr>
+			#{/list}							
+		</table>	
+		#{/if}
+		#{else}
+			<p class="segoe-bold-h2" style="text-align:center">No reviews yet</p>
+			<br/>
+		#{/else}
+				
+	</div>	
+</div> 
+

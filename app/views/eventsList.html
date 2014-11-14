@@ -1,0 +1,24 @@
+#{list items:items, as:'item'}
+<div class='event_poster shadow-blur'>
+   <div class='poster_wrapper'>
+   	   <a href="/watchlist/remove?id=${item.uuid}&url=${request.url.urlEncode()}" class="color-link" style="position:absolute;right:5px;top:5px"><i class="fa fa-times"></i></a>
+       <a href="/event-detail?uuid=${item.uuid}" class="poster_link">
+           <div class="poster_image" style="background:url('${item.listing.imageUrl}_128x128') no-repeat black center;background-size: 375px 150px;width:150px;height:150px"></div>
+       </a>
+       <div class='description' style='font-size:0.9em;min-height:60%'>
+           <strong><a href="/event-detail?uuid=${item.uuid}" class="event_title color-link-light">${item.listing.title}</a></strong>
+           <p class='event_blurb'>
+               <img height='16' src='/${item.user.avatarUrl}_32x32'> <a href="/user/${item.user.login}" class="color-link-light">${item.user.fullName}</a>
+           </p>
+       </div>
+   </div>
+   <div class='actions'>
+   </div>
+   <div class='event-time black' style='padding:5px'>
+       <span class='event-time-from' style='font-weight:bold' id='event-time-from'>${item.eventStart.format("d MMM, yyyy")}</span><br/> 
+       <span class='event-time-to'>#{time time:item.eventStart/}</span> - 
+       <span class='event-time-to'>#{time time:item.eventEnd/}</span>
+   </div>
+</div>
+#{/list}	
+<div class="clearfix"></div>						

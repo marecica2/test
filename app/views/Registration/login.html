@@ -1,0 +1,118 @@
+#{extends 'main.html' /} 
+#{set title:'Login' /} 
+#{set background:'true' /} 
+#{set 'moreScripts'}
+#{/set}
+
+#{if isPublic}
+<div id="fb-root"></div>
+<script>
+	window.fbAsyncInit = function() {
+	    FB.init({
+	      appId      : '117287758301883',
+	      status     : false, 
+	      cookie     : true,
+	      xfbml      : true
+	    });
+	
+	    FB.Event.subscribe('auth.authResponseChange', function(response) {
+	      console.log(response);
+	      if (response.status === 'connected') {
+	        resp();
+	        window.location.replace("/public/facebook/login?facebook="+response.authResponse.userID+"&id="+getParameterByName("id"));
+	      } else if (response.status === 'not_authorized') {
+	      } else {
+	      }
+	    });
+    };
+
+    (function(d){
+     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement('script'); js.id = id; js.async = true;
+     js.src = "//connect.facebook.net/en_US/all.js";
+     ref.parentNode.insertBefore(js, ref);
+    }(document));
+
+    function resp() {
+      FB.api('/me', function(response) {
+        console.log(response);
+      });
+    }
+    
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(document.URL);
+        return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    };    
+</script>
+#{/if}
+
+<div class="container" style="min-height:100vh">
+<div class="row">
+<div class="col-md-3"></div>
+<div class="col-md-6">
+	<div class="segoe well transparent2 " style="padding:40px;margin:30px auto;">
+		<form role="form" action="#{if isPublic}/public#{/if}/login#{if isPublic}?id=${request.params.id}#{/if}" method="POST">
+		    #{authenticityToken /}
+		    
+		    <h2 class="segoe"><i class="fa fa-sign-in"></i> &{'logIn'}</h2>
+		    <hr>
+		    
+			#{if flash.securityError}	
+			<div class="alert alert-danger alert-dismissable">
+		  		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  		<small><strong>${flash.securityError}</strong></small>
+			</div>
+			#{/if}
+
+			#{if flash.access}	
+			<div class="alert alert-danger alert-dismissable">
+		  		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  		<small><strong>${flash.access}</strong></small>
+			</div>
+			#{/if}
+			
+			<div class="form-group">
+				<label class="segoe" for="login">&{'login'}</label>
+				<input type="text" class="form-control" id="login" name="username" placeholder="&{'login'}" autofocus/>
+			</div>
+	
+			<div class="form-group">
+				<label class="segoe" for="password">&{'password'}</label>
+				<input type="password" class="form-control" id="password" name="password" placeholder="&{'password'}"/>
+			</div>
+	
+			<div class="form-group">
+				&{'login.registerQuestion'}<a href="#{if isPublic}/public#{/if}/register#{if isPublic}?id=${id}#{/if}"> &{'login.here'}</a>
+				&{'or'} <a href="/public/calendar?id=${id}">&{'reset.password'}</a>
+				<br/>
+				<br/>
+				<table class="pull-right">
+					<tr>
+						#{if isPublic}
+						<td>
+							<div class="fb-login-button" onlogin="facebookLogin"  data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
+						</td>
+						<td>
+						&nbsp;
+						</td>
+						#{/if}
+						<td>
+							<button class="btn btn-primary pull-right"><i class="fa fa-sign-in"></i> &{'logIn'}</button>
+						</td>
+					</tr>
+				</table>
+				
+				
+				<div style="clear:both;"></div>
+			</div>
+		</form>
+	</div>
+
+</div>
+<div class="col-md-3"></div>
+</div>
+</div>
+

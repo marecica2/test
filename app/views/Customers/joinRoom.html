@@ -1,0 +1,33 @@
+#{extends 'main.html' /} 
+#{set background:'true' /} 
+
+<div class="container segoe">
+<div class="row">
+	<div class="well transparent2 shadow" style="padding:40px;margin:30px auto;width:600px;">
+		<h3>&{'enterYourName'}</h3>
+		<form method="POST" action="" onsubmit="return validate()" >
+			<p>
+				<input type="text" class="form-control" id="name" name="name" placeholder="&{'yourName'}" focused/> 
+			</p>
+			<input type="hidden" name="id" value="${id}" />
+			<input type="hidden" name="url" value="${returnUrl}" />
+			<p>
+				<input type="submit" class="btn btn-primary btn-lg btn-block" value="&{'joinMeeting'}" />
+			</p>
+			<p>
+				&{'or'} <a href="/public/login?id=${id}&url=${returnUrl}">&{'logIn'}</a>
+			</p>
+		</form>
+	</div>
+</div>
+</div>
+<script>
+	function validate(){
+	    if($("#name").val().length > 2){
+	        return true;
+	    } 
+        return false;
+	}
+	
+	document.getElementById("name").focus();
+</script>

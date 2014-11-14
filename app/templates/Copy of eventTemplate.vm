@@ -1,0 +1,68 @@
+<html>
+<body style="font-family: Arial, sans-serif, emaildesk-template-placeholder; font-size: 14px;line-height: 1.42857142857143; text-align: left;">
+
+	<table class="rounded" cellspacing="30" 
+	style="width:100%; color: black; background-color: #FCFCFC; border: 1px solid #E2E2E2; -webkit-border-radius: 3px; -moz-border-radius: 3px;">
+		
+		<tr style="color: black;">
+			<td >
+				<table style="width:50%;">
+					<tr>
+						<td>
+							<table>
+								<tr>									
+									<td><strong>${emailWhen}:</strong></td>
+									<td>${date} ${start} - ${end} GMT</td>
+								</tr>
+								<tr>									
+									<td><strong>${emailWhat}:</strong></td>
+									<td>${description}</td>
+								</tr>
+								<tr>									
+									<td style='vertical-align:top'><strong>${emailLinks}:</strong></td>
+									<td>
+										#if ($newAccount)
+											${emailRegister1} <strong><a href="${newAccountUrl}&accept=undefined">${emailRegister2}</a></strong> ${emailRegister3}  &nbsp; <br/>
+										#end
+										<a href="${linkUrl}">${emailLinksMeeting}</a> &nbsp; <br/>
+										<a href="${url}&accept=undefined">${emailLinksDetail}</a>&nbsp; <br/>
+										<a href="${url}&accept=accepted">${emailLinksAccept}</a>&nbsp; <br/>
+										<a href="${url}&accept=declined">${emailLinksDecline}</a>&nbsp; 
+									</td>
+								</tr>
+								<tr>									
+									<td style='vertical-align:top'><strong>${emailGuests}:</strong></td>
+									<td>
+										<table>
+											#foreach( $a in $attendances )
+											<tr>
+												<td>$a.name</td>
+												<td>
+												#if ($a.result.equals("accepted"))
+													<span style="color:green">${emailResult2}</span>
+												#end
+												#if ($a.result.equals("declined"))
+													<span style="color:red">${emailResult3}</span>
+												#end
+												#if (!$a.result)
+													<span style="color:gray">${emailResult1}</span>
+												#end
+												</td>
+											</tr>
+											#end										
+										</table>
+									</td>
+								</tr>
+
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</body>
+	#if ($newAccount)
+		${emailRegister1} <strong><a href="${newAccountUrl}&accept=undefined">${emailRegister2}</a></strong> ${emailRegister3}  &nbsp; <br/>
+	#end
+</html>

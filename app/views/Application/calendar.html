@@ -1,0 +1,284 @@
+#{extends 'main.html' /} 
+#{set background:'true' /} 
+#{i18n /}
+
+#{set 'moreStyles'}
+    <style>
+	@media (min-width: 768px) {
+	    	.row {
+	    		margin:0px;
+	    	}	
+	}
+	@media (min-width: 992px) {
+	    	.right-row {
+				margin-left:20px;
+	    	}	
+	}
+	@media (max-width: 992px) {
+	    	.right-row-first {
+				margin-top:20px;
+	    	}	
+	}
+    </style>
+#{/set}
+
+#{set 'moreScripts'}
+    <link href="@{'/public/css/fullcalendar.css'}"  rel="stylesheet">
+	<script src="@{'/public/javascripts/lib/jquery-ui.custom.min.js'}" type="text/javascript" ></script>
+	<script src="@{'/public/javascripts/lib/fullcalendar.min.js'}"></script>
+	<script>
+		#{if userDisplayed}
+			starCalendarInit.userDisplayed = "${userDisplayed.uuid}";
+			starCalendarInit.userDisplayedLogin = "${userDisplayed.login}";
+		#{/if}
+		#{if listing}
+			starCalendarInit.listing = "${listing.uuid}";
+		#{/if}
+		#{if listings && listings.size() > 0 || request.params.listing != null}
+			starCalendarInit.listings = true;
+		#{/if}
+		#{if user}
+		starCalendarInit.userUUID = "${user.uuid}";
+		starCalendarInit.isPublic = false;
+		starCalendarInit.login = "${user.login}";
+		#{/if}
+		#{else}
+		starCalendarInit.isPublic = true;
+		#{/else}
+		
+		#{if selectedEvent != null}
+			starCalendarInit.selectedEventDate = new Date(${selectedEvent.eventStart});
+			starCalendarInit.selectedEventId = "${selectedEvent.uuid}";
+		#{/if}
+		#{if account != null}
+			starCalendarInit.defaultCurrency = "${account.currency}";
+		#{/if}
+	    starCalendar.d = new Date();
+	    starCalendar.h = starCalendar.d.getHours();
+	    starCalendar.mhalf = starCalendar.d.getMinutes() >= 30 ? true : false;
+	    starCalendar.currentMousePos = { x: -1, y: -1 };
+	    starCalendar.isPublic = starCalendarInit.isPublic;
+	    starCalendar.isLogged = starCalendarInit.isLogged;
+	    starCalendar.login = starCalendarInit.login;
+	    starCalendar.userDisplayedLogin = starCalendarInit.userDisplayedLogin;
+	    starCalendar.selectedEventDate = starCalendarInit.selectedEventDate;
+	    starCalendar.selectedEventId = starCalendarInit.selectedEventId;
+	    starCalendar.userUUID = starCalendarInit.userUUID;
+	    starCalendar.userDisplayed = starCalendarInit.userDisplayed;
+	    starCalendar.defaultCurrency = starCalendarInit.defaultCurrency;
+	    starCalendar.showEvent = true;
+	    starCalendar.activitiesLimit = 5;
+	    starCalendar.clientId = "";		
+	  
+	    //hiddenDays
+	    #{if userDisplayed && userDisplayed.hiddenDays != null}
+		    starCalendar.hiddenDays = "${userDisplayed.hiddenDays}";
+	    #{/if}
+	    #{elseif user && user.hiddenDays != null}
+		    starCalendar.hiddenDays = "${user.hiddenDays}";
+	    #{/elseif}
+	    #{else}
+		    starCalendar.hiddenDays = "";
+	    #{/else}
+		
+	    #{if user}
+		    starCalendar.defaultView = "${user.agendaType}";
+		#{/if}
+		
+	    starCalendar.hiddenDays = starCalendar.hiddenDays.split(",");
+	    for(var i = 0; i < starCalendar.hiddenDays.length; i++){
+	        starCalendar.hiddenDays[i] = parseInt(starCalendar.hiddenDays[i]);
+	    }
+	    
+	    //working hours
+	    #{if userDisplayed && userDisplayed.workingHourStart != null}
+		    starCalendar.startHour = parseInt("${userDisplayed.workingHourStart}");
+		    starCalendar.endHour = parseInt("${userDisplayed.workingHourEnd}");
+	    #{/if}
+	    #{elseif user && user.workingHourStart != null}
+		    starCalendar.startHour = parseInt("${user.workingHourStart}");
+		    starCalendar.endHour = parseInt("${user.workingHourEnd}");
+	    #{/elseif}
+	    #{else}
+		    starCalendar.startHour = parseInt("6");
+		    starCalendar.endHour = parseInt("22");
+	    #{/else}
+	</script>
+	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>
+	<script src="@{'/public/javascripts/calendar.js'}" type="text/javascript"></script>
+#{/set}
+
+<!-- facebook init -->
+<div id="fb-root"></div>
+  <!--
+ <script>
+   window.fbAsyncInit = function() {
+     FB.init({
+       appId      : '117287758301883',
+       status     : true,
+       xfbml      : true,
+       channelUrl: window.location.origin+'/channel.html'
+     });
+   };
+   
+   (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/all.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+ </script>
+-->    
+
+	
+	#{if listing}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 shadow" style="padding:0px;background:white">
+				
+				<a href="/listing-new?uuid=${listing.uuid}">
+					<img class="proggresive" style="float:left;" src="../${listing.imageUrl}_128x128">
+				</a>
+				<div style="float:left;padding:15px;">
+				<p>
+		  			<a href="/listing-new?uuid=${listing.uuid}" class=" color-link underline black" style=""><img class="img-circle" src="../${listing.user.avatarUrl}_32x32"> ${listing.user.fullName}</a>
+					&middot; ${listing.category}
+				</p>
+	  			<p>	
+		  			<a href="/listing-new?uuid=${listing.uuid}" class="segoe color-link underline" style="font-size:2.3em">${listing.title}</a>
+	  			</p>
+				</div>
+	  			<div class="clearfix"></div>
+			</div>
+		</div>	
+	</div>
+	<br/>
+	#{/if}	
+	
+	#{elseif userDisplayed}
+		#{set usr: userDisplayed/}
+		#{include 'userTop.html' /}
+	#{/elseif}	
+		
+<div id='calendar' class="container" style="min-height:60%;">
+	<div class="row">
+		<div class="col-md-12 shadow" style="padding:15px;background:white">
+			#{if userDisplayed && listing}
+			#{/if}	
+			#{else}
+				<span class="segoe-bold" style="font-size:3em"><i class="fa fa-calendar"></i> Planning</span>
+				<hr>
+			#{/else}
+			<div class="" id="calendar-div"></div>
+		</div>
+	</div>
+		
+</div>
+
+
+
+
+#{set 'moreHtml'}
+<!-- popup dialog -->
+<div id="myPopover" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+<div class="modal-dialog" style="">
+<div class="modal-content">
+<div class="modal-body">
+
+<div id='event-popup' style='font-family:Arial;font-size:1.1em;color:gray' >
+	<div class='arrow'></div>
+	<div class='popover-content'>
+		<span id="popup-close" class="color-link" style='float: right; margin-left:10px;pull-right; cursor: pointer;'><i class='fa fa-times fa-2x'></i></span> 
+		<span style='float: left;'>
+			<span style="font-size:1.5em" class="segoe-bold truncate event-title"> </span> 
+			<span class="popup-event-approvement" style="display:none;position:relative;top:-3px;">
+				<a class="btn btn-primary event-anchor popup-event-approve btn-xs" href='' style="margin:2px;" id="" data-url="/event/approve?event="><i class="fa fa-check"></i> &{'dashboard.approve'}</a>
+				<a class="btn btn-danger event-anchor popup-event-decline btn-xs" href='' style="margin:2px;" id="" data-url="/event/decline?event="><i class="fa fa-times"></i> &{'dashboard.decline'}</a>
+			</span>
+		</span>
+		<br/>
+		<br/>
+		<div style="clear:both"></div>
+
+		<div>
+			<i class="fa fa-clock-o fa-1x"></i> <nobr class="event-time-from"></nobr> <strong> - </strong> <nobr class="event-time-to"></nobr>
+		</div>
+		<div class="event-createdByName"></div>
+		<br/>
+		<div class="popup-edit-event">
+		
+			<strong>About</strong>
+			<p class="popup-event-description">
+			</p>
+
+			<strong class="">&{'dashboard.guests'}</strong>
+			
+			<div>
+				<form>
+					<div class="form-group">
+						<table class=" dialog-invite-list" data-checkboxes="false" style="width:100%;">
+						</table>
+					</div>
+				</form>
+			</div>
+		
+			<strong class="">&{'dashboard.actions'}</strong>
+			<p class="popup-event-type-livecast" style="display:none;">
+				<i class="fa fa-arrow-circle-o-right"></i> <a href='' data-url="/upstream?id=" class="event-anchor" target="_blank">&{'dashboard.startLivestream'}</a><br/>
+				<i class="fa fa-eye"></i> <a class="event-anchor" data-url='/livestream?id=' href="" target="_blank">&{'dashboard.viewLivestream'}</a><br/>
+			</p>
+			
+			<p class="popup-event-type-p2p" style="display:none;">
+				<i class="fa fa-arrow-circle-o-right"></i> <a class="event-anchor" data-url="/room?id=" href="" target="_blank">&{'dashboard.joinMeeting'}</a><br/>
+			</p>			
+			<br/>
+			
+			<span style="float:left">
+				<a href='' data-url="/event-detail?action=view&uuid=" style="margin:2px;" class="event-anchor btn btn-primary" id="popup-event-view">&{'dashboard.view'}</a>
+			</span>
+			<span style="float:right">
+				<a href='#' style="margin:2px;" class="btn btn-default" id="popup-event-delete">&{'dashboard.delete'}</a>
+			</span>
+			#{if !isPublic}
+				<span style="float:left"><a href='' data-url="/event-detail?action=edit&uuid=" style="margin:2px;" class="event-anchor btn btn-default" id="popup-event-edit">&{'dashboard.edit'}</a></span>
+				<!-- 
+				<span style="float:left"><a href='#' data-url="?event=" target="_blank" id="popup-event-link" class="btn btn-primary event-anchor"><i class="fa fa-link"></i> Link</a>&nbsp;</span>  
+				 -->
+			#{/if}
+			<div style="clear:both"></div>
+		</div>
+		
+		<div class="popup-new-event" style="display:none;">
+			#{if userDisplayed && listing}
+				<input type="hidden" id="popup-listing" name="listing" value="${listing.uuid}">
+			#{/if}
+			#{else}
+				<select class="form-control" name="listing" id="popup-listing"  style="margin-bottom:5px">
+					#{list items:listings, as:'item'}
+						<option value="${item.uuid}">${item.title}</option>
+					#{/list}
+				</select>
+			#{/else}
+			<!-- input type="text" class="form-control" id="popup-event-title" maxlength="50" placeholder="&{'dashboard.title'}" style="margin-bottom:5px" /-->
+			
+			<span class="pull-right">
+				#{if userDisplayed && listing}
+					<button class="btn btn-primary event-dialog-propose">Request for Event</button> 
+				#{/if}
+				#{else}
+					<button class="btn btn-default event-dialog-create">&{'dashboard.save'}</button> 
+				#{/else}
+			</span>
+			<div style="clear:both"></div>
+		</div>
+	</div>
+</div><!-- end-popup dialog -->
+
+</div>
+</div>
+</div>
+</div>
+#{/set}
+
+
