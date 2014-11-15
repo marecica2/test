@@ -1,5 +1,4 @@
 #{extends 'main.html' /} 
-#{set background:'true' /} 
 #{i18n /}
 
 #{set 'moreScripts'}
@@ -7,101 +6,89 @@
 	<script src="@{'/public/javascripts/dashboard.js'}" type="text/javascript"></script>	
 #{/set}
 
-<div class="containerx">
-	<div class=" shadow container-xs-height"  style="min-height:50%;background: white">
-		<div class="row row-xs-height">
-
-			
-			<div class="col-md-9 col-xs-height col-top" style="padding:14px;">
-				<span class="segoe-bold" style="font-size:3em"><i class="fa fa-desktop"></i> Dashboard</span>
-				<span style="position:relative;bottom:4px;left:10px">
-				</span>
-				<hr>
-				
-				<div class="row">
-					<div class="col-md-6">
-						<div class="row">
-							<div class="col-md-6">
-								<span class="segoe-bold-h2"><i class="fa fa-clock-o"></i> Upcoming</span>
-								<br/>
-								<div id="itemsListUpcoming"></div>
-								<div class="event_poster shadow-blur">
-									<div class="poster_wrapper" style="background:#eee">
-										<div style="height:140px;width:100%;display:table;text-align: center">
-											<div style="display:table-cell;vertical-align:middle;">
-												<div id="spinnerUpcoming" style="display:none;height:120px;background: url(public/images/loading.gif) center no-repeat"></div>
-												<span id="moreResultsUpcoming" class="color-link-light"><i class="fa fa-plus fa-3x"></i></span>
-				 							</div>
-										</div>	
-									</div>
-				           			<div class="event-time black" style="padding:5px">
-				           				<br/><br/>
-				           			</div>					
-								</div>
-							</div>
-							
-							
-							<div class="col-md-6">
-								<span class="segoe-bold-h2"><i class="fa fa-clock-o"></i> Previous</span>
-								<br/>
-								<div id="itemsListPrevious"></div>
-								<div class="event_poster shadow-blur">
-									<div class="poster_wrapper" style="background:#eee">
-										<div style="height:140px;width:100%;display:table;text-align: center">
-											<div style="display:table-cell;vertical-align:middle;">
-												<div id="spinnerPrevious" style="display:none;height:120px;background: url(public/images/loading.gif) center no-repeat"></div>
-												<span id="moreResultsPrevious" class="color-link-light"><i class="fa fa-plus fa-3x"></i></span>
-				 							</div>
-										</div>	
-									</div>
-				           			<div class="event-time black" style="padding:5px">
-				           				<br/><br/>
-				           			</div>					
-								</div>		
-							</div>	
-						</div>					
-					</div>
-					
-					<div class="col-md-6">
-						<span class="segoe-bold-h2"><i class="fa fa-th"></i> My Listings
-							<span class="pull-right">
-								<a class="btn btn-default btn-xs controls" href="/listing-new?action=edit&url=${request.url.urlEncode()}"><i class="fa fa-plus"></i> New Listing</a>&nbsp;
-							</span>			
-						</span>
-						<br/>	
-						#{if listings}
-							#{set items:listings /}
-							#{set forEvents:false /}
-							#{include 'listingsList.html' /}
-						#{/if}				
-						<br/>	
-
+<div class="padding container-xs-height">
+	<div class="row row-xs-height">
 		
-						#{if approved && approved.size() > 0}
-						<span class="segoe-bold-h2"><i class="fa fa-bars"></i> Waiting for approvement</span>
-						<br/>	
-							#{set items:approved /}
-							#{include 'eventsList.html' /}	
-							<br/>				
-						#{/if}							
+		<div class="col-md-9 col-xs-height col-top">
 
-						#{if watchList && watchList.size() > 0}
-						<span class="segoe-bold-h2"><i class="fa fa-bars"></i> Watch list</span>
-						<br/>	
-							#{set items:watchList /}
-							#{include 'eventsList.html' /}	
-							<br/>				
-						#{/if}					
-										
+			<div class="row">
+				<div class="col-md-6">		
+					<h2>
+						<i class="glyphicon glyphicon-th-large"></i> My Channels
+						<span class="pull-right">
+							<a class="btn btn-white btn-sm controls" href="/listing-new?action=edit&url=${request.url.urlEncode()}"><i class="fa fa-plus"></i> New Channel</a>&nbsp;
+						</span>			
+					</h2>
+					<div class="clearfix"></div>
+					#{if listings}
+						#{set items:listings /}
+						#{set forEvents:false /}
+						#{include 'listingsList.html' /}
+					#{/if}
+				</div>				
+				<div class="col-md-6">		
+					#{if approved && approved.size() > 0}
+					<h2 ><i class="fa fa-bars"></i> Waiting for approvement</h2>
+						#{set items:approved /}
+						#{include 'eventsList.html' /}	
+						<br/>				
+					#{/if}							
+			
+					#{if watchList && watchList.size() > 0}
+					<h2 ><i class="fa fa-bars"></i> Watch list</h2>
+						#{set items:watchList /}
+						#{include 'eventsList.html' /}	
+						<br/>				
+					#{/if}	
+				</div>				
+			</div>				
+
+			<div class="row">
+				<div class="col-md-6">
+					<h2>
+						<i class="icon-back-in-time"></i>Upcoming Events
+					</h2>
+					<div id="itemsListUpcoming"></div>
+					<div class="event_poster shadow-blur">
+						<div class="poster_wrapper" style="background:#eee">
+							<div style="height:140px;width:100%;display:table;text-align: center">
+								<div style="display:table-cell;vertical-align:middle;">
+									<div id="spinnerUpcoming" style="display:none;height:120px;background: url(public/images/loading.gif) center no-repeat"></div>
+									<span id="moreResultsUpcoming" class="color-link-light"><i class="fa fa-plus fa-3x"></i></span>
+	 							</div>
+							</div>	
+						</div>
+	           			<div class="event-time black" style="padding:5px">
+	           				<br/><br/>
+	           			</div>					
 					</div>
 				</div>
-			</div>
-
-			<div class="col-md-3 col-xs-height col-top" style="background: #fafafa;padding:15px" >
-				#{include 'activities.html' /}
+				<div class="col-md-6">
+					<h2>
+						<i class="icon-back-in-time"></i>Recent Events
+					</h2>
+					<div id="itemsListPrevious"></div>
+					<div class="event_poster shadow-blur">
+						<div class="poster_wrapper" style="background:#eee">
+							<div style="height:140px;width:100%;display:table;text-align: center">
+								<div style="display:table-cell;vertical-align:middle;">
+									<div id="spinnerPrevious" style="display:none;height:120px;background: url(public/images/loading.gif) center no-repeat"></div>
+									<span id="moreResultsPrevious" class="color-link-light"><i class="fa fa-plus fa-3x"></i></span>
+	 							</div>
+							</div>	
+						</div>
+	           			<div class="event-time black" style="padding:5px">
+	           				<br/><br/>
+	           			</div>					
+					</div>		
+				</div>	
 			</div>	
 			
 		</div>
+
+		<div class="col-md-3 col-xs-height col-top" style="background: #fdfdfd;" >
+			#{include 'activities.html' /}
+		</div>	
 	</div>
 </div>
 

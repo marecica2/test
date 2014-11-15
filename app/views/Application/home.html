@@ -1,129 +1,592 @@
 #{extends 'main.html' /} 
-#{set background:'true' /} 
 
 #{set 'moreScripts'}
 	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
 #{/set}
 
 #{set 'moreStyles'}
-<style>
-	.body-container {
-		padding:0px;
-	}
-</style>
 #{/set}
 
-<div class="shadow" style="">
-	<div style="height:500px;" class="bg-img"></div>
-</div>
 
-<div style="background: white">
-<div class="container">
-	<div class="row">
-		<div class="col-md-12">
-			<h1 class="segoe-bold" style="font-size: 2.2em">What is Widgr?</h1>
-			<hr>
-			<div class="row">
-				<div class="col-md-4" style="padding:15px;">	
-					<div style="padding:25px;height:300px ">
-					<span class="segoe-bold-h2">Find Help</span>
-					<p>
-						With Helpouts you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.
-					</p>
-					<a href="" class="btn btn-primary">Read more</a>
+
+<!-- banner start -->
+<!-- ================ -->
+<div class="banner">
+
+	<!-- slideshow start -->
+	<!-- ================ -->
+	<div class="slideshow">
+		
+		<!-- slider revolution start -->
+		<!-- ================ -->
+		<div class="slider-banner-container">
+			<div class="slider-banner">
+				<ul>
+					<!-- slide 1 start -->
+					<li data-transition="random" data-slotamount="7" data-masterspeed="500" data-saveperformance="on" data-title="Premium HTML5 template">
+					
+					<!-- main image -->
+					<img src="images/slider-1-slide-1.jpg"  alt="slidebg1" data-bgposition="center top" data-bgfit="cover" data-bgrepeat="no-repeat">
+
+					<!-- LAYER NR. 1 -->
+					<div class="tp-caption default_bg large sfr tp-resizeme"
+						data-x="0"
+						data-y="70" 
+						data-speed="600"
+						data-start="1200"
+						data-end="9400"
+						data-endspeed="600">Premium HTML5 template
 					</div>
-				</div>
-				<div class="col-md-4" style="padding:15px;">	
-					<div style="padding:25px;height:300px ">
-					<span class="segoe-bold-h2">Get Help</span>
-					<p>
-						You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a Helpout for later.
-					</p>	
-					<a href="" class="btn btn-primary">Read more</a>
+
+					<!-- LAYER NR. 2 -->
+					<div class="tp-caption dark_gray_bg sfl medium tp-resizeme"
+						data-x="0"
+						data-y="170" 
+						data-speed="600"
+						data-start="1600"
+						data-end="9400"
+						data-endspeed="600"><i class="icon-check"></i>
 					</div>
-				</div>
-				<div class="col-md-4" style="padding:15px;">	
-					<div style="padding:25px;height:300px ">
-					<span class="segoe-bold-h2">Get paid</span>
-					<p>
-						While some Helpouts are free, you'll need to pay for some. Paying for help is easy using Google Wallet.			
-					</p>
-					<a href="" class="btn btn-primary">Read more</a>
+
+					<!-- LAYER NR. 3 -->
+					<div class="tp-caption light_gray_bg sfb medium tp-resizeme"
+						data-x="50"
+						data-y="170" 
+						data-speed="600"
+						data-start="1600"
+						data-end="9400"
+						data-endspeed="600">100% Responsive
 					</div>
+
+					<!-- LAYER NR. 4 -->
+					<div class="tp-caption dark_gray_bg sfl medium tp-resizeme"
+						data-x="0"
+						data-y="220" 
+						data-speed="600"
+						data-start="1800"
+						data-end="9400"
+						data-endspeed="600"><i class="icon-check"></i>
+					</div>
+
+					<!-- LAYER NR. 5 -->
+					<div class="tp-caption light_gray_bg sfb medium tp-resizeme"
+						data-x="50"
+						data-y="220" 
+						data-speed="600"
+						data-start="1800"
+						data-end="9400"
+						data-endspeed="600">Bootstrap Based
+					</div>
+
+					<!-- LAYER NR. 6 -->
+					<div class="tp-caption dark_gray_bg sfl medium tp-resizeme"
+						data-x="0"
+						data-y="270" 
+						data-speed="600"
+						data-start="2000"
+						data-end="9400"
+						data-endspeed="600"><i class="icon-check"></i>
+					</div>
+
+					<!-- LAYER NR. 7 -->
+					<div class="tp-caption light_gray_bg sfb medium tp-resizeme"
+						data-x="50"
+						data-y="270" 
+						data-speed="600"
+						data-start="2000"
+						data-end="9400"
+						data-endspeed="600">Packed Full of Features
+					</div>
+
+					<!-- LAYER NR. 8 -->
+					<div class="tp-caption dark_gray_bg sfl medium tp-resizeme"
+						data-x="0"
+						data-y="320" 
+						data-speed="600"
+						data-start="2200"
+						data-end="9400"
+						data-endspeed="600"><i class="icon-check"></i>
+					</div>
+
+					<!-- LAYER NR. 9 -->
+					<div class="tp-caption light_gray_bg sfb medium tp-resizeme"
+						data-x="50"
+						data-y="320" 
+						data-speed="600"
+						data-start="2200"
+						data-end="9400"
+						data-endspeed="600">Very Easy to Customize
+					</div>
+
+					<!-- LAYER NR. 10 -->
+					<div class="tp-caption dark_gray_bg sfb medium tp-resizeme"
+						data-x="0"
+						data-y="370" 
+						data-speed="600"
+						data-start="2400"
+						data-end="9400"
+						data-endspeed="600">And Much More...
+					</div>
+
+					<!-- LAYER NR. 11 -->
+					<div class="tp-caption sfr tp-resizeme"
+						data-x="right"
+						data-y="center" 
+						data-speed="600"
+						data-start="2700"
+						data-end="9400"
+						data-endspeed="600"><img src="images/slider-1-layer-1.png" alt="">
+					</div>
+
+					</li>
+					<!-- slide 1 end -->
+
+					<!-- slide 2 start -->
+					<li data-transition="random" data-slotamount="7" data-masterspeed="500" data-saveperformance="on" data-title="Powerful Bootstrap Theme">
+					
+					<!-- main image -->
+					<img src="images/slider-1-slide-2.jpg"  alt="slidebg1" data-bgposition="center top" data-bgfit="cover" data-bgrepeat="no-repeat">
+
+					<!-- LAYER NR. 1 -->
+					<div class="tp-caption white_bg large sfr tp-resizeme"
+						data-x="0"
+						data-y="70" 
+						data-speed="600"
+						data-start="1200"
+						data-end="9400"
+						data-endspeed="600">Powerful Bootstrap Theme
+					</div>
+
+					<!-- LAYER NR. 2 -->
+					<div class="tp-caption default_bg sfl medium tp-resizeme"
+						data-x="0"
+						data-y="170" 
+						data-speed="600"
+						data-start="1600"
+						data-end="9400"
+						data-endspeed="600"><i class="icon-check"></i>
+					</div>
+
+					<!-- LAYER NR. 3 -->
+					<div class="tp-caption white_bg sfb medium tp-resizeme"
+						data-x="50"
+						data-y="170" 
+						data-speed="600"
+						data-start="1600"
+						data-end="9400"
+						data-endspeed="600">W3C Validated
+					</div>
+
+					<!-- LAYER NR. 4 -->
+					<div class="tp-caption default_bg sfl medium tp-resizeme"
+						data-x="0"
+						data-y="220" 
+						data-speed="600"
+						data-start="1800"
+						data-end="9400"
+						data-endspeed="600"><i class="icon-check"></i>
+					</div>
+
+					<!-- LAYER NR. 5 -->
+					<div class="tp-caption white_bg sfb medium tp-resizeme"
+						data-x="50"
+						data-y="220" 
+						data-speed="600"
+						data-start="1800"
+						data-end="9400"
+						data-endspeed="600">Unlimited layout variations
+					</div>
+
+					<!-- LAYER NR. 6 -->
+					<div class="tp-caption default_bg sfl medium tp-resizeme"
+						data-x="0"
+						data-y="270" 
+						data-speed="600"
+						data-start="2000"
+						data-end="9400"
+						data-endspeed="600"><i class="icon-check"></i>
+					</div>
+
+					<!-- LAYER NR. 7 -->
+					<div class="tp-caption white_bg sfb medium tp-resizeme"
+						data-x="50"
+						data-y="270" 
+						data-speed="600"
+						data-start="2000"
+						data-end="9400"
+						data-endspeed="600">Google Maps
+					</div>
+
+					<!-- LAYER NR. 8 -->
+					<div class="tp-caption default_bg sfl medium tp-resizeme"
+						data-x="0"
+						data-y="320" 
+						data-speed="600"
+						data-start="2200"
+						data-end="9400"
+						data-endspeed="600"><i class="icon-check"></i>
+					</div>
+
+					<!-- LAYER NR. 9 -->
+					<div class="tp-caption white_bg sfb medium tp-resizeme"
+						data-x="50"
+						data-y="320" 
+						data-speed="600"
+						data-start="2200"
+						data-end="9400"
+						data-endspeed="600">Very Flexible
+					</div>
+
+					<!-- LAYER NR. 10 -->
+					<div class="tp-caption default_bg sfb medium tp-resizeme"
+						data-x="0"
+						data-y="370" 
+						data-speed="600"
+						data-start="2400"
+						data-end="9400"
+						data-endspeed="600">And Much More...
+					</div>
+
+					<!-- LAYER NR. 11 -->
+					<div class="tp-caption sfr tp-resizeme"
+						data-x="right"
+						data-y="center" 
+						data-speed="600"
+						data-start="2700"
+						data-end="9400"
+						data-endspeed="600"><img src="images/slider-1-layer-2.png" alt="">
+					</div>
+
+					</li>
+					<!-- slide 2 end -->
+
+					<!-- slide 3 start -->
+					<li data-transition="random" data-slotamount="7" data-masterspeed="500" data-saveperformance="on" data-title="Powerful Bootstrap Theme">
+					
+					<!-- main image -->
+					<img src="images/slider-1-slide-3.jpg"  alt="kenburns"  data-bgposition="left center" data-kenburns="on" data-duration="10000" data-ease="Linear.easeNone" data-bgfit="100" data-bgfitend="115" data-bgpositionend="right center">
+
+					<!-- LAYER NR. 1 -->
+					<div class="tp-caption white_bg large sfr tp-resizeme"
+						data-x="0"
+						data-y="70" 
+						data-speed="600"
+						data-start="1200"
+						data-end="9400"
+						data-endspeed="600">Clean &amp; Unique Design
+					</div>
+
+					<!-- LAYER NR. 2 -->
+					<div class="tp-caption dark_gray_bg sfl medium tp-resizeme"
+						data-x="0"
+						data-y="170" 
+						data-speed="600"
+						data-start="1600"
+						data-end="9400"
+						data-endspeed="600"><i class="icon-check"></i>
+					</div>
+
+					<!-- LAYER NR. 3 -->
+					<div class="tp-caption white_bg sfb medium tp-resizeme"
+						data-x="50"
+						data-y="170" 
+						data-speed="600"
+						data-start="1600"
+						data-end="9400"
+						data-endspeed="600">After Sale Support
+					</div>
+
+					<!-- LAYER NR. 4 -->
+					<div class="tp-caption dark_gray_bg sfl medium tp-resizeme"
+						data-x="0"
+						data-y="220" 
+						data-speed="600"
+						data-start="1800"
+						data-end="9400"
+						data-endspeed="600"><i class="icon-check"></i>
+					</div>
+
+					<!-- LAYER NR. 5 -->
+					<div class="tp-caption white_bg sfb medium tp-resizeme"
+						data-x="50"
+						data-y="220" 
+						data-speed="600"
+						data-start="1800"
+						data-end="9400"
+						data-endspeed="600">Crystal Clean Code
+					</div>
+
+					<!-- LAYER NR. 6 -->
+					<div class="tp-caption dark_gray_bg sfl medium tp-resizeme"
+						data-x="0"
+						data-y="270" 
+						data-speed="600"
+						data-start="2000"
+						data-end="9400"
+						data-endspeed="600"><i class="icon-check"></i>
+					</div>
+
+					<!-- LAYER NR. 7 -->
+					<div class="tp-caption white_bg sfb medium tp-resizeme"
+						data-x="50"
+						data-y="270" 
+						data-speed="600"
+						data-start="2000"
+						data-end="9400"
+						data-endspeed="600">Crossbrowser Compatible
+					</div>
+
+					<!-- LAYER NR. 8 -->
+					<div class="tp-caption dark_gray_bg sfl medium tp-resizeme"
+						data-x="0"
+						data-y="320" 
+						data-speed="600"
+						data-start="2200"
+						data-end="9400"
+						data-endspeed="600"><i class="icon-check"></i>
+					</div>
+
+					<!-- LAYER NR. 9 -->
+					<div class="tp-caption white_bg sfb medium tp-resizeme"
+						data-x="50"
+						data-y="320" 
+						data-speed="600"
+						data-start="2200"
+						data-end="9400"
+						data-endspeed="600">Latest Technologies Used
+					</div>
+
+					<!-- LAYER NR. 10 -->
+					<div class="tp-caption dark_gray_bg sfb medium tp-resizeme"
+						data-x="0"
+						data-y="370" 
+						data-speed="600"
+						data-start="2400"
+						data-end="9400"
+						data-endspeed="600">Don't miss out!
+					</div>
+
+					<!-- LAYER NR. 11 -->
+					<div class="tp-caption sfr"
+						data-x="right" data-hoffset="-660"
+						data-y="center" 
+						data-speed="600"
+						data-start="2700"
+						data-endspeed="600"
+						data-autoplay="false"
+						data-autoplayonlyfirsttime="false"
+						data-nextslideatend="true">
+						<div class="embed-responsive embed-responsive-16by9">
+						<iframe class="embed-responsive-item" src='https://www.youtube.com/embed/v1uyQZNg2vE?enablejsapi=1&amp;html5=1&amp;hd=1&amp;wmode=opaque&amp;controls=1&amp;showinfo=0;rel=0;' width='640' height='360' style='width:640px;height:360px;'></iframe>
+						</div>
+					</div>
+
+					</li>
+					<!-- slide 3 end -->
+
+				</ul>
+				<div class="tp-bannertimer tp-bottom"></div>
+			</div>
+		</div>
+		<!-- slider revolution end -->
+
+	</div>
+	<!-- slideshow end -->
+
+</div>
+<!-- banner end -->
+
+*{
+<!-- page-top start-->
+<!-- ================ -->
+<div class="page-top">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<div class="call-to-action">
+					<h1 class="title">iDea Clean and Unique Design</h1>
+					<p>Sed ut Perspiciatis Unde Omnis Iste Sed ut perspiciatis unde omnis iste natu error sit  voluptatem accusan tium </p>
+					<a class="btn btn-white more" data-toggle="modal" data-target="#myModal">
+					Read more <i class="pl-10 fa fa-info"></i>
+					</a>
+
+					<!-- Modal -->
+					<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+									<h4 class="modal-title" id="myModalLabel">iDea Clean and Unique Design</h4>
+								</div>
+								<div class="modal-body">
+									<p>Consectetur adipisicing elit. Nemo architecto debitis dolorum ullam in ut sint, odit maiores eaque explicabo, repellendus minima soluta sunt! Nisi minima blanditiis voluptate, ut atque.</p>
+									<ul class="list-icons">
+										<li><i class="icon-check"></i> Nisi minima blanditiis voluptate</li>
+										<li><i class="icon-check"></i> Officiis nisi nam doloribus explicabo</li>
+										<li><i class="icon-check"></i> Debitis delectus corporis aspernatur</li>
+										<li><i class="icon-check"></i> Dolore temporibus odio distinctio</li>
+										<li><i class="icon-check"></i> Reprehenderit optio unde accusantium quia</li>
+									</ul>
+									<p>Culpa expedita! Quisquam, itaque officiis nisi nam doloribus explicabo possimus, dolorum alias provident maxime temporibus, enim voluptatibus! Molestias, accusantium cum impedit sint velit exercitationem deserunt, corporis magni provident earum, ullam iusto voluptatem iste animi inventore ab cupiditate quod laborum quasi libero doloremque obcaecati eius. Ut, reprehenderit optio unde accusantium quia qui! Debitis delectus corporis aspernatur nemo aut, odio harum ea repellendus quidem, saepe, incidunt? Assumenda deserunt unde minima aspernatur ducimus velit molestiae, minus eius inventore, dolore temporibus odio distinctio optio.</p>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="icon-check"></i> Ok</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					or
+					<a href="page-contact.html" class="btn btn-default contact">Contact us <i class="pl-10 fa fa-phone"></i></a>
 				</div>
-			</div>	
-			<br/>	
-			<br/>	
+			</div>
 		</div>
 	</div>
 </div>
-</div>
+<!-- page-top end -->
+}*
 
-<div style="background: #fafafa">
-<div class="container">
-	<div class="row">
-		<div class="col-md-12">
-			<a name="channels"></a>
-			<h1 class="segoe-bold" style="font-size: 2.2em">Search by Category <small class="pull-right"><a href="/channels">View All</a></small></h1>
-			<hr>
-			<div style="text-align:center">
-				<a data-category="business" rel="tooltip" data-placement="bottom" title="Business" class="category segoe-bold #{if request.params.category =='business'}black#{/if}" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-suitcase"></i></a>
-				<a data-category="education" rel="tooltip" data-placement="bottom" title="Education" class="category segoe-bold " style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-graduation-cap"></i></a>
-				<a data-category="electronics" rel="tooltip" data-placement="bottom" title="Computers & Technicals" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-desktop"></i></a>
-				<a data-category="health" rel="tooltip" data-placement="bottom" title="Health & Nutrition" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-medkit"></i></a>
-				<a data-category="art" rel="tooltip" data-placement="bottom" title="Art & Music" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-music"></i></a>
-				<a data-category="sport" rel="tooltip" data-placement="bottom" title="Sport's & Fitness" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-futbol-o"></i></a>
-				<a data-category="household" rel="tooltip" data-placement="bottom" title="Household & Gardening" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-wrench"></i></a>
-				<a data-category="18plus" rel="tooltip" data-placement="bottom" title="18+ (Adults only)" class="category segoe-bold" style="cursor: pointer; text-decoration:none; font-size: 3em;margin:20px"><nobr>18<i style="font-size:0.5em" class="fa fa-plus"></i></nobr></a>
-			</div>
-			<br />
+<!-- main-container start -->
+<!-- ================ -->
+<section class="main-container gray-bg">
 
-
-			<br/>
-			<div style="text-align:center;width:100%">
-				<div id="itemsListListing" style="margin:auto;width:90%">
-				</div>
-				<div class="clearfix"></div>
-				<br/>
-				<div id="" style="margin:auto;width:90%">
-					<div class="btn-block" style="display:table">
-						<div style="height:60px;display:table-cell;vertical-align:middle;width:100%">
-							<div id="spinnerListing" style="display:none;height:60px;background: url(public/images/loading.gif) center no-repeat; background-size:60px"></div>
-							<div id="moreResultsListing" >
-								<i class="fa fa-plus fa-2x"></i>
+	<!-- main start -->
+	<!-- ================ -->
+	<div class="main">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h1 class="text-center title">Features</h1>
+					<div class="separator"></div>
+					<p class="text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="box-style-1 white-bg object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="0">
+								<i class="fa fa-leaf"></i>
+								<h2>Find Help</h2>
+								<p>
+									With Helpouts you can get help anytime from people with expertise across a range 
+									of topics. Teachers, counselors, doctors, home repair specialists, personal trainers, 
+									hobby enthusiasts, and more.
+								</p>
+								<a href="page-services.html" class="btn-default btn">Read More</a>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="box-style-1 white-bg object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="200">
+								<i class="fa fa-laptop"></i>
+								<h2>Get Help</h2>
+								<p>
+									You can choose who to get help from based on qualifications, availability, ratings and reviews. 
+									Also, you can choose to get help right away or schedule a Helpout for later.
+								</p>
+								<a href="page-services.html" class="btn-default btn">Read More</a>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="box-style-1 white-bg object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="400">
+								<i class="fa fa-sitemap"></i>
+								<h2>Get Paid</h2>
+								<p>While some Helpouts are free, you'll need to pay for some. Paying for help is easy using Google Wallet.</p>
+								<a href="page-services.html" class="btn-default btn">Read More</a>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<br/>
-			
-			<script>
-				var params = "";
-				star.initItems("Listing", params);
-				
-				$(document).ready(function(){
-			        if ($("[rel=tooltip]").length) {
-			        	$("[rel=tooltip]").tooltip();
-			        }
-				     
-				    $(document).on("click", ".link", function(){
-				        document.location = $(this).attr("data-href");
-				    });
-				    
-				    $(".category").click(function(){
-				        $(".category").removeClass("black");    
-				    	var category = $(this).attr("data-category"); 
-				    	$(this).addClass("black");
-				    	
-				    	$("#itemsListListing").html("");
-						var params = "&category="+category;
-						star.Listing.first = 0;
-						star.initItems("Listing", params);
-				    });
-				});				
-			</script>
+		</div>
+	</div>
+	<!-- main end -->
+
+</section>
+<!-- main-container end -->
+
+
+<!-- section start -->
+<!-- ================ -->
+<div class="section parallax light-translucent-bg parallax-bg-3">
+	<div class="container">
+		<div class="call-to-action">
+			<div class="row">
+				<div class="col-md-8">
+					<h1 class="title text-center">Clean &amp; Powerful Bootstrap Theme</h1>
+					<p class="text-center">Sed ut Perspiciatis Unde Omnis Iste Sed ut sit  voluptatem accusan tium </p>
+				</div>
+				<div class="col-md-4">
+					<div class="text-center">
+						<a href="#" class="btn btn-default btn-lg">Purchase</a>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
+<!-- section end -->
+
+<!-- section start -->
+<!-- ================ -->
+<div class="section clearfix">
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+
+				<h2>Channels by Category <small><a class="link pull-right" href="">VIEW ALL</a></small></h2>
+				<div class="separator-2"></div>
+				<div style="text-align:center">
+					<a data-category="business" rel="tooltip" data-placement="top" title="Business" class="category segoe-bold #{if request.params.category =='business'}black#{/if}" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-suitcase"></i></a>
+					<a data-category="education" rel="tooltip" data-placement="top" title="Education" class="category segoe-bold " style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-graduation-cap"></i></a>
+					<a data-category="electronics" rel="tooltip" data-placement="top" title="Computers & Technicals" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-desktop"></i></a>
+					<a data-category="health" rel="tooltip" data-placement="top" title="Health & Nutrition" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-medkit"></i></a>
+					<a data-category="art" rel="tooltip" data-placement="top" title="Art & Music" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-music"></i></a>
+					<a data-category="sport" rel="tooltip" data-placement="top" title="Sport's & Fitness" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-futbol-o"></i></a>
+					<a data-category="household" rel="tooltip" data-placement="top" title="Household & Gardening" class="category segoe-bold" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-wrench"></i></a>
+					<a data-category="18plus" rel="tooltip" data-placement="top" title="18+ (Adults only)" class="category segoe-bold" style="cursor: pointer; text-decoration:none; font-size: 3em;margin:20px"><nobr>18<i style="font-size:0.5em" class="fa fa-plus"></i></nobr></a>
+				</div>				
+				<br/>
+				<div style="text-align:center;width:100%">
+					<div id="itemsListListing" style="margin:auto;width:90%">
+					</div>
+					<div class="clearfix"></div>
+					<br/>
+					<div id="" style="margin:auto;width:90%">
+						<div class="btn-block" style="display:table">
+							<div style="height:60px;display:table-cell;vertical-align:middle;width:100%">
+								<div id="spinnerListing" style="display:none;height:60px;background: url(public/images/loading.gif) center no-repeat; background-size:60px"></div>
+								<div id="moreResultsListing" >
+									<i class="fa fa-plus fa-2x"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>		
+				<script>
+					$(document).ready(function(){
+						var params = "";
+						star.initItems("Listing", params);
+		
+						if ($("[rel=tooltip]").length) {
+				        	$("[rel=tooltip]").tooltip();
+				        }
+					     
+					    $(document).on("click", ".link", function(){
+					        document.location = $(this).attr("data-href");
+					    });
+					    
+					    $(".category").click(function(){
+					        $(".category").removeClass("black");    
+					    	var category = $(this).attr("data-category"); 
+					    	$(this).addClass("black");
+					    	
+					    	$("#itemsListListing").html("");
+							var params = "&category="+category;
+							star.Listing.first = 0;
+							star.initItems("Listing", params);
+					    });
+					});				
+				</script>						
+			</div>
+		</div>
+	</div>
+
 </div>
+<!-- section end -->

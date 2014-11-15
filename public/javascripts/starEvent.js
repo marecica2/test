@@ -1,7 +1,7 @@
 star.initItems = function(prefix, urlParams){
     $(document).ready(function(){
         star[prefix] = {};
-        star[prefix].size = 9;
+        star[prefix].size = 4;
         star[prefix].first = 0;
         star[prefix].count = star[prefix].size;
 
@@ -27,7 +27,7 @@ star.initItems = function(prefix, urlParams){
         });
 
         // append elements        
-        $(window).unbind('scroll');
+        //$(window).unbind('scroll');
         $(window).scroll(function() {
             var diff = Math.abs($(window).scrollTop() - ($(document).height() - $(window).height()));
             if(diff < 1) {
@@ -84,50 +84,39 @@ star.generateItemsHtml = function(data, prefix){
     for(var i = 0; i < data.length; i++){
         var item = data[i];
         if(prefix.indexOf("Listing") >= 0){
-            html += "<div class='shadow-blur' style='text-align:left;background:white;  position:relative; width:320px; height:240px; float:left;margin:0px; margin:5px;border-top:5px solid #{if item && item.color} ${item.color} #{/if} #{else} #3A87AD #{/else};'>";
-            html += "   <div class='link' data-href='/listing-new?uuid="+item.uuid+"' style='cursor:pointer'>";
-            html += "           <img src='../"+item.imageUrl+"_128x128' />";
-            html += "       ";
-            html += "       <div style='position:absolute;top:90px;left:10px'>";
-            html += "           <img class='img-circle' style='border:3px solid white;float:left' src='../"+item.createdByAvatarUrl+"_64x64'>";
+            
+            html += "<div class='event-box shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
+            html += "   <div class='overlay-container'>";
+            html += "       <img src='"+item.imageUrl+"_128x128' alt=''>";
+            html += "       <mark style='position:absolute;bottom:0px;padding:5px' class='title'><img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/"+item.createdByAvatarUrl+"_32x32'>"+item.createdByName+" </mark>";
+            html += "       <div class='overlay'>";
+            html += "           <div class='overlay-links'>";
+            html += "               <a href='/listing-new?uuid="+item.uuid+"'><i class='fa fa-link'></i></a>";
+            html += "               <a href='/listing-new?uuid="+item.uuid+"' class='popup-img'><i class='fa fa-search-plus'></i></a>";
+            html += "           </div>";
             html += "       </div>";
-            html += "       ";
-            html += "       <div style='margin-top: -40px;margin-left: 90px; width: 230px; position:relative;height:40px; line-height: 1.2; overflow: hidden; text-overflow: ellipsis;'>";
-            html += "           <span style='position:absolute; bottom:0px; max-height: 40px; text-shadow: 1px 1px 8px #000;'>";
-            html += "               <span style='color:white; text-decoration: none; font-size: 1.3em; font-weight: bold' href='/user/${item.user.login}' >"+item.title+"</span>";
-            html += "           </span>";
-            html += "       </div>";
-            html += "       ";
-            html += "       <div class='segoe-bold' style='margin-left: 90px;margin-top:5px; width: 250px; position:relative;height:40px'>";
-            html += "           <span style='color:black; text-decoration: none; font-size: 1.0em; font-weight: bold'>"+item.createdByName+"</span>";
-            html += "       </div>";
-            html += "       ";
-            html += "       <div style='width:100%; position:absolute; bottom:0px; padding:10px' >";
-            html += "           <hr style='border:1px solid #f7f7f7' />";
-            html += "           <p> ";
-            html += "               <div style='float:left; font-size:0.8em; font-weight: bold; text-align: center'>";
+            html += "   </div>";
+            html += "   <div class='image-box-body'>";
+            html += "       <span>"+item.category+"</span> &middot; <span>"+item.type+"</span> &middot; <span>"+item.privacy+"</span><br/> ";
+            
             for(var j = 0; j < 5; j++){
-                html += "                           <i style='font-size:2em' class='fa fa-star blue' data-value='1'></i>";
+                html += "<i class='fa fa-star' data-value='1'></i>";
             }
-            html += "                   <br/>";
-            html += "                   123 reviews";
-            html += "               </div>";
-            html += "                       ";
-            html += "               <div style='float:right;'>";
-
+            html += "   12 reviews";
+            html += "   <br/>";
+            
             if(item.charging == 'free'){
-                html += "                   <span style='font-size:1.2em; font-weight: bold'>Free</span>";
+                html += "<strong>Free</strong>";
             }
 
             if(item.charging == 'before'){
-                html += "                   <span style='font-size:1.2em; font-weight: bold'>"+item.price+" "+item.currency+"</span>";
-            }
+                html += "<strong>"+item.price+"</strong> <small>"+item.currency+"</small>";
+            }            
             
-            html += "               </div>";
-            html += "           </p>";
-            html += "       </div>";
-            html += "       </div>      ";
-            html += "</div> ";            
+            html += "       <p class='event-box-link'><span><a href='/listing-new?uuid="+item.uuid+"' class='link-left'><span>"+star.utils.trimTo(item.title, 40)+"</span></a></span></p>";
+            html += "   </div>";
+            html += "</div>"; 
+            
             
         } else {
             var end = data[i].eventStart;
@@ -143,28 +132,38 @@ star.generateItemsHtml = function(data, prefix){
             if(!data[i].isOwner)
                 color = "darkgray";
             
-            event = data[i];
+            var item = data[i];
             
-            html += "<div class='event_poster shadow-blur'>";
-            html += "   <div class='poster_wrapper'>";
-            html += "       <a href='/event-detail?uuid="+event.uuid+"' class='poster_link'>";
-            html += "           <div class='poster_image' style='background:url(\"../"+event.imageUrl+"_128x128\") no-repeat black center;background-size: 375px 150px;width:150px;height:150px'></div>";
-            html += "       </a>";
-            html += "       <div class='description' style='font-size:0.9em;min-height:40%'>";
-            html += "           <strong><a href='/event-detail?uuid="+event.uuid+"' class='event_title color-link-light'>"+event.title+"</a></strong>";
-            html += "           <p class='event_blurb'>";
-            html += "               <img height='16' src='/"+event.createdByAvatarUrl+"_32x32'> <a href='/user/"+event.createdByLogin+"' class='color-link-light'>"+event.createdByName+"</a>";
-            html += "           </p>";
+            html += "<div class='event-box shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
+            html += "   <div class='overlay-container'>";
+            html += "       <img src='"+item.imageUrl+"_128x128' alt=''>";
+            html += "       <mark style='position:absolute;bottom:0px;padding:5px' class='title'><img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/"+item.createdByAvatarUrl+"_32x32'>"+item.createdByName+" </mark>";
+            html += "       <div class='overlay'>";
+            html += "           <div class='overlay-links'>";
+            html += "               <a href='/event-detail?uuid="+item.uuid+"'><i class='fa fa-link'></i></a>";
+            html += "               <a href='/event-detail?uuid="+item.uuid+"' class='popup-img'><i class='fa fa-search-plus'></i></a>";
+            html += "           </div>";
             html += "       </div>";
             html += "   </div>";
-            html += "   <div class='actions'>";
+            html += "   <div class='image-box-body'>";
+            //html += "       <span>"+item.category+"</span> &middot; <span>"+item.type+"</span> &middot; <span>"+item.privacy+"</span><br/> ";  
+            html += "       <p> ";
+            html += "           <strong>"+starUtils.formatDate(item.eventStart)+"</strong><br/> ";
+            html += "           <span>"+starUtils.formatTime(item.eventStart)+"</span> - ";
+            html += "           <span>"+starUtils.formatTime(item.eventEnd)+"</span>";            
+            html += "       </p> ";
+
+            if(item.charging == 'free'){
+                html += "<strong>Free</strong>";
+            }
+
+            if(item.charging == 'before'){
+                html += "<strong>"+item.price+"</strong> <small>"+item.currency+"</small>";
+            }    
+            
+            html += "       <p class='event-box-link'><span><a href='/event-detail?uuid="+item.uuid+"' class='link-left'><span>"+star.utils.trimTo(item.title, 40)+"</span></a></span></p>";
             html += "   </div>";
-            html += "   <div class='event-time black' style='padding:5px'>";
-            html += "       <span class='event-time-from' style='font-weight:bold' id='event-time-from'>"+starUtils.formatDate(event.eventStart)+"</span><br/> ";
-            html += "       <span class='event-time-to'>"+starUtils.formatTime(event.eventStart)+"</span> - ";
-            html += "       <span class='event-time-to'>"+starUtils.formatTime(event.eventEnd)+"</span>";
-            html += "   </div>";
-            html += "</div>";            
+            html += "</div>";           
         }
     }
     return html    
@@ -468,7 +467,7 @@ starEvent.loadActivities = function(uuid){
             html += "<table style='width:100%;'>";
             html += "<tr>";
             
-            html += "<td style='vertical-align:top'>";
+            html += "<td style='vertical-align:top;width:32px'>";
             
             var avatar = success[i].byCustomer ? success[i].customerAvatar : success[i].userAvatar;
             if(avatar != prev || i == 0){
@@ -478,7 +477,7 @@ starEvent.loadActivities = function(uuid){
             }
             prev = avatar;
             html += "</td>";
-            html += "<td style='padding-left:5px;vertical-align:top;width:100%'>";
+            html += "<td style='padding-left:5px;vertical-align:top;'>";
             html += "<div style='font-size:0.9em;color:#ccc'>";
             var url = success[i].byCustomer ? "/user/"+success[i].customerLogin : "/user/"+success[i].userLogin;
             var name = success[i].byCustomer ? success[i].customer : success[i].user;

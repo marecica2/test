@@ -24,6 +24,14 @@ star.utils.getParams = function () {
     return hashParams;
 }
 
+star.utils.trimTo = function(input, len) {
+    if(input.length > 10 && input.length > len){
+        input = input.substring(0, len-1);
+        input += "...";
+    }
+    return input;
+}
+
 star.utils.uploadFiles = function(url, files, clbk) {
     for (var i = 0; i < files.length; i++) {
       var formData = new FormData();

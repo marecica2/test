@@ -97,7 +97,10 @@ POST	/settings/agenda						Accounts.setAgendaType
 
 # Map static resources from the /app/public folder to the /public path
 GET     /favicon.ico                            404
-GET 	/public/css/							staticDir:public/css/
+GET 	/css/									staticDir:public/css/
+GET 	/fonts/									staticDir:public/fonts/
+GET 	/images/								staticDir:public/images/
+GET 	/plugins/								staticDir:public/plugins/
 GET     /public/                                staticDir:public
 
 # Catch all

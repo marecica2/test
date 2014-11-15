@@ -1,87 +1,272 @@
-<div class="shadow-small">
-#{if user && user.account.type == "standard"}
-	<div class="colorBg" style="text-align:center;padding:5px">
-		<span><a href="/settings#account" style="color:white">Share what you know and become a Publisher.</a></span>
-		<strong><a href="/" style="color:white">Learn more</a></strong>
+*{
+<!-- header-top start -->
+<!-- ================ -->
+<div class="header-top">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-2 col-sm-6">
+
+				<!-- header-top-first start -->
+				<!-- ================ -->
+				<div class="header-top-first clearfix">
+					<ul class="social-links clearfix hidden-xs">
+						<li class="twitter"><a target="_blank" href="http://www.twitter.com/"><i class="fa fa-twitter"></i></a></li>
+						<li class="skype"><a target="_blank" href="http://www.skype.com/"><i class="fa fa-skype"></i></a></li>
+						<li class="linkedin"><a target="_blank" href="http://www.linkedin.com/"><i class="fa fa-linkedin"></i></a></li>
+						<li class="googleplus"><a target="_blank" href="http://plus.google.com/"><i class="fa fa-google-plus"></i></a></li>
+						<li class="youtube"><a target="_blank" href="http://www.youtube.com/"><i class="fa fa-youtube-play"></i></a></li>
+						<li class="flickr"><a target="_blank" href="http://www.flickr.com/"><i class="fa fa-flickr"></i></a></li>
+						<li class="facebook"><a target="_blank" href="http://www.facebook.com/"><i class="fa fa-facebook"></i></a></li>
+						<li class="pinterest"><a target="_blank" href="http://www.pinterest.com/"><i class="fa fa-pinterest"></i></a></li>
+					</ul>
+					<div class="social-links hidden-lg hidden-md hidden-sm">
+						<div class="btn-group dropdown">
+							<button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i class="fa fa-share-alt"></i></button>
+							<ul class="dropdown-menu dropdown-animation">
+								<li class="twitter"><a target="_blank" href="http://www.twitter.com/"><i class="fa fa-twitter"></i></a></li>
+								<li class="skype"><a target="_blank" href="http://www.skype.com/"><i class="fa fa-skype"></i></a></li>
+								<li class="linkedin"><a target="_blank" href="http://www.linkedin.com/"><i class="fa fa-linkedin"></i></a></li>
+								<li class="googleplus"><a target="_blank" href="http://plus.google.com/"><i class="fa fa-google-plus"></i></a></li>
+								<li class="youtube"><a target="_blank" href="http://www.youtube.com/"><i class="fa fa-youtube-play"></i></a></li>
+								<li class="flickr"><a target="_blank" href="http://www.flickr.com/"><i class="fa fa-flickr"></i></a></li>
+								<li class="facebook"><a target="_blank" href="http://www.facebook.com/"><i class="fa fa-facebook"></i></a></li>
+								<li class="pinterest"><a target="_blank" href="http://www.pinterest.com/"><i class="fa fa-pinterest"></i></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- header-top-first end -->
+
+			</div>
+			<div class="col-xs-10 col-sm-6">
+
+				<!-- header-top-second start -->
+				<!-- ================ -->
+				<div id="header-top-second"  class="clearfix">
+
+					<!-- header top dropdowns start -->
+					<!-- ================ -->
+					<div class="header-top-dropdown">
+						<div class="btn-group dropdown">
+							<button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i class="fa fa-search"></i> Search</button>
+							<ul class="dropdown-menu dropdown-menu-right dropdown-animation">
+								<li>
+									<form role="search" class="search-box">
+										<div class="form-group has-feedback">
+											<input type="text" class="form-control" placeholder="Search">
+											<i class="fa fa-search form-control-feedback"></i>
+										</div>
+									</form>
+								</li>
+							</ul>
+						</div>
+						<div class="btn-group dropdown">
+							<button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Login</button>
+							<ul class="dropdown-menu dropdown-menu-right dropdown-animation">
+								<li>
+									<form class="login-form">
+										<div class="form-group has-feedback">
+											<label class="control-label">Username</label>
+											<input type="text" class="form-control" placeholder="">
+											<i class="fa fa-user form-control-feedback"></i>
+										</div>
+										<div class="form-group has-feedback">
+											<label class="control-label">Password</label>
+											<input type="password" class="form-control" placeholder="">
+											<i class="fa fa-lock form-control-feedback"></i>
+										</div>
+										<button type="submit" class="btn btn-group btn-dark btn-sm">Log In</button>
+										<span>or</span>
+										<button type="submit" class="btn btn-group btn-default btn-sm">Sing Up</button>
+										<ul>
+											<li><a href="#">Forgot your password?</a></li>
+										</ul>
+										<div class="divider"></div>
+										<span class="text-center">Login with</span>
+										<ul class="social-links clearfix">
+											<li class="facebook"><a target="_blank" href="http://www.facebook.com/"><i class="fa fa-facebook"></i></a></li>
+											<li class="twitter"><a target="_blank" href="http://www.twitter.com/"><i class="fa fa-twitter"></i></a></li>
+											<li class="googleplus"><a target="_blank" href="http://plus.google.com/"><i class="fa fa-google-plus"></i></a></li>
+										</ul>
+									</form>
+								</li>
+							</ul>
+						</div>
+						<div class="btn-group dropdown">
+							<button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i class="fa fa-shopping-cart"></i> Cart (8)</button>
+							<ul class="dropdown-menu dropdown-menu-right dropdown-animation cart">
+								<li>
+									<table class="table table-hover">
+										<thead>
+											<tr>
+												<th class="quantity">QTY</th>
+												<th class="product">Product</th>
+												<th class="amount">Subtotal</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td class="quantity">2 x</td>
+												<td class="product"><a href="shop-product.html">Android 4.4 Smartphone</a><span class="small">4.7" Dual Core 1GB</span></td>
+												<td class="amount">$199.00</td>
+											</tr>
+											<tr>
+												<td class="quantity">3 x</td>
+												<td class="product"><a href="shop-product.html">Android 4.2 Tablet</a><span class="small">7.3" Quad Core 2GB</span></td>
+												<td class="amount">$299.00</td>
+											</tr>
+											<tr>
+												<td class="quantity">3 x</td>
+												<td class="product"><a href="shop-product.html">Desktop PC</a><span class="small">Quad Core 3.2MHz, 8GB RAM, 1TB Hard Disk</span></td>
+												<td class="amount">$1499.00</td>
+											</tr>
+											<tr>
+												<td class="total-quantity" colspan="2">Total 8 Items</td>
+												<td class="total-amount">$1997.00</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="panel-body text-right">	
+									<a href="shop-cart.html" class="btn btn-group btn-default btn-sm">View Cart</a>
+									<a href="shop-checkout.html" class="btn btn-group btn-default btn-sm">Checkout</a>
+									</div>
+								</li>
+							</ul>
+						</div>
+
+					</div>
+					<!--  header top dropdowns end -->
+
+				</div>
+				<!-- header-top-second end -->
+
+			</div>
+		</div>
 	</div>
-#{/if}
-<nav class="navbar color role="navigation" style="font-size:1.4em;background:white;">
-
-  <!-- logo -->
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand segoe-bold" style="font-size:1.8em;font-weight:0;position:relative;bottom:10px" href="/home">
-    	<span class="color"><i class='fa fa-comments fa-1x'></i>wi</span><span class="segoe-bold black">dgr</span>
-    </a>
-    <form class="form navbar-left">
-	    <span class="input-group" style="max-width:250px;margin: 8px;">
-	      <input type="text" class="form-control" placeholder="Search for event">
-	      <span class="input-group-btn">
-	        <button class="btn btn-primary colorBg" type="button"><i class="fa fa-search"></i></button>
-	      </span>
-	    </span>
-    </form>     
-  </div>
-  <!-- end of logo -->
-
-  <!-- collapsible items -->
-  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="">
-
-     
-    <ul class="nav navbar-nav navbar-right">
- 	#{if user}
- 	  #{if user.unreadMessages}
-  	  	<li><a href="/mail" id="public-btn-logout"><i  class="color fa fa-envelope-o" title="&{'menu.newMessage'}"></i> </a></li>
-	  #{/if}
-  	  <li><a href="/dashboard" id="public-btn-logout"><i class="black fa fa-desktop  fa-1x" title="&{'menu.dashboard'}"></i> </a></li>
-      <li><a href="/user/${user.login}/calendar"><i class='black fa fa-calendar fa-1x' title="&{'menu.calendar'}"></i></a></li>
-	#{/if}
-	
-      <li class="dropdown" style="">
-    	<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="" ><span style=";position:relative;top:-2px"><img src='/public/images/flags/#{if request.cookies.get("PLAY_LANG") != null}${request.cookies.get("PLAY_LANG").value}#{/if}#{else}${lang}#{/else}.gif'> <b class="black caret"></b></span></a>
-        <ul class="dropdown-menu">
-            <li><a href="/locale?locale=sk&url=${request.url.urlEncode()}" ><img src='/public/images/flags/sk.gif'> Slovensky</a></li>
-            <li><a href="/locale?locale=en&url=${request.url.urlEncode()}" ><img src='/public/images/flags/en.gif'> English</a></li>
-            <li><a href="/locale?locale=cz&url=${request.url.urlEncode()}" ><img src='/public/images/flags/cz.gif'> Česky</a></li>
-            <li><a href="/locale?locale=pl&url=${request.url.urlEncode()}" ><img src='/public/images/flags/pl.gif'> Polski</a></li>
-            <li><a href="/locale?locale=hu&url=${request.url.urlEncode()}" ><img src='/public/images/flags/hu.gif'> Magyar</a></li>
-            <li><a href="/locale?locale=de&url=${request.url.urlEncode()}" ><img src='/public/images/flags/de.gif'> Deutsch</a></li>
-        </ul>
-      </li>   
-	
-  	#{if user}
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-        	<img class="img-circle" title="${user.fullName}" style="height:16px;-webkit-transform: scale(2)" src="/${user.avatarUrl}_32x32">
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="/user/${user.login}"><i class="fa fa-user"></i> &{'menu.profile'}</a></li>
-          <li><a href="/mail"><i class="fa fa-envelope"></i> &{'menu.mail'}</a></li>
-          <li><a href="/settingspayments"><i class="fa fa-credit-card"></i> &{'menu.payments'}</a></li>
-          <li><a href="/Accounts/contacts"><i class="fa fa-users"></i> &{'menu.contacts'}</a></li>
-          <li><a href="/settings"><i class="fa fa-pencil-square-o"></i> &{'menu.settings'}</a></li>
-      <li> 
-      	<a href="/logout" id="public-btn-logout" title="&{'menu.logout'}">
-      		<i class="black fa fa-power-off fa-1x"></i> Sign out
-      	</a>
-      </li>          
-        </ul>
-      </li>	
-	#{/if}  		
-  	#{if !user}
-      <li> 
-      	<a href="/login?url=${request.url.urlEncode()}" id="public-btn-logout" title="&{'menu.login'}">
-      		<i class="black fa fa-power-off fa-1x"> </i>
-      	</a>
-      </li>  
-	#{/if}  		
-	</ul>
-  </div>
-  <!-- end of collapsible items -->  
-</nav>		
 </div>
+<!-- header-top end -->
+}*
+
+<header class="header fixed clearfix">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-3">
+
+				<!-- header-left start -->
+				<!-- ================ -->
+				<div class="header-left clearfix">
+
+					<!-- logo -->
+					<div class="logo">
+						<a href="/home">
+							<img id="logo" src="/images/logo_purple.png" style="" alt="iDea">
+						</a>
+					</div>
+
+					<!-- name-and-slogan -->
+					<div class="site-slogan">
+						Share your knowledge
+					</div>
+
+				</div>
+				<!-- header-left end -->
+
+			</div>
+			<div class="col-md-9">
+
+				<!-- header-right start -->
+				<!-- ================ -->
+				<div class="header-right clearfix">
+
+					<!-- main-navigation start -->
+					<!-- ================ -->
+					<div class="main-navigation animated">
+
+						<!-- navbar start -->
+						<!-- ================ -->
+						<nav class="navbar navbar-default" role="navigation">
+							<div class="container-fluid">
+
+								<!-- Toggle get grouped for better mobile display -->
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+										<span class="sr-only">Toggle navigation</span>
+										<span class="icon-bar"></span>
+										<span class="icon-bar"></span>
+										<span class="icon-bar"></span>
+									</button>
+								</div>
+
+								<!-- Collect the nav links, forms, and other content for toggling -->
+								<div class="collapse navbar-collapse" id="navbar-collapse-1">
+									<ul class="nav navbar-nav navbar-right">
+									 	#{if user}
+									 	  #{if user.unreadMessages}
+									  	  	<li><a href="/mail" id="public-btn-logout"><i  class="color fa fa-envelope-o" title="&{'menu.newMessage'}"></i> </a></li>
+										  #{/if}
+									  	  <li #{if request.url.indexOf("home")>=0}class="active" #{/if}><a href="/home" id="public-btn-logout">Home</a></li>
+									  	  <li #{if request.url.indexOf("dashboard")>=0}class="active" #{/if}><a href="/dashboard" id="public-btn-logout">Dashboard</a></li>
+									      <li #{if request.url.indexOf("calendar")>=0}class="active" #{/if}><a href="/user/${user.login}/calendar">Planning</a></li>
+									      <li #{if request.url.indexOf("about")>=0}class="active" #{/if}><a href="/about">About</a></li>
+										#{/if}
+										
+									      <li class="dropdown" style="">
+									    	<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="" ><span style=";position:relative;top:4px"><img src='/public/images/flags/#{if request.cookies.get("PLAY_LANG") != null}${request.cookies.get("PLAY_LANG").value}#{/if}#{else}${lang}#{/else}.gif'></span></a>
+									        <ul class="dropdown-menu">
+									            <li><a href="/locale?locale=sk&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/sk.gif'> Slovensky</a></li>
+									            <li><a href="/locale?locale=en&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/en.gif'> English</a></li>
+									            <li><a href="/locale?locale=cz&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/cz.gif'> Česky</a></li>
+									            <li><a href="/locale?locale=pl&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/pl.gif'> Polski</a></li>
+									            <li><a href="/locale?locale=hu&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/hu.gif'> Magyar</a></li>
+									            <li><a href="/locale?locale=de&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/de.gif'> Deutsch</a></li>
+									        </ul>
+									      </li>   
+										
+									  	#{if user}
+									      <li class="dropdown">
+									        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+									        	<img class="img-circle inline" title="${user.fullName}" style="position:relative;bottom:3px;height:24px;" src="/${user.avatarUrl}_64x64">&nbsp;${user.fullName}
+									        </a>
+									        <ul class="dropdown-menu">
+									          <li><a href="/user/${user.login}"><i class="fa fa-user"></i> &{'menu.profile'}</a></li>
+									          <li><a href="/mail"><i class="fa fa-envelope"></i> &{'menu.mail'}</a></li>
+									          <li><a href="/settingspayments"><i class="fa fa-credit-card"></i> &{'menu.payments'}</a></li>
+									          <li><a href="/Accounts/contacts"><i class="fa fa-users"></i> &{'menu.contacts'}</a></li>
+									          <li><a href="/settings"><i class="fa fa-pencil-square-o"></i> &{'menu.settings'}</a></li>
+									      <li> 
+									      	<a href="/logout" id="public-btn-logout" title="&{'menu.logout'}">
+									      		<i class="black fa fa-power-off fa-1x"></i> Sign out
+									      	</a>
+									      </li>          
+									        </ul>
+									      </li>	
+										#{/if}  	
+											
+									  	#{if !user}
+									      <li> 
+									      	<a href="/login?url=${request.url.urlEncode()}" id="public-btn-logout" title="&{'menu.login'}">
+									      		<i class="black fa fa-power-off fa-1x"> </i>
+									      	</a>
+									      </li>  
+										#{/if} 									
+									</ul>
+								</div>
+
+							</div>
+						</nav>
+						<!-- navbar end -->
+
+					</div>
+					<!-- main-navigation end -->
+
+				</div>
+				<!-- header-right end -->
+
+			</div>
+		</div>
+	</div>
+</header>
+<!-- header end -->		
+
+
+*{ss}*
