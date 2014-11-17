@@ -20,6 +20,10 @@ public class EventDTO
 
     public String createdByAvatarUrl;
 
+    public String customerAvatarUrl;
+    public String customerLogin;
+    public String customer;
+
     public String description;
 
     public String color;
@@ -89,6 +93,12 @@ public class EventDTO
         e.uuid = event.uuid;
         e.isInvited = e.isOwner ? false : true;
         e.createdByUser = event.createdByUser;
+        if (event.customer != null)
+        {
+            e.customerAvatarUrl = event.customer.avatarUrl;
+            e.customerLogin = event.customer.login;
+            e.customer = event.customer.getFullName();
+        }
 
         if (event.created != null)
             e.created = event.created.getTime();
@@ -112,7 +122,6 @@ public class EventDTO
         e.type = "";
         e.privacy = e.privacy;
         e.description = "";
-        e.title = "";
         e.charging = "";
         e.price = "";
         e.color = "#FF0000";
@@ -122,7 +131,6 @@ public class EventDTO
         e.comments = null;
         e.currency = "";
         e.state = "";
-        e.imageUrl = "";
         e.created = 0;
         return e;
     }

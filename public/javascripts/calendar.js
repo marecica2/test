@@ -276,7 +276,7 @@ starCalendar.decorateEvent = function(event, element, view){
         if(text.length >= length)
             text = text.substring(0, length) + "...";
         var html = starEvent.eventIcons(event);
-        html = "<img height='15px' class='avatar16 shadow' src='/"+event.createdByAvatarUrl+"'> " + html;
+        html = "<img class='img-circle avatar22' src='/"+event.createdByAvatarUrl+"'> " + html;
         el.html(html + text);
     }
 };
@@ -375,7 +375,7 @@ starCalendar.clickEvent = function(event, jsEvent, view) {
     // show hide appropriate content
     starCalendar.selectedEvent = event;
     var popup = $("#myPopover");
-
+    
     // copy values to the event detail page dialog
     if(jsEvent != undefined){
         starEvent.inviteLoad(event.uuid, function(){
@@ -387,12 +387,12 @@ starCalendar.clickEvent = function(event, jsEvent, view) {
     }
     
     // reinit facebook
-    var url = document.location.origin + "/public/calendar/"+starCalendar.userUUID+"/"+event.uuid;
-    var url2 = document.location.origin + "/public/calendar/"+starCalendar.userUUID+"#?event="+event.uuid;
-    $(".fb-meta-title").attr("content", event.title);
-    $(".fb-meta-description").attr("content", event.description);
-    $(".event-anchor-comments").attr("href", url);
-    $(".facebook-share-link").attr("href", url2);
+    //var url = document.location.origin + "/public/calendar/"+starCalendar.userUUID+"/"+event.uuid;
+    //var url2 = document.location.origin + "/public/calendar/"+starCalendar.userUUID+"#?event="+event.uuid;
+    //$(".fb-meta-title").attr("content", event.title);
+    //$(".fb-meta-description").attr("content", event.description);
+    //$(".event-anchor-comments").attr("href", url);
+    //$(".facebook-share-link").attr("href", url2);
     //$(".fb-meta-url").attr("content", url);
     //if(FB != undefined){
     //    FB.XFBML.parse();
@@ -455,7 +455,7 @@ starCalendar.copyValuesToDialog = function(event){
         $("#popup-event-delete").show();
     }
         
-    $(".popup-event-description").html(event.description);
+    $(".popup-event-description").html(star.utils.trimTo(event.description, 250));
     var html = "<span>" + (event.charging != "free" && event.price.length > 0 ? ("<span style='font-size:1em' class='label label-primary'>" + event.price + " " + event.currency + "</span> "): "") + starEvent.eventIcons(event) + "</span>";
     $(".popup-event-charging").html(html);
     
@@ -475,7 +475,7 @@ starCalendar.copyValuesToDialog = function(event){
         }
     });    
     
-    $(".event-createdByName").html("<a href='/calendar/"+event.createdByLogin+"'><i class='fa fa-calendar'></i></a> <img class='avatar16' src='/"+event.createdByAvatarUrl+"'> <a href='/public/user?id="+event.createdBy+"'>" + event.createdByName + "</a>");
+    $(".event-createdByName").html("<a href='/calendar/"+event.createdByLogin+"'><i class='fa fa-calendar'></i></a> <img class='img-circle avatar22' src='/"+event.createdByAvatarUrl+"'> <a href='/public/user?id="+event.createdBy+"'>" + event.createdByName + "</a>");
     $(".event-title").val(event.title);
     $(".event-title-label").val(event.title);
     $(".event-title-label").html(event.title);
@@ -492,7 +492,8 @@ starCalendar.copyValuesToDialog = function(event){
         $(".event-time-from").html(starUtils.formatDate(event.start) + " " + starUtils.formatTime(event.start));
     if(event.end != null)
         $(".event-time-to").html(starUtils.formatTime(event.end));
-    $("#event-description").html(event.description);
+    console.log("xx");
+    $("#event-description").html(star.utils.trimTo(event.description, 100));
     $("#event-description-label").html(event.description);
     $(".event-charging-price").val(event.price);
     $("#event-color").val(event.backgroundColor);
@@ -558,7 +559,6 @@ starCalendar.getEvents = function(start, end, callback) {
             
             var isInvited = data[i].isInvited;
             var color = data[i].color;
-            console.log(data[i]);
             if(color == undefined || color == null || color == "")
                 color = starCalendar.defaultColor;
 

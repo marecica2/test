@@ -97,16 +97,13 @@ public class Events extends BaseController
     private static void convertEvent(List<EventDTO> eventsDto, Event event, EventDTO eDto, User user)
     {
         // public event render
+
         final Boolean isOwner = user != null ? event.isOwner(user) : false;
 
         if (isOwner)
         {
             eDto.isEditable = true;
             eventsDto.add(eDto);
-        } else if (event.listing.privacy.equals(Event.EVENT_VISIBILITY_PUBLIC))
-        {
-            eventsDto.add(eDto);
-
         } else if (user != null && event.hasInviteFor(user.login) && event.state.equals(Event.EVENT_STATE_CUSTOMER_CREATED))
         {
             eDto.isEditable = true;
@@ -114,6 +111,7 @@ public class Events extends BaseController
 
         } else if (user != null && !event.hasInviteFor(user.login))
         {
+            eDto.isInvited = false;
             eDto = EventDTO.postProcessHiddenEvent(eDto);
             eventsDto.add(eDto);
 
@@ -121,6 +119,10 @@ public class Events extends BaseController
         {
             eDto.isEditable = false;
             eventsDto.add(eDto);
+        } else if (event.listing.privacy.equals(Event.EVENT_VISIBILITY_PUBLIC))
+        {
+            eventsDto.add(eDto);
+
         }
     }
 

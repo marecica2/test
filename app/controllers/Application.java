@@ -30,7 +30,7 @@ public class Application extends BaseController
         render(user, account, isPublic, users, listings);
     }
 
-    public static void dashboard()
+    public static void dashboard(String type)
     {
         final User user = getLoggedUser();
         final List<Event> watchList = user != null ? Event.getWatchList(user) : null;
@@ -41,7 +41,8 @@ public class Application extends BaseController
         //c.name = "timezone";
         //c.value = user.timezone.toString();
         //request.cookies.put("timezone", c);
-        render(user, watchList, listings, approved);
+
+        render(user, watchList, listings, approved, type);
     }
 
     public static void calendarUser(String login) throws Throwable

@@ -204,14 +204,23 @@
 									 	  #{if user.unreadMessages}
 									  	  	<li><a href="/mail" id="public-btn-logout"><i  class="color fa fa-envelope-o" title="&{'menu.newMessage'}"></i> </a></li>
 										  #{/if}
-									  	  <li #{if request.url.indexOf("home")>=0}class="active" #{/if}><a href="/home" id="public-btn-logout">Home</a></li>
-									  	  <li #{if request.url.indexOf("dashboard")>=0}class="active" #{/if}><a href="/dashboard" id="public-btn-logout">Dashboard</a></li>
+									  	  <li ><a href="/home" id="public-btn-logout">Home</a></li>
+									      <li class='dropdown #{if request.url.indexOf("dashboard")>=0} active #{/if}'>
+									    	<a class="dropdown-toggle" data-toggle="dropdown" href="/dashboard/upcoming" title="" >Dashboard</a>
+									        <ul class="dropdown-menu">
+									            <li><a href="/dashboard/upcoming" ><i class="fa fa-clock-o"></i> Upcoming events</a></li>
+									            <li><a href="/dashboard/recent" ><i class="fa fa-clock-o"></i> Recent events</a></li>
+									            <li><a href="/dashboard/channels" ><i class="glyphicon glyphicon-th-large"></i> Manage Channels</a></li>
+									            <li><a href="/dashboard/requests" ><i class="fa fa-check"></i> Event Requests</a></li>
+									            <li><a href="/dashboard/watchlist" ><i class="fa fa-heart-o"></i> Watchlist</a></li>
+									        </ul>
+									      </li>
 									      <li #{if request.url.indexOf("calendar")>=0}class="active" #{/if}><a href="/user/${user.login}/calendar">Planning</a></li>
 									      <li #{if request.url.indexOf("about")>=0}class="active" #{/if}><a href="/about">About</a></li>
 										#{/if}
 										
 									      <li class="dropdown" style="">
-									    	<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="" ><span style=";position:relative;top:4px"><img src='/public/images/flags/#{if request.cookies.get("PLAY_LANG") != null}${request.cookies.get("PLAY_LANG").value}#{/if}#{else}${lang}#{/else}.gif'></span></a>
+									    	<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="" ><span><img src='/public/images/flags/#{if request.cookies.get("PLAY_LANG") != null}${request.cookies.get("PLAY_LANG").value}#{/if}#{else}${lang}#{/else}.gif'></span></a>
 									        <ul class="dropdown-menu">
 									            <li><a href="/locale?locale=sk&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/sk.gif'> Slovensky</a></li>
 									            <li><a href="/locale?locale=en&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/en.gif'> English</a></li>
@@ -225,7 +234,7 @@
 									  	#{if user}
 									      <li class="dropdown">
 									        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-									        	<img class="img-circle inline" title="${user.fullName}" style="position:relative;bottom:3px;height:24px;" src="/${user.avatarUrl}_64x64">&nbsp;${user.fullName}
+									        	<img class="img-circle inline" title="${user.fullName}" style="height:24px;" src="/${user.avatarUrl}_64x64">&nbsp;${user.fullName}
 									        </a>
 									        <ul class="dropdown-menu">
 									          <li><a href="/user/${user.login}"><i class="fa fa-user"></i> &{'menu.profile'}</a></li>

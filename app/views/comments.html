@@ -1,24 +1,27 @@
+ <br/>
+ <br/>
+ <br/>
+ <h2>Latest Posts</h2>
+ <div class="separator-2"></div>
+    	
 #{if !edit && user && object}
 <div class="row">
 <div class="col-md-12">
     <div class="modal-comments">
-		<div class="well">
-	    	<p class="segoe-bold-h2">Share what's new</p>
+		<div class="">
 			<form action="/event/comment?uuid=${object.uuid}&url=${request.url.urlEncode()}" method="post">
 			
-			<p>
-		    	<img class="" style="max-width: 64px" src="../${user.avatarUrl}_32x32">
-			</p>
+			<h3><img class="img-circle" style="float:left" src="/${user.avatarUrl}_32x32">&nbsp;Share what's new</h3>
 		    <div style="width:100%;">
 		    	<div class="form-group">
-		    		<textarea style="height:64px" class="form-control" maxlength="1000" placeholder="&{'dashboard.addComment'}" name="comment" id="dialog-comment-input"></textarea>
+		    		<textarea rows="4" class="form-control" maxlength="1000" placeholder="&{'dashboard.addComment'}" name="comment" id="dialog-comment-input"></textarea>
 		    	</div>
 		    	
-    	        <button class="btn btn-default btn-sm btn-primary pull-right" style="" id="dialog-comment-button" type="submit">Submit</button>
+    	        <button class="btn btn-default btn-primary pull-right" style="" id="dialog-comment-button" type="submit">Submit</button>
 				<div class="btn-group">
-    	        	<button class="btn btn-default btn-sm btn-success" style="" id="dialog-comment-button" type="submit"><i class="fa fa-link"></i> Url</button>
-    	        	<button class="btn btn-default btn-sm btn-info" style="" id="dialog-comment-button" type="submit"><i class="fa fa-file-image-o"></i> Media</button>
-					<button type="button" id="upload-buttonComments" class="btn btn-sm"><i class="fa fa-upload"></i> File</button>
+    	        	<button class="btn btn-light-gray" style="min-width: 0px;" id="dialog-comment-button" type="submit"><i class="fa fa-link"></i> Url</button>
+    	        	<button class="btn btn-light-gray" style="min-width: 0px;" id="dialog-comment-button" type="submit"><i class="fa fa-file-image-o"></i> Media</button>
+					<button class="btn btn-light-gray" style="min-width: 0px;" type="button" id="upload-buttonComments"><i class="fa fa-upload"></i> File</button>
 				</div>				
 				
 				<!-- File upload -->
@@ -76,7 +79,6 @@
 #{if comments}
 <div class="row">	
 	<div class="col-md-12">
-    	<p class="segoe-bold-h2">Comments</p>
 		<table class="table table-hover ">
 			#{list items:comments, as:'item'}
 		       <tr class='' style='position:relative'>
@@ -86,11 +88,11 @@
 				       #{/if} 
 				        
 				       <div style='display:table-cell;padding-right:10px'>
-				       	<img class='image-thumbnail avatar32'  src='../${item.user.avatarUrl}'> 
+				       	<img class='img-circle avatar32'  src='../${item.user.avatarUrl}'> 
 				       </div>
 				
 				       <div style='display:table-cell;vertical-align:top;'>
-					       <div style='font-size:0.9em;width:100%;padding-bottom:5px;'>
+					       <div>
 					       		<a href='/user/${item.user.login}'>${item.user.fullName}</a> on 
 						   		<span>${item.created.format("dd MMM, yyyy")}</span>
 				   				<span>#{time time:item.created/}</span>

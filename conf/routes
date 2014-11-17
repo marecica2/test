@@ -1,6 +1,6 @@
 GET     /										Application.home
 GET     /home									Application.home
-GET     /dashboard		                        Application.dashboard
+GET     /dashboard/{type}                       Application.dashboard
 GET     /calendar                               Application.calendar
 GET     /calendar/{login}			      		Application.calendarUser
 GET     /user/{login}/calendar		      		Application.calendarUser

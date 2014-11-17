@@ -135,19 +135,16 @@
 	#{if listing}
 	<div class="container">
 		<div class="row">
-			<div class="col-md-12 shadow" style="padding:0px;background:white">
-				
+			<div class="col-md-12 shadow" style="padding:0px;background: #fafafa">
 				<a href="/listing-new?uuid=${listing.uuid}">
 					<img class="proggresive" style="float:left;" src="../${listing.imageUrl}_128x128">
 				</a>
 				<div style="float:left;padding:15px;">
-				<p>
-		  			<a href="/listing-new?uuid=${listing.uuid}" class=" color-link underline black" style=""><img class="img-circle" src="../${listing.user.avatarUrl}_32x32"> ${listing.user.fullName}</a>
-					&middot; ${listing.category}
-				</p>
-	  			<p>	
-		  			<a href="/listing-new?uuid=${listing.uuid}" class="segoe color-link underline" style="font-size:2.3em">${listing.title}</a>
-	  			</p>
+					<p>
+			  			<a href="/listing-new?uuid=${listing.uuid}" class="" style=""><img class="img-circle" src="../${listing.user.avatarUrl}_32x32"> ${listing.user.fullName}</a>
+						&middot; ${listing.category}
+					</p>
+			  		<a href="/listing-new?uuid=${listing.uuid}" class="anchor" style="font-size:1.3em">${listing.title}</a>
 				</div>
 	  			<div class="clearfix"></div>
 			</div>
@@ -163,17 +160,16 @@
 		
 <div id='calendar' class="container" style="min-height:60%;">
 	<div class="row">
-		<div class="col-md-12 shadow" style="padding:15px;background:white">
+		<div class="col-md-12">
 			#{if userDisplayed && listing}
 			#{/if}	
 			#{else}
 				<h2><i class="fa fa-calendar"></i> Planning</h2>
-				<hr>
+				<div class="separator-2"></div>			
 			#{/else}
 			<div class="" id="calendar-div"></div>
 		</div>
 	</div>
-		
 </div>
 
 
@@ -186,66 +182,45 @@
 <div class="modal-content">
 <div class="modal-body">
 
-<div id='event-popup' style='font-family:Arial;font-size:1.1em;color:gray' >
+<div id='event-popup'>
 	<div class='arrow'></div>
 	<div class='popover-content'>
 		<span id="popup-close" class="color-link" style='float: right; margin-left:10px;pull-right; cursor: pointer;'><i class='fa fa-times fa-2x'></i></span> 
-		<span style='float: left;'>
-			<span style="font-size:1.5em" class="segoe-bold truncate event-title"> </span> 
-			<span class="popup-event-approvement" style="display:none;position:relative;top:-3px;">
-				<a class="btn btn-primary event-anchor popup-event-approve btn-xs" href='' style="margin:2px;" id="" data-url="/event/approve?event="><i class="fa fa-check"></i> &{'dashboard.approve'}</a>
-				<a class="btn btn-danger event-anchor popup-event-decline btn-xs" href='' style="margin:2px;" id="" data-url="/event/decline?event="><i class="fa fa-times"></i> &{'dashboard.decline'}</a>
-			</span>
-		</span>
+		<div style='float: left;'>
+			<h2> 
+				<span class="truncate event-title"></span>
+				<span class="popup-event-approvement" style="display:none;position:relative;top:-3px;">
+					<a class="btn btn-white btn-sm event-anchor popup-event-approve" href='' style="margin:2px;" id="" data-url="/event/approve?event="><i class="fa fa-check"></i> &{'dashboard.approve'}</a>
+					<a class="btn btn-white btn-sm event-anchor popup-event-decline" href='' style="margin:2px;" id="" data-url="/event/decline?event="><i class="fa fa-times"></i> &{'dashboard.decline'}</a>
+				</span>
+			</h2> 
+		</div>
 		<br/>
 		<br/>
 		<div style="clear:both"></div>
 
 		<div>
-			<i class="fa fa-clock-o fa-1x"></i> <nobr class="event-time-from"></nobr> <strong> - </strong> <nobr class="event-time-to"></nobr>
+			<i class="fa fa-clock-o fa-1x"></i> <span class="event-time-from"></span> <strong> - </strong> <span class="event-time-to"></span>
 		</div>
 		<div class="event-createdByName"></div>
-		<br/>
 		<div class="popup-edit-event">
 		
-			<strong>About</strong>
+			<h3>About</h3>
 			<p class="popup-event-description">
 			</p>
 
-			<strong class="">&{'dashboard.guests'}</strong>
-			
-			<div>
-				<form>
-					<div class="form-group">
-						<table class=" dialog-invite-list" data-checkboxes="false" style="width:100%;">
-						</table>
-					</div>
-				</form>
+			<h3>&{'dashboard.guests'}</h3>
+			<div class="form-group">
+				<table class=" dialog-invite-list" data-checkboxes="false" style="width:100%;">
+				</table>
 			</div>
 		
-			<strong class="">&{'dashboard.actions'}</strong>
-			<p class="popup-event-type-livecast" style="display:none;">
-				<i class="fa fa-arrow-circle-o-right"></i> <a href='' data-url="/upstream?id=" class="event-anchor" target="_blank">&{'dashboard.startLivestream'}</a><br/>
-				<i class="fa fa-eye"></i> <a class="event-anchor" data-url='/livestream?id=' href="" target="_blank">&{'dashboard.viewLivestream'}</a><br/>
-			</p>
-			
-			<p class="popup-event-type-p2p" style="display:none;">
-				<i class="fa fa-arrow-circle-o-right"></i> <a class="event-anchor" data-url="/room?id=" href="" target="_blank">&{'dashboard.joinMeeting'}</a><br/>
-			</p>			
-			<br/>
-			
 			<span style="float:left">
-				<a href='' data-url="/event-detail?action=view&uuid=" style="margin:2px;" class="event-anchor btn btn-primary" id="popup-event-view">&{'dashboard.view'}</a>
+				<a href='' data-url="/event-detail?action=view&uuid=" style="margin:2px;" class="btn btn-default event-anchor" id="popup-event-view">&{'dashboard.view'}</a>
 			</span>
 			<span style="float:right">
-				<a href='#' style="margin:2px;" class="btn btn-default" id="popup-event-delete">&{'dashboard.delete'}</a>
+				<a href='#' style="margin:2px;" class="btn btn-white " id="popup-event-delete">&{'dashboard.delete'}</a>
 			</span>
-			#{if !isPublic}
-				<span style="float:left"><a href='' data-url="/event-detail?action=edit&uuid=" style="margin:2px;" class="event-anchor btn btn-default" id="popup-event-edit">&{'dashboard.edit'}</a></span>
-				<!-- 
-				<span style="float:left"><a href='#' data-url="?event=" target="_blank" id="popup-event-link" class="btn btn-primary event-anchor"><i class="fa fa-link"></i> Link</a>&nbsp;</span>  
-				 -->
-			#{/if}
 			<div style="clear:both"></div>
 		</div>
 		
@@ -260,14 +235,13 @@
 					#{/list}
 				</select>
 			#{/else}
-			<!-- input type="text" class="form-control" id="popup-event-title" maxlength="50" placeholder="&{'dashboard.title'}" style="margin-bottom:5px" /-->
 			
 			<span class="pull-right">
 				#{if userDisplayed && listing}
-					<button class="btn btn-primary event-dialog-propose">Request for Event</button> 
+					<button class="btn btn-white  event-dialog-propose">Request for Event</button> 
 				#{/if}
 				#{else}
-					<button class="btn btn-default event-dialog-create">&{'dashboard.save'}</button> 
+					<button class="btn btn-white  event-dialog-create">&{'dashboard.save'}</button> 
 				#{/else}
 			</span>
 			<div style="clear:both"></div>
