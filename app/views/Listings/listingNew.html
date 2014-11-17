@@ -3,9 +3,9 @@
 #{set 'moreScripts'}
 	<script src="@{'/public/javascripts/lib/bootstrap-timepicker.min.js'}" type="text/javascript"></script>
 	<script src="@{'/public/javascripts/lib/simpleWebRtc.js'}" type="text/javascript" ></script>
-	<script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>	
-	<script src="@{'/public/javascripts/lib/jquery.Jcrop.min.js'}"></script>
 	<script src="@{'/public/javascripts/lib/bootstrap-datepicker.js'}" type="text/javascript"></script>	
+	<script src="@{'/public/javascripts/lib/jquery.Jcrop.min.js'}"></script>
+	<script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>	
 	<script>
 		starInit.aspectRatio = 2.5;
 		#{if listing}
@@ -25,14 +25,17 @@
 	<script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>	
 	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
 	<script src="@{'/public/javascripts/upload.js'}" type="text/javascript"></script>	
+	<script type="text/javascript" src="@{'/public/javascripts/lib/bootstrap-timepicker.min.js'}"></script>
 	<script>
-		starCalendarInit.listing = "${listing.uuid}";
-		var now = (new Date(new Date().getTime())).toJSON();
-		var params = "&start="+now+"&end="+now+"&listing="+starCalendarInit.listing+"&direction=upcoming&type=listing";
-		star.initItems("Upcoming", params);
-
-		var params1 = "&start="+now+"&end="+now+"&listing="+starCalendarInit.listing+"&direction=previous&type=listing";
-		star.initItems("Previous", params1);
+		$(document).ready(function(){
+			starCalendarInit.listing = "${listing.uuid}";
+			var now = (new Date(new Date().getTime())).toJSON();
+			var params = "&start="+now+"&end="+now+"&listing="+starCalendarInit.listing+"&direction=upcoming&type=listing";
+			star.initItems("Upcoming", params);
+	
+			var params1 = "&start="+now+"&end="+now+"&listing="+starCalendarInit.listing+"&direction=previous&type=listing";
+			star.initItems("Previous", params1);
+		});
 	</script>			
 #{/set}
 
@@ -46,10 +49,6 @@
 			padding-right: 15px !important;
     	}	
     </style>
-#{/set}
-
-#{set 'moreScripts'}
-	<script type="text/javascript" src="@{'/public/javascripts/lib/bootstrap-timepicker.min.js'}"></script>
 #{/set}
 
 <!-- set the item object -->
@@ -391,13 +390,12 @@
 			<input type="text" id="event-tags" class="form-control" style="width:100%" name="tags" value="${params.tags}" data-role="tagsinput"> 
 			<script>
 				$(document).ready(function(){
-				    console.log($('#event-tags'));
+				    console.log("xxxx");
 					$('#event-tags').tagsinput({
-					    typeahead: {                  
-					        source: ['perl', 'java', 'girls', 'sex', 'teens']
-					      }
-					});		
-					$('#event-tags').tagsinput('refresh');
+					    typeahead: {
+					      source: ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo']
+					    }
+					});
 				});		
 			</script>
 			<div class="error">#{error 'tags' /}</div>
