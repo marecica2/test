@@ -56,6 +56,16 @@ img {
 	height:inherit;
 }
 
+@media screen and (max-width: 767px) {
+	.input-group {
+		margin-bottom:15px;
+	}
+	.btn-margin {
+		margin-top:15px;
+		margin-bottom:15px;
+	}	
+}
+
 /* theme fixes */
 
 
@@ -67,6 +77,11 @@ img {
 
 
 /* various */
+.btn-margin {
+	margin-top:0px;
+	margin-bottom:0px;
+}
+
 .btn-short {
 	min-width:0px !important;
 }

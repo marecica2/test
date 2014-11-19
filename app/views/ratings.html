@@ -131,7 +131,7 @@
 				       			<br/>
 					       		
 					       		#{if item.comment && item.comment.length() > 10}
-	    				       		  <span style="position:relative;top:8px;">Was this rating helpful?</span>  
+	    				       		<p style="position:relative;top:8px;">Was this rating helpful?</p>  
 						       		#{if user}
 										<div class="btn-group pull-right" style="">
 										  <a href="/rating/${item.uuid}/vote?url=${request.url.urlEncode()}" class="btn btn-white btn-sm controls">Yes</a>

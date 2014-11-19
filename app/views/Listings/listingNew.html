@@ -632,7 +632,7 @@
 					#{if listing}
     	   	   			${listing.title}
 	 	    	   	#{/if}
-	 	    	   	<small>
+	 	    	   	<small style="font-size:0.5em">
 						#{if fromEvent && event}
 							#{if event.privacy == 'private'}
 								<span class="label label-default"><i class="fa fa-lock" title="${event.privacy}"></i> ${event.privacy}</span>
@@ -651,7 +651,7 @@
 								<span class="label label-default"><i class="fa fa-ban" title="${event.charging}"></i> ${event.charging} </span>
 							#{/if}
 							#{if event.charging == 'before'}
-								<span class="label label-danger">${event.price} ${event.currency} </span>
+								<span class="label label-danger">paid ${event.price} ${event.currency} </span>
 							#{/if}						
 						#{/if}		 	    	   	
 						#{else}
@@ -695,29 +695,41 @@
 					   #{if !edit && event}
 					       #{if event.type == 'livecast'}
 								#{if isOwner && (type == null || type != "broadcast") }
-									<i class="fa fa-arrow-circle-o-right"></i> <a href='/event-detail?uuid=${event.uuid}&type=broadcast'>&{'dashboard.startLivestream'}</a>
+									<a class="btn btn-gray btn-sm" href='/event-detail?uuid=${event.uuid}&type=broadcast'><i class="fa fa-arrow-circle-o-right"></i> &{'dashboard.startLivestream'}</a>
 								#{/if}
 								#{if isOwner && (type != null && type == "broadcast") }
-									<i class="fa fa-arrow-circle-o-right"></i> <a href='/event-detail?uuid=${event.uuid}'>&{'dashboard.stopLivestream'}</a>
+									<a class="btn btn-gray btn-sm" href='/event-detail?uuid=${event.uuid}'><i class="fa fa-arrow-circle-o-right"></i> &{'dashboard.stopLivestream'}</a>
 								#{/if}
-								<i class="fa fa-eye"></i> <a href="/event-detail?uuid=${event.uuid}&type=view">&{'dashboard.viewLivestream'}</a>
+								<a class="btn btn-gray btn-sm" href="/event-detail?uuid=${event.uuid}&type=view"><i class="fa fa-eye"></i> &{'dashboard.viewLivestream'}</a>
 							#{/if}
 							
 						   	#{if isOwner && type && type == 'broadcast'}
-						   		<i class="fa fa-microphone"></i> <a href="/event-detail?uuid=${event.uuid}" class="">Stop</a>
+						   		<a class="btn btn-gray btn-sm" href="/event-detail?uuid=${event.uuid}"><i class="fa fa-microphone"></i> Stop</a>
 						   	#{/if} 
 							
 							#{if event.type == 'p2p'}
-								<i class="fa fa-arrow-circle-o-right"></i> <a class="" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank">&{'dashboard.joinMeeting'}</a>
+								<a class="btn btn-gray btn-sm" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank"><i class="fa fa-arrow-circle-o-right"></i> &{'dashboard.joinMeeting'}</a>
 							#{/if}
 						#{/if}
+						<script src="https://apis.google.com/js/platform.js"></script>
+						<span id="placeholder-div5"></span>						
+						<script>
+						  $(document).ready(function(){
+							  gapi.hangout.render('placeholder-div5', {
+							    'topic': 'cats',
+							    'render': 'createhangout',
+							    'hangout_type': 'onair',
+							    'widget_size': 72
+							  });
+						  })
+						</script>							
 		    	   </p>
 		    	#{/if}				
     	   		<strong>Tags</strong><br/>
     	   		#{if listing && listing.tags}
 	    		    #{set tags = listing.tags.split(",") /}
 	    	    	#{list items:tags, as:'tag'}
-	    	    		<a href="/events?search=${tag}" style="font-size:1.0em" class="btn btn-default btn-short btn-sm">${tag}</a>
+	    	    		<a href="/events?search=${tag}" style="font-size:1.0em" class="btn btn-white btn-short btn-sm">${tag}</a>
 	    	    	#{/list}
     	    	#{/if}
 			</div>

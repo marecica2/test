@@ -15,19 +15,19 @@
 <div class="container">				
 	<div class="row">
 		<div class="col-md-8">
-		
+			#{if listings}
+				<br/>
+				#{set items:listings /}
+				#{set forEvents:false /}
+				#{include 'listingsList.html' /}
+			#{/if}	
+
 			<div>
 				<h2 class="">About ${usr.firstName}</h2>
 				#{set usr:usr /}
 				#{include 'userAbout.html' /}
 			</div>
 			<br>
-				  	
-			#{if listings}
-				#{set items:listings /}
-				#{set forEvents:false /}
-				#{include 'listingsList.html' /}
-			#{/if}	
 			
 			<div>
 				#{set object:usr /}

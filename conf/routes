@@ -1,5 +1,6 @@
 GET     /										Application.home
 GET     /home									Application.home
+GET     /channels								Application.channels
 GET     /dashboard/{type}                       Application.dashboard
 GET     /calendar                               Application.calendar
 GET     /calendar/{login}			      		Application.calendarUser

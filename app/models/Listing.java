@@ -101,11 +101,13 @@ public class Listing extends Model
         return Listing.find("byUser", user).fetch(500);
     }
 
-    public static List<Listing> getFiltered(Integer first, Integer count, Listing listing)
+    public static List<Listing> getFiltered(Integer first, Integer count, ListingFilter listing)
     {
         String query = "Select l from Listing l where 1 = 1 ";
         if (listing.category != null)
             query += " and l.category  = :category ";
+        if (listing.search != null)
+            query += " and CONCAT(l.title, l.tags) like :search ";
 
         query += " order by l.created desc";
         //Logger.error(query);
@@ -113,6 +115,8 @@ public class Listing extends Model
 
         if (listing.category != null)
             q.setParameter("category", listing.category);
+        if (listing.search != null)
+            q.setParameter("search", "%" + listing.search + "%");
 
         if (first != null && count != null)
         {

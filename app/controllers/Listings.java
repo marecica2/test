@@ -12,6 +12,7 @@ import models.Event;
 import models.FileUpload;
 import models.Followers;
 import models.Listing;
+import models.ListingFilter;
 import models.Rating;
 import models.User;
 import play.i18n.Messages;
@@ -33,10 +34,11 @@ public class Listings extends BaseController
         final User user = getLoggedUser();
         final Integer first = request.params.get("first") != null ? Integer.parseInt(request.params.get("first")) : null;
         final Integer count = request.params.get("count") != null ? Integer.parseInt(request.params.get("count")) : null;
-        final String category = request.params.get("category");
 
-        final Listing filterListing = new Listing();
-        filterListing.category = category;
+        final ListingFilter filterListing = new ListingFilter();
+        filterListing.search = StringUtils.getStringOrNull(request.params.get("search"));
+        filterListing.sort = StringUtils.getStringOrNull(request.params.get("sort"));
+        filterListing.category = StringUtils.getStringOrNull(request.params.get("category"));
 
         List<ListingDTO> ListingsDto = new ArrayList<ListingDTO>();
         List<Listing> listings = Listing.getFiltered(first, count, filterListing);

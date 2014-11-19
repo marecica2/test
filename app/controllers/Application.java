@@ -14,7 +14,7 @@ import play.mvc.Before;
 //@With(Secure.class)
 public class Application extends BaseController
 {
-    @Before(unless = { "calendarUser", "users", "home" })
+    @Before(unless = { "calendarUser", "users", "home", "channels" })
     static void checkAccess() throws Throwable
     {
         checkAuthorizedAccess();
@@ -22,12 +22,15 @@ public class Application extends BaseController
 
     public static void home()
     {
-        final Boolean isPublic = false;
         final User user = getLoggedUser();
-        final Account account = user != null ? user.account : null;
         List<User> users = User.getUsers();
-        List<Listing> listings = null;
-        render(user, account, isPublic, users, listings);
+        render(user, users);
+    }
+
+    public static void channels()
+    {
+        final User user = getLoggedUser();
+        render(user);
     }
 
     public static void dashboard(String type)

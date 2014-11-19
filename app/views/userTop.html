@@ -18,7 +18,7 @@
 			</div>
 		</div>
 		
-	  	<div class="col-md-5 col-xs-height col-top">
+	  	<div class="col-md-6 col-xs-height col-top side vertical-divider-right">
 			<h2>
 		  		#{if usr.lastOnlineTime && usr.lastOnlineTime.getTime() > (System.currentTimeMillis() - 20000) }
 		  			<i class="text-default icon-record"></i>
@@ -30,7 +30,7 @@
 				<a class="anchor" href="/user/${usr.login}">${usr.fullName}</a>
 				
 		    	#{if userProfile}
-					<span style="position:relative;bottom:7px">
+					<span style="position:relative;bottom:3px;right:15px">
 				    	#{if user && isOwner}
 				    		<a href="/settings?edit=true" class="btn btn-white btn-sm controls pull-right"><i class="fa fa-pencil"></i> Edit Profile</a> 
 				    	#{/if}			
@@ -60,35 +60,27 @@
 			</dl>	
 		</div>	
 		
-	  	<div class="col-md-4 col-xs-height col-top" >
+	  	<div class="col-md-3 col-xs-height col-top" >
 	  	
-			<aside class="sidebar col-md-4 col-xs-height col-top">
-				<div class="side vertical-divider-left">
-					<div class="block clearfix">
-						<h5 class="title margin-top-clear">Followers</h5>
-						#{if followers}
-							<p>
-							#{list items:followers, as:'item'}
-					    		<a href="/user/${item.followSource.login}"><img class="pull-left" style="margin:1px" src="/${item.followSource.avatarUrl}_32x32"></a>
-							#{/list}	
-							</p>						
-						#{/if}
-						
-						<div style="margin-top:20px" class="clearfix">&nbsp;</div>
-						
-						<h5 class="title">Following</h5>
-						#{if followees}
-							<p>
-							#{list items:followees, as:'item'}
-					    		<a href="/user/${item.followTarget.login}"><img class="pull-left " style="margin:1px" src="/${item.followTarget.avatarUrl}_32x32"></a>
-							#{/list}
-							</p>			
-						#{/if}	
-						
-						
-					</div>
-				</div>
-			</aside>
+				<h5 class="title margin-top-clear">Followers</h5>
+				#{if followers}
+					<p>
+					#{list items:followers, as:'item'}
+			    		<a href="/user/${item.followSource.login}"><img class="pull-left" style="margin:1px" src="/${item.followSource.avatarUrl}_32x32"></a>
+					#{/list}	
+					</p>						
+				#{/if}
+				
+				<div class="clearfix"></div>
+				<br/>
+				<h5 class="title">Following</h5>
+				#{if followees}
+					<p>
+					#{list items:followees, as:'item'}
+			    		<a href="/user/${item.followTarget.login}"><img class="pull-left " style="margin:1px" src="/${item.followTarget.avatarUrl}_32x32"></a>
+					#{/list}
+					</p>			
+				#{/if}	
 	  	</div>	
 	  					
 	</div>				

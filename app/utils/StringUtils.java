@@ -71,4 +71,12 @@ public class StringUtils
         return value;
     }
 
+    public static String getStringOrNull(String string)
+    {
+        if (string != null && string.length() > 0)
+            return string;
+        else
+            return null;
+    }
+
 }
