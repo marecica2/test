@@ -26,7 +26,7 @@
 					<li data-transition="random" data-slotamount="7" data-masterspeed="500" data-saveperformance="on" data-title="Premium HTML5 template">
 					
 					<!-- main image -->
-					<img src="images/slider-1-slide-1.jpg"  alt="slidebg1" data-bgposition="center top" data-bgfit="cover" data-bgrepeat="no-repeat">
+					<img src="/images/slider-1-slide-education.jpg"  alt="slidebg1" data-bgposition="center top" data-bgfit="cover" data-bgrepeat="no-repeat">
 
 					<!-- LAYER NR. 1 -->
 					<div class="tp-caption default_bg large sfr tp-resizeme"
@@ -35,7 +35,7 @@
 						data-speed="600"
 						data-start="1200"
 						data-end="9400"
-						data-endspeed="600">Premium HTML5 template
+						data-endspeed="600">Widgr
 					</div>
 
 					<!-- LAYER NR. 2 -->
@@ -55,7 +55,7 @@
 						data-speed="600"
 						data-start="1600"
 						data-end="9400"
-						data-endspeed="600">100% Responsive
+						data-endspeed="600">Find help
 					</div>
 
 					<!-- LAYER NR. 4 -->
@@ -75,7 +75,7 @@
 						data-speed="600"
 						data-start="1800"
 						data-end="9400"
-						data-endspeed="600">Bootstrap Based
+						data-endspeed="600">Get help
 					</div>
 
 					<!-- LAYER NR. 6 -->
@@ -95,27 +95,7 @@
 						data-speed="600"
 						data-start="2000"
 						data-end="9400"
-						data-endspeed="600">Packed Full of Features
-					</div>
-
-					<!-- LAYER NR. 8 -->
-					<div class="tp-caption dark_gray_bg sfl medium tp-resizeme"
-						data-x="0"
-						data-y="320" 
-						data-speed="600"
-						data-start="2200"
-						data-end="9400"
-						data-endspeed="600"><i class="icon-check"></i>
-					</div>
-
-					<!-- LAYER NR. 9 -->
-					<div class="tp-caption light_gray_bg sfb medium tp-resizeme"
-						data-x="50"
-						data-y="320" 
-						data-speed="600"
-						data-start="2200"
-						data-end="9400"
-						data-endspeed="600">Very Easy to Customize
+						data-endspeed="600">Get paid for helping other
 					</div>
 
 					<!-- LAYER NR. 10 -->
@@ -135,12 +115,22 @@
 						data-speed="600"
 						data-start="2700"
 						data-end="9400"
-						data-endspeed="600"><img src="images/slider-1-layer-1.png" alt="">
+						data-endspeed="600">
+						
+						#{if ratings && ratings.education}
+						<div class="box-style-1 default-bg object-non-visible animated object-visible fadeInUpSmall" data-animation-effect="fadeInUpSmall" data-effect-delay="0">
+							<i class="fa fa-leaf"></i>
+							<h2>Clean Design and Code</h2>
+							<p>
+								${ratings.education.comment}
+							</p>
+							<a href="page-services.html" class="btn-default btn">Find Out More</a>
+						</div>						
+						#{/if}
 					</div>
-
+					
 					</li>
 					<!-- slide 1 end -->
-
 					<!-- slide 2 start -->
 					<li data-transition="random" data-slotamount="7" data-masterspeed="500" data-saveperformance="on" data-title="Powerful Bootstrap Theme">
 					
@@ -383,7 +373,6 @@
 
 					</li>
 					<!-- slide 3 end -->
-
 				</ul>
 				<div class="tp-bannertimer tp-bottom"></div>
 			</div>
@@ -455,6 +444,59 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
+				
+					<form class="form" role="form" method="get" action="/channels">
+					    <div class="input-group banner-search input-block">
+							<input type="text" class="form-control" autocomplete="off" maxlength="50" name="search" id="query-search" data-provide="typeahead">
+						    <span class="input-group-btn">
+						    	<button class="btn btn-default btn-short btn-margin" style="height:40px;" id="dialog-invite-button" type="submit"><i style="font-size:1.3em" class="fa fa-search"></i></button>
+						    </span>
+					    </div>
+						<script>
+								var src = [];
+								function extractor(query) {
+								    var result = /([^,]+)$/.exec(query);
+								    if(result && result[1])
+								        return result[1].trim();
+								    return '';
+								};
+								
+							  	$("#query-search").typeahead(
+							  	{
+							  	    minLength : 2, 
+							  	    source : function(value, process){
+										  	    $.get("/search?query="+value, function(data){
+										  	        process(data);
+										  	        src = data;
+										  	    });
+							  				},
+							  		        updater: function(item) {
+							  		            var pos = src.indexOf(item);
+							  		            if(pos != -1) {
+							  		                var newSource = 
+							  		                    src.slice(0,pos)
+							  		                    .concat(src.slice(pos+1));
+							  		                //this.source = newSource;
+							  		            }
+							  		            return this.$element.val().replace(/[^,]*$/,'')+item+',';
+							  		        },
+							  		        matcher: function (item) {
+							  		          var tquery = extractor(this.query);
+							  		          if(!tquery) return false;
+							  		          return ~item.toLowerCase().indexOf(tquery)
+							  		        },
+							  		        highlighter: function (item) {
+							  		          
+							  		          var query = extractor(this.query).replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+							  		          return item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+							  		            return '<strong>' + match + '</strong>'
+							  		          })
+							  		        }
+							  	}
+							  	);
+						</script>
+					</form>						
+				
 					<h1 class="text-center title">Features</h1>
 					<div class="separator"></div>
 					<p class="text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>

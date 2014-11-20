@@ -55,6 +55,10 @@ public class ListingDTO
 
     public String category;
 
+    public Integer ratingAvg;
+
+    public Integer ratingCount;
+
     public static ListingDTO convert(Listing listing, User user)
     {
         ListingDTO l = new ListingDTO();
@@ -66,6 +70,8 @@ public class ListingDTO
         else
             l.isOwner = listing.user.equals(user) ? true : false;
         l.type = listing.type;
+        l.ratingAvg = listing.getRatingAvg();
+        l.ratingCount = listing.ratingCount != null ? listing.ratingCount : 0;
         l.price = listing.price;
         l.currency = listing.currency;
         l.category = listing.category;

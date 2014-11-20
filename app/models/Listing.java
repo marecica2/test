@@ -77,6 +77,10 @@ public class Listing extends Model
 
     public Boolean chatEnabled;
 
+    public Integer ratingCount;
+
+    public Integer ratingStars;
+
     @ManyToOne
     @JoinColumn(name = "account_id")
     public Account account;
@@ -133,6 +137,14 @@ public class Listing extends Model
         String description = this.description.replaceAll("\\*(.+?)\\*", "<strong>$1</strong>");
         this.description = description.replaceAll("\n", "<br/>");
         return description;
+    }
+
+    public Integer getRatingAvg()
+    {
+        if (ratingCount == null || ratingStars == null)
+            return 0;
+        float sum = ratingStars;
+        return Math.round(sum / ratingCount);
     }
 
 }

@@ -87,8 +87,8 @@ star.generateItemsHtml = function(data, prefix){
             
             html += "<div class='event-box shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
             html += "   <div class='overlay-container'>";
-            html += "       <img src='/"+item.imageUrl+"_128x128' alt=''>";
             html += "       <mark style='position:absolute;bottom:0px;padding:5px' class='title'><img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/"+item.createdByAvatarUrl+"_32x32'>"+item.createdByName+" </mark>";
+            html += "       <img src='/"+item.imageUrl+"_128x128' alt=''>";
             html += "       <div class='overlay'>";
             html += "           <div class='overlay-links'>";
             html += "               <a href='/listing-new?uuid="+item.uuid+"'><i class='fa fa-link'></i></a>";
@@ -114,9 +114,12 @@ star.generateItemsHtml = function(data, prefix){
             html += "   <br/>";            
             html += "   <p class='event-box-link'>";            
             for(var j = 0; j < 5; j++){
-                html += "<i class='fa fa-star' data-value='1'></i>";
+                if(j < item.ratingAvg)
+                    html += "<i class='fa fa-star' data-value='1'></i>";
+                else
+                    html += "<i class='fa fa-star-o' data-value='1'></i>";
             }
-            html += "   12 reviews";
+            html += " " + item.ratingCount + " reviews";
             html += "   </p>";
             
             html += "   </div>";
@@ -144,8 +147,8 @@ star.generateItemsHtml = function(data, prefix){
             } else {
                 html += "<div class='event-box shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
                 html += "   <div class='overlay-container'>";
-                html += "       <img src='/"+item.imageUrl+"_128x128' alt=''>";
                 html += "       <mark style='position:absolute;bottom:0px;padding:5px' class='title'><img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/"+item.createdByAvatarUrl+"_32x32'>"+item.createdByName+" </mark>";
+                html += "       <img src='/"+item.imageUrl+"_128x128' alt=''>";
                 html += "       <div class='overlay'>";
                 html += "           <div class='overlay-links'>";
                 html += "               <a href='/event-detail?uuid="+item.uuid+"'><i class='fa fa-link'></i></a>";

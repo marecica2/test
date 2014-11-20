@@ -14,9 +14,8 @@ import play.db.jpa.Model;
 @Entity
 public class Rating extends Model
 {
-    public static final String TYPE_EVENT = "event";
     public static final String TYPE_USER = "user";
-    public static final String TYPE_TOPIC = "topic";
+    public static final String TYPE_LISTING = "listing";
 
     @ManyToOne
     public User user;
@@ -48,6 +47,12 @@ public class Rating extends Model
         return Rating.find("uuid = ?", uuid).first();
     }
 
+    public static Object getPopularByCategory(String category)
+    {
+        return Rating.find("select r, l from Rating r, Listing l where r.objectUuid = l.uuid and r.type = 'listing' and l.category = ? and r.stars > 3 order by r.votes desc r.stars desc ",
+                category).first();
+    }
+
     public Rating saveRating()
     {
         this.created = new Date();
@@ -71,7 +76,7 @@ public class Rating extends Model
         Integer twoStars = 0;
         Integer oneStars = 0;
         Integer total = ratings.size();
-        Integer sum = 0;
+        double sum = 0;
 
         if (ratings != null && ratings.size() > 0)
         {
@@ -91,7 +96,8 @@ public class Rating extends Model
             }
 
             stats.put("totalStars", total);
-            stats.put("avgStars", sum / total);
+            final long avg = Math.round(sum / total);
+            stats.put("avgStars", avg);
             stats.put("oneStars", oneStars);
             stats.put("oneStarsPercent", (oneStars * 1.0) / total * 100.0);
             stats.put("twoStars", twoStars);
@@ -105,4 +111,5 @@ public class Rating extends Model
         }
         return stats;
     }
+
 }

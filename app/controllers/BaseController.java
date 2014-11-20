@@ -41,6 +41,12 @@ public class BaseController extends Controller
         redirect(UriUtils.redirectStr(url));
     }
 
+    public static void redirectToLogin(String url)
+    {
+        flash.put("url", url);
+        redirect("/login?url=" + UriUtils.urlEncode(url));
+    }
+
     public static User getLoggedUser()
     {
         final String userLogin = getUserLogin();

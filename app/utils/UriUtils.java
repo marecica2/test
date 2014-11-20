@@ -2,6 +2,7 @@ package utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,18 @@ public class UriUtils
         url = url.replaceAll("amp;", "");
         url = url.replaceAll("\r", "");
         url = url.replaceAll("\n", "");
+        return url;
+    }
+
+    public static String urlEncode(String url)
+    {
+        try
+        {
+            url = URLEncoder.encode(url, "UTF-8");
+        } catch (UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
         return url;
     }
 

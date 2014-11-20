@@ -1,6 +1,8 @@
 package controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import models.Account;
 import models.Activity;
@@ -8,13 +10,16 @@ import models.Attendance;
 import models.Event;
 import models.Followers;
 import models.Listing;
+import models.Rating;
 import models.User;
+import play.cache.Cache;
 import play.mvc.Before;
+import dto.Search;
 
 //@With(Secure.class)
 public class Application extends BaseController
 {
-    @Before(unless = { "calendarUser", "users", "home", "channels" })
+    @Before(unless = { "calendarUser", "users", "home", "channels", "search" })
     static void checkAccess() throws Throwable
     {
         checkAuthorizedAccess();
@@ -24,7 +29,27 @@ public class Application extends BaseController
     {
         final User user = getLoggedUser();
         List<User> users = User.getUsers();
-        render(user, users);
+        Search.tags("wi");
+
+        Map<String, Object> ratings = (Map<String, Object>) Cache.get("ratings");
+        if (ratings == null || true)
+        {
+            ratings = new HashMap<String, Object>();
+            Object r1 = Rating.getPopularByCategory("education");
+            Object r2 = Rating.getPopularByCategory("sport");
+            Object r3 = Rating.getPopularByCategory("health");
+            ratings.put("education", r1);
+            ratings.put("sport", r2);
+            ratings.put("health", r3);
+            Cache.add("ratings", ratings, "1h");
+        }
+        render(user, users, ratings);
+    }
+
+    public static void search(String query)
+    {
+        List<String> result = Search.tags(query.toLowerCase());
+        renderJSON(result);
     }
 
     public static void channels()
@@ -54,10 +79,16 @@ public class Application extends BaseController
         final User user = getLoggedUser();
         if (login != null)
             userDisplayed = User.getUserByLogin(login);
+
         final List<Followers> followers = Followers.getFollowers(userDisplayed);
         final List<Followers> followees = Followers.getFollowing(userDisplayed);
+
         if (request.params.get("listing") != null)
+        {
+            if (user == null)
+                redirectToLogin(request.url);
             flash.put("warning", "Click and drag to create time request for event.");
+        }
         calendarRender(userDisplayed, user, followers, followees);
     }
 

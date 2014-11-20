@@ -77,6 +77,27 @@ img {
 
 
 /* various */
+@media screen and (min-width: 767px) {
+	.banner-search {
+		position:absolute;
+		top:-24%;
+		left:15px;
+		z-index: 9999;	
+	}
+	.input-block {
+		width:300px;
+	}
+}
+@media screen and (max-width: 767px) {
+	div.banner {
+		display:none;	
+	}
+	
+	.input-block {
+		width:100%;
+	}
+}
+
 .btn-margin {
 	margin-top:0px;
 	margin-bottom:0px;
@@ -118,6 +139,16 @@ img {
 	float:left;
 	margin:0 15px 15px 0; 
 	text-align:left
+}
+
+.full-width > .event-box {
+	width:100%;
+	height:280px;
+	margin:0 0 15px 0; 	
+}
+
+.full-width > .event-box > .overlay-container > img {
+	width:100% !important;
 }
 
 .event-box-link {

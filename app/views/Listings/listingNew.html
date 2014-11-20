@@ -775,7 +775,7 @@
 						<h4>
 							<i class="icon-back-in-time"></i>Upcoming Events
 						</h4>
-						<div id="itemsListUpcoming"></div>
+						<div id="itemsListUpcoming" class="full-width"></div>
 						<div class="spinner-container1">
 							<div class="spinner-container">
 								<div id="spinnerUpcoming" class="spinner-load"></div>
@@ -787,7 +787,7 @@
 						<h4>
 							<i class="icon-back-in-time"></i>Recent Events
 						</h4>
-						<div id="itemsListPrevious"></div>
+						<div id="itemsListPrevious" class="full-width"></div>
 						<div class="spinner-container1">
 							<div class="spinner-container">
 								<div id="spinnerPrevious" class="spinner-load"></div>
@@ -804,14 +804,10 @@
 			<!-- ratings -->
 			<div>
 				<!-- ratings -->
-				#{if fromEvent}
-					#{set object:event /}
-					#{set ratingType:"event" /}
-				#{/if}
-				#{else}
+				#{if listing}
 					#{set object:listing /}
 					#{set ratingType:"listing" /}
-				#{/else}
+				#{/if}
 				#{include 'ratings.html' /}				
 			</div>		
 		</div>

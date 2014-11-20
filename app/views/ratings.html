@@ -11,7 +11,7 @@
 		<p>
        		#{list items:1..5, as:'i'}
        			#{if stats.get("avgStars") >= i}
-				    <i class="fa fa-star fa-2x" data-value="1"></i>
+				    <i class="fa fa-star fa-2x text-default" data-value="1"></i>
        			#{/if}
        			#{else}
 				    <i class="fa fa-star-o fa-2x" data-value="1"></i>
@@ -126,8 +126,8 @@
 					       		<p style='color:black;padding-top:5px;width:100%'>
 						       		${item.comment}
 					       		</p>
-				       			<img class="img-circle" src="/${item.user.avatarUrl}_32x32">
-				       			<strong><a href='/user/${item.user.login}'>${item.user.fullName}</a></strong>
+				       			<img class="img-circle avatar22" src="/${item.user.avatarUrl}_32x32">
+				       			<span><a href='/user/${item.user.login}'>${item.user.fullName}</a></span>
 				       			<br/>
 					       		
 					       		#{if item.comment && item.comment.length() > 10}

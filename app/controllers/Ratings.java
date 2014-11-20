@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Listing;
 import models.Rating;
 import models.User;
 import play.mvc.With;
@@ -26,6 +27,21 @@ public class Ratings extends BaseController
         r.uuid = RandomUtil.getDoubleUUID();
         r.comment = comment;
         r.saveRating();
+
+        if (type.equals(Rating.TYPE_LISTING))
+        {
+            Listing listing = Listing.get(uuid);
+            if (listing != null)
+            {
+                if (listing.ratingCount == null)
+                    listing.ratingCount = 0;
+                if (listing.ratingStars == null)
+                    listing.ratingStars = 0;
+                listing.ratingCount += 1;
+                listing.ratingStars += stars;
+                listing.save();
+            }
+        }
         redirectTo(url);
     }
 
@@ -35,6 +51,24 @@ public class Ratings extends BaseController
         {
             final Rating r = Rating.getByUuid(uuid);
             r.delete();
+
+            if (r.type.equals(Rating.TYPE_LISTING))
+            {
+                Listing listing = Listing.get(r.objectUuid);
+                if (listing != null)
+                {
+                    if (listing.ratingCount != null && listing.ratingCount > 0)
+                    {
+                        listing.ratingCount -= 1;
+                    }
+                    if (listing.ratingStars != null && listing.ratingStars > 0)
+                    {
+                        listing.ratingStars -= r.stars;
+                    }
+                    listing.save();
+                }
+            }
+
             redirectTo(url);
         } catch (Exception e)
         {
