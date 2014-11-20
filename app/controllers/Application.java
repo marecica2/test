@@ -11,10 +11,10 @@ import models.Event;
 import models.Followers;
 import models.Listing;
 import models.Rating;
+import models.Search;
 import models.User;
 import play.cache.Cache;
 import play.mvc.Before;
-import dto.Search;
 
 //@With(Secure.class)
 public class Application extends BaseController
@@ -40,6 +40,7 @@ public class Application extends BaseController
             Object r3 = Rating.getPopularByCategory("health");
             ratings.put("education", r1);
             ratings.put("sport", r2);
+
             ratings.put("health", r3);
             Cache.add("ratings", ratings, "1h");
         }

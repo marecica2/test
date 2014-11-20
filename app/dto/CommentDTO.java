@@ -1,14 +1,9 @@
 package dto;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import models.Comment;
 import play.db.jpa.Model;
 import utils.WikiUtils;
 
-@Entity
-@Table(name = "Customer")
 public class CommentDTO extends Model
 {
     public String uuid;

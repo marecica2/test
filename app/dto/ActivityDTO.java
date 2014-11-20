@@ -1,13 +1,8 @@
 package dto;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import models.Activity;
 import play.db.jpa.Model;
 
-@Entity
-@Table(name = "Customer")
 public class ActivityDTO extends Model
 {
     public String event;

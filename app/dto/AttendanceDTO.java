@@ -1,13 +1,8 @@
 package dto;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import models.Attendance;
 import play.db.jpa.Model;
 
-@Entity
-@Table(name = "Customer")
 public class AttendanceDTO extends Model
 {
     public String uuid;
