@@ -9,79 +9,68 @@
 <div class="padding container-xs-height">
 	<div class="row row-xs-height">
 		
-
-		<div class="col-md-8 col-xs-height col-top">
-			
-			#{if type == "channels"}
-				<h2>
-					<i class="glyphicon glyphicon-th-large"></i> My Channels
-					<span class="pull-right">
-						<a class="btn btn-white btn-sm controls" href="/listing-new?action=edit&url=${request.url.urlEncode()}"><i class="fa fa-plus"></i> New Channel</a>&nbsp;
-					</span>			
-				</h2>
-				<div class="clearfix"></div>
-				<div class="separator-2"></div>
-				#{if listings}
-					#{set items:listings /}
-					#{set forEvents:false /}
-					#{include 'listingsList.html' /}
-				#{/if}
-			#{/if}
-			
-			
-			#{if type == "watchlist"}
-				#{if watchList && watchList.size() > 0}
-					<h2 ><i class="fa fa-bars"></i> Watch list</h2>
-					<div class="separator-2"></div>
-					#{set items:watchList /}
-					#{include 'eventsList.html' /}	
-					<br/>				
-				#{/if}				
-			#{/if}
-
-			#{if type == "requests"}
-				#{if approved && approved.size() > 0}
-					<h2 ><i class="fa fa-bars"></i> Waiting for approvement</h2>
-					<div class="separator-2"></div>
-					#{set items:approved /}
-					#{include 'eventsList.html' /}	
-					<br/>				
-				#{/if}	
-			#{/if}
-						
-			
-			
-			#{if type == "upcoming"}
-				<h2>
-					<i class="fa fa-arrow-up"></i> <i class="fa fa-clock-o"></i> Upcoming Events
-				</h2>
-				<div class="separator-2"></div>
-				<div id="itemsListUpcoming"></div>
-				<div class="spinner-container1">
-					<div class="spinner-container">
-						<div id="spinnerUpcoming" class="spinner-load"></div>
-						<a id="moreResultsUpcoming" class="spinner-more"><i class=" icon-plus-circled"></i></a>
+		<div class="col-md-7 col-xs-height col-top">
+			<h2>
+				<i class="fa fa-desktop"></i> Dashboard
+				<small><a href="/channel/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm"><i class="fa fa-plus"></i> New Channel</a></small>
+			</h2>
+			#{if listings}
+				#{set items:listings /}
+				#{set forEvents:false /}
+				#{include 'listingsList.html' /}
+			#{/if}				
+		</div>
+		<div class="col-md-2 col-xs-height col-top">
+			<div class="tabs-style-2">
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist">
+					<li class="active"><a href="#h2tab4" role="tab" data-toggle="tab" class="side-padding-short">Upcoming</a></li>
+					<li><a href="#h2tab5" role="tab" data-toggle="tab" class="side-padding-short">Previous</a></li>
+					<li><a href="#h2tab3" role="tab" data-toggle="tab" class="side-padding-short">Requests</a></li>
+					<!-- 
+					<li><a href="#h2tab2" role="tab" data-toggle="tab"><i class="fa fa-list pr-5"></i>Watchlist</a></li>
+					 -->
+				</ul>
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div class="tab-pane fade" id="h2tab2">
+						#{if watchList && watchList.size() > 0}
+							#{set items:watchList /}
+							#{include 'eventsList.html' /}	
+						#{/if}	
+					</div>
+					
+					<div class="tab-pane fade" id="h2tab3">
+						#{if approved && approved.size() > 0}
+							#{set items:approved /}
+							#{include 'eventsList.html' /}	
+						#{/if}	
+					</div>
+					
+					<div class="tab-pane fade tab-pane in active" id="h2tab4">
+						<div id="itemsListUpcoming" class="full-widthd"></div>
+						<div class="spinner-container1">
+							<div class="spinner-container">
+								<div id="spinnerUpcoming" class="spinner-load"></div>
+								<a id="moreResultsUpcoming" class="spinner-more"><i class=" icon-plus-circled"></i></a>
+							</div>
+						</div>	
+					</div>
+					
+					<div class="tab-pane fade" id="h2tab5">
+						<div id="itemsListPrevious" class="full-widthd"></div>
+						<div class="spinner-container1">
+							<div class="spinner-container">
+								<div id="spinnerPrevious" class="spinner-load"></div>
+								<a id="moreResultsPrevious" class="spinner-more"><i class=" icon-plus-circled"></i></a>
+							</div>
+						</div>
 					</div>
 				</div>
-			#{/if}
-
-			#{if type == "recent"}
-				<h2>
-					<i class="fa fa-arrow-down"></i> <i class="fa fa-clock-o"></i> Recent Events
-				</h2>
-				<div class="separator-2"></div>
-				<div id="itemsListPrevious"></div>
-				<div class="spinner-container1">
-					<div class="spinner-container">
-						<div id="spinnerPrevious" class="spinner-load"></div>
-						<a id="moreResultsPrevious" class="spinner-more"><i class=" icon-plus-circled"></i></a>
-					</div>
-				</div>
-			#{/if}
-			
+			</div>		
 		</div>
 
-		<div class="col-md-4 col-xs-height col-top" style="background: #fdfdfd;" >
+		<div class="col-md-3 col-xs-height col-top" style="background: #fdfdfd;" >
 			#{include 'activities.html' /}
 		</div>	
 	</div>

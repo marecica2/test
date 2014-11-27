@@ -71,6 +71,9 @@ function userDetails(data) {
 				<div class="form-group">
 					<label class="" for="login">&{'registration.login'}</label>
 					<input type="text" class="form-control" id="login" name="login" value="#{if request.params.email}${request.params.email}#{/if}#{else}${params.login}#{/else}" placeholder="&{'registration.login'}"/>
+					
+					<input type="hidden" class="form-control" id="url" name="token" value="${request.params.token}"/>
+					<input type="hidden" class="form-control" id="url" name="invitation" value="${request.params.invitation}"/>
 					<input type="hidden" class="form-control" id="facebook" name="facebook"  />
 					<input type="hidden" class="form-control" id="registration" name="registration" value="#{if request.params.id}${request.params.id}#{/if}#{else}${params.registration}#{/else}" />
 					<div class="error">#{error 'login' /}</div>

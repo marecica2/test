@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 
 import play.db.jpa.Model;
 import utils.RandomUtil;
+import utils.WikiUtils;
 
 @Entity
 public class Message extends Model
@@ -55,6 +56,11 @@ public class Message extends Model
     public static Message getById(String id)
     {
         return Message.find("uuid = ? order by created desc", id).first();
+    }
+
+    public String getHtmlBody()
+    {
+        return WikiUtils.parseToHtml(this.body);
     }
 
 }

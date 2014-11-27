@@ -1,0 +1,86 @@
+<html>
+	<body>
+		<div style="max-width:1000px; background-color: ${color2}; font-family: 'Segoe UI Light','Segoe UI','Helvetica Neue Medium', Arial, sans-serif; font-size: 14px; line-height: 1.42857142857143; text-align: left;">
+
+			<!-- Logo widgr part -->			
+			<div style="margin:0px;width:100%; max-width:1000px; background-color: ${color4}">
+				<br/>
+				<div style="color:white; text-decoration:none">
+					<img style="padding-left:20px;" src="${logo}" alt="widgr">
+				</div>
+				<br/>
+			</div>
+
+
+			<!-- Title and User part -->
+			<div style="margin:0px;width:100%; max-width:1000px;">
+				<div style="color:white;">
+					<table style="background-color: ${color0}; border-collapse: collapse; width:100%">
+						<tr>
+							#if($user)
+							<td style="vertical-align:top">
+								<a href="${userUrl}"><img  style="height:128px" src="${userImage}"></a>
+							</td>
+							#end
+							<td style="height:148px;padding-left:20px; width: 100%; font-family: 'Segoe UI Light','Segoe UI','Helvetica Neue Medium', Arial, sans-serif;font-size:1.5em;">
+								#if($user)
+									${user} &nbsp;&nbsp;<a href="${userUrl}" style="color:white;font-size:0.7em;">${userUrlLabel}</a> 
+									<br/>
+								#end
+								${title}
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			
+			
+			<!-- Event part -->
+			#if($event)
+			<div style="background-color: ${color1}">
+				<!-- Channel image part -->
+				<a style="color:white; text-decoration:none;background-color: ${color1}" href="${eventUrl}">
+					<img  style="width:100%; max-width:1000px;" src="${eventImage}">
+				</a>
+				<br/>
+				<div style="margin:0px; color:white ;width:100%; max-width:1000px; padding:20px">
+					<a style="color:white; text-decoration:none" href="${eventUrl}">
+						<span style="padding-left:20px; font-family: 'Segoe UI Light','Segoe UI','Helvetica Neue Medium', Arial, sans-serif;font-size:2.0em;">${event}</span> 
+					</a>
+					&nbsp;&nbsp;<a href="${eventUrl}" style="color:white;font-size:0.9em;">${userUrlLabel}</a><br/>
+					<span style="padding-left:20px; font-family: 'Segoe UI Light','Segoe UI','Helvetica Neue Medium', Arial, sans-serif;font-size:1.3em;">${eventDate} ${eventStart} - ${eventEnd}</span>
+				</div>
+			</div>
+			#end
+			
+			
+			<!-- Main message -->
+			<div style="margin:0px;width:100%; max-width:1000px; color: black; background-color: ${color2}">
+				<br/>
+				<div style="margin:0px;padding:20px; font-size:1.2em;">
+					#if($notification)
+						<h3>${notificationLabel}</h3>
+						<p>${notification}</p>
+					#end
+					${message}
+				</div>
+				<br/>
+			</div>
+			
+			<!-- Second message -->
+			#if($url)
+			<div style="width:100%; max-width:1000px; background-color: ${color3}">		
+				<br/>
+				<p style="margin:0px;padding:20px">
+					<a href="${url}" style="margin:0 30px; color: white; font-size:1.3em; text-decoration: none; background-color: ${color1}; padding:15px;">${urlLabel}</a>
+					#if($url1)
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="${url1}" style="margin:0 30px; color: white; font-size:1.3em; text-decoration: none; background-color: ${color1}; padding:15px;">${urlLabel1}</a>
+					#end
+				</p>
+				<br/>
+			</div>
+			#end
+
+		</div>
+	</body>
+</html>

@@ -34,7 +34,8 @@ $(document).ready(function() {
         if(click){
             var data = {};
             data.type = cal; 
-            starServices.setAgendaType(data, null, null);
+            document.cookie="agenda="+cal;
+            //starServices.setAgendaType(data, null, null);
         }
     });    
 
@@ -156,6 +157,7 @@ $(document).ready(function() {
     
     if(starCalendar.defaultView == "")
         starCalendar.defaultView = "agendaWeek";
+    
     starCalendar.options = {
             header: {
                 center: 'prev,today,next',
@@ -175,8 +177,8 @@ $(document).ready(function() {
             allDaySlot: false,
             slotMinutes: 15,
             slotEventOverlap: true,
-            selectable: starCalendar.isPublic && (!starCalendar.isLogged || starCalendar.userUUID == "") ? false : true,
-            editable: starCalendar.isPublic && (!starCalendar.isLogged || starCalendar.userUUID == "") ? false : true,
+            selectable: starCalendar.editable,
+            editable: starCalendar.editable,
             selectHelper: true,
             axisFormat: 'HH:mm',
             hiddenDays: starCalendar.hiddenDays,
@@ -190,7 +192,7 @@ $(document).ready(function() {
             eventMouseout: starCalendar.mouseOutEvent,
             eventMouseover: starCalendar.mouseOverEvent,
             select: function(start, end, allDay) {
-                if(starCalendarInit.listings)
+                if(starCalendar.listings)
                     starCalendar.selectionNewEvent(calendar, start, end, allDay);
             },
             viewRender: function(view, element) {
@@ -206,24 +208,6 @@ $(document).ready(function() {
                 starCalendar.getEvents(start, end, callback);
             },
             eventAfterRender : function( event, element, view ){
-                var paramEvent = starUtils.getParameterByName("event");
-                if(paramEvent.length > 0 && starCalendar.showEvent == true && paramEvent == event.uuid){
-                    starCalendar.selectedEvent = event;
-                    starCalendar.selectedEventUUID = event.uuid
-                    starCalendar.selectedEventId = event.uuid;
-                    starCalendar.showDialog = true;
-                }
-                
-                if(event.uuid == starCalendar.selectedEventId && starCalendar.showDialog){
-                    starCalendar.showDialog = false;
-                    starCalendar.showEvent = false;
-                    $('#myModal').show();
-                    $('#calendar').hide();
-                    starCalendar.selectedEvent = event;
-                    starCalendar.copyValuesToDialog(starCalendar.selectedEvent);
-                    starCalendar.openEventDialog(event, element, view);
-                }
-                
                 if(event.invisible == undefined || !event.invisible)
                     starCalendar.decorateEvent(event, element, view);
             },
@@ -372,6 +356,7 @@ starCalendar.selectionNewEvent = function(ccc, start, end, allDay) {
 
 
 starCalendar.clickEvent = function(event, jsEvent, view) {
+
     // show hide appropriate content
     starCalendar.selectedEvent = event;
     var popup = $("#myPopover");
@@ -475,7 +460,7 @@ starCalendar.copyValuesToDialog = function(event){
         }
     });    
     
-    $(".event-createdByName").html("<a href='/calendar/"+event.createdByLogin+"'><i class='fa fa-calendar'></i></a> <img class='img-circle avatar22' src='/"+event.createdByAvatarUrl+"'> <a href='/public/user?id="+event.createdBy+"'>" + event.createdByName + "</a>");
+    $(".event-createdByName").html("<a href='/user/"+event.createdByLogin+"/calendar'><i class='fa fa-calendar'></i></a> <img class='img-circle avatar22' src='/"+event.createdByAvatarUrl+"'> <a href='/public/user?id="+event.createdBy+"'>" + event.createdByName + "</a>");
     $(".event-title").val(event.title);
     $(".event-title-label").val(event.title);
     $(".event-title-label").html(event.title);
@@ -537,9 +522,9 @@ starCalendar.getEvents = function(start, end, callback) {
     if(starCalendar.userDisplayedLogin != undefined){
         url = "start="+start.toJSON()+"&end="+end.toJSON()+"&uuid="+starCalendar.userUUID+"&user="+starCalendar.userDisplayedLogin+"&type=request";
     }
-    if(starCalendarInit.listing != undefined){
+    if(starCalendar.listing != undefined){
         url = "start="+start.toJSON()+"&end="+end.toJSON()+"&uuid="+starCalendar.userUUID+"&user="+starCalendar.userDisplayedLogin+"&type=request";
-        //url = "start="+start.toJSON()+"&end="+end.toJSON()+"&uuid="+starCalendar.userUUID+"&listing="+starCalendarInit.listing+"&type=request";
+        //url = "start="+start.toJSON()+"&end="+end.toJSON()+"&uuid="+starCalendar.userUUID+"&listing="+starCalendar.listing+"&type=request";
     }
     
     starCalendar.start = start;

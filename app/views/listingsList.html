@@ -6,30 +6,43 @@
 	});
 </script>
 #{list items:items, as:'item'}
-<div class="shadow-blur" style="background: #fafafa; width:100%; margin:0 0 20px 0;border-top:1px solid #{if item && item.color} ${item.color} #{/if} #{else} #3A87AD #{/else};">
+<div class="shadow-blur" style="background: #fafafa; width:100%; margin:0 0 20px 0;">
 	
-	<div class="anchorLink" data-href="/listing-new?uuid=${item.uuid}" style="cursor:pointer;display:table;text-align:left;width:100%">
+	<div class="anchorLink" data-href="/channel/${item.uuid}" style="cursor:pointer;display:table;text-align:left;width:100%">
    		
-   		<div style="display:table-cell; height:128px; width:170px; min-width:170px; background: url('/${item.imageUrl}') no-repeat center; background-size:cover">
+   		<div style="display:table-cell; height:128px; width:200px; min-width:200px; background: url('/${item.imageUrl}') no-repeat center; background-size:cover; border-right:5px solid #{if item && item.color} ${item.color} #{/if} #{else} #3A87AD #{/else};">
    		</div>
    		
-   		<div style="display:table-cell;vertical-align:top;padding:0 15px 0 15px;">
-			<h5>${item.title}</h5>
+   		<div style="display:table-cell;vertical-align:top;padding:0 15px 0 15px;position:relative;">
+			<h4>${item.title}</h4>
 			<p style="margin-bottom:5px">
-				<img class="inline" style="height:16px" src="../${item.user.avatarUrl}_32x32"> <strong>${item.user.fullName}</strong>  &middot; 
+				<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
+				<strong>${item.user.fullName}</strong>  &middot; 
 				${item.category}  &middot; 
 				${item.privacy}  &middot; 
 				${item.type}
 			</p>
-			<p class="truncate">${item.description.trimDot(100)}</p>
+			#{if isOwner}
+				<a href="/event?action=edit&url=${request.url.urlEncode()}&listingId=${item.uuid}" class="btn btn-light-gray btn-sm btn-right btn-margin">Create event</a>
+			#{/if}
+			
+			#{else}
+				<a href="/user/${usr.login}/calendar?listing=${item.uuid}" class="btn btn-light-gray btn-sm btn-right btn-margin"><i class="fa fa-calendar"></i> Request a Time</a>
+			#{/else}
+			
+			
+			<span class="truncate">${item.getDescriptionHtml().trimDot(140).raw()}</span>
    			<p>
-	   			#{if item.charging}
-	   				<mark class="selected">${item.price} <small>${item.currency}</small></mark>
-		   			<nobr>for 15</nobr> minutes
-	   			#{/if}
-	   			#{else}
-	   				<span class="">Free</span>
-	   			#{/else}
+   			#{if item.charging != 'free'}
+   				<strong>from ${item.price} <small>${item.currency}</small></strong>
+	   			<nobr>for 15</nobr> minutes
+   			#{/if}
+   			#{else}
+   				<strong class="">Free</strong>
+   			#{/else}
+   			#{if item.firstFree}
+   				<span class="label label-default">first free</span>
+   			#{/if}
    			</p>
    		</div>
    	</div>		

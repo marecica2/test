@@ -39,7 +39,7 @@ public class Paypal
 
     private final String version = "93";
 
-    private String paymentAmount = "10";
+    private BigDecimal paymentAmount = new BigDecimal("10");
     private String paymentCurrency = "USD";
     private String returnUrl;
     private String cancelUrl;
@@ -51,7 +51,7 @@ public class Paypal
             String endpoint, String paymentUrl, String percentage)
     {
         this.paymentAmount = e.listing.price;
-        this.paymentCurrency = e.account.currency;
+        this.paymentCurrency = e.user.account.currency;
         this.providerPaypalAccount = providerPaypalAccount;
         this.providerPaypalAccountMicropayment = providerPaypalAccountMicropayment;
         this.returnUrl = returnUrl;
@@ -68,7 +68,7 @@ public class Paypal
     public Paypal(Event e)
     {
         this.paymentAmount = e.listing.price;
-        this.paymentCurrency = e.account.currency;
+        this.paymentCurrency = e.user.account.currency;
     }
 
     public String getReturnUrl()
@@ -172,7 +172,7 @@ public class Paypal
 
     private void processDetails(Event event, StringBuilder sb, DoExpressCheckoutResponse response) throws UnsupportedEncodingException
     {
-        final BigDecimal price = new BigDecimal(paymentAmount);
+        final BigDecimal price = paymentAmount;
         final BigDecimal fee = price.multiply(new BigDecimal(percentage));
 
         final BigDecimal providerPrice = price.subtract(fee);
@@ -185,7 +185,7 @@ public class Paypal
             response.providerPrice = providerPrice;
             response.fee = fee;
             response.price = price;
-            response.account = event.account.paypalAccount;
+            response.account = event.user.account.paypalAccount;
             response.providerAccount = paypalAccount;
         }
 

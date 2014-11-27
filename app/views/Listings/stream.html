@@ -1,0 +1,74 @@
+<!-- stream -->
+#{if fromEvent && !edit}
+<div class="section gray-bg" style="background:#fafafa">
+	<div class="container">	
+		<div class="row">
+			<div class="col-md-12">
+				#{set cols: event.chatEnabled?8:12 /} 
+				<div class="row">
+					#{if event.type == "livecast" && type != "broadcast"}
+					<div class="col-md-${cols}" style="padding:0px;">
+						<object height="500" style="background:black;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/downstream.swf">
+						    <param name='src' value='/public/images/downstream.swf'/>
+						    <param name="movie" value="https://fpdownload.adobe.com/strobe/FlashMediaPlayback.swf" />
+							<param name=FlashVars value="myServerUrl=${rmtp}&myStreamName=${event.uuid}" />
+							<param name="wmode" value="transparent" />
+							<param name="allowFullScreen" value="true" />
+							<param name="allowscriptaccess" value="always" />
+							<param name="quality" value="high" />
+							<param name="menu" value="false" />
+						</object>		
+					</div>
+					#{/if}
+					
+					#{if type == 'broadcast'}
+					<div class="col-md-${cols}" style="padding:0px;">
+						 <object class=""  style="background:black;width:100%;min-height:500px;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/upstream.swf">
+						    <param name='src' value='/public/images/upstream.swf'/>
+							<param name="movie" value="/public/images/upstream.swf" />
+							<param name=FlashVars value="myServerUrl=${rmtp}&myStreamName=${event.uuid}" />
+							<param name="wmode" value="transparent" />
+							<param name="quality" value="high" />
+							<param name="menu" value="false" />
+							<param name="allowFullScreen" value="true" />
+						 </object>	
+					</div>
+					#{/if}
+					
+					#{if event.type == 'p2p'}
+					<div class="col-md-${cols}" style="padding:0px;#{if event.chatEnabled}height:500px;#{/if}#{else}height:100px#{/else}">
+						 <div class="higlight" style="width:100%;height:100px;text-align: center">
+						 	<div style="height: 200px;width: 200px;position: absolute;margin: -50px 0 0 -50px;left:45%;top: 50%;">
+							 	<a class="anchor" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank" ><i style="font-size:6em" class="fa fa-comments"></i><span style="font-size:2em"> Join</span></a>
+						 	</div>
+						 </div>	
+					</div>		
+					#{/if}
+					
+					#{if event.chatEnabled}
+					<div class="col-md-4" style="padding:10px;height:500px;">
+						<div style="height:100%">
+							<div id="content" class="form-control" style="height:440px;color:black;overflow-y: scroll;"></div>
+							<div class="controls">
+								<form onsubmit="return false;">
+									<div class="input-group">
+										<input id="chat-text" class="form-control"> <input id="chat-name" type="hidden" value="${name}"> 
+										<span class="input-group-btn">
+											<button id="chat-send" class="btn btn-gray btn-short" style="margin:0px;height:40px">
+												&{'send'}
+											</button>
+										</span>
+										<div class="clearfix"></div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					#{/if}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+#{/if}
+<!-- stream -->

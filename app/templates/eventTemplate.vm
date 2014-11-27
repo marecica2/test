@@ -1,6 +1,8 @@
 <html>
 	<body>
 		<div style="max-width:1000px; background-color: #4D9CD7; background-color: #F8F8F8; font-family: 'Segoe UI Light','Segoe UI','Helvetica Neue Medium', Arial, sans-serif; font-size: 14px;line-height: 1.42857142857143; text-align: left;">
+			
+			<!-- User part -->
 			<div style="margin:0px;width:100%; max-width:1000px; background-color: #4D9CD7">
 				<br/>
 				<div style="color:white; text-decoration:none">
@@ -19,6 +21,8 @@
 				<br/>
 			</div>
 			
+			<!-- Event time part -->
+			#if($event)
 			<div style="margin:0px;width:100%; max-width:1000px; background-color: rgb(66, 139, 202)">
 				<a style="color:white; text-decoration:none" href="${url}">
 					<span style="padding-left:20px; font-family: 'Segoe UI Light','Segoe UI','Helvetica Neue Medium', Arial, sans-serif;font-size:2.3em;">${title}</span><br/>
@@ -27,7 +31,9 @@
 				<br/>
 				<br/>
 			</div>
+			#end
 			
+			<!-- Channel image part -->
 			<a style="color:white; text-decoration:none" href="${url}">
 				<img  style="width:100%; max-width:1000px;" src="${image}">
 			</a>

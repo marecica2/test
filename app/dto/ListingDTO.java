@@ -59,20 +59,22 @@ public class ListingDTO
 
     public Integer ratingCount;
 
+    private Boolean firstFree;
+
     public static ListingDTO convert(Listing listing, User user)
     {
         ListingDTO l = new ListingDTO();
+        if (user == null)
+            l.isOwner = false;
+        else
+            l.isOwner = user.isOwner(listing);
         l.color = listing.color;
         l.description = listing.description;
         l.title = listing.title;
-        if (user != null)
-            l.isOwner = false;
-        else
-            l.isOwner = listing.user.equals(user) ? true : false;
         l.type = listing.type;
         l.ratingAvg = listing.getRatingAvg();
         l.ratingCount = listing.ratingCount != null ? listing.ratingCount : 0;
-        l.price = listing.price;
+        l.price = listing.price.toString();
         l.currency = listing.currency;
         l.category = listing.category;
         l.state = listing.state;
@@ -83,15 +85,12 @@ public class ListingDTO
         l.uuid = listing.uuid;
         l.isInvited = l.isOwner ? false : true;
         l.createdByUser = false;
-        if (listing.created != null)
-            l.created = listing.created.getTime();
-        if (listing.user != null)
-        {
-            l.createdByName = listing.user.getFullName();
-            l.createdByLogin = listing.user.login;
-            l.createdBy = listing.user.uuid;
-            l.createdByAvatarUrl = listing.user.avatarUrl;
-        }
+        l.created = listing.created.getTime();
+        l.createdByName = listing.user.getFullName();
+        l.createdByLogin = listing.user.login;
+        l.firstFree = listing.firstFree;
+        l.createdBy = listing.user.uuid;
+        l.createdByAvatarUrl = listing.user.avatarUrl;
         return l;
     }
 

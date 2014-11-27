@@ -9,7 +9,7 @@
 <div class="row">
 	<div class="col-md-5">
 		<p>
-       		#{list items:1..5, as:'i'}
+       		#{list items:1..5, as:'i'} 
        			#{if stats.get("avgStars") >= i}
 				    <i class="fa fa-star fa-2x text-default" data-value="1"></i>
        			#{/if}
@@ -65,7 +65,8 @@
 
 <div class="row">
 	<div class="col-md-12">
-		#{if user && !isOwner}
+	
+		#{if user && !isOwner && listing}
 		<div class="modal-comments">
 			<div class="">
 				<form action="/rating?url=${request.url.urlEncode()}" method="post">

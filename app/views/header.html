@@ -159,7 +159,7 @@
 					<!-- logo -->
 					<div class="logo">
 						<a href="/home">
-							<img id="logo" src="/images/logo_purple.png" style="" alt="iDea">
+							<img id="logo" src="/images/logo_purple.png" style="" alt="widgr">
 						</a>
 					</div>
 
@@ -200,53 +200,57 @@
 								<!-- Collect the nav links, forms, and other content for toggling -->
 								<div class="collapse navbar-collapse" id="navbar-collapse-1">
 									<ul class="nav navbar-nav navbar-right">
+								 	  	#{if user && user.unreadMessages}
+								  	  		<li><a href="/mail" id="public-btn-logout"><i style="font-size:1.3em" class="blink text-default fa fa-envelope-o" title="&{'Received new message'}"></i> </a></li>
+									  	#{/if}
+   								  	   <li #{if request.url.indexOf("home")>=0}class="active"#{/if}><a href="/home" id="public-btn-logout">Home</a></li>
 									 	#{if user}
-									 	  #{if user.unreadMessages}
-									  	  	<li><a href="/mail" id="public-btn-logout"><i  class="color fa fa-envelope-o" title="&{'menu.newMessage'}"></i> </a></li>
-										  #{/if}
-									  	  <li ><a href="/home" id="public-btn-logout">Home</a></li>
-									      <li class='dropdown #{if request.url.indexOf("dashboard")>=0} active #{/if}'>
-									    	<a class="dropdown-toggle" data-toggle="dropdown" href="/dashboard/upcoming" title="" >Dashboard</a>
-									        <ul class="dropdown-menu">
-									            <li><a href="/dashboard/upcoming" ><i class="fa fa-clock-o"></i> Upcoming events</a></li>
-									            <li><a href="/dashboard/recent" ><i class="fa fa-clock-o"></i> Recent events</a></li>
-									            <li><a href="/dashboard/channels" ><i class="glyphicon glyphicon-th-large"></i> Manage Channels</a></li>
-									            <li><a href="/dashboard/requests" ><i class="fa fa-check"></i> Event Requests</a></li>
-									            <li><a href="/dashboard/watchlist" ><i class="fa fa-heart-o"></i> Watchlist</a></li>
-									        </ul>
-									      </li>
+									      <li #{if request.url.indexOf("dashboard")>=0}class="active" #{/if}><a href="/dashboard">Dashboard</a></li>
 									      <li #{if request.url.indexOf("calendar")>=0}class="active" #{/if}><a href="/user/${user.login}/calendar">Planning</a></li>
-									      <li #{if request.url.indexOf("about")>=0}class="active" #{/if}><a href="/about">About</a></li>
 										#{/if}
+										
+								      	#{if !user}
+								      		<li #{if request.url.indexOf("about")>=0}class="active" #{/if}><a href="/about">About</a></li>
+								      		<li #{if request.url.indexOf("pricing")>=0}class="active" #{/if}><a href="/pricing">Pricing</a></li>
+								      	#{/if}	
 										
 									      <li class="dropdown" style="">
 									    	<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="" ><span><img src='/public/images/flags/#{if request.cookies.get("PLAY_LANG") != null}${request.cookies.get("PLAY_LANG").value}#{/if}#{else}${lang}#{/else}.gif'></span></a>
 									        <ul class="dropdown-menu">
-									            <li><a href="/locale?locale=sk&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/sk.gif'> Slovensky</a></li>
 									            <li><a href="/locale?locale=en&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/en.gif'> English</a></li>
-									            <li><a href="/locale?locale=cz&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/cz.gif'> Česky</a></li>
-									            <li><a href="/locale?locale=pl&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/pl.gif'> Polski</a></li>
-									            <li><a href="/locale?locale=hu&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/hu.gif'> Magyar</a></li>
 									            <li><a href="/locale?locale=de&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/de.gif'> Deutsch</a></li>
+									            <li><a href="/locale?locale=pl&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/pl.gif'> Polski</a></li>
+									            <li><a href="/locale?locale=sk&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/sk.gif'> Slovensky</a></li>
+									            <li><a href="/locale?locale=cz&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/cz.gif'> Česky</a></li>
+									            <li><a href="/locale?locale=hu&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/hu.gif'> Magyar</a></li>
 									        </ul>
 									      </li>   
 										
 									  	#{if user}
+										  #{if user.isAdmin()}
+									      <li class="dropdown">
+									        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Setup</a>
+									        <ul class="dropdown-menu">
+									          	<li><a href="/admin/users"><i class="icon-users"></i> Users</a></li>
+									          	<li><a href="/admin/publishers"><i class="icon-users"></i> Publisher Requests</a></li>
+									        </ul>
+									      </li>	
+									      #{/if}
 									      <li class="dropdown">
 									        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 									        	<img class="img-circle inline" title="${user.fullName}" style="height:24px;" src="/${user.avatarUrl}_64x64">&nbsp;${user.fullName}
 									        </a>
 									        <ul class="dropdown-menu">
-									          <li><a href="/user/${user.login}"><i class="fa fa-user"></i> &{'menu.profile'}</a></li>
-									          <li><a href="/mail"><i class="fa fa-envelope"></i> &{'menu.mail'}</a></li>
-									          <li><a href="/settingspayments"><i class="fa fa-credit-card"></i> &{'menu.payments'}</a></li>
-									          <li><a href="/Accounts/contacts"><i class="fa fa-users"></i> &{'menu.contacts'}</a></li>
-									          <li><a href="/settings"><i class="fa fa-pencil-square-o"></i> &{'menu.settings'}</a></li>
-									      <li> 
-									      	<a href="/logout" id="public-btn-logout" title="&{'menu.logout'}">
+									          	<li><a href="/user/${user.login}"><i class="icon-user"></i> &{'menu.profile'}</a></li>
+									          	<li><a href="/contacts"><i class="icon-users"></i> &{'menu.contacts'}</a></li>
+									          	<li><a href="/mail"><i class="fa fa-envelope-o"></i> &{'menu.mail'}</a></li>
+									          	<li><a href="/settingspayments"><i class="fa fa-credit-card"></i> &{'menu.payments'}</a></li>
+									          	<li><a href="/settings"><i class=" icon-tools"></i> &{'menu.settings'}</a></li>
+									      	  	<li> 
+									      		<a href="/logout?url=${request.url.urlEncode()}" id="public-btn-logout" title="&{'menu.logout'}">
 									      		<i class="black fa fa-power-off fa-1x"></i> Sign out
-									      	</a>
-									      </li>          
+									      		</a>
+									      		</li>          
 									        </ul>
 									      </li>	
 										#{/if}  	

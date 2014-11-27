@@ -28,7 +28,20 @@ union all
 select distinct regexp_split_to_table(unaccent(lower(title)),'\s') as term from listing 
 order by term
 
-
 select distinct term from tags where term like '%ava%'
 
+
+
 */
+
+DROP TABLE IF EXISTS activity CASCADE;
+DROP TABLE IF EXISTS rating CASCADE;
+DROP TABLE IF EXISTS event_comment_fileupload CASCADE;
+DROP TABLE IF EXISTS event_comment CASCADE;
+DROP TABLE IF EXISTS fileupload CASCADE;
+DROP TABLE IF EXISTS comment CASCADE;
+DROP TABLE IF EXISTS message CASCADE;
+DROP TABLE IF EXISTS event CASCADE;
+DROP TABLE IF EXISTS listing CASCADE;
+DROP TABLE IF EXISTS chat_feed CASCADE;
+DROP TABLE IF EXISTS attendance CASCADE;

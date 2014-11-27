@@ -1,15 +1,16 @@
+
 #{if usr.userAbout}
-<p class="black">${usr.userAbout.nl2br()}</p>
+<p class="black">${usr.userAboutHtml().raw()}</p>
 #{/if}
 
 #{if usr.userEducation}
 <h3>Education</h3>
-<p class="black ">${usr.userEducation.nl2br()}</p>
+<p class="black ">${usr.userEducationHtml().raw()}</p>
 #{/if}
 
 #{if usr.userExperiences}
 <h3>Experiences</h3>
-<p class="black ">${usr.userExperiences.nl2br()}</p>
+<p class="black ">${usr.userExperiencesHtml().raw()}</p>
 #{/if}
 
 <ul class="social-links colored clearfix" >

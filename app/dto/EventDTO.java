@@ -81,7 +81,7 @@ public class EventDTO
         else
             e.isOwner = false;
         e.type = event.listing.type;
-        e.price = event.listing.price;
+        e.price = event.listing.price.toString();
         e.currency = event.listing.currency;
         e.category = event.listing.category;
         e.state = event.state;
@@ -119,6 +119,7 @@ public class EventDTO
 
     public static EventDTO postProcessHiddenEvent(EventDTO e)
     {
+        e.title = "";
         e.type = "";
         e.privacy = e.privacy;
         e.description = "";

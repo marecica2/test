@@ -57,6 +57,18 @@ public class EmailProvider
         createSession();
     }
 
+    public EmailProvider()
+    {
+        this.host = Constants.MAIL_HOST;
+        this.port = Constants.MAIL_PORT;
+        this.username = Constants.MAIL_ACCOUNT;
+        this.password = Constants.MAIL_PASSWORD;
+        this.protocol = Constants.MAIL_PROTOCOL_SMTPS;
+        this.tls = false;
+        emailSettings();
+        createSession();
+    }
+
     private void emailSettings()
     {
         props.put("mail.transport.protocol", protocol);

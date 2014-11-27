@@ -6,10 +6,15 @@
 	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
 #{/set}
 
-<div style="padding:15px;min-height:100%;min-height:80vh;background: white" class="container shadow">
-	<span class="segoe-bold-h2" style="font-size:3em"><i class="fa fa-envelope-o"></i> Messages</span>
-	<hr>
+<div class="container" style="min-height:50vh">
 	<div>
+		<div class="row">
+			<div class="col-md-12">
+				<h2><i class="fa fa-envelope-o"></i> Messages</h2>
+				<div class="separator-2"></div>
+			</div>
+		</div>
+
 		<div class="row">
 			<div class="col-md-2">
 				<ul class="nav nav-pills nav-stacked" role="tablist">
@@ -23,7 +28,6 @@
  			
  			
  				#{if action && action.equals("new")}	
- 				<p class="segoe-bold-h2">New Message</p>
 				<div class="error">#{error 'email' /}</div>		
  				<form class="" action="/mail" role="form" method="post">
  					<input type="hidden" name="url" value="${request.url.urlEncode()}">
@@ -34,18 +38,23 @@
 					</div>
 
 					<label for="exampleInputEmail1" style="position:relative;top:0px">To</label>
+					<div class="form-group">
+						<input type="text" class="form-control typeahead" autocomplete="off" placeholder="&{'dashboard.inviteAdd'}" maxlength="50" name="toUser" data-provide="typeahead" value="${request.params.to}">
+					</div>
+					<!-- 
 				    <div class="input-group">
 						<input type="text" class="form-control typeahead" autocomplete="off" placeholder="&{'dashboard.inviteAdd'}" maxlength="50" name="toUser" data-provide="typeahead" value="${request.params.to}">
 					    <span class="input-group-btn">
-					    	<button class="btn btn-default" type="button">Add</button>
+					    	<button class="btn btn-default btn-margin" style="height:40px" type="button">Add</button>
 					    </span>				  
 				    </div>
+					 -->
 					<script>
 					  	$(".typeahead").typeahead(
 					  	{
 					  	    minLength : 2, 
 					  	    source : function(value, process){
-								  	    $.get("/event/invites?str="+value, function(data){
+								  	    $.get("/invites?str="+value, function(data){
 								  	        var list = [];
 									  	    for(var i in data)
 										  		list.push(""+data[i].login +", "+ data[i].name + ">");
@@ -74,14 +83,13 @@
   				#{/if}
  			
  			
- 				#{if !action}
- 				<p class="segoe-bold-h2">Inbox</p>
+ 				#{if !action && received}
 				<table class="table table-hover table-striped">
 					#{list items:received, as:'item'}
 				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if}>
-				       	   	<td style="vertical-align:middle"><strong>From:</strong> <img class="" src="../${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} (${item.fromUser.login})</td>
+				       	   	<td style="vertical-align:middle"><span>From:</span> <img class="avatar16 img-circle" src="/${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} (${item.fromUser.login})</td>
 				       	   	<td style="vertical-align:middle"><a href="/mail/${item.uuid}">${item.subject}</a></td>
-				       		<td style="vertical-align:middle">#{if item.body.length() > 40} ${item.body.substring(0,36)}...#{/if}#{else}${item.body}#{/else}</td>
+				       		<td style="vertical-align:middle">${item.body.trimDot(10)}</td>
 				       		<td style="vertical-align:middle">
 				       			#{formatDate}${item.created.getTime()}#{/formatDate}
 				       			#{formatTime}${item.created.getTime()}#{/formatTime}
@@ -92,13 +100,12 @@
 				#{/if}
 
  				#{if action && action.equals("sent")}
- 				<p class="segoe-bold-h2">Sent Messages</p>
 				<table class="table table-hover table-striped">
 					#{list items:sent, as:'item'}
 				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if}>
-				       	   	<td style="vertical-align:middle">To: <img class="" src="../${item.toUser.avatarUrl}_32x32" height="16px"> ${item.toUser.fullName} (${item.toUser.login})</td>
+				       	   	<td style="vertical-align:middle">To: <img class="avatar16 img-circle" src="/${item.toUser.avatarUrl}_32x32"> ${item.toUser.fullName} (${item.toUser.login})</td>
 				       	   	<td style="vertical-align:middle"><a href="/mail/${item.uuid}">${item.subject}</a></td>
-				       		<td style="vertical-align:middle">#{if item.body.length() > 40} ${item.body.substring(0,36)}...#{/if}#{else}${item.body}#{/else}</td>
+				       		<td style="vertical-align:middle">${item.body.trimDot(10)}</td>
 				       		<td style="vertical-align:middle">
 				       			#{formatDate}${item.created.getTime()}#{/formatDate}
 				       			#{formatTime}${item.created.getTime()}#{/formatTime}
@@ -110,46 +117,38 @@
 				
 
  				#{if thread}
- 				<p class="segoe-bold">Conversation in thread ${thread[0].subject}</p>
-				<table class="table table-hover table-striped">
+				<table class="table  ">
 					#{list items:thread, as:'item'}
 				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if} #{if message.uuid == item.uuid} class="active" #{/if}>
-				       	   	<td style="vertical-align:middle"><img class="" src="../${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} (${item.fromUser.login})</td>
+				       	   	<td style="vertical-align:middle"><img class="avatar16 img-circle" src="../${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} (${item.fromUser.login})</td>
 				       	   	<td style="vertical-align:middle"><a href="/mail/${item.uuid}">${item.subject}</a></td>
-				       		<td style="vertical-align:middle">#{if item.body.length() > 40} ${item.body.substring(0,36)}...#{/if}#{else}${item.body}#{/else}</td>
+				       		<td style="vertical-align:middle">${item.body.trimDot(10)}</td>
 				       		<td style="vertical-align:middle">
 				       			#{formatDate}${item.created.getTime()}#{/formatDate}
 				       			#{formatTime}${item.created.getTime()}#{/formatTime}
 				       		</td>
 					   </tr>
+					   
 					   #{if message.uuid == item.uuid}
-					   <tr class="active">
-					   		<td colspan="4" style="border-top:0px">
-					   			  <div class="">
-									  <table>
-										  <tr>
-											  <td><strong>Subject</strong>&nbsp;&nbsp;&nbsp;</td>
-											  <td>${item.subject}</td>
-										  </tr>
-										  <tr>
-											  <td><strong>From</strong></td>
-											  <td><img class="" src="../${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} (${item.fromUser.login})</td>
-										  </tr>
-										  <tr>
-											  <td><strong>To</strong></td>
-											  <td><img class="" src="../${item.toUser.avatarUrl}_32x32" height="16px"> ${item.toUser.fullName} (${item.toUser.login})</td>
-										  </tr>
-									  </table>
-									  <br/>
-							   		  ${item.body}
-									  <br/>
-									  <br/>
-					   			  </div>
+					   <tr>
+					   		<td colspan="5">
+								<dl class="dl-horizontal">
+									  <dt>Subject</dt>
+									  <dd>${item.subject}</dd>
+									  <dt><strong>From</strong></dt>
+									  <dd><nobr><img class="img-circle avatar16" src="/${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} (${item.fromUser.login})</nobr></dd>
+									  <dt><strong>To</strong></dt>
+									  <dd><nobr><img class="img-circle avatar16" src="/${item.toUser.avatarUrl}_32x32" height="16px"> ${item.toUser.fullName} (${item.toUser.login})</nobr></dd>
+									  <dt><strong>Message</strong></dt>
+									  <dd>${item.getHtmlBody().raw()}</dd>
+								</dl>
 					   		</td>
 					   </tr>
 					   #{/if}
+					   
 					#{/list}							
 				</table>
+				
  				<form class="" action="/mail" role="form" method="post">
  					<input type="hidden" name="url" value="${request.url.urlEncode()}">
  					<input type="hidden" name="thread" value="#{if message && message.thread}${message.thread}#{/if}#{else}${message.uuid}#{/else}">
@@ -157,18 +156,23 @@
 						<label for="exampleInputEmail1">Write Reply</label>
 					    <input type="text" class="form-control" name="subject" id="exampleInputEmail1" placeholder="Subject" value="${message.subject}">
 					</div>
+				    <div class="form-group">
+						<input type="text" class="form-control typeahead" autocomplete="off" placeholder="&{'dashboard.inviteAdd'}" maxlength="50" name="toUser" value="${message.fromUser.login}" data-provide="typeahead">
+				    </div>
+					<!-- 
 				    <div class="input-group">
 						<input type="text" class="form-control typeahead" autocomplete="off" placeholder="&{'dashboard.inviteAdd'}" maxlength="50" name="toUser" value="${message.fromUser.login}" data-provide="typeahead">
 					    <span class="input-group-btn">
 					    	<button class="btn btn-default" type="button">Add</button>
 					    </span>				  
 				    </div>			
+					 -->
 					<script>
 					  	$(".typeahead").typeahead(
 					  	{
 					  	    minLength : 2, 
 					  	    source : function(value, process){
-								  	    $.get("/event/invites?str="+value, function(data){
+								  	    $.get("/invites?str="+value, function(data){
 								  	        var list = [];
 									  	    for(var i in data)
 										  		list.push(""+data[i].login +", "+ data[i].name + ">");
@@ -185,7 +189,9 @@
 					  	);
 					</script>				    		
 					<div class="form-group">			    
-				    	<textarea rows="5" cols="" class="form-control" placeholder="Message" name="emailBody" style="margin-top:5px"></textarea>
+				    	<textarea rows="15" cols="" class="form-control" placeholder="Message" name="emailBody" style="margin-top:5px"></textarea>
+				    	#{include 'help.html' /}	
+				    
 				    </div>		
 					<div class="form-group">			    
 				        <button type="submit" class="pull-right btn btn-default popup-event-notify"><span class="spinner-small spinner-notify"> </span><i class="fa fa-envelope"></i> &{'dashboard.send'}</button>

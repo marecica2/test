@@ -4,7 +4,6 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Map;
 
-import models.Account;
 import models.Attendance;
 import models.Event;
 import models.User;
@@ -76,18 +75,6 @@ public class BaseController extends Controller
         return u;
     }
 
-    public static Account getAccountByUser()
-    {
-        User user = getLoggedUser();
-        return user.account;
-    }
-
-    public static Account getAccountByEvent(String eventUuid)
-    {
-        Event event = Event.get(eventUuid);
-        return event.account;
-    }
-
     private static String getUserLogin()
     {
         return Secure.Security.connected();
@@ -106,28 +93,6 @@ public class BaseController extends Controller
     public static boolean isProd()
     {
         return Play.mode.isProd();
-    }
-
-    public static boolean isPublicRequest(Map<String, Header> headers)
-    {
-        final String referer = getReferrerUrl(headers);
-        boolean publicRequest = false;
-        if (referer.indexOf("/public/") != -1)
-        {
-            publicRequest = true;
-        }
-        return publicRequest;
-    }
-
-    public static boolean isPublicRequest()
-    {
-        final String referer = getReferrerUrl(request.headers);
-        boolean publicRequest = false;
-        if (referer.indexOf("/public/") != -1)
-        {
-            publicRequest = true;
-        }
-        return publicRequest;
     }
 
     public static boolean isUserLogged()
@@ -149,12 +114,23 @@ public class BaseController extends Controller
 
     static void checkAuthorizedAccess()
     {
-        if (Secure.Security.isConnected() || getReferrerUrl(request.headers).contains("/public/calendar"))
+        if (Secure.Security.isConnected())
         {
         } else
         {
             flash.put("url", request.url);
             Secure.login();
+        }
+    }
+
+    static void checkAdminAccess()
+    {
+        if (Secure.Security.isConnected() && getLoggedUser().isAdmin())
+        {
+        } else
+        {
+            flash.put("url", request.url);
+            notFound();
         }
     }
 
@@ -214,8 +190,8 @@ public class BaseController extends Controller
                     attendance.transactionDate = new Date();
                     attendance.price = resp.price;
                     attendance.providerPrice = resp.providerPrice;
-                    attendance.currency = e.account.currency;
-                    attendance.paypalAccount = e.account.paypalAccount;
+                    attendance.currency = e.user.account.currency;
+                    attendance.paypalAccount = e.user.account.paypalAccount;
                     attendance.paypalAccountProvider = resp.providerAccount;
                     attendance.transactionId = resp.transactionIdProvider;
                     attendance.transactionIdProvider = resp.transactionIdOur;
@@ -261,7 +237,6 @@ public class BaseController extends Controller
         Attendance attendance;
         attendance = new Attendance();
         attendance.event = e;
-        attendance.account = Account.getAccountByEvent(e.uuid);
         attendance.customer = customer;
         attendance.created = new Date();
         attendance.email = customer.login;

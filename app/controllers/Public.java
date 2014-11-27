@@ -7,10 +7,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import models.Account;
 import models.Activity;
 import models.ChatFeed;
-import models.Followers;
+import models.Contact;
 import models.Listing;
 import models.Rating;
 import models.User;
@@ -75,28 +74,24 @@ public class Public extends BaseController
         renderJSON(aDto);
     }
 
-    public static void userProfile(String id, String userLogin)
+    public static void userProfile(String userLogin)
     {
         final boolean userProfile = true;
         final User user = getLoggedUser();
-        User usr = null;
-        if (userLogin != null)
-            usr = User.getUserByLogin(userLogin);
-        if (usr == null)
-            notFound();
-
+        final User usr = User.getUserByLogin(userLogin);
         final Boolean isOwner = user != null && usr != null && usr.equals(user) ? true : false;
-        final List<Followers> followers = Followers.getFollowers(usr);
-        final List<Followers> followees = Followers.getFollowing(usr);
-        final Followers follow = user != null ? Followers.get(user, usr) : null;
+        final Contact contact = user != null ? Contact.get(user, usr) : null;
+
+        final List<Contact> followers = Contact.getFollowers(usr);
+        final List<Contact> followees = Contact.getFollowing(usr);
+        final Contact follow = Contact.isFollowing(user, usr, followers);
+
         final List<Rating> ratings = Rating.getByUser(usr.uuid);
         final List<Listing> listings = Listing.getForUser(usr);
         final Map<String, Object> stats = Rating.calculateStats(ratings);
 
-        Account account = null;
-        if (user != null)
-            account = user.account;
-        render(user, usr, account, isOwner, followees, followers, follow, ratings, stats, listings, userProfile);
+        render(user, usr, userProfile, isOwner, listings, followees,
+                followers, follow, ratings, stats, contact);
     }
 
     public static void feedSave()
@@ -106,16 +101,8 @@ public class Public extends BaseController
             final JsonObject jo = JsonUtils.getJson(request.body);
             ChatFeed feed = new ChatFeed();
             feed = feedFromJson(jo, feed);
-
-            if (isPublicRequest(request.headers))
-            {
-                User customer = getLoggedUser();
-                feed.customer = customer;
-            } else
-            {
-                User user = getLoggedUser();
-                feed.user = user;
-            }
+            User user = getLoggedUser();
+            feed.user = user;
             feed.saveFeed();
             renderJSON(feed);
         } catch (Exception e)
@@ -163,5 +150,18 @@ public class Public extends BaseController
             renderJSON("{\"error\":\"" + e.getMessage() + "\"}");
             e.printStackTrace();
         }
+    }
+
+    public static void wiki()
+    {
+        renderTemplate("wiki.html");
+    }
+
+    public static void activate(String uuid)
+    {
+        User user = User.getUserByUUID(uuid);
+        user.activated = true;
+        user.save();
+        redirectTo("/login");
     }
 }

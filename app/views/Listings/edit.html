@@ -1,0 +1,434 @@
+#{if edit}
+<div class="container">
+	<form id="cropForm" action="/crop" method="post">
+		<input type="hidden" id="url" name="url" value="${request.url.urlEncode()}" />
+		<input type="hidden" id="x1" name="x1" />
+		<input type="hidden" id="x2" name="x2" />
+		<input type="hidden" id="y1" name="y1" />
+		<input type="hidden" id="y2" name="y2" />
+		<input type="hidden" id="imageUrlCrop" name="imageUrl" />
+		<input type="hidden" id="imageIdCrop" name="imageId" />
+		<input type="hidden" id="type" name="type" value="listing" />
+		<input type="hidden" id="tempCrop" name="objectId" value="#{if listing}${listing.uuid}#{/if}#{else}${temp}#{/else}"/>
+	</form>
+	<form action="" method="post">
+	
+	
+	#{if fromEvent}
+		<input type="hidden" name="temp" id="temp" value="${temp}">
+		<div class="form-group event-title-1" style="">
+			<h3>Time</h3>
+			<div class="row" style="margin-left:0px" >
+			  <div class="col-lg-4" style="padding-left:0px">
+				<div class="input-group input-append bootstrap-timepicker" style="margin-bottom:5px;">
+					<input type="text" class="form-control input-small" maxlength="50" name="eventDate" id="eventDate" value="${params.eventDate}" placeholder="Event date"/>
+					<span id="fa-calendar" class="input-group-addon add-on"><i class="fa fa-calendar"></i></span>
+				</div>
+			  </div>
+			  <div class="col-lg-4" style="padding-left:0px">
+				<div class="input-group input-append bootstrap-timepicker" style="margin-bottom:5px;">
+					<input id="timepicker1" type="text" class="form-control input-small" name="eventStart" value="${params.eventStart}">
+					<span class="input-group-addon add-on"><i class="fa fa-clock-o"></i></span>
+				</div>
+			  </div>
+			  <div class="col-lg-4" style="padding-left:0px">
+				<div class="input-group input-append bootstrap-timepicker" style="margin-bottom:5px;">
+					<input id="timepicker2" type="text" class="form-control input-small" name="eventEnd" value="${params.eventEnd}">
+					<span class="input-group-addon add-on"><i class="fa fa-clock-o"></i></span>
+				</div>
+			  </div>
+			</div>
+			<div class="alert alert-danger">#{error 'eventStart' /}</div>
+			<div class="alert alert-danger">#{error 'eventEnd' /}</div>
+			<div class="alert alert-danger">#{error 'eventDate' /}</div>
+			<div class="alert alert-danger">#{error 'time' /}</div>
+			
+			<input type="hidden" id="offset" name="offset"/>
+			<script>
+				$(document).ready(function(){
+	                $('#offset').val(new Date().getTimezoneOffset());
+	                $('#timepicker1').timepicker({
+	                    appendWidgetTo: 'body',
+	                    showMeridian: false
+	                });
+	                $('#timepicker2').timepicker({
+	                    appendWidgetTo: 'body',
+	                    showMeridian: false	
+	                });
+	                $('#fa-calendar').click(function(){
+	                    $('#eventDate').datepicker('show');
+	                });
+	                
+	                var nowTemp = new Date();
+	                var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+	                
+	                #{if params.eventEnd == null || params.eventEnd.length() == 0}
+	                 $('#timepicker2').timepicker('setTime', (nowTemp.getHours()+1)+":"+($("#timepicker1").val().substring($("#timepicker1").val().indexOf(":")+1)));
+	            	#{/if}
+	                #{else}
+	                 $('#timepicker2').timepicker('setTime', '${params.eventEnd}');
+	                #{/else}
+	                
+	            	var checkin = $('#eventDate').datepicker({
+	                  format:"dd.mm.yyyy",
+	                  onRender: function(date) {
+	                    return date.valueOf() < now.valueOf() ? 'disabled' : '';
+	                  }
+	                }).data('datepicker');
+	                
+	                #{if params.eventDate == null || params.eventDate.length() == 0}
+	                	$('#eventDate').datepicker('setValue', new Date());
+	                #{/if}
+				});	                
+			</script>
+		</div>		
+		
+		<div class="form-group">
+			<h3>&{'dashboard.eventType'}</h3>
+			<div class="btn-group" data-toggle="buttons">
+			  <label class="btn btn-light-gray #{if params.type == "p2p"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "p2p"} checked="checked" #{/if} value="p2p"> Peer to peer
+			  </label>
+			  <label class="btn btn-light-gray #{if params.type == "livecast"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "livecast"} checked="checked" #{/if} value="livecast"> Broadcast
+			  </label>
+			  <label class="btn btn-light-gray #{if params.type == "hangout"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangout"} checked="checked" #{/if} value="hangout"> Hangout
+			  </label>
+			  <label class="btn btn-light-gray #{if params.type == "hangoutAir"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangoutAir"} checked="checked" #{/if} value="hangoutAir"> Hangout on Air
+			  </label>
+			  <label class="btn btn-light-gray #{if params.type == "instant"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "instant"} checked="checked" #{/if} value="instant"> Instant Broadcast
+			  </label>
+			</div>				
+			<div class="alert alert-danger">#{error 'type' /}</div>
+		</div>
+
+		<div class="form-group ">
+			<h3>&{'dashboard.privacy'}</h3>
+			<div class="btn-group" data-toggle="buttons">
+				  <label class="btn btn-light-gray #{if params.privacy == "private"} active #{/if}" >
+				    <input type="radio" name="privacy" id="option1" autocomplete="off" #{if params.privacy == "private"} checked="checked" #{/if} value="private"> Private
+				  </label>				
+				  <label class="btn btn-light-gray #{if params.privacy == "public"} active #{/if}" >
+				    <input type="radio" name="privacy" id="option1" autocomplete="off" #{if params.privacy == "public"} checked="checked" #{/if} value="public"> Public
+				  </label>
+			</div>					
+			<div class="alert alert-danger">#{error 'privacy' /}</div>
+		</div>
+		
+		<div class="form-group">
+			<h3>&{'dashboard.charging'}</h3> 
+			<div class="event-charging-container">
+				<div class="btn-group" data-toggle="buttons">
+					  <label class="btn btn-light-gray #{if params.charging == "free"} active #{/if}" >
+					    <input type="radio" name="charging" id="option1" autocomplete="off" #{if params.charging == "free"} checked="checked" #{/if} class="event-charging" value="free"> Free
+					  </label>				
+					  <label class="btn btn-light-gray #{if params.charging == "before"} active #{/if}" >
+					    <input type="radio" name="charging" id="option1" autocomplete="off" #{if params.charging == "before"} checked="checked" #{/if} class="event-charging" value="before"> Paid 
+					  </label>
+				</div>			
+			</div>
+			<div class="alert alert-danger">#{error 'charging' /}</div>
+			<script>
+				$(document).ready(function(){
+					if($('input[name=charging]:checked', '.event-charging-container').val() == 'free')    
+					    $(".price-container").hide();
+					else
+					    $(".price-container").show();
+				})
+				$(".event-charging").change(function(){
+					if($('input[name=charging]:checked', '.event-charging-container').val() == 'free')    
+					    $(".price-container").hide();
+					else
+					    $(".price-container").show();
+				});
+			</script>
+
+			<div class="price-container">
+				#{if params.firstFree == 'true'}
+					<p>
+						<span class="label label-default">First Event is set to free</span>
+					</p>
+				 #{/if}			
+				<div class="input-group">
+    			  <input type="text" class="form-control event-charging-price" style="height:40px;" id="event-charging-price" maxlength="30" placeholder="&{'dashboard.price'}" name="price" value="${params.price}"/>
+				  <span class="input-group-addon">
+					  <select class="event-currency" name="currency">
+						<option value="USD" #{if params.currency == "USD"} selected="selected" #{/if} >USD</option>
+						<option value="EUR" #{if params.currency == "EUR"} selected="selected" #{/if} >EUR</option>
+						<option value="GBP" #{if params.currency == "GBP"} selected="selected" #{/if} >GBP</option>
+						<option value="CAD" #{if params.currency == "CAD"} selected="selected" #{/if} >CAD</option>
+						<option value="CHF" #{if params.currency == "CHF"} selected="selected" #{/if} >CHF</option>
+						<option value="SEK" #{if params.currency == "SEK"} selected="selected" #{/if} >SEK</option>
+						<option value="NOK" #{if params.currency == "NOK"} selected="selected" #{/if} >NOK</option>
+						<option value="AUD" #{if params.currency == "AUD"} selected="selected" #{/if} >AUD</option>
+						<option value="BRL" #{if params.currency == "BRL"} selected="selected" #{/if} >BRL</option>
+						<option value="PLN" #{if params.currency == "PLN"} selected="selected" #{/if} >PLN</option>
+						<option value="CZK" #{if params.currency == "CZK"} selected="selected" #{/if} >CZK</option>
+						<option value="JPY" #{if params.currency == "JPY"} selected="selected" #{/if} >JPY</option>
+						<option value="DKK" #{if params.currency == "DKK"} selected="selected" #{/if} >DKK</option>
+						<option value="NZD" #{if params.currency == "NZD"} selected="selected" #{/if} >NZD</option>
+					  </select>
+				  </span>
+				</div>
+				<div class="alert alert-danger">#{error 'price' /}</div>
+				<div class="alert alert-danger">#{error 'currency' /}</div>
+				
+				<br/> 
+				<div class="form-group event-category" style="">
+		  			<select class="form-control" name="chargingTime">
+						<option value="15" #{if params.chargingTime == "15"} selected="selected" #{/if} >for 15 minutes</option>
+						<option value="10" #{if params.chargingTime == "10"} selected="selected" #{/if} >for 10 minutes</option>
+						<option value="5" #{if params.chargingTime == "5"} selected="selected" #{/if} >for 5 minutes</option>
+					</select>						
+					<div class="alert alert-danger">#{error 'category' /}</div>
+				</div>					
+			</div>	
+		</div>			
+		
+		<div class="form-group ">
+			<div class="" style="font-weight:light;"> 
+				<label class="" style="font-weight:100;"> <input type="checkbox" name="chatEnabled" value="chatEnabled" #{if params.chatEnabled != null} checked="checked" #{/if}> Enable chat</label> &nbsp;&nbsp;&nbsp;
+			</div>
+		</div>											
+		
+		<div class="form-group ">
+			<div class="" style="font-weight:light;"> 
+				<label class="" style="font-weight:100;"> <input type="checkbox" name="commentsEnabled" value="commentsEnabled" #{if params.commentsEnabled != null} checked="checked" #{/if}> Enable comments</label> &nbsp;&nbsp;&nbsp;
+			</div>
+		</div>											
+		<br/>
+		
+		<div class="event-edit">
+			<button type="submit" class="btn btn-default" id="event-dialog-save" >&{'dashboard.save'}</button>
+	   		<a href="${request.params.url}" type="button" class="btn btn-white">&{'cancel'}</a> 
+		</div>
+	#{/if}
+	#{else}
+		<!-- File upload -->
+		<span id="upload-button" class="btn btn-light-gray" style="margin-top:5px"><i class="fa fa-camera"></i> Upload new picture</span>
+		<span id="crop-button" class="btn btn-light-gray " style="margin-top:5px;display:none"><i class="fa fa-camera"></i> Crop</span>
+
+		#{if listing && params.image && params.image.indexOf("uploads") != -1}
+			<a href="/channel-reset-image?uuid=${listing.uuid}&url=${request.url.urlEncode()}"  style="margin-top:5px;" id="delete-upload-button" class="btn btn-white btn-sm"><i class="fa fa-times"></i> Remove</a>
+		#{/if}
+		
+		<input type="file" id="upload" name="upload"  accept="image/*" style="display:none">
+		<input type="hidden" id="temp" name="temp" value="${params.temp}"/>
+		<input type="hidden" id="imageInput" name="image" value="${params.image}"/>
+		<input type="hidden" id="imageTemp" name="imageTempUrl" value="${request.params.imageUrl}"/>
+		<input type="hidden" id="imageId" name="imageId"/>
+		<div id="progresses" style='margin-top:10px'>
+		</div>
+		<!-- Fileupload -->			
+
+
+		<div class="form-group"> 
+			<div class="event-edit">
+				<div id="selectedColor" style="height:30px;width:30px;background:#{if listing && listing.color.length() > 0}${listing.color}#{/if}#{else}#3A87AD#{/else};float:left;margin:3px;margin-left:0px;"></div>
+				<div style="height:30px;width:2px;background:#AAAAAA;float:left;margin-right:5px;margin:3px;"></div>
+				<div class="colorHover" onclick="starCalendar.dialogColorPick('#3A87AD');" style="height:30px;width:30px;background:#3A87AD;float:left;margin:3px;"></div>
+				<div class="colorHover" onclick="starCalendar.dialogColorPick('#429CF6');" style="height:30px;width:30px;background:#429CF6;float:left;margin:3px;"></div>
+				<div class="colorHover" onclick="starCalendar.dialogColorPick('#20D1E8');" style="height:30px;width:30px;background:#20D1E8;float:left;margin:3px;"></div>
+				<div class="colorHover" onclick="starCalendar.dialogColorPick('#0ACCBF');" style="height:30px;width:30px;background:#0ACCBF;float:left;margin:3px;"></div>
+				<div class="colorHover" onclick="starCalendar.dialogColorPick('#81DA42');" style="height:30px;width:30px;background:#81DA42;float:left;margin:3px;"></div>
+				<div class="colorHover" onclick="starCalendar.dialogColorPick('#DAD542');" style="height:30px;width:30px;background:#DAD542;float:left;margin:3px;"></div>
+				<div class="colorHover" onclick="starCalendar.dialogColorPick('#DB851C');" style="height:30px;width:30px;background:#DB851C;float:left;margin:3px;"></div>
+				<div class="colorHover" onclick="starCalendar.dialogColorPick('#6B5031');" style="height:30px;width:30px;background:#6B5031;float:left;margin:3px;"></div>
+				<div class="colorHover" onclick="starCalendar.dialogColorPick('#D43131');" style="height:30px;width:30px;background:#D43131;float:left;margin:3px;"></div>
+				<div class="colorHover" onclick="starCalendar.dialogColorPick('#D43991');" style="height:30px;width:30px;background:#D43991;float:left;margin:3px;"></div>
+				<div class="colorHover" onclick="starCalendar.dialogColorPick('#9327DB');" style="height:30px;width:30px;background:#9327DB;float:left;margin:3px;"></div>
+				<div class="colorHover" onclick="starCalendar.dialogColorPick('#2633C7');" style="height:30px;width:30px;background:#2633C7;float:left;margin:3px;"></div>
+				<input type="hidden" id="event-color" name="color" value="#{if listing}${listing.color}#{/if}"/>
+				<script>
+                       var starCalendar = {};
+                       starCalendar.dialogColorPick = function(hex) {
+                           $("#event-color").val(hex);
+                           $("#selectedColor").css("background-color",hex);
+                       };						
+				</script>
+				<div style="clear:both"></div>
+			</div>
+		</div>
+		
+		<div class="form-group event-title-1" style="">
+			<h3>Title</h3>
+			<input type="text" class="form-control " id="event-title" maxlength="50" name="title" placeholder="&{'dashboard.title'}" value="${params.title}"/>
+			<div class="alert alert-danger">#{error 'title' /}</div>
+		</div>
+
+		<div class="form-group event-tags" style="">
+			<h3>Tags</h3>
+			<input type="text" id="event-tags" class="form-control" style="width:100%" name="tags" value="${params.tags}" data-role="tagsinput"> 
+			<script>
+				$(document).ready(function(){
+					$('#event-tags').tagsinput({
+					    typeahead: {
+					      source: ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo']
+					    }
+					});
+				});		
+			</script>
+			<div class="alert alert-danger">#{error 'tags' /}</div>
+		</div>
+
+		<div class="form-group event-category" style="">
+			<h3>Category</h3>
+  			<select class="event-category form-control" id="event-category" name="category">
+				<option value="business" #{if params.category == "business"} selected="selected" #{/if} >Business</option>
+				<option value="education" #{if params.category == "education"} selected="selected" #{/if} >Education</option>
+				<option value="electronics" #{if params.category == "electronics"} selected="selected" #{/if} >Electronics</option>
+				<option value="health" #{if params.category == "health"} selected="selected" #{/if} >Health</option>
+				<option value="art" #{if params.category == "art"} selected="selected" #{/if} >Art</option>
+				<option value="sport" #{if params.category == "sport"} selected="selected" #{/if} >Sport</option>
+				<option value="18plus" #{if params.category == "18plus"} selected="selected" #{/if} >18plus</option>
+				<option value="household" #{if params.category == "household"} selected="selected" #{/if} >Household</option>
+				<option value="other" #{if params.category == "other"} selected="selected" #{/if} >Other</option>
+			</select>						
+			<div class="alert alert-danger">#{error 'category' /}</div>
+		</div>
+
+		<div class="form-group">
+			<h3>About</h3>
+			<textarea class="form-control event-description event-edit" rows="12" id="event-description" maxlength="1000" name="description" placeholder="&{'dashboard.description'}">${params.description}</textarea>
+			<div class="alert alert-danger">#{error 'description' /}</div>
+		</div>
+		
+		<div class="form-group event-title-1" style="">
+			<h3>Introduction Video Url</h3>
+			<input type="text" class="form-control " id="event-title" maxlength="50" name="video" placeholder="&{'dashboard.title'}" value="${params.video}"/>
+			<div class="alert alert-danger">#{error 'video' /}</div>
+		</div>		
+		
+		<div class="form-group">
+			<h3>&{'dashboard.eventType'}</h3>
+			<div class="btn-group" data-toggle="buttons">
+			  <label class="btn btn-light-gray #{if params.type == "p2p"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "p2p"} checked="checked" #{/if} value="p2p"> Peer to peer
+			  </label>
+			  <label class="btn btn-light-gray #{if params.type == "livecast"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "livecast"} checked="checked" #{/if} value="livecast"> Broadcast
+			  </label>
+			  <label class="btn btn-light-gray #{if params.type == "hangout"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangout"} checked="checked" #{/if} value="hangout"> Hangout
+			  </label>
+			  <label class="btn btn-light-gray #{if params.type == "hangoutAir"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangoutAir"} checked="checked" #{/if} value="hangoutAir"> Hangout on Air
+			  </label>
+			  <label class="btn btn-light-gray #{if params.type == "instant"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "instant"} checked="checked" #{/if} value="instant"> Instant Broadcast
+			  </label>
+			</div>				
+		</div>
+
+		<div class="form-group ">
+			<h3>&{'dashboard.privacy'}</h3>
+			<div class="btn-group" data-toggle="buttons">
+				  <label class="btn btn-light-gray #{if params.privacy == "private"} active #{/if}" >
+				    <input type="radio" name="privacy" id="option1" autocomplete="off" #{if params.privacy == "private"} checked="checked" #{/if} value="private"> Private
+				  </label>				
+				  <label class="btn btn-light-gray #{if params.privacy == "public"} active #{/if}" >
+				    <input type="radio" name="privacy" id="option1" autocomplete="off" #{if params.privacy == "public"} checked="checked" #{/if} value="public"> Public
+				  </label>
+			</div>					
+			<div class="alert alert-danger">#{error 'privacy' /}</div>
+		</div>
+		
+		<div class="form-group">
+			<h3>&{'dashboard.charging'}</h3> 
+			<div class="event-charging-container">
+				<div class="btn-group" data-toggle="buttons">
+					  <label class="btn btn-light-gray #{if params.charging == "free"} active #{/if}" >
+					    <input type="radio" name="charging" id="option1" autocomplete="off" #{if params.charging == "free"} checked="checked" #{/if} class="event-charging" value="free"> Free
+					  </label>				
+					  <label class="btn btn-light-gray #{if params.charging == "before"} active #{/if}" >
+					    <input type="radio" name="charging" id="option1" autocomplete="off" #{if params.charging == "before"} checked="checked" #{/if} class="event-charging" value="before"> Paid 
+					  </label>
+				</div>			
+			</div>
+			<div class="alert alert-danger">#{error 'charging' /}</div>
+			<script>
+				$(document).ready(function(){
+					if($('input[name=charging]:checked', '.event-charging-container').val() == 'free')    
+					    $(".price-container").hide();
+					else
+					    $(".price-container").show();
+				})
+				$(".event-charging").change(function(){
+					if($('input[name=charging]:checked', '.event-charging-container').val() == 'free')    
+					    $(".price-container").hide();
+					else
+					    $(".price-container").show();
+				});
+			</script>
+
+			<div class="price-container">
+				<div class="input-group">
+    			  <input type="text" class="form-control event-charging-price" style="height:40px;" id="event-charging-price" maxlength="30" placeholder="&{'dashboard.price'}" name="price" value="${params.price}"/>
+				  <span class="input-group-addon">
+					  <select class="event-currency" name="currency">
+						<option value="USD" #{if params.currency == "USD"} selected="selected" #{/if} >USD</option>
+						<option value="EUR" #{if params.currency == "EUR"} selected="selected" #{/if} >EUR</option>
+						<option value="GBP" #{if params.currency == "GBP"} selected="selected" #{/if} >GBP</option>
+						<option value="CAD" #{if params.currency == "CAD"} selected="selected" #{/if} >CAD</option>
+						<option value="CHF" #{if params.currency == "CHF"} selected="selected" #{/if} >CHF</option>
+						<option value="SEK" #{if params.currency == "SEK"} selected="selected" #{/if} >SEK</option>
+						<option value="NOK" #{if params.currency == "NOK"} selected="selected" #{/if} >NOK</option>
+						<option value="AUD" #{if params.currency == "AUD"} selected="selected" #{/if} >AUD</option>
+						<option value="BRL" #{if params.currency == "BRL"} selected="selected" #{/if} >BRL</option>
+						<option value="PLN" #{if params.currency == "PLN"} selected="selected" #{/if} >PLN</option>
+						<option value="CZK" #{if params.currency == "CZK"} selected="selected" #{/if} >CZK</option>
+						<option value="JPY" #{if params.currency == "JPY"} selected="selected" #{/if} >JPY</option>
+						<option value="DKK" #{if params.currency == "DKK"} selected="selected" #{/if} >DKK</option>
+						<option value="NZD" #{if params.currency == "NZD"} selected="selected" #{/if} >NZD</option>
+					  </select>
+				  </span>
+				</div>
+				<div class="alert alert-danger">#{error 'price' /}</div>
+				<div class="alert alert-danger">#{error 'currency' /}</div>
+				
+				<br/>
+				<div class="form-group event-category" style="">
+		  			<select class="form-control" name="chargingTime">
+						<option value="15" #{if params.chargingTime == "15"} selected="selected" #{/if} >for 15 minutes</option>
+						<option value="10" #{if params.chargingTime == "10"} selected="selected" #{/if} >for 10 minutes</option>
+						<option value="5" #{if params.chargingTime == "5"} selected="selected" #{/if} >for 5 minutes</option>
+					</select>						
+					<div class="alert alert-danger">#{error 'category' /}</div>
+				</div>					
+				<div class="form-group ">
+					<div class="" style="font-weight:light;"> 
+						<label class="" style="font-weight:100;"> <input type="checkbox" name="firstFree" value="firstFree" #{if params.firstFree != null} checked="checked" #{/if}> First Free</label> &nbsp;&nbsp;&nbsp;
+					</div>
+					<div class="alert alert-danger">#{error 'firstFree' /}</div>
+				</div>						
+			</div>	
+		</div>								
+
+		<br/>
+		<div class="form-group ">
+			<div class="" style="font-weight:light;"> 
+				<label class="" style="font-weight:100;"> <input type="checkbox" name="chatEnabled" value="chatEnabled" #{if params.chatEnabled != null} checked="checked" #{/if}> Enable chat</label> &nbsp;&nbsp;&nbsp;
+			</div>
+			<div class="alert alert-danger">#{error 'chatEnabled' /}</div>
+		</div>
+		
+		<div class="form-group ">
+			<div class="" style="font-weight:light;"> 
+				<label class="" style="font-weight:100;"> <input type="checkbox" name="commentsEnabled" value="commentsEnabled" #{if params.commentsEnabled != null} checked="checked" #{/if}> Enable comments</label> &nbsp;&nbsp;&nbsp;
+			</div>
+			<div class="alert alert-danger">#{error 'commentsEnabled' /}</div>
+		</div>		
+		<br/>
+		
+		<div class="event-edit">
+			<button type="submit" class="btn btn-default" id="event-dialog-save" >&{'dashboard.save'}</button>
+	   		<a href="${request.params.url}" type="button" class="btn btn-white"><i class="fa fa-times"></i> &{'cancel'}</a> 
+		</div>
+
+	#{/else}
+	</form>	
+</div>
+#{/if}

@@ -91,7 +91,7 @@ star.generateItemsHtml = function(data, prefix){
             html += "       <img src='/"+item.imageUrl+"_128x128' alt=''>";
             html += "       <div class='overlay'>";
             html += "           <div class='overlay-links'>";
-            html += "               <a href='/listing-new?uuid="+item.uuid+"'><i class='fa fa-link'></i></a>";
+            html += "               <a href='/channel/"+item.uuid+"'><i class='fa fa-link'></i></a>";
             html += "               <a href='/user/"+item.createdByLogin+"'><i class='fa fa-user'></i></a>";
             html += "           </div>";
             html += "       </div>";
@@ -107,11 +107,13 @@ star.generateItemsHtml = function(data, prefix){
             if(item.charging == 'before'){
                 html += "<strong>"+item.price+"</strong> <small>"+item.currency+"</small>";
             }       
+            if(item.firstFree != undefined && item.firstFree == true){
+                html += " <small class='label default-bg'>First free</small>";
+            }       
             
             
-            html += "       <p class='event-box-links'><span><a href='/listing-new?uuid="+item.uuid+"' class='link-left'><span>"+star.utils.trimTo(item.title, 33)+"</span></a></span></p>";
+            html += "       <p class='event-box-links'><span><a href='/channel/"+item.uuid+"' class='link-left'><span>"+star.utils.trimTo(item.title, 30)+"</span></a></span></p>";
 
-            html += "   <br/>";            
             html += "   <p class='event-box-link'>";            
             for(var j = 0; j < 5; j++){
                 if(j < item.ratingAvg)
@@ -129,10 +131,11 @@ star.generateItemsHtml = function(data, prefix){
         } else {
             var end = data[i].eventStart;
             var distance = end - now;
-            var days = Math.floor(distance / _day);
-            var hours = Math.floor( (distance % _day ) / _hour );
-            var minutes = Math.floor( (distance % _hour) / _minute );
-            var seconds = Math.floor( (distance % _minute) / _second );
+            var before = distance > 0 ? false : true;
+            var days = Math.abs(Math.floor(distance / _day));
+            var hours = Math.abs(Math.floor( (distance % _day ) / _hour ));
+            var minutes = Math.abs(Math.floor( (distance % _hour) / _minute ));
+            var seconds = Math.abs(Math.floor( (distance % _minute) / _second ));
 
             var color = "#3a87ad";
             if(data[i] != undefined && data[i].color != undefined && data[i].color.length > 0)
@@ -142,42 +145,41 @@ star.generateItemsHtml = function(data, prefix){
             
             var item = data[i];
 
-            if(item.privacy == "private" && !item.isOwner && !item.isInvited){
-                
-            } else {
+            if(item.isOwner || item.isInvited){
                 html += "<div class='event-box shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
                 html += "   <div class='overlay-container'>";
                 html += "       <mark style='position:absolute;bottom:0px;padding:5px' class='title'><img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/"+item.createdByAvatarUrl+"_32x32'>"+item.createdByName+" </mark>";
-                html += "       <img src='/"+item.imageUrl+"_128x128' alt=''>";
+                html += "       <img src='/"+item.imageUrl+"' alt=''>";
                 html += "       <div class='overlay'>";
                 html += "           <div class='overlay-links'>";
-                html += "               <a href='/event-detail?uuid="+item.uuid+"'><i class='fa fa-link'></i></a>";
+                html += "               <a href='/event/"+item.uuid+"'><i class='fa fa-link'></i></a>";
                 html += "               <a href='/user/"+item.createdByLogin+"'><i class='fa fa-user'></i></a>";
                 html += "           </div>";
                 html += "       </div>";
                 html += "   </div>";
-                html += "   <div class='image-box-body'>";
+                html += "   <div class='image-box-body' style='font-size:0.9em'>";
                 //html += "       <span>"+item.category+"</span> &middot; <span>"+item.type+"</span> &middot; <span>"+item.privacy+"</span><br/> ";  
-                html += "       <p> ";
-                html += "           <strong>"+starUtils.formatDate(item.eventStart)+"</strong><br/> ";
+               
+                html += "           <p>";
+                html += "           <strong>"+starUtils.formatDate(item.eventStart)+"</strong>";
                 html += "           <span>"+starUtils.formatTime(item.eventStart)+"</span> - ";
-                html += "           <span>"+starUtils.formatTime(item.eventEnd)+"</span><br/>";            
-
-
+                html += "           <span>"+starUtils.formatTime(item.eventEnd)+"</span><br/>";
+                html += "           <strong>"+(before?"Ago ":"Starts in")+"</strong> " + (days > 0 ? (days + " days ") : "") + (hours > 0 ? (hours + "h ") : "") + minutes + "m";          
+                html += "           <br/>";            
                 if(item.charging == 'free'){
                     html += "<strong>Free</strong>";
                 }
 
                 if(item.charging == 'before'){
-                    html += "<strong>"+item.price+"</strong> <small>"+item.currency+"</small>";
+                    html += "       <strong>"+item.price+"</strong> <small>"+item.currency+"</small>";
                 }    
                 if(item.state == 'customer_created'){
-                    html += " <img class='img-circle avatar22' src='/"+item.customerAvatarUrl+"_32x32'>";
-                    html += " <span class='label label-danger'>pending</span>";
+                    html += "       <img class='img-circle avatar22' src='/"+item.customerAvatarUrl+"_32x32'>";
+                    html += "       <span class='label label-danger'>pending</span>";
                 }
-                html += "   </p>";
+                html += "       </p>";
                 
-                html += "       <p class='event-box-link'><span><a href='/event-detail?uuid="+item.uuid+"' class='link-left'><span>"+star.utils.trimTo(item.title, 40)+"</span></a></span></p>";
+                html += "       <p class='event-box-link'><span><a href='/event/"+item.uuid+"' class='link-left'><span>"+star.utils.trimTo(item.title, 30)+"</span></a></span></p>";
                 html += "   </div>";
                 html += "</div>";                           
             }
@@ -485,7 +487,7 @@ starEvent.loadActivities = function(uuid){
             
             var avatar = success[i].byCustomer ? success[i].customerAvatar : success[i].userAvatar;
             if(avatar != prev || i == 0){
-                html += "<img class=' avatar32' style='' src='/"+avatar+"'>";
+                html += "<img class=' avatar32 img-circle' style='' src='/"+avatar+"'>";
             } else {
                 html +="<div style='width:32px'>&nbsp;</div>"
             }
@@ -525,6 +527,11 @@ starEvent.loadActivities = function(uuid){
         }
     });
 };
+
+
+starEvent.updateStyle = function(data){
+    starServices.updateStyle(data, function(){console.log("success");});
+}
 
 
 
@@ -586,7 +593,7 @@ starServices.inviteEvent = function(data, success, error){
 starServices.getItems = function(prefix, params, success, error){
     var url = "events";
     if(prefix.indexOf("Listing") != -1)
-        url = "listings";
+        url = "channels-get";
     $.ajax({
         type: "GET",
         url: "/"+url+"?"+params.url,
@@ -623,6 +630,17 @@ starServices.updateAttendance = function(data, success, error){
     $.ajax({
         type: "POST",
         url: "/attendance/update",
+        data: JSON.stringify(data),
+        success: success,
+        error: error,
+        contentType: "application/json"
+    });
+};
+
+starServices.updateStyle = function(data, success, error){
+    $.ajax({
+        type: "POST",
+        url: "/settings/style",
         data: JSON.stringify(data),
         success: success,
         error: error,

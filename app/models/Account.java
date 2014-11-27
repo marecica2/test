@@ -13,14 +13,21 @@ public class Account extends Model
     public static final String TYPE_PUBLISHER_REQUEST = "publisherReq";
     public static final String TYPE_PUBLISHER = "publisher";
 
+    public static final String PLAN_TYPE_STANDARD = "standard";
+    public static final String PLAN_MONTH_BASIC = "month";
+    public static final String PLAN_MONTH_GOLD = "gold";
+
     public String name;
     public String type;
+    public Date requestTime;
     public String key;
     public String url;
     public String currency;
     public String paypalAccount;
 
-    public Date requestTime;
+    public String planCurrent;
+    public String planRequest;
+    public Date planRequestFrom;
 
     public String smtpHost;
     public String smtpPort;
@@ -32,12 +39,6 @@ public class Account extends Model
     {
         Account account = Account.find("byKey", key).first();
         return account;
-    }
-
-    public static Account getAccountByEvent(String eventUuid)
-    {
-        Event event = Event.get(eventUuid);
-        return event.account;
     }
 
     @Override
@@ -68,4 +69,17 @@ public class Account extends Model
         return true;
     }
 
+    public String currentPlan()
+    {
+        if (this.planRequestFrom == null || this.planRequestFrom.getTime() < System.currentTimeMillis())
+            return this.planRequest;
+        return this.planCurrent;
+    }
+
+    public Boolean newPlanApplied()
+    {
+        if (this.planRequestFrom == null || this.planRequestFrom.getTime() < System.currentTimeMillis())
+            return true;
+        return false;
+    }
 }

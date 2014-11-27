@@ -1,12 +1,82 @@
 #{extends 'main.html' /} 
+#{set switcher: true /}
+
 #{set 'moreStyles'}
 	<link rel="stylesheet" href="@{'/public/css/jquery.Jcrop.min.css'}" type="text/css" />
 #{/set}
+
 #{set 'moreScripts'}
 	<script src="@{'/public/javascripts/lib/jquery.Jcrop.min.js'}"></script>
+	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>
 	<script>
-	starInit.aspectRatio = 1;
+		starInit.aspectRatio = 1;
+
+		$(document).ready(function(){
+			if ($("[rel=tooltip]").length) {
+	        	$("[rel=tooltip]").tooltip();
+	        }
+		});				
 	</script>
+
+#{/set}
+
+
+#{set 'moreHtml'}
+	<!-- Color Switcher (Remove these lines) -->
+	<script type="text/javascript" src="@{'/public/style-switcher/style-switcher.js'}"></script>
+	<div class="style-switcher closed">
+		<div class="header">
+			<a class="trigger" href="#"><i class="icon-tools"></i></a>
+			<h2>Style Switcher</h2>
+		</div>
+		<div class="clearfix body">
+			<h3>Predifined Colors</h3>
+			<ul class="styleChange">
+				<li class="red selected" data-style="red" title="red"></li>
+				<li class="blue" data-style="blue" title="blue"></li>
+				<li class="green" data-style="green" title="green"></li>
+				<li class="orange" data-style="orange" title="orange"></li>
+				<li class="dark-gray" data-style="dark_gray" title="dark_gray"></li>
+				<li class="pink" data-style="pink" title="pink"></li>
+				<li class="purple" data-style="purple" title="purple"></li>
+				<li class="dark-cyan" data-style="dark_cyan" title="dark_cyan"></li>
+				<li class="yellow" data-style="yellow" title="yellow"></li>
+				<li class="light-blue" data-style="light_blue" title="light_blue"></li>
+				<li class="brown" data-style="brown" title="brown"></li>
+				<li class="light-green" data-style="light_green" title="light_green"></li>
+				<li class="dark-red" data-style="dark_red" title="dark_red"></li>
+			</ul>
+			<hr>
+			<h3>Footer</h3>
+			<ul class="footerChange">
+				<li class="dark selected" data-style="dark" title="dark"><i class="fa fa-square-o"></i> Dark</li>
+				<li class="light" data-style="light" title="light"><i class="fa fa-square-o"></i> Light</li>
+			</ul>
+			<hr>
+			<h3>Layout Mode</h3>
+			<ul class="layoutChange">
+				<li class="wide selected" data-style="wide" title="wide"><i class="fa fa-arrow-left pr-10"></i>Wide<i class="fa fa-arrow-right pl-10"></i></li>
+				<li class="boxed" data-style="boxed" title="boxed"><i class="fa fa-arrow-right pr-5"></i>Boxed<i class="fa fa-arrow-left pl-5"></i></li>
+			</ul>
+			<h3>Patterns</h3>
+			<ul class="patternChange">
+				<li class="pattern-0" data-style="pattern-0" title="white background"></li>
+				<li class="pattern-1" data-style="pattern-1" title="pattern-1"></li>
+				<li class="pattern-2" data-style="pattern-2" title="pattern-2"></li>
+				<li class="pattern-3" data-style="pattern-3" title="pattern-3"></li>
+				<li class="pattern-4" data-style="pattern-4" title="pattern-4"></li>
+				<li class="pattern-5" data-style="pattern-5" title="pattern-5"></li>
+				<li class="pattern-6" data-style="pattern-6" title="pattern-6"></li>
+				<li class="pattern-7" data-style="pattern-7" title="pattern-7"></li>
+				<li class="pattern-8" data-style="pattern-8" title="pattern-8"></li>
+				<li class="pattern-9" data-style="pattern-9" title="pattern-9"></li>
+			</ul>
+			<ul class="resetAll">
+				<li class="btn btn-default btn-sm" title="Reset">Reset All</li>
+			</ul>
+		</div>
+	</div>
+	<!-- Color Switcher End -->
 #{/set}
 
 #{set background:'true' /} 
@@ -23,38 +93,32 @@
 </form>
 
 <div>
-<div style="background:white;min-height:80vh;padding:15px" class="container shadow">
+<div class="container">
 	<div class="row">
 	  	<div class="col-md-12">
-	  	
-			<form class="form-horizontal" role="form" method="post" action="/settings?edit=true">	  	
-			<span class="" style="font-size:3em"><i class="fa fa-pencil-square-o"></i><span class="segoe-bold">Settings</span>
-				<span class="pull-right">
-					<span id="upload-button" class="btn btn-default btn-xs " style=""><i class="fa fa-camera"></i> Upload new picture</span>
-					<span id="crop-button" class="btn btn-default btn-xs " style="display:none"><i class="fa fa-camera"></i> Crop</span>
+			<h2 class="btn-margin">
+				<i class=" icon-tools"></i>Settings
+				<span class="">
 					#{if event && params.image && params.image.indexOf("uploads") != -1}
-						<a href="/event/reset-image?id=${event.uuid}&url=${request.url.urlEncode()}" id="delete-upload-button" class="btn btn-default"><i class="fa fa-times"></i> Remove</a>
+						<a href="/event/reset-image?id=${event.uuid}&url=${request.url.urlEncode()}" id="delete-upload-button" class="btn btn-default btn-margin"><i class="fa fa-times"></i> Remove</a>
 					#{/if}					
 					#{if !edit}
-						<a class="btn btn-default btn-xs" href="/settings?edit=true"><i class="fa fa-pencil"></i> &{'edit'}</a>
+						<a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true"><i class="fa fa-pencil"></i> &{'edit'}</a>
 					#{/if}
 					#{else}
-						<a class="btn btn-default btn-xs" href="/settings"><i class="fa fa-times"></i> &{'cancel'}</a>
+						<a class="btn btn-light-gray btn-sm btn-margin" href="/settings"><i class="fa fa-times"></i> &{'cancel'}</a>
 					#{/else}
 				</span>
-			</span>
-			<hr>	  	
-
-			#{if errors}
-	    	<div class="error">
-	    		#{error 'all' /}
-	    	</div>
-		    #{/if}
+			</h2>
+			
+			<form class="form-horizontal" role="form" method="post" action="/settings?edit=true">	
 		    
 		    
 			<!-- File upload -->
 			<div>
-				<img id="image" style="height:256px;margin-bottom:5px" class="" src="../${user.avatarUrl}"><br/>
+				<span id="crop-button" class="btn btn-default " style="display:none"><i class="fa fa-camera"></i> Crop</span>
+				<img id="image" style="height:256px;" class="" src="/${user.avatarUrl}">
+				<span id="upload-button" class="btn btn-light-gray radius btn-short" style="position:relative;left:-150px"><i class="fa fa-camera"></i></span>
 				<input type="file" id="upload" name="upload"  accept="image/*" style="display:none">
 				<input type="hidden" id="temp" name="temp" value="${params.temp}"/>
 				<input type="hidden" id="imageInput" name="image" value="${params.image}"/>
@@ -68,17 +132,30 @@
 			
 			
 
+			#{if !user.account.newPlanApplied()}
+			<div class="shadow alert alert-info alert-dismissible" role="alert">
+			    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					Change to ${user.account.planRequest} plan will be applied after 
+					${account.planRequestFrom.format("dd MMM, yyyy")}
+					<span>#{time time:account.planRequestFrom/}</span>
+			</div>
+			#{/if}					
 
 
-
-			<h3 class="segoe-bold-h2"><i class='fa fa-certificate fa-1.5x'></i> <a class="color-link" id="account">&{'account.account'}</a></h3>
+			<h3>&{'account.account'}</h3>
+			<div class="separator-2"></div>
 			#{if !edit}
 			<dl class="dl-horizontal">
+				<dt>&{'account.plan'}</dt>
+				<dd>
+					${user.account.currentPlan()}
+				</dd>
 				<dt>&{'account.accountType'}</dt>
 				<dd>
 					${user.account.type} &nbsp; 
 					#{if user && user.account.type == "standard"}
 						<br/><a href="/settings/request-publisher?url=${request.url.urlEncode()}">Become a Publisher</a>
+						<i class="fa fa-question-circle" rel="tooltip" data-placement="right" data-original-title="To become a publisher you must have filled in personal information and created at least one channel. To create new channel go to Dashboard and click 'new channel' button."></i>
 					#{/if}
 					#{if user && user.account.type == "publisherReq"}
 						<br/>Waiting for approvement
@@ -109,11 +186,12 @@
 			#{/if}
 			#{else}
 			<div class="form-group">
-				<label for="locale" class="col-sm-2 control-label">&{'account.accountType'}</label>
+				<label for="accPlan" class="col-sm-2 control-label">&{'account.plan'}</label>
 			    <div class="col-sm-10">
-					<select class="form-control" name="accType" id="type">
+					<select class="form-control" name="accPlan" id="accPlan">
 						<option #{if params.type == "standard"}  selected='selected' #{/if} value="standard">Standard</option>
-						<option #{if params.type == "publisher"}  selected='selected' #{/if} value="publisher">Publisher</option>
+						<option #{if params.type == "month"}  selected='selected' #{/if} value="month">Monthly Basic</option>
+						<option #{if params.type == "gold"}  selected='selected' #{/if} value="gold">Monthly Gold</option>
 					</select>
 					<div class="error">#{error 'locale' /}</div>
 			    </div>
@@ -189,7 +267,8 @@
 			
 			
 	  		<br/>				    
-			<h3 class="segoe-bold-h2"><i class='fa fa-user fa-1.5x'></i> &{'About You'}</h3>
+			<h3>&{'About You'}</h3>
+			<div class="separator-2"></div>
 			#{if !edit}
 				#{set usr:user /}
 				#{include 'userAbout.html' /}
@@ -270,7 +349,8 @@
 	  	
 	  	
 	  		<br/>
-			<h3 class="segoe-bold-h2"><i class='fa fa-calendar fa-1.5x'></i> &{'calendar'}</h3>
+			<h3>&{'Your Calendar'}</h3>
+			<div class="separator-2"></div>
 			#{if !edit}
 			<dl class="dl-horizontal">
 				<dt>&{'working.hours'}</dt>
@@ -388,7 +468,8 @@
 
 
 			<br/>
-			<h3 class="segoe-bold-h2"><i class='fa fa-cc-paypal fa-1.5x'></i> &{'account.paypal'}</h3>
+			<h3>&{'Paypal Account'}</h3>
+			<div class="separator-2"></div>
 			#{if !edit}
 			<dl class="dl-horizontal">
 				<dt>&{'account.paypalAccount'}</dt>
@@ -439,7 +520,8 @@
 			
 			
 			<br/>
-			<h3 class="segoe-bold-h2"><i class='fa fa-envelope fa-1.5x'></i> &{'account.emailAccountSettings'}</h3>
+			<h3>&{'Outgoing Email'}</h3>
+			<div class="separator-2"></div>
 			<div class="alert alert-success alert-dismissable" style="display:none;" id="email-success"></div>
 			<div class="alert alert-danger alert-dismissable" style="display:none;" id="email-danger"></div>
 			#{if !edit}
@@ -533,7 +615,8 @@
 			
 			
 			<br/>
-			<h3 class="segoe-bold-h2"><i class='fa fa-code fa-1.5x'></i> &{'account.websiteEmbedding'}</h3>
+			<h3>Website Embedding</h3>
+			<div class="separator-2"></div>
 			<dl class="dl-horizontal">
 				<dt>&{'account.viaIframe'}</dt>
 				<dd style="margin-bottom:30px;">
@@ -551,9 +634,11 @@
 
 			#{if edit}
 			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10" style="padding-left: 0px;">
-					<button type="submit" class="btn btn-primary">&{'save'}</button>
-					<a href="/Accounts/account" class="btn btn-default">&{'cancel'}</a>
+				<div class="col-sm-12">
+					<div class="pull-right">
+						<button type="submit" class="btn btn-default">&{'save'}</button>
+						<a href="/Accounts/account" class="btn btn-white">&{'cancel'}</a>
+					</div>
 				</div>
 			</div>
 			#{/if}

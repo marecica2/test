@@ -2,11 +2,12 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
-import models.Account;
 import models.Activity;
 import models.Attendance;
+import models.Contact;
 import models.Event;
 import models.User;
 import play.mvc.Before;
@@ -18,24 +19,17 @@ import utils.UriUtils;
 import com.google.gson.JsonObject;
 
 import dto.AttendanceDTO;
+import dto.UserDTO;
 
 public class Attendances extends BaseController
 {
-    @Before(unless = { "login", "attendances" })
+    @Before(unless = { "attendancesRest" })
     static void checkAccess() throws Throwable
     {
         checkAuthorizedAccess();
     }
 
-    public static void attendance()
-    {
-        final Account account = getAccountByUser();
-        final String uuid = request.params.get("uuid");
-        final Attendance a = Attendance.get(uuid, account);
-        renderJSON(AttendanceDTO.convert(a));
-    }
-
-    public static void attendances()
+    public static void attendancesRest()
     {
         final String eventUuid = request.params.get("event");
         final Event event = Event.get(eventUuid);
@@ -45,62 +39,34 @@ public class Attendances extends BaseController
             List<Attendance> as = Attendance.getByEvent(event);
             for (Attendance a : as)
             {
-                // if anonymous user is accessing event resources filter out private events
                 AttendanceDTO eDto = AttendanceDTO.convert(a);
                 aDto.add(eDto);
             }
             renderJSON(aDto);
         }
-        renderJSON("null");
+        renderJSON(null);
     }
 
-    //    public static void attendanceSave()
-    //    {
-    //        try
-    //        {
-    //            final JsonObject jo = JsonUtils.getJson(request.body);
-    //            final Event e = Event.get(jo.get("event").getAsString());
-    //            final String email = jo.get("email") != null ? StringUtils.htmlEscape(jo.get("email").getAsString()) : "";
-    //            final User user = User.getUserByLogin(email);
-    //            final User customer = User.getUserByLogin(email);
-    //            final boolean isForUser = user != null ? true : false;
-    //
-    //            Attendance a = new Attendance();
-    //            a.event = e;
-    //            a.user = e.user;
-    //            a.email = StringUtils.htmlEscape(email);
-    //            a.isForUser = isForUser;
-    //
-    //            if (isForUser)
-    //            {
-    //                a.user = user;
-    //                a.name = user.getFullName();
-    //            } else if (customer != null)
-    //            {
-    //                a.customer = customer;
-    //                a.name = customer.getFullName();
-    //            } else
-    //            {
-    //                a.name = "guest" + RandomUtil.getRandomDigits(5);
-    //            }
-    //
-    //            a.save(e.account);
-    //            renderJSON(AttendanceDTO.convert(a));
-    //        } catch (Exception e)
-    //        {
-    //            e.printStackTrace();
-    //            response.status = 500;
-    //            renderJSON("Failed to update event. Cause: " + e.getMessage());
-    //        }
-    //    }
+    public static void invites(String str)
+    {
+        final User user = getLoggedUser();
+        List<Contact> c = Contact.getContacts(user, str);
+        List<UserDTO> contacts = new LinkedList<UserDTO>();
+        for (Contact contact : c)
+            contacts.add(UserDTO.convert(contact.contact));
+        renderJSON(contacts);
+    }
 
     public static void attendanceNewSave(String email, String eventId, String url)
     {
-        final User loggedUser = getLoggedUser();
-        final Event e = Event.get(eventId);
-        final User user = User.getUserByLogin(email);
+        final Event event = Event.get(eventId);
+        final User user = getLoggedUser();
+        final Boolean isForUser = getLoggedUser().login.equals(email) ? true : false;
         final User customer = User.getUserByLogin(email);
-        final boolean isForUser = getLoggedUser().login.equals(email) ? true : false;
+        final Contact blockedContact = customer != null ? Contact.get(customer, user) : null;
+
+        if (blockedContact != null && blockedContact.blocked)
+            validation.addError("email", "Blocked contact");
 
         validation.required(email);
         validation.email(email);
@@ -108,43 +74,57 @@ public class Attendances extends BaseController
         if (!validation.hasErrors())
         {
             Attendance a = new Attendance();
-            a.event = e;
-            a.user = e.user;
+            a.event = event;
+            a.user = event.user;
             a.email = StringUtils.htmlEscape(email);
             a.isForUser = isForUser;
-
-            if (isForUser)
-            {
-                a.user = user;
-                a.name = user.getFullName();
-            } else if (customer != null)
+            if (customer != null)
             {
                 a.customer = customer;
                 a.name = customer.getFullName();
             } else
             {
-                a.customer = null;
-                a.user = null;
-                a.name = "guest" + RandomUtil.getRandomDigits(5);
+                a.name = email;
             }
-            a.save(e.account);
+            a.saveAttendance();
 
             final Activity act = new Activity();
             act.type = Activity.ACTIVITY_EVENT_INVITED;
             act.forCustomer = true;
             act.customer = customer;
             act.login = customer != null ? customer.getFullName() : a.name;
-            act.user = loggedUser;
+            act.user = user;
             act.event = a.event;
             act.eventName = a.event.listing.title;
             act.saveActivity();
 
+            Contact contact1 = Contact.get(user, customer);
+            if (contact1 == null)
+            {
+                contact1 = new Contact();
+                contact1.user = user;
+                contact1.contact = customer;
+                contact1.following = false;
+                contact1.saveContact();
+            }
+
+            Contact contact2 = Contact.get(customer, user);
+            if (contact2 == null)
+            {
+                contact2 = new Contact();
+                contact2.user = customer;
+                contact2.contact = user;
+                contact2.following = false;
+                contact2.saveContact();
+            }
+
         }
         params.flash();
+        validation.keep();
         redirect(UriUtils.redirectStr(url));
     }
 
-    public static void attendanceUpdate()
+    public static void attendanceRestUpdate()
     {
         try
         {
@@ -175,7 +155,7 @@ public class Attendances extends BaseController
 
     }
 
-    public static void attendanceDelete()
+    public static void attendanceRestDelete()
     {
         try
         {
@@ -206,10 +186,9 @@ public class Attendances extends BaseController
             a.created = new Date();
             a.email = user.login;
             a.result = Attendance.ATTENDANCE_RESULT_ACCEPTED;
-            a.account = user.account;
             a.name = user.getFullName();
             a.watchlist = true;
-            a.uuid = RandomUtil.getDoubleUUID();
+            a.uuid = RandomUtil.getUUID();
         } else
         {
             a.watchlist = true;
@@ -246,16 +225,14 @@ public class Attendances extends BaseController
     {
         try
         {
-            User user = getLoggedUser();
-            Attendance a = Attendance.get(uuid);
-            a.result = type.equals("accepted") ? Attendance.ATTENDANCE_RESULT_ACCEPTED : Attendance.ATTENDANCE_RESULT_DECLINED;
+            final User user = getLoggedUser();
+            final String result = type.equals("accepted") ? Attendance.ATTENDANCE_RESULT_ACCEPTED : Attendance.ATTENDANCE_RESULT_DECLINED;
+            final Attendance a = Attendance.get(uuid);
+            a.result = result;
             a.save();
 
             final Activity act = new Activity();
-            if (a.result.equals("accepted"))
-                act.type = Activity.ACTIVITY_EVENT_INVITE_ACCEPTED;
-            else
-                act.type = Activity.ACTIVITY_EVENT_INVITE_DECLINED;
+            act.type = result;
             act.user = user;
             act.event = a.event;
             act.eventName = a.event.listing.title;

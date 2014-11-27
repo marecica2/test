@@ -15,20 +15,22 @@
 <div class="container">				
 	<div class="row">
 		<div class="col-md-8">
+			<div>
+				<h2 class="">About ${usr.firstName}</h2>
+				<div class="separator-2"></div>
+				#{set usr:usr /}
+				#{include 'userAbout.html' /}
+			</div>
+			
+			<br>
 			#{if listings}
-				<br/>
+				<h2>All channels from ${usr.firstName}</h2>
+				<div class="separator-2"></div>
 				#{set items:listings /}
 				#{set forEvents:false /}
 				#{include 'listingsList.html' /}
 			#{/if}	
-
-			<div>
-				<h2 class="">About ${usr.firstName}</h2>
-				#{set usr:usr /}
-				#{include 'userAbout.html' /}
-			</div>
-			<br>
-			
+						
 			<div>
 				#{set object:usr /}
 				#{include 'ratings.html' /}			

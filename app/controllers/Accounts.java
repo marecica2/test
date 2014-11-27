@@ -9,25 +9,50 @@ import java.util.Map;
 
 import models.Account;
 import models.Attendance;
-import models.Followers;
 import models.Listing;
 import models.User;
+
+import org.apache.velocity.VelocityContext;
+
 import play.Logger;
 import play.cache.Cache;
 import play.i18n.Lang;
 import play.i18n.Messages;
 import play.mvc.With;
+import templates.VelocityTemplate;
 import utils.DateTimeUtils;
 import utils.JsonUtils;
-import utils.RandomUtil;
+import utils.StringUtils;
 
 import com.google.gson.JsonObject;
 
 import email.EmailProvider;
+import email.Notification;
 
 @With(controllers.Secure.class)
 public class Accounts extends BaseController
 {
+    public static void setStyle()
+    {
+        final User user = getLoggedUserNotCache();
+        final JsonObject jo = JsonUtils.getJson(request.body);
+        final String stylesheet = jo.get("stylesheet") != null ? jo.get("stylesheet").getAsString() : null;
+        final String pattern = jo.get("pattern") != null ? jo.get("pattern").getAsString() : null;
+        final String layout = jo.get("layout") != null ? jo.get("layout").getAsString() : null;
+        final String footer = jo.get("footer") != null ? jo.get("footer").getAsString() : null;
+        if (pattern != null)
+            user.pattern = pattern;
+        if (stylesheet != null)
+            user.stylesheet = stylesheet;
+        if (layout != null)
+            user.layout = layout;
+        if (footer != null)
+            user.footer = footer;
+        user.save();
+        Cache.delete(user.login);
+        renderJSON("ok");
+    }
+
     public static void account()
     {
         final boolean edit = request.params.get("edit") == null ? false : true;
@@ -81,7 +106,7 @@ public class Accounts extends BaseController
     }
 
     public static void accountPost(
-        String accType,
+        String accPlan,
         String userAbout, String userExperiences, String userEducation,
         String skype, String googlePlus, String linkedIn, String twitter, String facebook,
         String url, String locale, String accName, Boolean emailNotification,
@@ -102,9 +127,6 @@ public class Accounts extends BaseController
 
         if (!validation.hasErrors())
         {
-            account.type = accType;
-            account.name = accName;
-            account.url = url;
 
             user.timezone = timezone;
             user.firstName = firstName;
@@ -112,24 +134,32 @@ public class Accounts extends BaseController
             user.locale = locale;
             user.emailNotification = emailNotification;
 
-            user.userAbout = userAbout;
-            user.userEducation = userEducation;
-            user.userExperiences = userExperiences;
+            user.userAbout = StringUtils.htmlEscape(userAbout);
+            user.userEducation = StringUtils.htmlEscape(userEducation);
+            user.userExperiences = StringUtils.htmlEscape(userExperiences);
             user.facebook = facebook;
             user.googlePlus = googlePlus;
             user.twitter = twitter;
             user.linkedIn = linkedIn;
             user.skype = skype;
 
+            if (account.planRequestFrom == null || account.planRequestFrom.getTime() < System.currentTimeMillis() || true)
+            {
+                account.planCurrent = account.planRequest;
+                account.planRequest = accPlan;
+                account.planRequestFrom = new Date(System.currentTimeMillis() + 60000);
+            }
+            account.name = accName;
+            account.requestTime = new Date();
+            account.url = url;
             account.smtpHost = smtpHost;
             account.smtpPort = smtpPort;
             account.smtpAccount = smtpAccount;
             account.smtpPassword = smtpPassword;
             account.smtpProtocol = smtpProtocol;
-            account.save();
-
             account.paypalAccount = paypal;
             account.currency = currency;
+            account.save();
 
             if (imageUrl != null)
             {
@@ -167,13 +197,15 @@ public class Accounts extends BaseController
 
         if (listings == null || listings.size() == 0)
         {
-            flash.put("error", "");
-            validation.addError("listing", "You need at least one listing.");
+            validation.addError("request", "You need at least one listing.");
         }
         if (user.userAbout == null || user.userAbout.length() < 10)
         {
-            flash.put("error", "");
-            validation.addError("about", "Please fill in information about you.");
+            validation.addError("request", "Please fill in information about you.");
+        }
+        if (user.account.paypalAccount == null || user.account.paypalAccount.length() < 2)
+        {
+            validation.addError("request", "Invalid Paypal account");
         }
 
         if (!validation.hasErrors())
@@ -188,28 +220,6 @@ public class Accounts extends BaseController
         params.flash(); // add http parameters to the flash scope
         validation.keep(); // keep the errors for the next request
         account();
-    }
-
-    public static void follow(String id, String url)
-    {
-        final User user = getLoggedUser();
-        final User userToFollow = User.getUserByUUID(id);
-        Followers f = new Followers();
-        f.followSource = user;
-        f.followTarget = userToFollow;
-        f.uuid = RandomUtil.getUUID();
-        f.created = new Date();
-        f.save();
-        redirectTo(url);
-    }
-
-    public static void unfollow(String id, String url)
-    {
-        final User user = getLoggedUser();
-        final User userTarget = User.getUserByUUID(id);
-        Followers f = Followers.get(user, userTarget);
-        f.delete();
-        redirectTo(url);
     }
 
     public static void checkConnection(String id, String url)
@@ -239,8 +249,16 @@ public class Accounts extends BaseController
         try
         {
             final User user = getLoggedUser();
-            EmailProvider em = new EmailProvider(user.account.smtpHost, user.account.smtpPort, user.account.smtpAccount, user.account.smtpPassword, "10000", user.account.smtpProtocol, true);
-            em.sendMessage(user.login, Messages.get("email.test.subject"), Messages.get("email.test.body"));
+            final String from = user.login;
+            final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
+            final EmailProvider emailProvider = new EmailProvider(user.account.smtpHost, user.account.smtpPort,
+                    user.account.smtpAccount, user.account.smtpPassword, "10000", user.account.smtpProtocol, true);
+            final String title = "Email Test";
+            final String message = "Email settings are setted up correctly";
+
+            final VelocityContext ctx = VelocityTemplate.createBasicTemplate(null, baseUrl, title, message);
+            final String body = VelocityTemplate.processTemplate(ctx, VelocityTemplate.getTemplateContent(VelocityTemplate.CONTACT_INVITE_TEMPLATE));
+            new Notification(emailProvider, from, "Email Test", user.login, body).execute();
             renderJSON("{\"response\":\"" + Messages.get("email.test.response.ok") + "\"}");
         } catch (Exception e)
         {
@@ -310,14 +328,6 @@ public class Accounts extends BaseController
         }
         params.flash();
         render(user, account, payments, total, provider, fee, mapTotal);
-    }
-
-    public static void contacts()
-    {
-        final User user = getLoggedUser();
-        final Account account = user.account;
-        List<User> customers = User.getCustomersForAccount(account, null);
-        render(customers, account, user);
     }
 
     public static void passwordReset()

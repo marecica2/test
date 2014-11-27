@@ -1,39 +1,46 @@
 GET     /										Application.home
 GET     /home									Application.home
 GET     /search									Application.search
-GET     /channels								Application.channels
-GET     /dashboard/{type}                       Application.dashboard
+GET     /dashboard			                    Application.dashboard
 GET     /calendar                               Application.calendar
-GET     /calendar/{login}			      		Application.calendarUser
 GET     /user/{login}/calendar		      		Application.calendarUser
-
-GET     /room			                       	Hangout.room
-GET     /join-room			                  	Hangout.joinRoom
-
-GET		/remove-upload							FileuploadController.removeFile	
-POST    /fileupload								FileuploadController.uploadFile
-POST    /photoupload							FileuploadController.uploadPhoto
-POST    /delete-temp-files						FileuploadController.deleteTmpFiles
-GET	    /delete-temp-files						FileuploadController.deleteTmpFiles
-POST    /crop									FileuploadController.cropImage
+GET     /channels								Application.channels
 
 GET		/login									Secure.login
+GET		/login/									Secure.login
 POST   	/login          						Secure.authenticate
 GET	   	/logout									Secure.logout
 
-GET     /listings                  				Listings.listings
-GET 	/listing-new							Listings.listingNew
-GET 	/listing								Listings.listingNew
-POST	/listing-new							Listings.listingNewPost
-POST	/listing-delete							Listings.deleteListing
-GET     /listing/reset-image					Listings.resetImage
+GET 	/channel/{uuid}							Listings.listingNew
+POST	/channel/{uuid}							Listings.listingNewPost
+GET 	/channel-delete							Listings.deleteListing
+GET     /channel-reset-image					Listings.resetImage
+GET     /channels-get							Listings.listingsRest
 
-GET     /event-detail             				Events.eventNew
-POST    /event-detail             				Events.eventNewPost
+GET     /event      		       				Events.eventNew
+GET     /event/{uuid} 		       				Events.eventNew
+POST    /event		             				Events.eventNewPost
+GET     /events                  				Events.events
+GET     /event		              				Events.event
+POST    /event/save              				Events.eventSaveRest
+POST    /event/update              				Events.eventUpdateRest
+DELETE  /event/delete              				Events.eventDeleteRest
+GET     /event-delete              				Events.eventDelete
+POST    /event/invite              				Events.eventInvite
+GET     /event/reset-image						Events.resetImage
+GET     /event-approve            				Events.approve
+GET     /event-decline            				Events.decline
 
-GET    	/mail	        						Messages.inbox
-POST   	/mail	        						Messages.send
-GET   	/mail/{id}         						Messages.detail
+POST    /attendance-new-save           			Attendances.attendanceNewSave
+GET     /attendance-new-edit           			Attendances.attendanceNewEdit
+GET     /attendance-new-delete           		Attendances.attendanceNewDelete
+GET     /attendances                  			Attendances.attendancesRest
+POST    /attendance/save              			Attendances.attendanceRestSave
+POST    /attendance/update              		Attendances.attendanceRestUpdate
+DELETE  /attendance/delete              		Attendances.attendanceRestDelete
+GET     /invites								Attendances.invites
+GET		/watchlist/add							Attendances.watchListAdd
+GET		/watchlist/remove						Attendances.watchListRemove
 
 GET     /captcha                                Registration.captcha
 GET		/registration							Registration.registration
@@ -45,8 +52,31 @@ POST 	/password								Registration.passwordPost
 GET		/public/password						Registration.passwordCustomer
 POST 	/public/password						Registration.passwordCustomerPost
 
-POST    /event/comment                  		Comments.addComment
-GET  	/event/comment/delete              		Comments.deleteComment
+GET     /contacts								Contacts.contacts
+POST    /contacts/invite						Contacts.contactInvite
+GET     /contact-add							Contacts.contactAdd
+GET     /contact-delete							Contacts.contactDelete
+GET     /contact-block							Contacts.contactBlock
+GET     /contact-unblock						Contacts.contactUnblock
+GET     /contact-follow							Contacts.contactFollow
+GET     /contact-unfollow						Contacts.contactUnfollow
+
+GET		/locale									Public.locale
+GET 	/user/{userLogin}						Public.userProfile
+GET 	/public/user							Public.userProfile
+GET 	/public/feeds							Public.feeds
+POST 	/public/feed							Public.feedSave
+GET 	/public/activities						Public.activities
+GET 	/public/facebook/registration			Public.facebookRegistration
+GET 	/wiki									Public.wiki
+GET 	/account/activate						Public.activate
+
+GET		/remove-upload							FileuploadController.removeFile	
+POST    /fileupload								FileuploadController.uploadFile
+POST    /photoupload							FileuploadController.uploadPhoto
+POST    /delete-temp-files						FileuploadController.deleteTmpFiles
+GET	    /delete-temp-files						FileuploadController.deleteTmpFiles
+POST    /crop									FileuploadController.cropImage
 
 POST    /rating			                  		Ratings.addRating
 GET  	/rating/delete              			Ratings.deleteRating
@@ -57,35 +87,15 @@ GET  	/rating/{uuid}/abuse         	 		Ratings.abuseForRating
 GET		/paypal/checkout/{event}				PaypalController.payBefore
 POST	/paypal/checkout/{event}				PaypalController.payBefore
 
-GET     /events                  				Events.events
-GET     /event		              				Events.event
-POST    /event/save              				Events.eventSaveRest
-POST    /event/update              				Events.eventUpdateRest
-DELETE  /event/delete              				Events.eventDeleteRest
-POST    /event/invite              				Events.eventInvite
-GET     /event/decline            				Events.decline
-GET     /event/approve            				Events.approve
-GET     /event/invites							Events.invites
-GET     /event/reset-image						Events.resetImage
+POST    /event/comment                  		Comments.addComment
+GET  	/event/comment/delete              		Comments.deleteComment
 
-GET		/watchlist/add							Attendances.watchListAdd
-GET		/watchlist/remove						Attendances.watchListRemove
-GET     /attendances                  			Attendances.attendances
-GET     /attendance		              			Attendances.event
-POST    /attendance/save              			Attendances.attendanceSave
-POST    /attendance/update              		Attendances.attendanceUpdate
-DELETE  /attendance/delete              		Attendances.attendanceDelete
-POST    /attendance-new-save           			Attendances.attendanceNewSave
-GET     /attendance-new-edit           			Attendances.attendanceNewEdit
-GET     /attendance-new-delete           		Attendances.attendanceNewDelete
+GET    	/mail	        						Messages.inbox
+POST   	/mail	        						Messages.send
+GET   	/mail/{id}         						Messages.detail
 
-GET		/locale									Public.locale
-GET 	/user/{userLogin}						Public.userProfile
-GET 	/public/user							Public.userProfile
-GET 	/public/feeds							Public.feeds
-POST 	/public/feed							Public.feedSave
-GET 	/public/activities						Public.activities
-GET 	/public/facebook/registration			Public.facebookRegistration
+GET     /room			                       	Hangout.room
+GET     /join-room			                  	Hangout.joinRoom
 
 GET 	/test-email								Accounts.testEmail
 GET 	/follow									Accounts.follow
@@ -96,6 +106,13 @@ GET 	/settings								Accounts.account
 GET 	/settings/smtp/reset					Accounts.resetEmail
 GET 	/settings/request-publisher				Accounts.requestPublisher
 POST	/settings/agenda						Accounts.setAgendaType
+POST	/settings/style							Accounts.setStyle
+
+GET 	/admin/publishers						Admin.publishers
+GET 	/admin/users							Admin.users
+GET 	/admin/approve							Admin.approve
+GET 	/admin/deny								Admin.deny
+
 
 # Map static resources from the /app/public folder to the /public path
 GET     /favicon.ico                            404

@@ -1,5 +1,7 @@
 package models;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,13 +37,7 @@ public class Event extends Model
     public static String EVENT_STATE_CUSTOMER_CREATED = "customer_created";
     public static String EVENT_STATE_USER_ACCEPTED = "user_accepted";
     public static String EVENT_STATE_USER_DECLINED = "user_declined";
-    //public static String EVENT_STATE_USER_APPROVEMENT_WAIT = "user_approvement_wait";
-    //public static String EVENT_STATE_CUSTOMER_APPROVEMENT_WAIT = "customer_approvement_wait";
-    //public static String EVENT_STATE_CUSTOMER_ACCEPTED = "customer_accepted";
-    //public static String EVENT_STATE_USER_DECLINED = "user_declined";
-    //public static String EVENT_STATE_CUSTOMER_DECLINED = "customer_declined";
-    //public static String EVENT_STATE_USER_CANCELED = "user_canceled";
-    //public static String EVENT_STATE_CUSTOMER_CANCELED = "customer_canceled";
+
     public static String EVENT_CHARGING_FREE = "free";
     public static String EVENT_CHARGING_BEFORE = "before";
     public static String EVENT_CHARGING_AFTER = "after";
@@ -64,7 +60,7 @@ public class Event extends Model
 
     public Boolean archived;
 
-    public String price;
+    public BigDecimal price;
 
     public String currency;
 
@@ -76,13 +72,15 @@ public class Event extends Model
 
     public Boolean chatEnabled;
 
+    public Boolean commentsEnabled;
+
+    public Boolean firstFree;
+
+    public Integer chargingTime;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", orphanRemoval = true)
     @Cascade({ org.hibernate.annotations.CascadeType.DELETE })
     public List<Attendance> attendances = new ArrayList<Attendance>();
-
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    public Account account;
 
     @ManyToOne
     @JoinColumn(name = "listing_id")
@@ -101,7 +99,6 @@ public class Event extends Model
     public Event save(Account account)
     {
         this.created = new Date();
-        this.account = account;
         Event event = this.save();
         return event;
     }
@@ -174,14 +171,14 @@ public class Event extends Model
             if (from != null)
                 query += " and ev.eventStart >= :start ";
             if (to != null)
-                query += " and ev.eventEnd <= :end ";
+                query += " and ev.eventStart <= :end ";
             query += " ) or ";
 
             query += " ( ev.user = :cust ";
             if (from != null)
                 query += " and ev.eventStart >= :start ";
             if (to != null)
-                query += " and ev.eventEnd <= :end ";
+                query += " and ev.eventStart <= :end ";
             query += " ) ";
         }
 
@@ -301,7 +298,7 @@ public class Event extends Model
     @Override
     public String toString()
     {
-        return "Event [uuid=" + uuid + ", account=" + account + ", eventStart=" + eventStart + ", eventEnd=" + eventEnd + "]";
+        return "Event [uuid=" + uuid + ", eventStart=" + eventStart + ", eventEnd=" + eventEnd + "]";
     }
 
     public Boolean isOwner(User user)
@@ -309,7 +306,7 @@ public class Event extends Model
         return user != null && user.uuid.equals(this.user.uuid) ? true : false;
     }
 
-    public String getPrice()
+    public BigDecimal getPrice()
     {
         if (price != null)
             return price;
@@ -355,6 +352,46 @@ public class Event extends Model
             return chatEnabled;
         else
             return this.listing.chatEnabled;
+    }
+
+    public Boolean getCommentsEnabled()
+    {
+        if (commentsEnabled != null)
+            return commentsEnabled;
+        else
+            return this.listing.commentsEnabled;
+    }
+
+    public Boolean getFirstFree()
+    {
+        if (firstFree != null)
+            return firstFree;
+        else
+            return this.listing.firstFree;
+    }
+
+    public Integer getChargingTime()
+    {
+        if (chargingTime != null)
+            return chargingTime;
+        else
+            return this.listing.chargingTime;
+    }
+
+    public Integer getMinutes()
+    {
+        long diff = this.eventEnd.getTime() - this.eventStart.getTime();
+        int minutes = Math.round(diff / (1000 * 60));
+        return minutes;
+    }
+
+    public BigDecimal getTotalPrice()
+    {
+        final BigDecimal divisor = new BigDecimal(this.getChargingTime(), new MathContext(2));
+        final BigDecimal unitPrice = this.getPrice().divide(divisor, MathContext.DECIMAL128);
+        final BigDecimal multiplicand = new BigDecimal(this.getMinutes());
+        final BigDecimal totalPrice = unitPrice.multiply(multiplicand).round(new MathContext(4));
+        return totalPrice;
     }
 
 }

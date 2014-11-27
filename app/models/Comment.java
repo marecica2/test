@@ -20,6 +20,7 @@ public class Comment extends Model
 {
     public static final String EVENT_COMMENT = "event";
     public static final String USER_COMMENT = "user";
+    public static final String LISTING_COMMENT = "listing";
 
     public static final String TYPE_DEFAULT = "text";
     public static final String TYPE_FILE = "file";

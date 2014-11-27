@@ -3,74 +3,59 @@
 #{i18n /}
 
 #{set 'moreStyles'}
-    <style>
-	@media (min-width: 768px) {
-	    	.row {
-	    		margin:0px;
-	    	}	
-	}
-	@media (min-width: 992px) {
-	    	.right-row {
-				margin-left:20px;
-	    	}	
-	}
-	@media (max-width: 992px) {
-	    	.right-row-first {
-				margin-top:20px;
-	    	}	
-	}
-    </style>
 #{/set}
 
 #{set 'moreScripts'}
     <link href="@{'/public/css/fullcalendar.css'}"  rel="stylesheet">
 	<script src="@{'/public/javascripts/lib/jquery-ui.custom.min.js'}" type="text/javascript" ></script>
 	<script src="@{'/public/javascripts/lib/fullcalendar.min.js'}"></script>
+	<script src="@{'/public/javascripts/utils.js'}"></script>
 	<script>
-		#{if userDisplayed}
-			starCalendarInit.userDisplayed = "${userDisplayed.uuid}";
-			starCalendarInit.userDisplayedLogin = "${userDisplayed.login}";
-		#{/if}
-		#{if listing}
-			starCalendarInit.listing = "${listing.uuid}";
-		#{/if}
-		#{if listings && listings.size() > 0 || request.params.listing != null}
-			starCalendarInit.listings = true;
-		#{/if}
-		#{if user}
-		starCalendarInit.userUUID = "${user.uuid}";
-		starCalendarInit.isPublic = false;
-		starCalendarInit.login = "${user.login}";
-		#{/if}
-		#{else}
-		starCalendarInit.isPublic = true;
-		#{/else}
-		
-		#{if selectedEvent != null}
-			starCalendarInit.selectedEventDate = new Date(${selectedEvent.eventStart});
-			starCalendarInit.selectedEventId = "${selectedEvent.uuid}";
-		#{/if}
-		#{if account != null}
-			starCalendarInit.defaultCurrency = "${account.currency}";
-		#{/if}
 	    starCalendar.d = new Date();
 	    starCalendar.h = starCalendar.d.getHours();
 	    starCalendar.mhalf = starCalendar.d.getMinutes() >= 30 ? true : false;
 	    starCalendar.currentMousePos = { x: -1, y: -1 };
-	    starCalendar.isPublic = starCalendarInit.isPublic;
-	    starCalendar.isLogged = starCalendarInit.isLogged;
-	    starCalendar.login = starCalendarInit.login;
-	    starCalendar.userDisplayedLogin = starCalendarInit.userDisplayedLogin;
-	    starCalendar.selectedEventDate = starCalendarInit.selectedEventDate;
-	    starCalendar.selectedEventId = starCalendarInit.selectedEventId;
-	    starCalendar.userUUID = starCalendarInit.userUUID;
-	    starCalendar.userDisplayed = starCalendarInit.userDisplayed;
-	    starCalendar.defaultCurrency = starCalendarInit.defaultCurrency;
+	    starCalendar.isPublic = starCalendar.isPublic;
+	    starCalendar.isLogged = starCalendar.isLogged;
+	    starCalendar.login = starCalendar.login;
+	    starCalendar.userDisplayedLogin = starCalendar.userDisplayedLogin;
+	    starCalendar.selectedEventDate = starCalendar.selectedEventDate;
+	    starCalendar.selectedEventId = starCalendar.selectedEventId;
+	    starCalendar.userUUID = starCalendar.userUUID;
+	    starCalendar.userDisplayed = starCalendar.userDisplayed;
+	    starCalendar.defaultCurrency = starCalendar.defaultCurrency;
 	    starCalendar.showEvent = true;
 	    starCalendar.activitiesLimit = 5;
-	    starCalendar.clientId = "";		
-	  
-	    //hiddenDays
+	    starCalendar.clientId = "";	
+	
+		#{if userDisplayed}
+			starCalendar.userDisplayed = "${userDisplayed.uuid}";
+			starCalendar.userDisplayedLogin = "${userDisplayed.login}";
+		#{/if}
+		#{if listing}
+			starCalendar.listing = "${listing.uuid}";
+		#{/if}
+		#{if listings && listings.size() > 0 || request.params.listing != null}
+			starCalendar.listings = true;
+		#{/if}
+		
+		// create events
+		#{if user && (user.isPublisher() || userDisplayed)}
+			starCalendar.userUUID = "${user.uuid}";
+			starCalendar.login = "${user.login}";
+			starCalendar.editable = true;
+		#{/if}
+		#{else}
+			starCalendar.editable = false;
+		#{/else}
+		
+	    // set default view
+	    #{if user}
+	    	console.log("vvv");
+		    starCalendar.defaultView = star.utils.getCookie("agenda");
+		#{/if}
+
+		// set hiddenDays
 	    #{if userDisplayed && userDisplayed.hiddenDays != null}
 		    starCalendar.hiddenDays = "${userDisplayed.hiddenDays}";
 	    #{/if}
@@ -80,17 +65,12 @@
 	    #{else}
 		    starCalendar.hiddenDays = "";
 	    #{/else}
-		
-	    #{if user}
-		    starCalendar.defaultView = "${user.agendaType}";
-		#{/if}
-		
 	    starCalendar.hiddenDays = starCalendar.hiddenDays.split(",");
 	    for(var i = 0; i < starCalendar.hiddenDays.length; i++){
 	        starCalendar.hiddenDays[i] = parseInt(starCalendar.hiddenDays[i]);
-	    }
-	    
-	    //working hours
+	    }	    
+		
+	    // set working hours
 	    #{if userDisplayed && userDisplayed.workingHourStart != null}
 		    starCalendar.startHour = parseInt("${userDisplayed.workingHourStart}");
 		    starCalendar.endHour = parseInt("${userDisplayed.workingHourEnd}");
@@ -135,18 +115,52 @@
 	#{if listing}
 	<div class="container">
 		<div class="row">
-			<div class="col-md-12 shadow" style="padding:0px;background: #fafafa">
-				<a href="/listing-new?uuid=${listing.uuid}">
-					<img class="proggresive" style="float:left;" src="../${listing.imageUrl}_128x128">
-				</a>
-				<div style="float:left;padding:15px;">
-					<p>
-			  			<a href="/listing-new?uuid=${listing.uuid}" class="" style=""><img class="img-circle" src="../${listing.user.avatarUrl}_32x32"> ${listing.user.fullName}</a>
-						&middot; ${listing.category}
-					</p>
-			  		<a href="/listing-new?uuid=${listing.uuid}" class="anchor" style="font-size:1.3em">${listing.title}</a>
+			<div class="col-md-12">
+				<!-- include from listings list -->
+				<script>
+					$(document).ready(function(){
+					    $(".anchorLink").click(function(){
+					        document.location = $(this).attr("data-href");
+					    });
+					});
+				</script>				
+				#{set item: listing /}
+				#{set usr: userDisplayed /}
+				<div class="shadow-blur" style="background: #fafafa; width:100%; margin:0 0 20px 0;">
+					
+					<div class="anchorLink" data-href="/channel/${item.uuid}" style="cursor:pointer;display:table;text-align:left;width:100%">
+				   		
+				   		<div style="display:table-cell; height:128px; width:200px; min-width:200px; background: url('/${item.imageUrl}') no-repeat center; background-size:cover; border-right:5px solid #{if item && item.color} ${item.color} #{/if} #{else} #3A87AD #{/else};">
+				   		</div>
+				   		
+				   		<div style="display:table-cell;vertical-align:top;padding:0 15px 0 15px;position:relative;">
+							<h4>${item.title}</h4>
+							<p style="margin-bottom:5px">
+								<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
+								<strong>${item.user.fullName}</strong>  &middot; 
+								${item.category}  &middot; 
+								${item.privacy}  &middot; 
+								${item.type}
+							</p>
+							
+							
+							<span class="truncate">${item.getDescriptionHtml().trimDot(140).raw()}</span>
+				   			<p>
+				   			#{if item.charging != 'free'}
+				   				<strong>from ${item.price} <small>${item.currency}</small></strong>
+					   			<nobr>for 15</nobr> minutes
+				   			#{/if}
+				   			#{else}
+				   				<strong class="">Free</strong>
+				   			#{/else}
+				   			#{if item.firstFree}
+				   				<span class="label label-default">first free</span>
+				   			#{/if}
+				   			</p>
+				   		</div>
+				   	</div>		
 				</div>
-	  			<div class="clearfix"></div>
+
 			</div>
 		</div>	
 	</div>
@@ -191,8 +205,8 @@
 			<h2> 
 				<span class="truncate event-title"></span>
 				<span class="popup-event-approvement" style="display:none;position:relative;top:-3px;">
-					<a class="btn btn-white btn-sm event-anchor popup-event-approve" href='' style="margin:2px;" id="" data-url="/event/approve?event="><i class="fa fa-check"></i> &{'dashboard.approve'}</a>
-					<a class="btn btn-white btn-sm event-anchor popup-event-decline" href='' style="margin:2px;" id="" data-url="/event/decline?event="><i class="fa fa-times"></i> &{'dashboard.decline'}</a>
+					<a class="btn btn-white btn-sm event-anchor popup-event-approve" href='' style="margin:2px;" id="" data-url="/event-approve?url=${request.url.urlEncode()}&event="><i class="fa fa-check"></i> &{'dashboard.approve'}</a>
+					<a class="btn btn-white btn-sm event-anchor popup-event-decline" href='' style="margin:2px;" id="" data-url="/event-decline?url=${request.url.urlEncode()}&event="><i class="fa fa-times"></i> &{'dashboard.decline'}</a>
 				</span>
 			</h2> 
 		</div>
@@ -217,7 +231,7 @@
 			</div>
 		
 			<span style="float:left">
-				<a href='' data-url="/event-detail?action=view&uuid=" style="margin:2px;" class="btn btn-default event-anchor" id="popup-event-view">&{'dashboard.view'}</a>
+				<a href='' data-url="/event/" style="margin:2px;" class="btn btn-default event-anchor" id="popup-event-view">&{'dashboard.view'}</a>
 			</span>
 			<span style="float:right">
 				<a href='#' style="margin:2px;" class="btn btn-white " id="popup-event-delete">&{'dashboard.delete'}</a>

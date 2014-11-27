@@ -120,6 +120,11 @@ jQuery(document).ready(function($) {
 		link.attr('href', '/css/skins/' + stylesheet + '.css');
 		document.getElementById("logo").src="/images/logo_" + stylesheet + ".png";
 		$.cookie('stylesheet', stylesheet, 365);		
+		
+		// save setting
+		var data = {};
+		data.stylesheet = stylesheet;
+		starEvent.updateStyle(data);
 		});
 
 		// switch patterns
@@ -137,7 +142,14 @@ jQuery(document).ready(function($) {
 		$(".style-switcher select").val("boxed");
 		$.cookie('pattern', pattern, 365);
 		$.cookie('layout_mode', 'boxed', 365);
-		});
+		
+	     // save setting
+        var data = {};
+        data.pattern = pattern;
+        starEvent.updateStyle(data);
+        
+        });
+		
 
 		// Switch layout
 		// Boxed Layout
@@ -156,6 +168,11 @@ jQuery(document).ready(function($) {
 			} else {
 				$('.style-switcher .patternChange li[data-style="pattern-0"]').addClass("selected");
 			}
+			
+		    // save setting
+	        var data = {};
+	        data.layout = "boxed";
+	        starEvent.updateStyle(data);
 		});
 
 		// Wide Layout
@@ -167,6 +184,11 @@ jQuery(document).ready(function($) {
 			$(".testimonial .container").css("marginLeft", "auto");
 			$('.style-switcher .patternChange li.selected').removeClass("selected");
 			$.cookie('layout_mode', 'wide', 365);
+			
+            // save setting
+            var data = {};
+            data.layout = "wide";
+            starEvent.updateStyle(data);			
 		});
 
 		// Footer bg
@@ -175,6 +197,10 @@ jQuery(document).ready(function($) {
 			$('.style-switcher .footerChange li[data-style="dark"]').addClass("selected");
 			$('.style-switcher .footerChange li[data-style="light"]').removeClass("selected");
 			$.cookie('footer_bg', 'dark', 365);
+			
+            var data = {};
+            data.footer = "dark";
+            starEvent.updateStyle(data);
 		});
 
 		$('.style-switcher .footerChange li.light').on('click',function(){ 
@@ -182,6 +208,10 @@ jQuery(document).ready(function($) {
 			$('.style-switcher .footerChange li[data-style="dark"]').removeClass("selected");
 			$('.style-switcher .footerChange li[data-style="light"]').addClass("selected");
 			$.cookie('footer_bg', 'light', 365);
+
+			var data = {};
+			data.footer = "light";
+			starEvent.updateStyle(data);
 		});
 
 		//Reset All

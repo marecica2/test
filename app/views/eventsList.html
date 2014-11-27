@@ -5,7 +5,7 @@
 		<mark style='position:absolute;bottom:0px;padding:5px' class='title'><img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/${item.user.avatarUrl}_32x32'>${item.user.fullName}</mark>
 		<div class='overlay'>
 			<div class='overlay-links'>
-				<a href='/event-detail?uuid=${item.uuid}'><i class='fa fa-link'></i></a>
+				<a href='/event/${item.uuid}'><i class='fa fa-link'></i></a>
 				<a href='/user/${item.user.login}'><i class='fa fa-user'></i></a>
 			</div>
 		</div>
@@ -27,7 +27,7 @@
 			<span class='label label-danger'>pending</span>
 			#{/if}
 		</p>
-		<p class='event-box-link'><span><a href='/listing-new?uuid=${item.uuid}' class='link-left'><span>${item.listing.title}</span></a></span></p>
+		<p class='event-box-link'><span><a href='/event/${item.uuid}' class='link-left'><span>${item.listing.title}</span></a></span></p>
 	</div>
 </div>
 

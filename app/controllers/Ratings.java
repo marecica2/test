@@ -24,7 +24,7 @@ public class Ratings extends BaseController
         r.votes = 0;
         r.abuses = 0;
         r.type = type;
-        r.uuid = RandomUtil.getDoubleUUID();
+        r.uuid = RandomUtil.getUUID();
         r.comment = comment;
         r.saveRating();
 

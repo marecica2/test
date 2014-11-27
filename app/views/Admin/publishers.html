@@ -1,0 +1,56 @@
+#{extends 'main.html' /} 
+
+#{set 'moreScripts'}
+#{/set}
+
+#{set 'moreStyles'}
+#{/set}
+
+#{set background:'true' /} 
+
+
+<div class="container">				
+	<div class="row">
+		<div class="col-md-12" style="min-height:40vh">
+			<h2>Publishers requests</h2>
+			<div class="separator-2"></div>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Request time</th>
+						<th></th>
+						<th>Status</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				#{list items:publishers, as:'item'}
+					<tr>
+						<td>
+							<img class="avatar22" src="/${item.avatarUrl}_32x32">
+							<a href="/user/${item.login}">${item.fullName}</a>
+						</td>
+						<td>
+							${item.account.type}
+							${item.account.requestTime}
+						</td>
+						<td>
+							<a href="/mail?action=new&to=${item.login}">Write a message</a>
+						</td>
+						<td>
+							#{if item}
+								<span class="label label-danger">blocked</span>
+							#{/if}
+						</td>
+						<td>
+							<a href="/admin/approve?uuid=${item.uuid}&url=${request.url.urlEncode()}" class="btn btn-default btn-sm btn-short btn-margin">Approve</a>
+							<a href="/admin/deny?uuid=${item.uuid}&url=${request.url.urlEncode()}" class="btn btn-gray btn-sm btn-short btn-margin">Deny</a>
+						</td>
+					</tr>				
+				#{/list}				
+			</table>
+		</div>
+	</div>
+</div>
+
+																						

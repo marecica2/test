@@ -6,10 +6,10 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.Query;
 import javax.persistence.Table;
 
 import play.db.jpa.Model;
+import utils.WikiUtils;
 import controllers.FileuploadController;
 
 @Entity
@@ -19,7 +19,6 @@ public class User extends Model
     public static final String ROLE_SUPERADMIN = "superadmin";
     public static final String ROLE_ADMIN = "admin";
     public static final String ROLE_USER = "user";
-    public static final String ROLE_CUSTOMER = "customer";
 
     public String uuid;
 
@@ -47,6 +46,8 @@ public class User extends Model
     public Boolean unreadMessages;
 
     public Boolean emailNotification;
+
+    public Boolean activated;
 
     public String hiddenDays;
 
@@ -79,10 +80,19 @@ public class User extends Model
 
     public String skype;
 
-    public String getFullName()
-    {
-        return firstName + " " + lastName;
-    }
+    public String layout;
+
+    public String stylesheet;
+
+    public String pattern;
+
+    public String footer;
+
+    // random secret uuid token for invitations
+    public String referrerToken;
+
+    // identifies user who invited this user
+    public String registrationToken;
 
     public static User getUserByLogin(String login)
     {
@@ -103,6 +113,16 @@ public class User extends Model
             u = u.merge();
         u = u.save();
         return u;
+    }
+
+    public static List<User> getUsers()
+    {
+        return User.all().fetch();
+    }
+
+    public static List<User> getPublisherRequests()
+    {
+        return User.find("from User where account.type = ?", Account.TYPE_PUBLISHER_REQUEST).fetch();
     }
 
     @Override
@@ -147,47 +167,57 @@ public class User extends Model
             return FileuploadController.PATH_TO_UPLOADS + avatarUrl + "";
     }
 
-    public String getAvatarUrlSmall()
+    public String userAboutHtml()
     {
-        //        String md5 = RandomUtil.getMD5Hex(this.login);
-        //        return "//www.gravatar.com/avatar/" + md5 + "?s=25";
-        return FileuploadController.PATH_TO_UPLOADS + avatarUrl + "_64x64";
+        return WikiUtils.parseToHtml(this.userAbout);
     }
 
-    public String getAvatarUrlTiny()
+    public String userEducationHtml()
     {
-        return FileuploadController.PATH_TO_UPLOADS + avatarUrl + "_16x16";
+        return WikiUtils.parseToHtml(this.userEducation);
     }
 
-    public static List<User> getCustomersForAccount(Account account, String queryString)
+    public String userExperiencesHtml()
     {
-        //        String query = "select distinct c from Customer c join c.attendances as al where al.account = :account";
-        //        if (str != null)
-        //            query += " and concat(c.login, ' ', c.firstName, ' ', c.lastName) like :login ";
-        //
-        //        Query q = Customer.em().createQuery(query);
-        //        q.setParameter("account", account);
-        //        if (str != null)
-        //        {
-        //            q.setParameter("login", "%" + str + "%");
-        //        }
-
-        String query = "select distinct c from Attendance a, User c where a.account = :account and a.customer.uuid = c.uuid ";
-        if (queryString != null)
-            query += " and lower(concat(a.email, ' ', c.firstName, ' ', c.lastName)) like :queryString";
-
-        Query q = User.em().createQuery(query);
-        q.setParameter("account", account);
-        if (queryString != null)
-        {
-            q.setParameter("queryString", "%" + queryString.toLowerCase() + "%");
-        }
-        List<User> customers = q.getResultList();
-        return customers;
+        return WikiUtils.parseToHtml(this.userExperiences);
     }
 
-    public static List<User> getUsers()
+    public String getFullName()
     {
-        return User.all().fetch();
+        return firstName + " " + lastName;
     }
+
+    public Boolean isPublisher()
+    {
+        if (this.account.type != null && this.account.type.equals(Account.TYPE_PUBLISHER))
+            return true;
+        return false;
+    }
+
+    public Boolean isAdmin()
+    {
+        if (this.role.equals(ROLE_SUPERADMIN))
+            return true;
+        return false;
+    }
+
+    public Boolean isOwner(Listing listing)
+    {
+        if (listing != null && this.equals(listing.user))
+            return true;
+        return false;
+    }
+
+    public Boolean isOwner(Event event)
+    {
+        if (event != null && this.equals(event.user))
+            return true;
+        return false;
+    }
+
+    public Boolean isOnline()
+    {
+        return (this.lastOnlineTime != null && (this.lastOnlineTime.getTime() > System.currentTimeMillis() - 20000)) ? true : false;
+    }
+
 }

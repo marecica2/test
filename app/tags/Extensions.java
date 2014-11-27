@@ -13,7 +13,7 @@ public class Extensions extends JavaExtensions
 
     public static String trimDot(String input, int len)
     {
-        if (input.length() > len && input.length() > 50)
+        if (input.length() > len && input.length() > 10)
         {
             input = input.substring(0, len - 3);
             input += " ...";

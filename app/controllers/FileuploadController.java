@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
-import models.Event;
 import models.FileUpload;
 import models.Listing;
 import models.User;
@@ -87,18 +86,6 @@ public class FileuploadController extends BaseController
             user.avatarUrl = fu.getUrl();
             user.save();
             Cache.delete(user.login);
-        }
-
-        if ("event".equals(type))
-        {
-
-            Event e = Event.get(objectId);
-            if (e != null)
-            {
-                e.listing.imageId = fu.uuid;
-                e.listing.imageUrl = PATH_TO_UPLOADS + fu.getUrl();
-                e.save();
-            }
         }
 
         if ("listing".equals(type))

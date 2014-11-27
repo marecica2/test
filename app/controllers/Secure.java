@@ -76,7 +76,7 @@ public class Secure extends Controller
         if (validation.hasErrors() || !allowed)
         {
             flash.keep("url");
-            flash.error("secure.error");
+            flash.error(Messages.get("Incorrect login or password"));
             params.flash();
             login();
         }
@@ -97,7 +97,10 @@ public class Secure extends Controller
         session.clear();
         //response.removeCookie("rememberme");
         Security.invoke("onDisconnected");
-        flash.success("secure.logout");
+        flash.success(Messages.get("You have been logged out"));
+        String url = request.params.get("url");
+        if (url != null)
+            redirect(url);
         login();
     }
 
@@ -107,9 +110,17 @@ public class Secure extends Controller
     {
         Security.invoke("onAuthenticated");
         String url = flash.get("url");
-        if (url == null || url.contains("check-connection"))
+        if (url == null)
         {
-            url = "/home";
+            url = request.params.get("url");
+            if ("/login".equals(url))
+                url = "/home";
+            if ("/login/".equals(url))
+                url = "/home";
+            if ("".equals(url))
+                url = "/home";
+            if (url == null)
+                url = "/home";
         }
         redirect(url);
     }
@@ -142,6 +153,12 @@ public class Secure extends Controller
         {
             User user = User.getUserByLogin(username);
 
+            if (!user.activated)
+            {
+                flash("securityError", Messages.get("Your account is not activated"));
+                return false;
+            }
+
             if (user != null && user.password.equals(password))
             {
                 user.lastLoginTime = new Date();
@@ -150,7 +167,7 @@ public class Secure extends Controller
                 return true;
             }
 
-            flash("securityError", Messages.get("securityError"));
+            flash("securityError", Messages.get("Incorrect login or password"));
             return false;
         }
 

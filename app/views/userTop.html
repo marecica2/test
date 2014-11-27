@@ -2,25 +2,25 @@
 <div class="container container-xs-height">
 	<div class="row row-xs-height">
 	  	
-	  	<div class="col-md-3 col-xs-height col-top" >
-			<div class="box-style-1 gray-bg team-member">
+	  	<div class="col-md-12 col-xs-height col-top" >
+			
+			<div class="gray-bg" style="padding:15px;max-height:170px;max-width:170px; float:left;margin-right:15px;margin-bottom:15px;">
 				<div class="overlay-container">
 					<img src="/${usr.avatarUrl}">
 					<div class="overlay">
 						<ul class="social-links colored clearfix">
 							<li class="facebook"><a target="_blank" href="http://www.facebook.com"><i class="fa fa-facebook"></i></a></li>	
 							<li class="linkedin"><a target="_blank" href="http://www.linkedin.com"><i class="fa fa-linkedin"></i></a></li>
-							<li class="skype"><a target="_blank" href="http://www.skype.com"><i class="fa fa-skype"></i></a></li>
+							<li class="twitter"><a target="_blank" href="http://www.skype.com"><i class="fa fa-twitter"></i></a></li>
 							<li class="googleplus"><a target="_blank" href="http://plus.google.com"><i class="fa fa-google-plus"></i></a></li>
 						</ul>
 					</div>
 				</div>
 			</div>
-		</div>
-		
-	  	<div class="col-md-6 col-xs-height col-top side vertical-divider-right">
-			<h2>
-		  		#{if usr.lastOnlineTime && usr.lastOnlineTime.getTime() > (System.currentTimeMillis() - 20000) }
+			
+			<div style="float:left;margin-right:15px">
+			<h3 class="margin-clear">
+		  		#{if usr.isOnline()}
 		  			<i class="text-default icon-record"></i>
 				#{/if}
 				#{else}
@@ -30,27 +30,31 @@
 				<a class="anchor" href="/user/${usr.login}">${usr.fullName}</a>
 				
 		    	#{if userProfile}
-					<span style="position:relative;bottom:3px;right:15px">
+					<span>
 				    	#{if user && isOwner}
-				    		<a href="/settings?edit=true" class="btn btn-white btn-sm controls pull-right"><i class="fa fa-pencil"></i> Edit Profile</a> 
+				    		<a href="/settings?edit=true" class="btn btn-light-gray btn-sm controls"><i class="fa fa-pencil"></i> Edit Profile</a> 
 				    	#{/if}			
 						#{if user && !isOwner}
 						<span>
-							#{if follow == null}
-								<a href="/follow?id=${usr.uuid}&url=${request.url.urlEncode()}" class="btn btn-white btn-sm controls pull-right"><i class="fa fa-plus"></i> Follow</a> 
+							#{if follow && follow.following == true}
+								<a href="/contact-unfollow?uuid=${follow.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-minus"></i> Unfollow</a> 
 							#{/if}
-							#{if follow != null}
-								<a href="/unfollow?id=${usr.uuid}&url=${request.url.urlEncode()}" class="btn btn-white btn-sm controls pull-right"><i class="fa fa-minus"></i> Unfollow</a> 
-							#{/if}
+							#{else}
+								<a href="/contact-follow?uuid=${follow}&usr=${usr.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-plus"></i> Follow</a> 
+							#{/else}
+							<!-- 
+								<a href="/contact-add?uuid=${usr.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm controls pull-right"><i class="fa fa-plus"></i> Add contact</a> 
+							 -->
 						</span>
 						#{/if}	
 					</span>
 				#{/if}				
-			</h2>
+			</h3>
+			<br/>
 
 			<dl class="dl-horizontal">
 				<dt>&{'email'}</dt>
-				<dd><i class="fa fa-envelope-o"></i> <a href="mailto:${usr.login}">${usr.login}</a></dd>
+				<dd><i class="fa fa-envelope-o"></i> ${usr.login}</dd>
 				<dt>Calendar</dt>
 				<dd><i class="fa fa-calendar"></i> <a href="/user/${usr.login}/calendar">Show calendar</a></dd>
 				#{if usr.lastOnlineTime}
@@ -58,15 +62,14 @@
 				<dd><i class="fa fa-clock-o"></i> ${usr.lastOnlineTime.format("dd MMM, yyyy")} #{time time:usr.lastOnlineTime/} &nbsp;</dd>
 				#{/if}
 			</dl>	
-		</div>	
+			</div>
 		
-	  	<div class="col-md-3 col-xs-height col-top" >
-	  	
+	  		<div style="float:right;margin-right:15px">
 				<h5 class="title margin-top-clear">Followers</h5>
 				#{if followers}
 					<p>
 					#{list items:followers, as:'item'}
-			    		<a href="/user/${item.followSource.login}"><img class="pull-left" style="margin:1px" src="/${item.followSource.avatarUrl}_32x32"></a>
+			    		<a href="/user/${item.user.login}"><img class="pull-left" style="height:22px;margin:1px" src="/${item.user.avatarUrl}_32x32"></a>
 					#{/list}	
 					</p>						
 				#{/if}
@@ -77,10 +80,11 @@
 				#{if followees}
 					<p>
 					#{list items:followees, as:'item'}
-			    		<a href="/user/${item.followTarget.login}"><img class="pull-left " style="margin:1px" src="/${item.followTarget.avatarUrl}_32x32"></a>
+			    		<a href="/user/${item.contact.login}"><img class="pull-left " style="height:22px;margin:1px" src="/${item.contact.avatarUrl}_32x32"></a>
 					#{/list}
 					</p>			
 				#{/if}	
+			</div>
 	  	</div>	
 	  					
 	</div>				

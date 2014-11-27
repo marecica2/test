@@ -25,9 +25,6 @@ public class Attendance extends Model
     public Event event;
 
     @ManyToOne
-    public Account account;
-
-    @ManyToOne
     public User user;
 
     @ManyToOne
@@ -119,11 +116,10 @@ public class Attendance extends Model
         return a;
     }
 
-    public Attendance save(Account account)
+    public Attendance saveAttendance()
     {
-        this.account = account;
         this.created = new Date();
-        this.uuid = RandomUtil.getDoubleUUID();
+        this.uuid = RandomUtil.getUUID();
         Attendance a = this.save();
         return a;
     }

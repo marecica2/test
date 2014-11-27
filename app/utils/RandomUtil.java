@@ -7,12 +7,6 @@ import java.util.UUID;
 
 public class RandomUtil
 {
-    public static String getDoubleUUID()
-    {
-        final String uuid = (UUID.randomUUID().toString() + UUID.randomUUID().toString()).replaceAll("-", "");
-        return uuid;
-    }
-
     public static String getUUID()
     {
         final String uuid = (UUID.randomUUID().toString()).replaceAll("-", "");

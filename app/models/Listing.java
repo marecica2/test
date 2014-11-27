@@ -1,5 +1,6 @@
 package models;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.TypedQuery;
 
 import play.db.jpa.Model;
+import utils.WikiUtils;
 
 @Entity
 public class Listing extends Model
@@ -29,13 +31,7 @@ public class Listing extends Model
     public static String EVENT_STATE_CUSTOMER_CREATED = "customer_created";
     public static String EVENT_STATE_USER_ACCEPTED = "user_accepted";
     public static String EVENT_STATE_USER_DECLINED = "user_declined";
-    //public static String EVENT_STATE_USER_APPROVEMENT_WAIT = "user_approvement_wait";
-    //public static String EVENT_STATE_CUSTOMER_APPROVEMENT_WAIT = "customer_approvement_wait";
-    //public static String EVENT_STATE_CUSTOMER_ACCEPTED = "customer_accepted";
-    //public static String EVENT_STATE_USER_DECLINED = "user_declined";
-    //public static String EVENT_STATE_CUSTOMER_DECLINED = "customer_declined";
-    //public static String EVENT_STATE_USER_CANCELED = "user_canceled";
-    //public static String EVENT_STATE_CUSTOMER_CANCELED = "customer_canceled";
+
     public static String EVENT_CHARGING_FREE = "free";
     public static String EVENT_CHARGING_BEFORE = "before";
     public static String EVENT_CHARGING_AFTER = "after";
@@ -48,7 +44,7 @@ public class Listing extends Model
 
     public String roomSecret;
 
-    public String price;
+    public BigDecimal price;
 
     public String currency;
 
@@ -59,6 +55,8 @@ public class Listing extends Model
     public String imageUrl;
 
     public String imageId;
+
+    public String video;
 
     @Column(length = 1500)
     public String description;
@@ -75,15 +73,19 @@ public class Listing extends Model
 
     public String privacy;
 
-    public Boolean chatEnabled;
-
     public Integer ratingCount;
 
     public Integer ratingStars;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    public Account account;
+    public Boolean chatEnabled;
+
+    public Boolean commentsEnabled;
+
+    public Boolean deleted;
+
+    public Boolean firstFree;
+
+    public Integer chargingTime;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -102,12 +104,12 @@ public class Listing extends Model
 
     public static List<Listing> getForUser(User user)
     {
-        return Listing.find("byUser", user).fetch(500);
+        return Listing.find("from Listing where user = ? and deleted is null", user).fetch(500);
     }
 
     public static List<Listing> getFiltered(Integer first, Integer count, ListingFilter listing)
     {
-        String query = "Select l from Listing l where 1 = 1 ";
+        String query = "Select l from Listing l where deleted is null ";
         if (listing.category != null)
             query += " and l.category  = :category ";
         if (listing.search != null)
@@ -132,11 +134,12 @@ public class Listing extends Model
         return listings;
     }
 
-    public String getDescription()
+    public String getDescriptionHtml()
     {
-        String description = this.description.replaceAll("\\*(.+?)\\*", "<strong>$1</strong>");
-        this.description = description.replaceAll("\n", "<br/>");
-        return description;
+        //String description = this.description.replaceAll("\\*(.+?)\\*", "<strong>$1</strong>");
+        //this.description = description.replaceAll("\n", "<br/>");
+        //return description;
+        return WikiUtils.parseToHtml(this.description);
     }
 
     public Integer getRatingAvg()

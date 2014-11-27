@@ -1,0 +1,22 @@
+<div class="box-style-1 gray-bg object-non-visible animated object-visible fadeInUpSmall" data-animation-effect="fadeInUpSmall" data-effect-delay="0">
+	<img style="margin-bottom:15px" class="img-circle avatar128" src="${item[1].user.avatarUrl}">
+	<div style="font-size:1.0em;font-weight: bold">${item[1].title}</div>
+	<p>${item[1].category}</p>
+	<p>
+      		#{list items:1..5, as:'i'}
+      			#{if item[0].stars >= i}
+			    <i style="font-size:1.5em" class="fa fa-star blue" data-value="1"></i>
+      			#{/if}
+      			#{else}
+			    <i style="font-size:1.5em" class="fa fa-star-o" data-value="1"></i>
+      			#{/else}
+		#{/list}	
+	</p>		
+	<p>
+		&#8222;${item[0].comment}&#8220;
+	</p>
+	<p>
+		<strong>${item[0].user.fullName}</strong>
+	</p>				
+	<a href="/channel/${item[1].uuid}" class="btn-default btn">Find Out More</a>
+</div>	

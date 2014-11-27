@@ -6,6 +6,7 @@ import models.Activity;
 import models.Comment;
 import models.Event;
 import models.FileUpload;
+import models.Listing;
 import models.User;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -16,21 +17,24 @@ import utils.RandomUtil;
 @With(Secure.class)
 public class Comments extends BaseController
 {
-    public static void addComment(String uuid, String comment, String type, String url, String fileUpload, String tempId)
+    public static void addComment(String uuid, String comment, String type, String url, String tempId)
     {
         final Event e = Event.get(uuid);
+        final Listing l = Listing.get(uuid);
         final User u = User.getUserByUUID(uuid);
         final User user = getLoggedUser();
 
         final Comment c = new Comment();
         c.user = user;
         c.comment = StringEscapeUtils.escapeHtml(comment);
-        c.uuid = tempId != null ? tempId : RandomUtil.getDoubleUUID();
+        c.uuid = tempId != null ? tempId : RandomUtil.getUUID();
         c.objectUuid = uuid;
         if (u != null)
             c.objectTarget = Comment.USER_COMMENT;
         if (e != null)
             c.objectTarget = Comment.EVENT_COMMENT;
+        if (l != null)
+            c.objectTarget = Comment.LISTING_COMMENT;
 
         c.url = url;
         c.type = Comment.TYPE_DEFAULT;

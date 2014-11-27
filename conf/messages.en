@@ -176,23 +176,23 @@ login.here=here
 login.logout=You have been logged out
 login.return=Return to login page
 
-invitationCreated=Invited <a class=popup-event-edit href=/user/%s>%s</a> to event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
-invitationAccepted=Accepted invitation for event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
-invitationDeclined=Declined invitation for event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
-invitationAcceptedCust=Accepted invitation for event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
-invitationDeclinedCust=Declined invitation for event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
-eventDeleted=Cancelled event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
+invitationCreated=Invited <a class=popup-event-edit href=/user/%s>%s</a> to event <a class=popup-event-edit href=/event/%s>%s</a>
+invitationAccepted=Accepted invitation for event <a class=popup-event-edit href=/event/%s>%s</a>
+invitationDeclined=Declined invitation for event <a class=popup-event-edit href=/event/%s>%s</a>
+invitationAcceptedCust=Accepted invitation for event <a class=popup-event-edit href=/event/%s>%s</a>
+invitationDeclinedCust=Declined invitation for event <a class=popup-event-edit href=/event/%s>%s</a>
+eventDeleted=Cancelled event <a class=popup-event-edit href=/event/%s>%s</a>
 eventDeletedCust=Cancelled event <a class=popup-event-edit data-event=%s href=#>%s</a>
-eventCreatedUsr=Created event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
-eventCreatedCust=Proposed new event for listing <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
-eventMoved=Changed time for event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
-eventUpdatedUsr=Updated event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
-eventUpdatedCust=Updated event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
-eventApproved=Approved event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
-eventDeclined=Declined event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
-eventCommented=Added comment on event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
-eventCommentedCust=Added comment on event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a>
-eventStarted=Event <a class=popup-event-edit href=/event-detail?action=view&uuid=%s>%s</a> just started
+eventCreatedUsr=Created event <a class=popup-event-edit href=/event/%s>%s</a>
+eventCreatedCust=Proposed new event for listing <a class=popup-event-edit href=/event/%s>%s</a>
+eventMoved=Changed time for event <a class=popup-event-edit href=/event/%s>%s</a>
+eventUpdatedUsr=Updated event <a class=popup-event-edit href=/event/%s>%s</a>
+eventUpdatedCust=Updated event <a class=popup-event-edit href=/event/%s>%s</a>
+eventApproved=Approved event <a class=popup-event-edit href=/event/%s>%s</a>
+eventDeclined=Declined event <a class=popup-event-edit href=/event/%s>%s</a>
+eventCommented=Added comment on event <a class=popup-event-edit href=/event/%s>%s</a>
+eventCommentedCust=Added comment on event <a class=popup-event-edit href=/event/%s>%s</a>
+eventStarted=Event <a class=popup-event-edit href=/event/%s>%s</a> just started
 
 
 

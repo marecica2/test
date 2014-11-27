@@ -35,7 +35,7 @@ public class ChatFeed extends Model
     public ChatFeed saveFeed()
     {
         this.created = new Date();
-        this.uuid = RandomUtil.getDoubleUUID();
+        this.uuid = RandomUtil.getUUID();
         ChatFeed a = this.save();
         return a;
     }
