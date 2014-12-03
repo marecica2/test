@@ -59,3 +59,4 @@ src/test/resources/mule.test.properties
 /tmp
 /lib
 /eclipse
+/tokens
