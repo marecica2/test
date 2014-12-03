@@ -5770,7 +5770,7 @@ function DayEventRenderer() {
 			
 			function mouseup(ev) {
 				trigger('eventResizeStop', this, event, ev);
-				$('body').css('cursor', '');
+				$('body').css('cursor', 'pointer');
 				hoverListener.stop();
 				clearOverlays();
 				if (dayDelta) {

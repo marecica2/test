@@ -1,34 +1,40 @@
-    	
-#{if !edit && user && object && object.commentsEnabled}
-<br/>
-<br/>
-<br/>
-<h2>Latest Posts</h2>
-<div class="separator-2"></div>
+#{if objectType == "user" || (!edit && user && object && object.commentsEnabled)}
 
 <div class="row">
 <div class="col-md-12">
     <div class="modal-comments">
 		<div class="">
-			<form action="/event/comment?uuid=${object.uuid}&url=${request.url.urlEncode()}" method="post">
-				<h3><img class="img-circle" style="float:left" src="/${user.avatarUrl}_32x32">&nbsp;Share what's new</h3>
+			<form action="/event/comment?uuid=${object.uuid}&objectType=${objectType}&url=${request.url.urlEncode()}" method="post">
+				<h2><img class="img-circle" style="float:left" src="/${user.avatarUrl}_32x32">&nbsp;Share what's new</h2>
 			    <div>
 			    	<div class="form-group">
-			    		<textarea rows="4" class="form-control" maxlength="1000" placeholder="&{'dashboard.addComment'}" name="comment" id="dialog-comment-input"></textarea>
+			    		<textarea rows="1" class="form-control" maxlength="1000" name="comment" id="dialog-comment-input"></textarea>
 			    	</div>
 			    	
-	    	        <button class="btn btn-default btn-primary pull-right" style="" id="dialog-comment-button" type="submit">Submit</button>
-					<div class="btn-group">
-	    	        	<button class="btn btn-light-gray" style="min-width: 0px;" id="dialog-comment-button" type="submit"><i class="fa fa-link"></i> Url</button>
-	    	        	<button class="btn btn-light-gray" style="min-width: 0px;" id="dialog-comment-button" type="submit"><i class="fa fa-file-image-o"></i> Media</button>
-						<button class="btn btn-light-gray" style="min-width: 0px;" type="button" id="upload-buttonComments"><i class="fa fa-upload"></i> File</button>
-					</div>				
+	    	        <button class="btn btn-light-gray pull-right" style="" id="dialog-comment-button" type="submit">Submit</button>
+					
+					<div class="form-group">
+						<div class="btn-group" data-toggle="buttons">
+						  <label class="btn btn-light-gray active btn-short" >
+						    <input type="radio" name="type" id="upload-buttonLink" checked="checked" value="text"><i class="fa fa-pencil"></i> Text
+						  </label>
+						  <label class="btn btn-light-gray btn-short" >
+						    <input type="radio" name="type" id="upload-buttonLink" value="link"><i class="fa fa-link"></i> Link
+						  </label>
+						  <label class="btn btn-light-gray btn-short" >
+						    <input type="radio" name="type" id="upload-buttonMedia" value="media"><i class="fa fa-file-image-o"></i> Media
+						  </label>
+						  <label class="btn btn-light-gray btn-short" id="upload-buttonComments">
+						    <input type="radio" name="type" id="upload-buttonComments1" value="file" ><i class="fa fa-upload"></i> File
+						  </label>
+						</div>				
+					</div>					
+
 					
 					<!-- File upload -->
 					<input type="file" id="uploadComments" name="upload" style="display:none" multiple="multiple">
 					<input type="hidden" id="comment" name="tempId" value="${commentTemp}">
 					<input type="hidden" id="fileUploadComments" name="fileUpload">
-					<input type="hidden" id="typeComments" name="type">
 					<script>
 						$(document).ready(function(){
 							$("#upload-buttonComments").click(function(){
@@ -42,9 +48,9 @@
 					    		star.utils.uploadFiles('/fileupload'+params, this.files, function(json){
 					    		    var resp = JSON.parse(json);
 					    		    if(resp.extension.indexOf("image") != -1){
-						    		    $("#images").append("<img class='img-thumbnail' style='height:100px;margin-bottom:4px' src='public/uploads/"+resp.url+"_thumb'>");
+						    		    $("#images").append("<img class='img-thumbnail' style='height:100px;margin-bottom:4px' src='/public/uploads/"+resp.url+"_thumb'>");
 					    		    } else {
-					    		        $("#images").append("<span class='label label-primary'><i class='fa fa-file'></i> "+resp.name+"</span><br/>");
+					    		        $("#images").append("<span class='label default_bg'><i class='fa fa-file'></i> "+resp.name+"</span><br/>");
 					    		    }
 				    		        $("#fileUploadComments").val(resp.uuid);
 				    		        $("#typeComments").val("file");
@@ -52,6 +58,7 @@
 							});
 						});
 					</script>
+					
 					<div id="progresses" >
 					</div>
 					<div id="images">
@@ -82,7 +89,7 @@
 			#{list items:comments, as:'item'}
 		       <tr class='' style='position:relative'>
 		       	   <td>
-			       	   #{if isOwner}
+			       	   #{if item.user.uuid == user.uuid}
 					       <a href="/event/comment/delete?uuid=${item.uuid}&url=${request.url.urlEncode()}"><i class='pull-right color-link fa fa-times delete-comment'></i></a>
 				       #{/if} 
 				        
@@ -93,7 +100,7 @@
 				       <div style='display:table-cell;vertical-align:top;'>
 					       <div>
 					       		<a href='/user/${item.user.login}'>${item.user.fullName}</a> on 
-						   		<span>${item.created.format("dd MMM, yyyy")}</span>
+					   			<span>${item.created.format("dd MMM, yyyy")}</span> 
 				   				<span>#{time time:item.created/}</span>
 					       </div>
 					        <p>${item.comment}</p>

@@ -2,6 +2,7 @@ package models;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,6 @@ public class Event extends Model
     public static String EVENT_TYPE_P2P_CALL = "p2p";
     public static String EVENT_TYPE_BROADCAST = "live";
     public static String EVENT_VISIBILITY_PUBLIC = "public";
-    public static String EVENT_VISIBILITY_HIDDEN = "hidden";
     public static String EVENT_VISIBILITY_PRIVATE = "private";
     public static String EVENT_STATE_USER_CREATED = "user_created";
     public static String EVENT_STATE_CUSTOMER_CREATED = "customer_created";
@@ -47,6 +47,8 @@ public class Event extends Model
     public Date lastModified;
 
     public Date created;
+
+    public Date started;
 
     public String roomSecret;
 
@@ -77,6 +79,8 @@ public class Event extends Model
     public Boolean firstFree;
 
     public Integer chargingTime;
+
+    public String youtubeId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", orphanRemoval = true)
     @Cascade({ org.hibernate.annotations.CascadeType.DELETE })
@@ -165,7 +169,7 @@ public class Event extends Model
 
         String query = "Select distinct ev from Event ev join ev.attendances att where 1 = 1 ";
 
-        if (includeAttendances && !isListing)
+        if (!isListing && includeAttendances)
         {
             query += " and ( att.customer = :cust ";
             if (from != null)
@@ -188,7 +192,7 @@ public class Event extends Model
             if (from != null)
                 query += " and ev.eventStart >= :start ";
             if (to != null)
-                query += " and ev.eventEnd <= :end ";
+                query += " and ev.eventStart <= :end ";
         }
 
         if (upcoming)
@@ -230,7 +234,7 @@ public class Event extends Model
         this.attendances.clear();
 
         // delete comments
-        final List<Comment> comments = Comment.getByObject(uuid);
+        final List<Comment> comments = Comment.getByEvent(this);
         for (Comment c : comments)
         {
             List<FileUpload> files = c.files;
@@ -239,14 +243,6 @@ public class Event extends Model
             files.clear();
             c.delete();
         }
-
-        //        // delete event image
-        //        FileUpload fu = FileUpload.getByUuid(this.imageId);
-        //        if (fu != null)
-        //        {
-        //            FileUpload.deleteOnDisc(fu);
-        //            fu.delete();
-        //        }
 
         List<Activity> act = Activity.getByEvent(this);
         for (Activity activity : act)
@@ -306,76 +302,14 @@ public class Event extends Model
         return user != null && user.uuid.equals(this.user.uuid) ? true : false;
     }
 
-    public BigDecimal getPrice()
+    public Boolean isPrivate()
     {
-        if (price != null)
-            return price;
-        else
-            return this.listing.price;
+        return this.privacy.equals(EVENT_VISIBILITY_PRIVATE);
     }
 
-    public String getCurrency()
+    public Boolean isFree()
     {
-        if (this.currency != null)
-            return currency;
-        else
-            return this.listing.currency;
-    }
-
-    public String getCharging()
-    {
-        if (charging != null)
-            return charging;
-        else
-            return this.listing.charging;
-    }
-
-    public String getType()
-    {
-        if (type != null)
-            return type;
-        else
-            return this.listing.type;
-    }
-
-    public String getPrivacy()
-    {
-        if (privacy != null)
-            return privacy;
-        else
-            return this.listing.privacy;
-    }
-
-    public Boolean getChatEnabled()
-    {
-        if (chatEnabled != null)
-            return chatEnabled;
-        else
-            return this.listing.chatEnabled;
-    }
-
-    public Boolean getCommentsEnabled()
-    {
-        if (commentsEnabled != null)
-            return commentsEnabled;
-        else
-            return this.listing.commentsEnabled;
-    }
-
-    public Boolean getFirstFree()
-    {
-        if (firstFree != null)
-            return firstFree;
-        else
-            return this.listing.firstFree;
-    }
-
-    public Integer getChargingTime()
-    {
-        if (chargingTime != null)
-            return chargingTime;
-        else
-            return this.listing.chargingTime;
+        return this.charging.equals(EVENT_CHARGING_FREE);
     }
 
     public Integer getMinutes()
@@ -387,11 +321,15 @@ public class Event extends Model
 
     public BigDecimal getTotalPrice()
     {
-        final BigDecimal divisor = new BigDecimal(this.getChargingTime(), new MathContext(2));
-        final BigDecimal unitPrice = this.getPrice().divide(divisor, MathContext.DECIMAL128);
-        final BigDecimal multiplicand = new BigDecimal(this.getMinutes());
-        final BigDecimal totalPrice = unitPrice.multiply(multiplicand).round(new MathContext(4));
-        return totalPrice;
+        if (this.chargingTime != null)
+        {
+            final BigDecimal divisor = new BigDecimal(this.chargingTime.toString(), MathContext.DECIMAL32);
+            final BigDecimal unitPrice = this.price.divide(divisor, 32, RoundingMode.CEILING);
+            final BigDecimal multiplicand = new BigDecimal(this.getMinutes().toString(), MathContext.DECIMAL32);
+            BigDecimal totalPrice = unitPrice.multiply(multiplicand);
+            totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_HALF_DOWN);
+            return totalPrice;
+        }
+        return null;
     }
-
 }

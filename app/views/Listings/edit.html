@@ -1,4 +1,5 @@
 #{if edit}
+<div class="section gray-bg">
 <div class="container">
 	<form id="cropForm" action="/crop" method="post">
 		<input type="hidden" id="url" name="url" value="${request.url.urlEncode()}" />
@@ -11,27 +12,28 @@
 		<input type="hidden" id="type" name="type" value="listing" />
 		<input type="hidden" id="tempCrop" name="objectId" value="#{if listing}${listing.uuid}#{/if}#{else}${temp}#{/else}"/>
 	</form>
-	<form action="" method="post">
 	
-	
+	<form action="" method="post" role="form">
 	#{if fromEvent}
 		<input type="hidden" name="temp" id="temp" value="${temp}">
-		<div class="form-group event-title-1" style="">
-			<h3>Time</h3>
+		<div class="form-group" >
 			<div class="row" style="margin-left:0px" >
 			  <div class="col-lg-4" style="padding-left:0px">
+				<label class="control-label">Event Date</label>
 				<div class="input-group input-append bootstrap-timepicker" style="margin-bottom:5px;">
 					<input type="text" class="form-control input-small" maxlength="50" name="eventDate" id="eventDate" value="${params.eventDate}" placeholder="Event date"/>
 					<span id="fa-calendar" class="input-group-addon add-on"><i class="fa fa-calendar"></i></span>
 				</div>
 			  </div>
 			  <div class="col-lg-4" style="padding-left:0px">
+				<label class="control-label">Start time</label>
 				<div class="input-group input-append bootstrap-timepicker" style="margin-bottom:5px;">
 					<input id="timepicker1" type="text" class="form-control input-small" name="eventStart" value="${params.eventStart}">
 					<span class="input-group-addon add-on"><i class="fa fa-clock-o"></i></span>
 				</div>
 			  </div>
 			  <div class="col-lg-4" style="padding-left:0px">
+				<label class="control-label">End time</label>
 				<div class="input-group input-append bootstrap-timepicker" style="margin-bottom:5px;">
 					<input id="timepicker2" type="text" class="form-control input-small" name="eventEnd" value="${params.eventEnd}">
 					<span class="input-group-addon add-on"><i class="fa fa-clock-o"></i></span>
@@ -83,30 +85,30 @@
 			</script>
 		</div>		
 		
+		<label class="control-label">Event type</label>
 		<div class="form-group">
-			<h3>&{'dashboard.eventType'}</h3>
 			<div class="btn-group" data-toggle="buttons">
 			  <label class="btn btn-light-gray #{if params.type == "p2p"} active #{/if}" >
-			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "p2p"} checked="checked" #{/if} value="p2p"> Peer to peer
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "p2p"} checked="checked" #{/if} value="p2p"> Video Conference
 			  </label>
-			  <label class="btn btn-light-gray #{if params.type == "livecast"} active #{/if}" >
-			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "livecast"} checked="checked" #{/if} value="livecast"> Broadcast
-			  </label>
-			  <label class="btn btn-light-gray #{if params.type == "hangout"} active #{/if}" >
-			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangout"} checked="checked" #{/if} value="hangout"> Hangout
-			  </label>
-			  <label class="btn btn-light-gray #{if params.type == "hangoutAir"} active #{/if}" >
-			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangoutAir"} checked="checked" #{/if} value="hangoutAir"> Hangout on Air
+			  <label class="btn btn-light-gray #{if params.type == "broadcast"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "broadcast"} checked="checked" #{/if} value="broadcast"> Live Broadcast
 			  </label>
 			  <label class="btn btn-light-gray #{if params.type == "instant"} active #{/if}" >
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "instant"} checked="checked" #{/if} value="instant"> Instant Broadcast
+			  </label>
+			  <label class="btn btn-light-gray #{if params.type == "hangout"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangout"} checked="checked" #{/if} value="hangout"><i class="fa fa-google-plus"></i> Google Hangout
+			  </label>
+			  <label class="btn btn-light-gray #{if params.type == "hangoutAir"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangoutAir"} checked="checked" #{/if} value="hangoutAir"><i class="fa fa-google-plus"></i> Google Hangout Air
 			  </label>
 			</div>				
 			<div class="alert alert-danger">#{error 'type' /}</div>
 		</div>
 
+		<label class="control-label">Privacy</label>
 		<div class="form-group ">
-			<h3>&{'dashboard.privacy'}</h3>
 			<div class="btn-group" data-toggle="buttons">
 				  <label class="btn btn-light-gray #{if params.privacy == "private"} active #{/if}" >
 				    <input type="radio" name="privacy" id="option1" autocomplete="off" #{if params.privacy == "private"} checked="checked" #{/if} value="private"> Private
@@ -118,8 +120,8 @@
 			<div class="alert alert-danger">#{error 'privacy' /}</div>
 		</div>
 		
+		<label class="control-label">Charging</label>
 		<div class="form-group">
-			<h3>&{'dashboard.charging'}</h3> 
 			<div class="event-charging-container">
 				<div class="btn-group" data-toggle="buttons">
 					  <label class="btn btn-light-gray #{if params.charging == "free"} active #{/if}" >
@@ -177,7 +179,7 @@
 				<div class="alert alert-danger">#{error 'currency' /}</div>
 				
 				<br/> 
-				<div class="form-group event-category" style="">
+				<div class="form-group event-category" >
 		  			<select class="form-control" name="chargingTime">
 						<option value="15" #{if params.chargingTime == "15"} selected="selected" #{/if} >for 15 minutes</option>
 						<option value="10" #{if params.chargingTime == "10"} selected="selected" #{/if} >for 10 minutes</option>
@@ -189,14 +191,14 @@
 		</div>			
 		
 		<div class="form-group ">
-			<div class="" style="font-weight:light;"> 
-				<label class="" style="font-weight:100;"> <input type="checkbox" name="chatEnabled" value="chatEnabled" #{if params.chatEnabled != null} checked="checked" #{/if}> Enable chat</label> &nbsp;&nbsp;&nbsp;
+			<div class="" > 
+				<label class="" style="font-weight:100;"> <input type="checkbox" name="chatEnabled" value="chatEnabled" #{if params.chatEnabled != null} checked="checked" #{/if}> <strong>Enable chat</strong></label> &nbsp;&nbsp;&nbsp;
 			</div>
 		</div>											
 		
 		<div class="form-group ">
-			<div class="" style="font-weight:light;"> 
-				<label class="" style="font-weight:100;"> <input type="checkbox" name="commentsEnabled" value="commentsEnabled" #{if params.commentsEnabled != null} checked="checked" #{/if}> Enable comments</label> &nbsp;&nbsp;&nbsp;
+			<div class="" > 
+				<label class="" style="font-weight:100;"> <input type="checkbox" name="commentsEnabled" value="commentsEnabled" #{if params.commentsEnabled != null} checked="checked" #{/if}> <strong>Enable comments</strong></label> &nbsp;&nbsp;&nbsp;
 			</div>
 		</div>											
 		<br/>
@@ -207,13 +209,11 @@
 		</div>
 	#{/if}
 	#{else}
+	
 		<!-- File upload -->
 		<span id="upload-button" class="btn btn-light-gray" style="margin-top:5px"><i class="fa fa-camera"></i> Upload new picture</span>
 		<span id="crop-button" class="btn btn-light-gray " style="margin-top:5px;display:none"><i class="fa fa-camera"></i> Crop</span>
 
-		#{if listing && params.image && params.image.indexOf("uploads") != -1}
-			<a href="/channel-reset-image?uuid=${listing.uuid}&url=${request.url.urlEncode()}"  style="margin-top:5px;" id="delete-upload-button" class="btn btn-white btn-sm"><i class="fa fa-times"></i> Remove</a>
-		#{/if}
 		
 		<input type="file" id="upload" name="upload"  accept="image/*" style="display:none">
 		<input type="hidden" id="temp" name="temp" value="${params.temp}"/>
@@ -253,14 +253,14 @@
 			</div>
 		</div>
 		
-		<div class="form-group event-title-1" style="">
-			<h3>Title</h3>
+		<label class="control-label">Title</label>
+		<div class="form-group" >
 			<input type="text" class="form-control " id="event-title" maxlength="50" name="title" placeholder="&{'dashboard.title'}" value="${params.title}"/>
 			<div class="alert alert-danger">#{error 'title' /}</div>
 		</div>
 
-		<div class="form-group event-tags" style="">
-			<h3>Tags</h3>
+		<label class="control-label">Tags</label>
+		<div class="form-group event-tags" >
 			<input type="text" id="event-tags" class="form-control" style="width:100%" name="tags" value="${params.tags}" data-role="tagsinput"> 
 			<script>
 				$(document).ready(function(){
@@ -274,8 +274,8 @@
 			<div class="alert alert-danger">#{error 'tags' /}</div>
 		</div>
 
-		<div class="form-group event-category" style="">
-			<h3>Category</h3>
+		<label class="control-label">Category</label>
+		<div class="form-group event-category" >
   			<select class="event-category form-control" id="event-category" name="category">
 				<option value="business" #{if params.category == "business"} selected="selected" #{/if} >Business</option>
 				<option value="education" #{if params.category == "education"} selected="selected" #{/if} >Education</option>
@@ -290,20 +290,20 @@
 			<div class="alert alert-danger">#{error 'category' /}</div>
 		</div>
 
+		<label class="control-label">About</label>
 		<div class="form-group">
-			<h3>About</h3>
 			<textarea class="form-control event-description event-edit" rows="12" id="event-description" maxlength="1000" name="description" placeholder="&{'dashboard.description'}">${params.description}</textarea>
 			<div class="alert alert-danger">#{error 'description' /}</div>
 		</div>
-		
-		<div class="form-group event-title-1" style="">
-			<h3>Introduction Video Url</h3>
+	
+		<label class="control-label">Introduction Video Url</label>	
+		<div class="form-group event-title-1" >
 			<input type="text" class="form-control " id="event-title" maxlength="50" name="video" placeholder="&{'dashboard.title'}" value="${params.video}"/>
 			<div class="alert alert-danger">#{error 'video' /}</div>
 		</div>		
 		
+		<label class="control-label">Channel type</label>
 		<div class="form-group">
-			<h3>&{'dashboard.eventType'}</h3>
 			<div class="btn-group" data-toggle="buttons">
 			  <label class="btn btn-light-gray #{if params.type == "p2p"} active #{/if}" >
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "p2p"} checked="checked" #{/if} value="p2p"> Peer to peer
@@ -323,8 +323,8 @@
 			</div>				
 		</div>
 
+		<label class="control-label">Privacy</label>
 		<div class="form-group ">
-			<h3>&{'dashboard.privacy'}</h3>
 			<div class="btn-group" data-toggle="buttons">
 				  <label class="btn btn-light-gray #{if params.privacy == "private"} active #{/if}" >
 				    <input type="radio" name="privacy" id="option1" autocomplete="off" #{if params.privacy == "private"} checked="checked" #{/if} value="private"> Private
@@ -336,8 +336,8 @@
 			<div class="alert alert-danger">#{error 'privacy' /}</div>
 		</div>
 		
+		<label class="control-label">Charging</label>
 		<div class="form-group">
-			<h3>&{'dashboard.charging'}</h3> 
 			<div class="event-charging-container">
 				<div class="btn-group" data-toggle="buttons">
 					  <label class="btn btn-light-gray #{if params.charging == "free"} active #{/if}" >
@@ -390,7 +390,7 @@
 				<div class="alert alert-danger">#{error 'currency' /}</div>
 				
 				<br/>
-				<div class="form-group event-category" style="">
+				<div class="form-group event-category" >
 		  			<select class="form-control" name="chargingTime">
 						<option value="15" #{if params.chargingTime == "15"} selected="selected" #{/if} >for 15 minutes</option>
 						<option value="10" #{if params.chargingTime == "10"} selected="selected" #{/if} >for 10 minutes</option>
@@ -399,7 +399,7 @@
 					<div class="alert alert-danger">#{error 'category' /}</div>
 				</div>					
 				<div class="form-group ">
-					<div class="" style="font-weight:light;"> 
+					<div class="" > 
 						<label class="" style="font-weight:100;"> <input type="checkbox" name="firstFree" value="firstFree" #{if params.firstFree != null} checked="checked" #{/if}> First Free</label> &nbsp;&nbsp;&nbsp;
 					</div>
 					<div class="alert alert-danger">#{error 'firstFree' /}</div>
@@ -409,15 +409,15 @@
 
 		<br/>
 		<div class="form-group ">
-			<div class="" style="font-weight:light;"> 
-				<label class="" style="font-weight:100;"> <input type="checkbox" name="chatEnabled" value="chatEnabled" #{if params.chatEnabled != null} checked="checked" #{/if}> Enable chat</label> &nbsp;&nbsp;&nbsp;
+			<div class="" > 
+				<label class="" style="font-weight:100;"> <input type="checkbox" name="chatEnabled" value="chatEnabled" #{if params.chatEnabled != null} checked="checked" #{/if}> <strong>Enable chat</strong></label> &nbsp;&nbsp;&nbsp;
 			</div>
 			<div class="alert alert-danger">#{error 'chatEnabled' /}</div>
 		</div>
 		
 		<div class="form-group ">
-			<div class="" style="font-weight:light;"> 
-				<label class="" style="font-weight:100;"> <input type="checkbox" name="commentsEnabled" value="commentsEnabled" #{if params.commentsEnabled != null} checked="checked" #{/if}> Enable comments</label> &nbsp;&nbsp;&nbsp;
+			<div class="" > 
+				<label class="" style="font-weight:100;"> <input type="checkbox" name="commentsEnabled" value="commentsEnabled" #{if params.commentsEnabled != null} checked="checked" #{/if}> <strong>Enable comments</strong></label> &nbsp;&nbsp;&nbsp;
 			</div>
 			<div class="alert alert-danger">#{error 'commentsEnabled' /}</div>
 		</div>		
@@ -430,5 +430,6 @@
 
 	#{/else}
 	</form>	
+</div>
 </div>
 #{/if}

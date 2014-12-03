@@ -359,6 +359,7 @@ SimpleWebRTC.prototype.shareScreen = function (cb) {
                 }
             });
         } else {
+            console.log(err);
             self.emit(err);
         }
 
@@ -657,6 +658,7 @@ module.exports = mockconsole;
 var getUserMedia = require('getusermedia');
 
 module.exports = function (cb) {
+    // xxx
     var constraints = {
             video: {
                 mandatory: {

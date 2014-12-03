@@ -33,24 +33,28 @@
 			</div>
 			#{/if}
 			
-   	   	   <p class="segoe" style="font-size:1.3em">
+   	   	   	<p class="segoe" style="font-size:1.3em">
 		   		<span>${e.eventStart.format("dd MMM, yyyy")}</span>
 		   		<span>#{time time:e.eventStart/}</span> - 
 		   		<span>#{time time:e.eventEnd/}</span>
-   	   	   </p>
+   	   	   	</p>
+
+			<p>${e.listing.getDescriptionHtml().raw()}</p>
+			
+			<div style="font-size:1.2em">
    	   	   	<table class="table">
    	   	   		<tr class="light_gray_bg">
-   	   	   			<td>Unit price</td>
-   	   	   			<td>${e.price} ${e.currency}</td>
+   	   	   			<td><strong>Unit price</strong></td>
 	   	   	   		<td>for ${e.chargingTime} minutes</td>
+   	   	   			<td>${e.price} ${e.currency}</td>
    	   	   		</tr>
    	   	   		<tr class="default_bg">
    	   	   			<td><strong>Total</strong></td>
-   	   	   			<td><strong>${e.getTotalPrice()} ${e.currency}</strong></td>
-	   	   	   		<td><strong>for ${e.getMinutes()} minutes</strong></td>
+	   	   	   		<td>for ${e.getMinutes()} minutes</td>
+   	   	   			<td>${e.getTotalPrice()} ${e.currency}</td>
    	   	   		</tr>
    	   	   	</table>
-			<p>${e.listing.getDescriptionHtml().raw()}</p>
+   	   	   	</div>
 			
 			<br/>
 			<form method="POST" action="/paypal/checkout/${e.uuid}" onsubmit="return validate()" >

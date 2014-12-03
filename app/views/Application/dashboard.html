@@ -8,19 +8,39 @@
 
 <div class="padding container-xs-height">
 	<div class="row row-xs-height">
+
+		<div class="col-md-4 col-xs-height col-top">
+
+			#{list items:contacts, as:'item'}
+		  		#{if item.contact.isOnline()}
+					<a href="/user/${item.contact.login}"><img class="pull-left" style="height:40px;margin:1px" src="/${item.contact.avatarUrl}_64x64"></a>
+				#{/if}
+				#{else}
+					<a href="/user/${item.contact.login}"><img class="pull-left" style="height:40px;margin:1px;opacity:0.2" src="/${item.contact.avatarUrl}_64x64"></a>
+				#{/else}			
+			#{/list}		
 		
-		<div class="col-md-7 col-xs-height col-top">
-			<h2>
-				<i class="fa fa-desktop"></i> Dashboard
-				<small><a href="/channel/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm"><i class="fa fa-plus"></i> New Channel</a></small>
-			</h2>
+			#{set objectType:"user" /}
+			#{set object:user /}
+			#{include 'comments.html' /}
+			
+			<div class="spinner-container1">
+				<div class="spinner-container">
+					<a id="moreResultsComments" href="/dashboard?results=${results}" class="spinner-more"><i class=" icon-plus-circled"></i></a>
+				</div>
+			</div>				
+		</div>
+	
+		<div class="col-md-5 col-xs-height col-top">
+			<div>
+				<a href="/channel/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray"><i class="fa fa-plus"></i> New Channel</a>
+			</div>			
 			#{if listings}
 				#{set items:listings /}
 				#{set forEvents:false /}
 				#{include 'listingsList.html' /}
-			#{/if}				
-		</div>
-		<div class="col-md-2 col-xs-height col-top">
+			#{/if}	
+					
 			<div class="tabs-style-2">
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs" role="tablist">
@@ -68,11 +88,14 @@
 					</div>
 				</div>
 			</div>		
-		</div>
-
+		</div>		
+		
+		
+		
 		<div class="col-md-3 col-xs-height col-top" style="background: #fdfdfd;" >
 			#{include 'activities.html' /}
 		</div>	
+				
 	</div>
 </div>
 

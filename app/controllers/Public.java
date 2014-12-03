@@ -52,6 +52,12 @@ public class Public extends BaseController
         renderJSON(feedsDto);
     }
 
+    public static void about()
+    {
+        User user = getLoggedUser();
+        renderTemplate("Application/about.html", user);
+    }
+
     public static void activities(String id, int limit, String uuid)
     {
         Boolean isPublic = false;

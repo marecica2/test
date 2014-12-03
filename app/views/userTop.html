@@ -1,12 +1,12 @@
+
 <div class="section gray-bg-lighter ">
-<div class="container container-xs-height">
-	<div class="row row-xs-height">
-	  	
-	  	<div class="col-md-12 col-xs-height col-top" >
-			
-			<div class="gray-bg" style="padding:15px;max-height:170px;max-width:170px; float:left;margin-right:15px;margin-bottom:15px;">
+<div class="container">
+	
+	<div class="row">
+		<div class="col-lg-3 col-sm-4">
+			<div class="box-style-1 gray-bg team-member">
 				<div class="overlay-container">
-					<img src="/${usr.avatarUrl}">
+					<img src="/${usr.avatarUrl}" style="width:100%s">
 					<div class="overlay">
 						<ul class="social-links colored clearfix">
 							<li class="facebook"><a target="_blank" href="http://www.facebook.com"><i class="fa fa-facebook"></i></a></li>	
@@ -17,18 +17,21 @@
 					</div>
 				</div>
 			</div>
-			
-			<div style="float:left;margin-right:15px">
-			<h3 class="margin-clear">
+		</div>
+		
+
+		
+		<div class="col-lg-6 col-sm-8">
+						
+			<h2 class="margin-clear">
+				<a class="anchor" href="/user/${usr.login}">${usr.fullName}</a>
 		  		#{if usr.isOnline()}
 		  			<i class="text-default icon-record"></i>
 				#{/if}
 				#{else}
 		  			<i style="color:gray" class="icon-record"></i>
-				#{/else}
-
-				<a class="anchor" href="/user/${usr.login}">${usr.fullName}</a>
-				
+				#{/else}		
+						
 		    	#{if userProfile}
 					<span>
 				    	#{if user && isOwner}
@@ -49,23 +52,18 @@
 						#{/if}	
 					</span>
 				#{/if}				
-			</h3>
+			</h2>
+			<ul class="list-icons">
+				<li><i class="fa fa-user"></i> Last Active on ${usr.lastOnlineTime.format("dd MMM, yyyy")} #{time time:usr.lastOnlineTime/}</li>
+				<li><i class="fa fa-calendar pr-5"></i><a href="/user/${usr.login}/calendar/public">Show public calendar</a></li>
+				<li><i class="fa fa-envelope pr-5"></i>${usr.login}</li>
+			</ul>
 			<br/>
+		</div>
 
-			<dl class="dl-horizontal">
-				<dt>&{'email'}</dt>
-				<dd><i class="fa fa-envelope-o"></i> ${usr.login}</dd>
-				<dt>Calendar</dt>
-				<dd><i class="fa fa-calendar"></i> <a href="/user/${usr.login}/calendar">Show calendar</a></dd>
-				#{if usr.lastOnlineTime}
-				<dt>Last active</dt>
-				<dd><i class="fa fa-clock-o"></i> ${usr.lastOnlineTime.format("dd MMM, yyyy")} #{time time:usr.lastOnlineTime/} &nbsp;</dd>
-				#{/if}
-			</dl>	
-			</div>
-		
-	  		<div style="float:right;margin-right:15px">
-				<h5 class="title margin-top-clear">Followers</h5>
+		<div class="col-lg-3 col-sm-8 " style="height:100%">
+			<div class="vertical-divider-left-lg side">
+				<h3 class="title margin-top-clear">Followers</h3>
 				#{if followers}
 					<p>
 					#{list items:followers, as:'item'}
@@ -73,10 +71,10 @@
 					#{/list}	
 					</p>						
 				#{/if}
-				
 				<div class="clearfix"></div>
 				<br/>
-				<h5 class="title">Following</h5>
+				
+				<h3 class="title">Following</h3>
 				#{if followees}
 					<p>
 					#{list items:followees, as:'item'}
@@ -84,9 +82,13 @@
 					#{/list}
 					</p>			
 				#{/if}	
+				<div class="clearfix"></div>
+				<br/>
 			</div>
-	  	</div>	
-	  					
-	</div>				
+		</div>	
+		
+	</div>
+
+
 </div>
 </div>

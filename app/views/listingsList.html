@@ -14,7 +14,7 @@
    		</div>
    		
    		<div style="display:table-cell;vertical-align:top;padding:0 15px 0 15px;position:relative;">
-			<h4>${item.title}</h4>
+			<h4>${item.title.trimDot(90)}</h4>
 			<p style="margin-bottom:5px">
 				<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
 				<strong>${item.user.fullName}</strong>  &middot; 
@@ -31,19 +31,31 @@
 			#{/else}
 			
 			
-			<span class="truncate">${item.getDescriptionHtml().trimDot(140).raw()}</span>
+			<span class="truncate">${item.getDescriptionHtml().trimDot(90).raw()}</span>
    			<p>
    			#{if item.charging != 'free'}
-   				<strong>from ${item.price} <small>${item.currency}</small></strong>
+   				from <strong>${item.price} <small>${item.currency}</small></strong>
 	   			<nobr>for 15</nobr> minutes
    			#{/if}
    			#{else}
    				<strong class="">Free</strong>
    			#{/else}
    			#{if item.firstFree}
-   				<span class="label label-default">first free</span>
+   				<span class="label default_bg">first free</span>
    			#{/if}
    			</p>
+   			
+   			<p>
+       		#{list items:1..5, as:'i'} 
+       			#{if i <= item.getRatingAvg()} 
+				    <i class="fa fa-star text-default" data-value="1"></i>
+       			#{/if}
+       			#{else}
+				    <i class="fa fa-star-o" data-value="1"></i>
+       			#{/else}
+			#{/list}
+            ${item.ratingCount} reviews   			
+   			<p>
    		</div>
    	</div>		
 </div>	   

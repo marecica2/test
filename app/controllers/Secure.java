@@ -153,7 +153,7 @@ public class Secure extends Controller
         {
             User user = User.getUserByLogin(username);
 
-            if (!user.activated)
+            if (user != null && !user.activated)
             {
                 flash("securityError", Messages.get("Your account is not activated"));
                 return false;

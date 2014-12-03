@@ -17,286 +17,358 @@ star.cameraoOff = false;
 star.switchAuto = true;
 star.chatMimized = true;
     
-var webrtc = new SimpleWebRTC({
-    localVideoEl: 'localVideo',
-    autoRequestMedia: star.livestream? false : true,
-    url:"https://"+star.server_host,
-    debug: false,
-    detectSpeakingEvents: true,
-    autoAdjustMic: false
-});
-
-
-$(document).ready(function(){
-    $(".event-link-share").click(function(){
-        prompt("Share this event", window.location.origin + $(this).attr("data-url"));
+var webrtc = null;
+if(star.userInRoom){
+    webrtc = new SimpleWebRTC({
+        localVideoEl: 'localVideo',
+        autoRequestMedia: true,
+        url: star.server_host,
+        debug: false,
+        detectSpeakingEvents: true,
+        autoAdjustMic: false
     });
-});
+}
 
 
-
-//bind all event handlers when webrtc is ready
-webrtc.on('readyToCall', function () {
-     
-     //automatically create user_joined event
-     socket.emit('user_joined', {"user" : star.user, "room" : star.room, "usr" : star.usr});
+// if user is room
+if(webrtc != null){
     
-     // automatic join to room
-     var room = star.room
-     joinRoom(room, joinRoomCallback);
-     
-     
-     $(document).click(function(){
-         $(".peer-controls").hide();
-     });
-
-     
-     
-     $(document).on("click", ".video-dropdown", function(event){
-         console.log("dd");
-         event.stopPropagation();
-         var id = $(this).attr("data-id");
-         if($(".peer-controls[data-id='"+id+"']").is(':visible'))
-             $(".peer-controls[data-id='"+id+"']").hide();
-         else {
-             console.log("vvvv");
-             $(".peer-controls").hide();
-             $(".peer-controls[data-id='"+id+"']").show();
-         }
-     });
-     
-  
-     $(document).on("click", ".avatar-mute-btn", function(){
-         if(!$(this).hasClass("btn-danger")){
-             //emit mute event to source to be muted later
-             var id = $(this).attr("data-id");
-             var data = {};
-             data.id = id;
-             socket_message_broadcast("mute", data);
-
-             $(this).addClass("btn-danger");
-             var id = $(this).attr("data-id");
-         }
-     });
-     
-
-     $("#controls-mute").click(function(){
-         if(star.muted == false){
-             $(this).addClass("btn-danger");
-             star.muted = true;
-             webrtc.mute();
-         } else {
-             $(this).removeClass("btn-danger");
-             star.muted = false;
-             webrtc.unmute();
-         }
-         var data = {};
-         data.id = getPeerId();
-         data.muted = star.muted;
-         socket_message_broadcast("mute-broadcast", data);
-     });
-    
-     
-     $(document).on("click", ".user-elm", function(){
-         var id = $(this).attr("data-id");
-         var local = $(this).parent().parent().parent().attr("data-local");
+    //bind all event handlers when webrtc is ready
+    webrtc.on('readyToCall', function () {
+        
+         //automatically create user_joined event
+         socket.emit('user_joined', {"user" : star.user, "room" : star.room, "usr" : star.usr});
+        
+         // automatic join to room
+         var room = star.room
+         joinRoom(room, joinRoomCallback);
          
+         $(document).click(function(){
+             $(".peer-controls").hide();
+         });
 
-         if(star.selectedId == null || star.selectedId != id){
-             star.selectedId = id;
-             star.switchAuto = false;
-             maximizeMimize(id, local);
-             $(this).attr("data-reverse", "false");
-         } else {
-             star.selectedId = null;
-             star.switchAuto = true;
-             maximizeMimize(id, local);
-             $(this).attr("data-reverse", "true");
-         }
-     });
-
-     
-     
-     if (!webrtc.capabilities.screenSharing) {
-         $('#screenShareButton').attr('disabled', 'disabled');
-     }
-     
-     
-     $('#screenShareButton').click(function () {
-         if (webrtc.getLocalScreen()) {
-             webrtc.stopScreenShare();
+         // muting unmuting
+         $("#controls-mute").click(function(){
+             if(star.muted == false){
+                 $(this).removeClass("btn-dark");
+                 $(this).addClass("btn-danger");
+                 $(this).html("<i class='icon-mute'></i>");
+                 $(".peer-label-muted[data-id='"+getPeerId()+"']").show();
+                 webrtc.mute();
+                 star.muted = true;
+             } else {
+                 $(this).removeClass("btn-danger");
+                 $(this).addClass("btn-dark");
+                 $(this).html("<i class='icon-sound'></i>");
+                 $(".peer-label-muted[data-id='"+getPeerId()+"']").hide();
+                 webrtc.unmute();
+                 star.muted = false;
+             }
              var data = {};
              data.id = getPeerId();
-             socket_message_broadcast("removedScreen", data);
-             $(this).removeClass("btn-danger");
-         } else {
-             webrtc.shareScreen(function (err) {
-                 if (err) {
-                 } else {
-                 }
-             });
-             $(this).addClass("btn-danger");
-         }
-     });         
+             data.muted = star.muted;
+             socket_message_broadcast("mute-broadcast", data);
+         });
+
+         $(document).on("click", ".peer-mute", function(event){
+             event.stopPropagation();
+             console.log("click mute");
+             var id = $(this).attr("data-id");
+             if(id == getPeerId()){
+                 $("#controls-mute").removeClass("btn-dark");
+                 $("#controls-mute").addClass("btn-danger");
+                 webrtc.mute();
+                 star.muted = true;
+             }
+             $(".peer-label-muted[data-id='"+id+"']").show();
+             $(".peer-controls[data-id='"+id+"']").hide();
+             var data = {};
+             data.id = id;
+             data.muted = true;
+             socket_message_broadcast("mute-broadcast", data);
+         });
+
+         $(document).on("click", ".peer-unmute", function(event){
+             event.stopPropagation();
+             console.log("click unmute");
+             var id = $(this).attr("data-id");
+             if(id == getPeerId()){
+                 $("#controls-mute").removeClass("btn-danger");
+                 $("#controls-mute").addClass("btn-dark");
+                 webrtc.unmute();
+                 star.muted = false;                 
+             }
+             $(".peer-label-muted[data-id='"+id+"']").hide();
+             $(".peer-controls[data-id='"+id+"']").hide();
+             var data = {};
+             data.id = id;
+             data.muted = false;
+             socket_message_broadcast("mute-broadcast", data);
+         });
          
-     $("#controls-switchauto").click(function() {
-         star.switchAuto = !star.switchAuto;
-         if(star.switchAuto)
-             $(this).addClass("btn-success");
-         else
-             $(this).removeClass("btn-success");
-     });
-     
-     $("#controls-hangup").click(function() {
-         $("#controls").hide();
-         peerRemoveCurrent();
-         for(var i = 0; i < peers().length; i++){
-             peers()[i].end();
-         }
+         // peer dropdown clicked
+         $(document).on("click", ".video-dropdown", function(event){
+             event.stopPropagation();
+             var id = $(this).attr("data-id");
+             if($(".peer-controls[data-id='"+id+"']").is(':visible'))
+                 $(".peer-controls[data-id='"+id+"']").hide();
+             else {
+                 $(".peer-controls").hide();
+                 $(".peer-controls[data-id='"+id+"']").show();
+             }
+         });
          
-         $("#remotes").remove();
-         $("#localVideo").remove();
-         webrtc.leaveRoom();
-         webrtc.stopLocalVideo();
-         webrtc.connection.removeAllListeners();
-         webrtc.connection.disconnect();
-         
-         var data = {};
-         data.id = getPeerId();
-         socket_message_all("controls-hangup", data);
-         send_chat(star.user + ' has left the conversation');
-     });
-     
-});
-
-
-webrtc.on('localScreenRemoved', function () {
-
-});
-
-// local screen share obtained
-webrtc.on('localScreenAdded', function (video) {
+         // maximize mimize peer
+         $(document).on("click", ".user-elm", function(){
+             var id = $(this).attr("data-id");
+             var local = $(this).parent().parent().parent().attr("data-local");
+             
     
-});
-
-
-// we got access to the camera
-webrtc.on('localStream', function (stream) {
-    console.log("local stream added");
-
-    // move the video avatar
-    var id = webrtc.connection.socket.sessionid;
-    $(webrtc.getLocalVideoContainer()).parent().wrap("<div data-id='"+id+"' data-local='true' style='position:relative' id='video-element-"+id+"' class='user-elm'></div>");
-    $(webrtc.getLocalVideoContainer()).parent().parent().append("<div id='localVolume' class='volumeBar'></div>");
-    webrtc.getLocalVideoContainer().play();
-});
-
-
-// a peer video has been added
-webrtc.on('videoAdded', function (video, peer) {
-    //console.log('video added ');
-    var remotes = document.getElementById('remotes');
-    var isScreen = $(video).attr("id").indexOf("_screen") != -1 ? true : false;
-
-    if (remotes) {
+             if(star.selectedId == null || star.selectedId != id){
+                 star.selectedId = id;
+                 star.switchAuto = false;
+                 maximizeMimize(id, local);
+                 $(this).attr("data-reverse", "false");
+             } else {
+                 star.selectedId = null;
+                 star.switchAuto = true;
+                 maximizeMimize(id, local);
+                 $(this).attr("data-reverse", "true");
+             }
+         });
+    
+         // screenshare
+         if (!webrtc.capabilities.screenSharing) {
+             $('#screenShareButton').attr('disabled', 'disabled');
+         }
+         
+         $('#screenShareButton').click(function () {
+             if (webrtc.getLocalScreen()) {
+                 webrtc.stopScreenShare();
+                 var data = {};
+                 data.id = getPeerId();
+                 socket_message_broadcast("removedScreen", data);
+                 $(this).removeClass("btn-danger");
+             } else {
+                 webrtc.shareScreen(function (err) {
+                     if (err) {
+                     } else {
+                     }
+                 });
+                 $(this).addClass("btn-danger");
+             }
+         });         
+             
+         
+         $("#controls-switchauto").click(function() {
+             star.switchAuto = !star.switchAuto;
+             if(star.switchAuto)
+                 $(this).addClass("btn-success");
+             else
+                 $(this).removeClass("btn-success");
+         });
+         
+         
+         $("#controls-hangup").click(function() {
+             $("#controls").hide();
+             peerRemoveCurrent();
+             for(var i = 0; i < peers().length; i++){
+                 peers()[i].end();
+             }
+             
+             $("#remotes").remove();
+             $("#localVideo").remove();
+             webrtc.leaveRoom();
+             webrtc.stopLocalVideo();
+             webrtc.connection.removeAllListeners();
+             webrtc.connection.disconnect();
+             
+             var data = {};
+             data.id = getPeerId();
+             socket_message_all("controls-hangup", data);
+             send_chat(star.user + ' has left the conversation');
+         });
+         
+    });
+    
+    
+    webrtc.on('localScreenRemoved', function () {
+    
+    });
+    
+    // local screen share obtained
+    webrtc.on('localScreenAdded', function (video) {
+        
+    });
+    
+    
+    // we got access to the camera
+    webrtc.on('localStream', function (stream) {
+        console.log("local stream added");
+    
+        // move the video avatar
+        var id = webrtc.connection.socket.sessionid;
+        $(webrtc.getLocalVideoContainer()).parent().wrap("<div data-id='"+id+"' data-local='true' style='position:relative' id='video-element-"+id+"' class='user-elm'></div>");
+        $(webrtc.getLocalVideoContainer()).parent().parent().append("<div id='localVolume' class='volumeBar'></div>");
+        webrtc.getLocalVideoContainer().play();
+    });
+    
+    
+    // a peer video has been added
+    webrtc.on('videoAdded', function (video, peer) {
+        //console.log('video added ');
+        var remotes = document.getElementById('remotes');
+        var isScreen = $(video).attr("id").indexOf("_screen") != -1 ? true : false;
+    
+        if (remotes) {
+            if(isScreen){
+                //$("#video-element-"+peer.id+"[data-screen='true']").remove();
+                //$("#"+peer.id+"_video_incoming").remove();
+                //$(container).wrap("<div data-screen='true' data-id='"+peer.id+"' id='video-element-"+peer.id+"' class='user-elm'></div>");
+                
+                // replace it with screen stream
+                $("#"+peer.id+"_video_incoming").before(video);
+    
+                // hide original video
+                $("#"+peer.id+"_video_incoming").hide();
+    
+                video.play();
+                video.play();
+            } else {
+                var container = document.createElement('div');
+                container.className = 'videoContainer';
+                container.id = 'container_' + webrtc.getDomId(peer);
+                container.appendChild(video);
+                
+                // move the video avatar
+                remotes.appendChild(container);
+    
+                // suppress contextmenu
+                //video.oncontextmenu = function () { return false; };
+    
+                // show the ice connection state
+                if (peer && peer.pc) {
+                    var connstate = document.createElement('div');
+                    connstate.className = 'connectionstate';
+                    container.appendChild(connstate);
+                }            
+                $(container).wrap("<div  data-id='"+peer.id+"' id='video-element-"+peer.id+"' class='user-elm'></div>");
+                // show the remote volume
+                var vol = document.createElement('div');
+                vol.id = 'volume_' + peer.id;
+                vol.className = 'volumeBar';
+                $("#video-element-"+peer.id).append($(vol));
+                video.play();
+            }
+        }
+    })
+    
+    
+    // a peer was removed
+    webrtc.on('videoRemoved', function (video, peer) {
+        //console.log('video removed ');
+        
+        var isScreen = $(video).attr("id").indexOf("_screen") != -1 ? true : false;
+        console.log(isScreen);
+        console.log(video);
+        
         if(isScreen){
             //$("#video-element-"+peer.id+"[data-screen='true']").remove();
-            //$("#"+peer.id+"_video_incoming").remove();
-            //$(container).wrap("<div data-screen='true' data-id='"+peer.id+"' id='video-element-"+peer.id+"' class='user-elm'></div>");
             
-            // replace it with screen stream
-            $("#"+peer.id+"_video_incoming").before(video);
-
-            // hide original video
-            $("#"+peer.id+"_video_incoming").hide();
-
-            video.play();
-            video.play();
+            //console.log("removing screen");
+            //console.log(video);
+            
+            // remove screen share video
+            $(video).remove();
+            $("#"+peer.id+"_screen_incoming").remove();
+            star.maximizedScreen = null;
+    
+            // show original video
+            $("#"+peer.id+"_video_incoming").show();
         } else {
-            var container = document.createElement('div');
-            container.className = 'videoContainer';
-            container.id = 'container_' + webrtc.getDomId(peer);
-            container.appendChild(video);
-            
-            // move the video avatar
-            remotes.appendChild(container);
-
-            // suppress contextmenu
-            //video.oncontextmenu = function () { return false; };
-
-            // show the ice connection state
-            if (peer && peer.pc) {
-                var connstate = document.createElement('div');
-                connstate.className = 'connectionstate';
-                container.appendChild(connstate);
-            }            
-            $(container).wrap("<div  data-id='"+peer.id+"' id='video-element-"+peer.id+"' class='user-elm'></div>");
-            // show the remote volume
-            var vol = document.createElement('div');
-            vol.id = 'volume_' + peer.id;
-            vol.className = 'volumeBar';
-            $("#video-element-"+peer.id).append($(vol));
-            video.play();
+            $(video).remove();
+            //$("#"+peer.id+"_video_incoming").remove();
+            $("#video-element-"+peer.id).remove();
         }
-    }
-})
-
-
-// a peer was removed
-webrtc.on('videoRemoved', function (video, peer) {
-    //console.log('video removed ');
+    });
     
-    var isScreen = $(video).attr("id").indexOf("_screen") != -1 ? true : false;
-    console.log(isScreen);
-    console.log(video);
     
-    if(isScreen){
-        //$("#video-element-"+peer.id+"[data-screen='true']").remove();
-        
-        //console.log("removing screen");
-        //console.log(video);
-        
-        // remove screen share video
-        $(video).remove();
-        $("#"+peer.id+"_screen_incoming").remove();
-        star.maximizedScreen = null;
-
-        // show original video
-        $("#"+peer.id+"_video_incoming").show();
-    } else {
-        $(video).remove();
-        //$("#"+peer.id+"_video_incoming").remove();
-        $("#video-element-"+peer.id).remove();
-    }
-});
-
-
-// local volume has changed
-var volumes = 0;
-webrtc.on('volumeChange', function (volume, treshold) {
-    if(!star.muted){
-        showVolume(document.getElementById('localVolume'), volume);
-        if(volume > treshold && star.switchAuto){
-            var id = getPeerId();
-            
-            if(star.maximizedId == null || id != star.maximizedId || star.switchAuto){
-                console.log("switching ");
-                maximizeMimize(id, true);
+    // local volume has changed
+    var volumes = 0;
+    webrtc.on('volumeChange', function (volume, treshold) {
+        if(!star.muted){
+            showVolume(document.getElementById('localVolume'), volume);
+            if(volume > treshold && star.switchAuto){
+                var id = getPeerId();
+                
+                if(star.maximizedId == null || id != star.maximizedId || star.switchAuto){
+                    console.log("switching ");
+                    maximizeMimize(id, true);
+                }
+                var data = {};
+                data.id = getPeerId();
+                data.volume = volume;
+                socket_message_broadcast("speaking", data);
             }
-            var data = {};
-            data.id = getPeerId();
-            data.volume = volume;
-            socket_message_broadcast("speaking", data);
         }
+    });
+    
+    //webrtc.webrtc.on("speaking", star.room, function(data){
+    //});
+}
+
+
+function usersRender(data) {
+    data = JSON.parse(data);
+    var html = "";
+    users = [];
+    for ( var index in data) {
+        var row = data[index];
+            for ( var usr in row) {
+                if(row[usr].room == star.room){
+                    html = "";
+                    users.push(row[usr]);
+                    html += "<div id='user-item-"+row[usr].id+"' data-id='"+row[usr].id+"' style='position:relative;' title='"+row[usr].user+"'>";
+                    
+                    // peer labels
+                    html += "<div style='position:absolute;top:5px;left:5px;z-index:9999;'>";
+                    html += "   <div style='display:none' class='peer-label-screenshare peer-control-lbl btn-success' data-id='"+row[usr].id+"'><i class='fa fa-desktop'></i></div>"
+                    html += "   <div style='display:none' class='peer-label-muted peer-control-lbl btn-danger' data-id='"+row[usr].id+"'><i class='icon-mute'></i></div>"
+                    html += "</div>";
+                    
+                    // peer controls
+                    html += "<div class='video-dropdown' data-id='"+row[usr].id+"'><i class='fa fa-chevron-down color-link-light'></i></div>"
+                    html += "<div class='peer-controls' data-id='"+row[usr].id+"' style='display:none;z-index:9999;opacity:0.8'>";
+                    html += "   <button class='peer-mute btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' data-type='audio' data-name='" + row[usr].user + "' data-id='"+row[usr].id+"'>"
+                    html += "       <i class='icon-mute'></i> "+i18n("mute");
+                    html += "   </button> ";
+                    html += "   <button class='peer-unmute btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' data-type='audio' data-name='" + row[usr].user + "' data-id='"+row[usr].id+"'>"
+                    html += "       <i class='icon-sound'></i> "+i18n("unmute");
+                    html += "   </button> ";
+                    html += "</div>";
+
+                    // peer avatar
+                    html += "<div id='"+ row[usr].id +"_video_small' class='peer-avatar'>";
+                    html += "   <div class='peer-avatar-label'>" + (row[usr].usr != undefined ? row[usr].usr.name : row[usr].user) + "</div>";
+                    html += "</div>";
+    
+                    html += "</div>";
+                    
+                    function closure(elm, html) {
+                        $("#video-element-"+elm).waitUntilExists(function(){
+                            $("#video-element-"+elm).prepend(html);
+                        });
+                    };
+                    closure(row[usr].id, html);
+                }
+            }
     }
-});
-
-
-//webrtc.webrtc.on("speaking", star.room, function(data){
-//});
-
-
-
+    
+    // check if buttons should be enabled or disabled  
+    if(webrtc.webrtc.peers.length == 0 ){
+    } else {
+    }
+}
 
 function maximizeMimize(id, local){
     console.log(id + star.maximizedId);
@@ -311,7 +383,7 @@ function maximizeMimize(id, local){
             $(star.maximized).appendTo(moveTo);
             if(star.maximized != null)
                 star.maximized.play();
-            $("#video-element-"+star.maximizedId).css("border", "1px solid rgba(0,0,0,0)");
+            $("#video-element-"+star.maximizedId).css("border", "3px solid rgba(0,0,0,0)");
             $("#"+star.maximizedId+"_video_small").hide();
             
             // mimize maximized screen
@@ -345,12 +417,13 @@ function maximizeMimize(id, local){
             $(star.maximized).css("left", "0px");
             $(".videoContainer", "#video-element-"+star.maximizedId).hide();
             $(star.maximized).css("width", "100%");
+            $(star.maximized).css("-webkit-transform", "scale(1.0)");
             $(star.maximized).css("height", "100%");
             $(star.maximized).css("z-index", "-1");
             $("#"+star.maximizedId+"_video_small").show();
             $(".container", "#video-element-"+star.maximizedId).hide();
             if(star.selectedId != null)
-                $("#video-element-"+id).css("border", "1px solid rgba(255,255,255,0.8)");
+                $("#video-element-"+id).css("border", "3px solid rgba(255,255,255,0.7)");
             if(star.maximized != null)
                 star.maximized.play();
             
@@ -441,12 +514,20 @@ socket.on('socket_message', function(data) {
     }
 
     if(data.event == "mute-broadcast"){
-        var elm = $(".avatar-mute-btn", "#video-element-"+data.data.id);
-        console.log(elm);
-        if(!data.data.muted){
-            elm.removeClass("btn-danger");
+        if(data.data.id == getPeerId() && data.data.muted){
+            $("#controls-mute").removeClass("btn-dark");
+            $("#controls-mute").addClass("btn-danger");   
+            webrtc.mute();
+        }
+        if(data.data.id == getPeerId() && !data.data.muted){
+            $("#controls-mute").addClass("btn-dark");
+            $("#controls-mute").removeClass("btn-danger");           
+            webrtc.unmute();
+        }
+        if(data.data.muted){
+            $(".peer-label-muted[data-id='"+data.data.id+"']").show();
         } else {
-            elm.addClass("btn-danger");
+            $(".peer-label-muted[data-id='"+data.data.id+"']").hide();
         }
     }
     
@@ -496,8 +577,6 @@ socket.on('socket_message', function(data) {
     
 });
 
-
-
 socket.on('user_disconnect', function(data) {
     var disconnected_client = JSON.parse(data).client;
     usersRender(data);
@@ -518,6 +597,7 @@ socket.on('user_disconnect', function(data) {
 });
 
 socket.on('user_update', function(data) {
+    console.log("user_update event");
     usersRender(data);
 });
 
@@ -628,59 +708,6 @@ function usersRefresh(){
 }
 
 
-function usersRender(data) {
-    data = JSON.parse(data);
-    var html = "";
-    users = [];
-    for ( var index in data) {
-        var row = data[index];
-            for ( var usr in row) {
-                if(row[usr].room == star.room){
-                    html = "";
-                    users.push(row[usr]);
-                    html += "<div id='user-item-"+row[usr].id+"' data-id='"+row[usr].id+"' style='position:relative;text-align:center' title='"+row[usr].user+"'>";
-
-                    if(!star.livestream ){
-                        html += "<div style='height:30px;width:110px;position:absolute;top:0px;z-index:100' class='video-dropdown' data-id='"+row[usr].id+"'><i class='fa fa-chevron-down color-link-light'></i></div>"
-                        html += "<div class='peer-controls' data-id='"+row[usr].id+"' style='width:108px;padding:1px;background:black;display:none;position:absolute;top:-40px;text-align:center;width:100%;z-index:9999;'>";
-                        html += "<button title='"+i18n("cal.videoCall")+"' style='opacity:0.5' data-reverse='false' class='btn btn-sm btn-default avatar-maximize-btn' data-type='audio' data-name=\"" + row[usr].user + "\" data-id=\"" + row[usr].id + "\">"
-                        html += "<i class='fa fa-search-plus fa-1x'></i>";
-                        html += "</button> ";
-                        if(row[usr].id != getPeerId() || true){
-                            html += "<button title='"+i18n("cal.audioCall")+"' style='opacity:0.5' class='btn btn-sm btn-default avatar-mute-btn' data-type='audio' data-name=\"" + row[usr].user + "\" data-id=\"" + row[usr].id + "\">"
-                            html += "<i class='fa fa-microphone fa-1x'></i>";
-                            html += "</button> ";
-                            if(row[usr].usr != undefined && row[usr].usr.skype != undefined){
-                                html += "<a title='"+i18n("cal.skypeCall")+"' style='opacity:0.5' href='skype:"+row[usr].usr.skype+"?call'><button class='btn btn-sm btn-default'><i class='fa fa-skype fa-1x'></i></button></a>";
-                            }
-                        }
-                        html += "</div>";
-                    }
-
-                    html += "<div id='"+ row[usr].id +"_video_small' style='display:none;height:110px;width:110px;'>";
-                    html += "<div class='segoe' style='background:rgba(0,0,0,0.5);display:table-cell;color:white;text-align:center;vertical-align:middle;width:110px;height:110px;font-size:1em;padding:0px'>" + (row[usr].usr != undefined ? row[usr].usr.name : row[usr].user) + "</div>";
-                    html += "<img class='img-circle' style='display:none;background:black' src='" + (row[usr].usr != undefined ? row[usr].usr.avatar : "") + "' id=\"video_small_"+row[usr].id+"\">";
-                    html += "</div>";
-    
-                    html += "</div>";
-                    function closure(elm, html) {
-                        $("#video-element-"+elm).waitUntilExists(function(){
-                            $("#video-element-"+elm).prepend(html);
-                        });
-                    };
-                    closure(row[usr].id, html);
-   
-                }
-            }
-    }
-    
-    // check if buttons should be enabled or disabled  
-    if(webrtc.webrtc.peers.length == 0 ){
-    } else {
-    }
-}
-
-
 function getPeerId(){
     return socket.socket.sessionid;
 }
@@ -701,15 +728,6 @@ function peerRemoveCurrent(){
     var peer = getPeerById(getPeerId());
     if(peer != null)
         peer.end();
-}
-
-function peerOnCall(){
-    if(webrtc.webrtc.peers.length == 1 && webrtc.webrtc.peers[0] == getPeerId())
-        return false;
-    if(webrtc.webrtc.peers.length > 0)
-        return true;
-    else
-        return false;
 }
 
 function getUserById(id){
@@ -736,7 +754,6 @@ function peers(){
 
 // chat services
 $(document).ready(function(){
-
     $("#chat-slider").click(function() {
         var elm = $("#chat-container");
         if(star.chatMimized){
@@ -786,7 +803,7 @@ socket.on('message', function(data) {
             star.chatMimized = false;
         }
     }
-    //content.scrollTop = content.scrollHeight;
+    content.scrollTop = content.scrollHeight;
 });
 
 $("#chat-send").click(function(){
@@ -834,19 +851,6 @@ $(document).ready(function(){
 });
 
 
-//filepicker.setKey("AvWSXuNKTTKH2hr4j9Lrwz");
-//$("#chat-upload").click(function(){
-//    filepicker.pick(function(InkBlob){
-//        var data = {};
-//        data.event = star.room;
-//        data.comment = "[url]"+InkBlob.url+"[/url][name]"+InkBlob.filename+"[/name]";
-//        roomServices.saveFeed(data, function(succ){
-//            console.log(succ);
-//            send_chat(succ.comment, $("#chat-name").val());
-//        });        
-//    });
-//});
-
 
 (function ($) {
     /**
@@ -865,7 +869,7 @@ $(document).ready(function(){
         if (!isChild)
         {
             (window.waitUntilExists_Intervals = window.waitUntilExists_Intervals || {})[this.selector] =
-                window.setInterval(function () { $this.waitUntilExists(handler, shouldRunHandlerOnce, true); }, 500)
+                window.setInterval(function () { $this.waitUntilExists(handler, shouldRunHandlerOnce, true); }, 200)
             ;
         }
         else if (shouldRunHandlerOnce && $elements.length)

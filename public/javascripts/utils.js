@@ -25,7 +25,7 @@ star.utils.getParams = function () {
 }
 
 star.utils.trimTo = function(input, len) {
-    if(input.length > 10 && input.length > len){
+    if(input != undefined && input != null && input.length > 10 && input.length > len){
         input = input.substring(0, len-1);
         input += "...";
     }

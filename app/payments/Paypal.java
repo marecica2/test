@@ -3,6 +3,7 @@ package payments;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Calendar;
@@ -22,6 +23,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 
+import play.Logger;
 import utils.DateTimeUtils;
 import utils.StringUtils;
 
@@ -50,8 +52,8 @@ public class Paypal
     public Paypal(Event e, String returnUrl, String cancelUrl, String providerPaypalAccount, String providerPaypalAccountMicropayment, String user, String pwd, String signature,
             String endpoint, String paymentUrl, String percentage)
     {
-        this.paymentAmount = e.listing.price;
-        this.paymentCurrency = e.user.account.currency;
+        this.paymentAmount = e.price;
+        this.paymentCurrency = e.currency;
         this.providerPaypalAccount = providerPaypalAccount;
         this.providerPaypalAccountMicropayment = providerPaypalAccountMicropayment;
         this.returnUrl = returnUrl;
@@ -67,8 +69,8 @@ public class Paypal
 
     public Paypal(Event e)
     {
-        this.paymentAmount = e.listing.price;
-        this.paymentCurrency = e.user.account.currency;
+        this.paymentAmount = e.price;
+        this.paymentCurrency = e.currency;
     }
 
     public String getReturnUrl()
@@ -173,7 +175,7 @@ public class Paypal
     private void processDetails(Event event, StringBuilder sb, DoExpressCheckoutResponse response) throws UnsupportedEncodingException
     {
         final BigDecimal price = paymentAmount;
-        final BigDecimal fee = price.multiply(new BigDecimal(percentage));
+        final BigDecimal fee = price.multiply(new BigDecimal(percentage)).round(new MathContext(2));
 
         final BigDecimal providerPrice = price.subtract(fee);
         String paypalAccount = providerPaypalAccount;
@@ -203,8 +205,8 @@ public class Paypal
         // our payment
         sb.append("&PAYMENTREQUEST_1_PAYMENTACTION=" + URLEncoder.encode("Order", "UTF-8"));
         sb.append("&PAYMENTREQUEST_1_DESC=" + URLEncoder.encode(StringUtils.getStringNotNullMaxLen(event.listing.title, 100), "UTF-8"));
-        sb.append("&PAYMENTREQUEST_1_SELLERPAYPALACCOUNTID=" + paypalAccount);
-        //sb.append("&PAYMENTREQUEST_1_SELLERPAYPALACCOUNTID=" + "marecica22@yahoo.com");
+        //sb.append("&PAYMENTREQUEST_1_SELLERPAYPALACCOUNTID=" + paypalAccount);
+        sb.append("&PAYMENTREQUEST_1_SELLERPAYPALACCOUNTID=" + "marecica22@yahoo.com");
         sb.append("&PAYMENTREQUEST_1_CURRENCYCODE=" + URLEncoder.encode(paymentCurrency, "UTF-8"));
         sb.append("&PAYMENTREQUEST_1_AMT=" + URLEncoder.encode(fee.toPlainString(), "UTF-8"));
         sb.append("&PAYMENTREQUEST_1_PAYMENTREQUESTID=" + URLEncoder.encode(event.id + "_our", "UTF-8"));
@@ -227,7 +229,8 @@ public class Paypal
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse response = httpClient.execute(post);
         String resp = EntityUtils.toString(response.getEntity());
-        //Logger.error("Paypal response " + resp);
+        Logger.error("========= ");
+        Logger.error("Paypal response " + resp);
         return resp;
     }
 

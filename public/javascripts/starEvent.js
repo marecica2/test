@@ -144,8 +144,7 @@ star.generateItemsHtml = function(data, prefix){
                 color = "darkgray";
             
             var item = data[i];
-
-            if(item.isOwner || item.isInvited){
+            if(item.isOwner || item.uuid != undefined){
                 html += "<div class='event-box shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
                 html += "   <div class='overlay-container'>";
                 html += "       <mark style='position:absolute;bottom:0px;padding:5px' class='title'><img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/"+item.createdByAvatarUrl+"_32x32'>"+item.createdByName+" </mark>";
@@ -158,7 +157,7 @@ star.generateItemsHtml = function(data, prefix){
                 html += "       </div>";
                 html += "   </div>";
                 html += "   <div class='image-box-body' style='font-size:0.9em'>";
-                //html += "       <span>"+item.category+"</span> &middot; <span>"+item.type+"</span> &middot; <span>"+item.privacy+"</span><br/> ";  
+                html += "       <span>"+item.category+"</span> &middot; <span>"+item.type+"</span> &middot; <span>"+item.privacy+"</span><br/> ";  
                
                 html += "           <p>";
                 html += "           <strong>"+starUtils.formatDate(item.eventStart)+"</strong>";
@@ -171,7 +170,7 @@ star.generateItemsHtml = function(data, prefix){
                 }
 
                 if(item.charging == 'before'){
-                    html += "       <strong>"+item.price+"</strong> <small>"+item.currency+"</small>";
+                    html += "       <strong>"+item.priceTotal+"</strong> <small>"+item.currency+"</small> for "+item.chargingTime+" min";
                 }    
                 if(item.state == 'customer_created'){
                     html += "       <img class='img-circle avatar22' src='/"+item.customerAvatarUrl+"_32x32'>";

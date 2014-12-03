@@ -339,9 +339,7 @@ starCalendar.selectionNewEvent = function(ccc, start, end, allDay) {
     starCalendar.start = start;
     starCalendar.end = end;
     starCalendar.allDay = allDay;
-
-    $(".event-title").val(i18n("app.newEvent"));
-    $(".event-title").html(i18n("app.newEvent"));
+    $(".event-title").html(star.utils.trimTo(i18n("New Event"), 35));
     $(".event-time-from").html(starUtils.formatDateTime(start));
     $(".event-time-to").html(starUtils.formatTime(end));
     
@@ -362,7 +360,7 @@ starCalendar.clickEvent = function(event, jsEvent, view) {
     var popup = $("#myPopover");
     
     // copy values to the event detail page dialog
-    if(jsEvent != undefined){
+    if(jsEvent != undefined && event.uuid != undefined){
         starEvent.inviteLoad(event.uuid, function(){
             starCalendar.copyValuesToDialog(event);
             if(event.uuid.length > 0){
@@ -461,7 +459,6 @@ starCalendar.copyValuesToDialog = function(event){
     });    
     
     $(".event-createdByName").html("<a href='/user/"+event.createdByLogin+"/calendar'><i class='fa fa-calendar'></i></a> <img class='img-circle avatar22' src='/"+event.createdByAvatarUrl+"'> <a href='/public/user?id="+event.createdBy+"'>" + event.createdByName + "</a>");
-    $(".event-title").val(event.title);
     $(".event-title-label").val(event.title);
     $(".event-title-label").html(event.title);
     
@@ -472,12 +469,11 @@ starCalendar.copyValuesToDialog = function(event){
     else
         $(".event-currency").val(event.currency);
     
-    $(".event-title").html(event.title);
+    $(".event-title").html(star.utils.trimTo(event.title, 35));
     if(event.start != null)
         $(".event-time-from").html(starUtils.formatDate(event.start) + " " + starUtils.formatTime(event.start));
     if(event.end != null)
         $(".event-time-to").html(starUtils.formatTime(event.end));
-    console.log("xx");
     $("#event-description").html(star.utils.trimTo(event.description, 100));
     $("#event-description-label").html(event.description);
     $(".event-charging-price").val(event.price);
@@ -543,11 +539,12 @@ starCalendar.getEvents = function(start, end, callback) {
             d.setTime(new Date(data[i].created));
             
             var isInvited = data[i].isInvited;
+            var isOwner = data[i].isOwner;
             var color = data[i].color;
             if(color == undefined || color == null || color == "")
                 color = starCalendar.defaultColor;
 
-            if(isInvited){
+            if(isInvited && !isOwner){
                 var rgb = starCalendar.hexToRgb(color);
                 if(rgb != null)
                     color = "rgba("+rgb.r+","+rgb.g+","+rgb.b+",0.5)";
@@ -556,6 +553,7 @@ starCalendar.getEvents = function(start, end, callback) {
             if(data[i].state == "customer_created"){
                 color = "rgba(255,0,0,0.4)";
             }
+            console.log(data[i]);
             
             event = {};
             event.isInvite = data[i].isInvite;

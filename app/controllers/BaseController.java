@@ -20,11 +20,10 @@ import utils.UriUtils;
 
 public class BaseController extends Controller
 {
-    public static final String CONFIG_SERVER_IP = "star.configuration.ip";
-    public static final String CONFIG_SERVER_DOMAIN = "star.configuration.domain";
-    public static final String CONFIG_RMTP_PATH = "star.configuration.rmtp";
-    public static final String CONFIG_STREAM_NAME = "star.configuration.stream";
     public static final String CONFIG_BASE_URL = "star.configuration.baseurl";
+    public static final String CONFIG_SOCKET_IO = "star.configuration.socketio";
+    public static final String CONFIG_RMTP_PATH = "star.configuration.rmtp";
+    public static final String CONFIG_STREAM_PATH = "star.configuration.stream";
 
     public static final String CONFIG_PAYPAL_PROVIDER_ACCOUNT = "star.configuration.paypal.provider.account";
     public static final String CONFIG_PAYPAL_PROVIDER_ACCOUNT_MICROPAYMENT = "star.configuration.paypal.provider.account.micropayment";
@@ -85,11 +84,6 @@ public class BaseController extends Controller
         return Play.configuration.getProperty(key);
     }
 
-    public static String getIP()
-    {
-        return getProperty(CONFIG_SERVER_IP);
-    }
-
     public static boolean isProd()
     {
         return Play.mode.isProd();
@@ -136,26 +130,32 @@ public class BaseController extends Controller
 
     protected static void checkPayPalPayment(Event e, String transactionId, String url) throws Throwable
     {
-        if (e.getCharging().equals(Event.EVENT_CHARGING_FREE))
+        final User user = getLoggedUser();
+        if (e.isOwner(user))
+        {
+            Logger.info("Owner, not paying");
+            return;
+        }
+
+        if (e.charging.equals(Event.EVENT_CHARGING_FREE))
         {
             Logger.info("Free event, not needed to log in");
             return;
         }
 
-        if (!e.getCharging().equals(Event.EVENT_CHARGING_FREE) && (!isUserLogged() || getLoggedUser() == null))
+        if (!e.charging.equals(Event.EVENT_CHARGING_FREE) && (!isUserLogged() || getLoggedUser() == null))
         {
             Logger.info("Redirect to login");
             flash.put("url", request.url);
             Secure.login();
         }
 
-        if (!e.getCharging().equals(Event.EVENT_CHARGING_FREE) && isUserLogged() && getLoggedUser() != null)
+        if (!e.charging.equals(Event.EVENT_CHARGING_FREE) && isUserLogged() && getLoggedUser() != null)
         {
-            final User user = getLoggedUser();
             Attendance attendance = e.getInviteForCustomer(user);
 
             // in case of public event and missing attendance create it for the logged customer programatically
-            if (attendance == null && e.getPrivacy().equals(Event.EVENT_VISIBILITY_PUBLIC))
+            if (attendance == null && e.privacy.equals(Event.EVENT_VISIBILITY_PUBLIC))
                 attendance = createAttendanceForCustomerEvent(e, user);
 
             String cancelUrl = getProperty(BaseController.CONFIG_BASE_URL) + url.substring(1);

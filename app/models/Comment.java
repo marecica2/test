@@ -15,27 +15,27 @@ import org.hibernate.annotations.Cascade;
 import play.db.jpa.Model;
 
 @Entity
-@Table(name = "event_comment")
+@Table(name = "comment")
 public class Comment extends Model
 {
-    public static final String EVENT_COMMENT = "event";
-    public static final String USER_COMMENT = "user";
-    public static final String LISTING_COMMENT = "listing";
-
+    public static final String COMMENT_EVENT = "event";
+    public static final String COMMENT_LISTING = "listing";
+    public static final String COMMENT_USER = "user";
     public static final String TYPE_DEFAULT = "text";
-    public static final String TYPE_FILE = "file";
     public static final String TYPE_LINK = "link";
+    public static final String TYPE_FILE = "file";
     public static final String TYPE_GOOGLE_DOCS = "gdoc";
+
+    public Date created;
 
     @ManyToOne
     public User user;
 
-    public String objectTarget;
-    public String objectUuid;
+    @ManyToOne
+    public Event event;
 
-    @Cascade({ org.hibernate.annotations.CascadeType.DELETE })
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    public List<FileUpload> files;
+    @ManyToOne
+    public Listing listing;
 
     @Column(length = 1000)
     public String url;
@@ -43,13 +43,38 @@ public class Comment extends Model
     @Column(length = 1000)
     public String comment;
 
+    @Column(length = 10)
     public String type;
-    public String uuid;
-    public Date created;
 
-    public static List<Comment> getByObject(String uuid)
+    @Column(length = 20)
+    public String uuid;
+
+    @Column(length = 10)
+    public String objectType;
+
+    @Cascade({ org.hibernate.annotations.CascadeType.DELETE })
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<FileUpload> files;
+
+    public static List<Comment> getByEvent(Event event)
     {
-        return Comment.find("byObjectUuid", uuid).fetch();
+        return Comment.find("from Comment where event = ? order by created desc", event).fetch();
+    }
+
+    public static List<Comment> getByListing(Listing listing)
+    {
+        return Comment.find("from Comment where listing = ? order by created desc", listing).fetch();
+    }
+
+    public static List<Comment> getByFollower(User user, Integer results)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select comment from Comment comment left outer join Comment.event e left outer join e.attendances as a where (comment.user in ");
+        sb.append(" (select contact.contact from Contact contact where contact.following = true and contact.user = ? ) ");
+        sb.append(" and (comment.objectType != 'event' or e.privacy = 'public' or (e.privacy = 'private' and a.customer = ?) ) ");
+        sb.append(" ) or comment.user = ? ");
+        sb.append(" order by comment.created desc ");
+        return Comment.find(sb.toString(), user, user, user).fetch(results);
     }
 
     public static Comment getByUuid(String uuid)
@@ -69,4 +94,5 @@ public class Comment extends Model
     {
         return "Comment [user=" + user + ", comment=" + comment + ", uuid=" + uuid + ", created=" + created + "]";
     }
+
 }

@@ -17,45 +17,24 @@ import utils.RandomUtil;
 @With(Secure.class)
 public class Comments extends BaseController
 {
-    public static void addComment(String uuid, String comment, String type, String url, String tempId)
+    public static void addComment(String uuid, String objectType, String comment, String type, String url, String tempId)
     {
-        final Event e = Event.get(uuid);
-        final Listing l = Listing.get(uuid);
-        final User u = User.getUserByUUID(uuid);
         final User user = getLoggedUser();
 
         final Comment c = new Comment();
         c.user = user;
         c.comment = StringEscapeUtils.escapeHtml(comment);
         c.uuid = tempId != null ? tempId : RandomUtil.getUUID();
-        c.objectUuid = uuid;
-        if (u != null)
-            c.objectTarget = Comment.USER_COMMENT;
-        if (e != null)
-            c.objectTarget = Comment.EVENT_COMMENT;
-        if (l != null)
-            c.objectTarget = Comment.LISTING_COMMENT;
+        c.type = type;
+        c.objectType = objectType;
 
-        c.url = url;
-        c.type = Comment.TYPE_DEFAULT;
-        if (type != null && type.equals(Comment.TYPE_FILE))
-        {
-            List<FileUpload> fu = FileUpload.getByTemp(tempId);
-            c.files = fu;
-            System.err.println("uploaded files " + fu.size());
-            System.err.println("uploaded files " + fu.size());
-            System.err.println("uploaded files " + fu.size());
-            for (FileUpload fileUpload2 : fu)
-                fileUpload2.stored = true;
-        }
-        if (type != null && type.equals(Comment.TYPE_LINK))
-            c.type = Comment.TYPE_LINK;
-        if (type != null && type.equals(Comment.TYPE_GOOGLE_DOCS))
-            c.type = Comment.TYPE_GOOGLE_DOCS;
-        c.saveComment();
+        System.err.println(type);
 
-        if (e != null)
+        if (objectType.equals(Comment.COMMENT_EVENT))
         {
+            final Event e = Event.get(uuid);
+            c.event = e;
+
             final Activity act = new Activity();
             act.type = Activity.ACTIVITY_EVENT_COMMENTED;
             act.user = user;
@@ -63,6 +42,28 @@ public class Comments extends BaseController
             act.eventName = e.listing.title;
             act.saveActivity();
         }
+
+        if (objectType.equals(Comment.COMMENT_LISTING))
+        {
+            final Listing l = Listing.get(uuid);
+            c.listing = l;
+        }
+
+        if (objectType.equals(Comment.COMMENT_USER))
+        {
+            final User u = User.getUserByUUID(uuid);
+            c.user = u;
+        }
+
+        if (type.equals(Comment.TYPE_FILE))
+        {
+            List<FileUpload> fu = FileUpload.getByTemp(tempId);
+            c.files = fu;
+            for (FileUpload fileUpload2 : fu)
+                fileUpload2.stored = true;
+        }
+
+        c.saveComment();
         redirectTo(url);
     }
 
@@ -73,7 +74,10 @@ public class Comments extends BaseController
             Comment c = Comment.getByUuid(uuid);
             List<FileUpload> files = c.files;
             for (FileUpload fileUpload : files)
+            {
                 FileUpload.deleteOnDisc(fileUpload);
+                // fileUpload.delete();
+            }
             c.delete();
             redirectTo(url);
         } catch (Exception e)

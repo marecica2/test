@@ -1,0 +1,42 @@
+#{extends 'main.html' /} 
+#{set title:'Join Event' /} 
+#{set 'moreScripts'}
+#{/set}
+
+
+<div class="container" style="min-height:40vh">
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<form role="form" action="" onsubmit="return validate()" method="POST">
+			    
+			    <h2 class=""><i class="fa fa-sign-in"></i> Join Video Call</h2>
+			    <div class="divider"></div>
+			    
+				<div class="form-group">
+					<input type="text" class="form-control" id="name" name="name" placeholder="&{'yourName'}" focused/> 
+					<input type="hidden" name="id" value="${id}" />
+					<input type="hidden" name="url" value="${url}" />
+				</div>
+				<div class="form-group">
+					<input type="submit" class="btn btn-default btn-block" value="&{'joinMeeting'}" />
+					&{'or'} <a href="/login?url=${url}">&{'logIn'}</a>
+				</div>
+			</form>
+			<script>
+				function validate(){
+				    if($("#name").val().length > 2){
+				        return true;
+				    } 
+			        return false;
+				}
+				document.getElementById("name").focus();
+			</script>			
+		</div>
+		<div class="col-md-3"></div>
+	</div>
+</div>
+			    
+
+
+

@@ -103,7 +103,7 @@
 				<table class="table table-hover table-striped">
 					#{list items:sent, as:'item'}
 				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if}>
-				       	   	<td style="vertical-align:middle">To: <img class="avatar16 img-circle" src="/${item.toUser.avatarUrl}_32x32"> ${item.toUser.fullName} (${item.toUser.login})</td>
+				       	   	<td style="vertical-align:middle">To: <img class="avatar16 img-circle" src="/${item.toUser.avatarUrl}_32x32"> ${item.toUser.fullName} (${item.toUser.getLogin()})</td>
 				       	   	<td style="vertical-align:middle"><a href="/mail/${item.uuid}">${item.subject}</a></td>
 				       		<td style="vertical-align:middle">${item.body.trimDot(10)}</td>
 				       		<td style="vertical-align:middle">
@@ -120,7 +120,7 @@
 				<table class="table  ">
 					#{list items:thread, as:'item'}
 				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if} #{if message.uuid == item.uuid} class="active" #{/if}>
-				       	   	<td style="vertical-align:middle"><img class="avatar16 img-circle" src="../${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} (${item.fromUser.login})</td>
+				       	   	<td style="vertical-align:middle"><img class="avatar16 img-circle" src="../${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} (${item.fromUser.getLogin()})</td>
 				       	   	<td style="vertical-align:middle"><a href="/mail/${item.uuid}">${item.subject}</a></td>
 				       		<td style="vertical-align:middle">${item.body.trimDot(10)}</td>
 				       		<td style="vertical-align:middle">
@@ -136,9 +136,9 @@
 									  <dt>Subject</dt>
 									  <dd>${item.subject}</dd>
 									  <dt><strong>From</strong></dt>
-									  <dd><nobr><img class="img-circle avatar16" src="/${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} (${item.fromUser.login})</nobr></dd>
+									  <dd><nobr><img class="img-circle avatar16" src="/${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} (${item.fromUser.getLogin()})</nobr></dd>
 									  <dt><strong>To</strong></dt>
-									  <dd><nobr><img class="img-circle avatar16" src="/${item.toUser.avatarUrl}_32x32" height="16px"> ${item.toUser.fullName} (${item.toUser.login})</nobr></dd>
+									  <dd><nobr><img class="img-circle avatar16" src="/${item.toUser.avatarUrl}_32x32" height="16px"> ${item.toUser.fullName} (${item.toUser.getLogin()})</nobr></dd>
 									  <dt><strong>Message</strong></dt>
 									  <dd>${item.getHtmlBody().raw()}</dd>
 								</dl>

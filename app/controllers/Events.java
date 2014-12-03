@@ -23,10 +23,10 @@ import play.mvc.Before;
 import templates.VelocityTemplate;
 import utils.DateTimeUtils;
 import utils.JsonUtils;
-import utils.NetUtils;
 import utils.NumberUtils;
 import utils.RandomUtil;
 import utils.StringUtils;
+import youtube.LiveStreams;
 
 import com.google.gson.JsonObject;
 
@@ -94,81 +94,78 @@ public class Events extends BaseController
     {
         // public event render
 
+        final Boolean isPublic = event.privacy.equals(Event.EVENT_VISIBILITY_PUBLIC) ? true : false;
         final Boolean isOwner = user != null ? event.isOwner(user) : false;
+        final Boolean isInvited = user != null && event.hasInviteFor(user) ? true : false;
+        final Boolean isCustomerCreated = user != null && event.state.equals(Event.EVENT_STATE_CUSTOMER_CREATED) ? true : false;
 
-        if (isOwner)
-        {
-            eDto.isEditable = true;
-            eventsDto.add(eDto);
-        } else if (user != null && event.hasInviteFor(user.login) && event.state.equals(Event.EVENT_STATE_CUSTOMER_CREATED))
-        {
-            eDto.isEditable = true;
-            eventsDto.add(eDto);
+        // isOwner
+        eDto.isOwner = isOwner;
 
-        } else if (user != null && !event.hasInviteFor(user.login))
-        {
-            eDto.isInvited = false;
+        eDto.isInvited = isInvited;
+
+        // isEditable
+        eDto.isEditable = isOwner || isCustomerCreated ? true : false;
+
+        if (!isPublic && !isInvited)
             eDto = EventDTO.postProcessHiddenEvent(eDto);
-            eventsDto.add(eDto);
 
-        } else if (user != null && !event.state.equals(Event.EVENT_STATE_CUSTOMER_CREATED))
-        {
-            eDto.isEditable = false;
-            eventsDto.add(eDto);
-        } else if (event.listing.privacy.equals(Event.EVENT_VISIBILITY_PUBLIC))
-        {
-            eventsDto.add(eDto);
-
-        }
+        eventsDto.add(eDto);
     }
 
-    public static void eventNew(String action, String uuid, String url, String type, String listingId)
+    public static void hangoutYoutubeId(String id)
+    {
+        final User user = getLoggedUser();
+        LiveStreams.getStream(user.uuid);
+        redirect("https://hangouts.google.com/onair");
+    }
+
+    public static void hangoutYoutubeIdRest(String id)
+    {
+        final User user = getLoggedUser();
+        final String youtubeId = LiveStreams.getStream(user.uuid);
+        final Event event = Event.get(id);
+        event.youtubeId = youtubeId;
+        event.save();
+        if (youtubeId != null)
+        {
+            JsonObject jo = new JsonObject();
+            jo.addProperty("youtube", youtubeId);
+            renderJSON(jo);
+        }
+        JsonObject jo = new JsonObject();
+        jo.addProperty("resp", youtubeId);
+        renderJSON(jo);
+    }
+
+    public static void event(String action, String newEvent, String uuid, String url, String type, String listingId)
     {
         final User user = getLoggedUser();
         final Event event = Event.get(uuid);
-
-        final Listing listing = event != null ? event.listing : Listing.get(listingId);
         final Boolean edit = action != null && action.equals("edit") ? true : false;
         final Boolean isOwner = event != null ? event.isOwner(user) : false;
+        final Boolean isNew = newEvent != null ? true : false;
+        final Attendance attendance = user != null && event != null ? event.getInviteForCustomer(user) : null;
+        final Boolean paid = (user != null && attendance != null && attendance.paid != null && attendance.paid) || isOwner ? true : false;
+
+        // check access
+        if (event == null && !isNew)
+            notFound();
+        if (event != null && !isOwner && edit)
+            forbidden();
+        if (event != null && event.isPrivate() && user == null)
+            forbidden();
+        if (event != null && event.isPrivate() && !isOwner && !event.hasInviteFor(user))
+            forbidden();
+
+        final Listing listing = event != null ? event.listing : Listing.get(listingId);
         final Boolean fromEvent = true;
-
-        if (user == null && edit)
-            forbidden();
-        if (event != null && edit && user != null && !user.isOwner(event))
-            forbidden();
-
         final List<FileUpload> files = event != null ? FileUpload.getByObject(event.uuid) : null;
-
         final String temp = RandomUtil.getUUID();
         final String commentTemp = RandomUtil.getUUID();
-        final List<Comment> comments = event != null ? Comment.getByObject(event.uuid) : null;
-
+        final List<Comment> comments = event != null ? Comment.getByEvent(event) : null;
         final List<Rating> ratings = listing != null ? Rating.getByObject(listing.uuid) : null;
         final Map<String, Object> stats = listing != null ? Rating.calculateStats(ratings) : null;
-
-        Attendance attendance = null;
-        if (event != null)
-        {
-            for (Attendance a : event.attendances)
-            {
-                if (a.customer != null && a.customer.equals(user))
-                    attendance = a;
-            }
-        }
-
-        if (event == null && !edit)
-            notFound();
-
-        if (event != null && edit && !isOwner && !event.state.equals(Event.EVENT_STATE_CUSTOMER_CREATED))
-            forbidden();
-
-        if (event != null && !event.listing.privacy.equals(Event.EVENT_VISIBILITY_PUBLIC))
-        {
-            if (user == null)
-                checkAccess();
-            if (!event.hasInviteFor(user.login) && !event.isOwner(user))
-                forbidden();
-        }
 
         if (event != null)
         {
@@ -191,27 +188,41 @@ public class Events extends BaseController
             params.put("color", event.listing.color);
             params.put("image", event.listing.imageUrl);
 
-            if (event.getChatEnabled() != null && event.getChatEnabled())
+            // can be modified
+            params.put("type", event.type);
+            params.put("privacy", event.privacy);
+            params.put("currency", event.currency);
+            params.put("charging", event.charging);
+            if (event.price != null)
+                params.put("price", event.price.toString());
+            if (event.chargingTime != null)
+                params.put("chargingTime", event.chargingTime.toString());
+            if (event.listing.firstFree)
+                params.put("firstFree", "true");
+            if (event.chatEnabled)
                 params.put("chatEnabled", "true");
-            if (event.getCommentsEnabled() != null && event.getCommentsEnabled())
+            if (event.commentsEnabled)
                 params.put("commentsEnabled", "true");
-
-            params.put("type", event.getType());
-            params.put("privacy", event.getPrivacy());
-            params.put("currency", event.getCurrency());
-            params.put("charging", event.getCharging());
-            params.put("price", event.getPrice().toString());
-            params.put("chargingTime", event.getChargingTime() + "");
-            params.put("firstFree", event.getFirstFree() + "");
         } else
         {
             params.put("type", listing.type);
             params.put("privacy", listing.privacy);
+            params.put("currency", listing.currency);
             params.put("charging", listing.charging);
-            params.put("price", listing.price.toString());
-            params.put("currency", user.account.currency);
-            params.put("firstFree", listing.firstFree + "");
-            params.put("chargingTime", listing.chargingTime + "");
+            if (listing.price != null)
+                params.put("price", listing.price.toString());
+            if (listing.chargingTime != null)
+                params.put("chargingTime", listing.chargingTime.toString());
+            if (listing.price != null)
+                params.put("price", listing.price.toString());
+            if (listing.chargingTime != null)
+                params.put("chargingTime", listing.chargingTime.toString());
+            if (listing.firstFree != null && listing.firstFree)
+                params.put("firstFree", "true");
+            if (listing.chatEnabled != null && listing.chatEnabled)
+                params.put("chatEnabled", "true");
+            if (listing.commentsEnabled != null && listing.commentsEnabled)
+                params.put("commentsEnabled", "true");
         }
         params.put("temp", temp);
         params.flash();
@@ -219,18 +230,13 @@ public class Events extends BaseController
         final String name = user != null ? user.getFullName() : null;
         final String room = event != null ? event.uuid : null;
         final String rmtp = getProperty(CONFIG_RMTP_PATH);
-        String serverIp = NetUtils.getIp();
-        if (isProd() || serverIp == null)
-            serverIp = getProperty(CONFIG_SERVER_DOMAIN);
-        serverIp = "localhost";
-        serverIp = "192.168.1.100";
-        //serverIp = "192.168.2.81";
+        final String socketIo = getProperty(CONFIG_SOCKET_IO);
         Map<String, String> errs = new HashMap<String, String>();
-        render("Listings/listingNew.html", user, isOwner, edit, event, url, errs, name, room, rmtp,
-                serverIp, type, attendance, files, temp, commentTemp, comments, ratings, stats, listing, fromEvent);
+        render("Listings/listingNew.html", user, isOwner, edit, event, attendance, paid, url, errs, name, room, rmtp,
+                socketIo, type, files, temp, commentTemp, comments, ratings, stats, listing, fromEvent);
     }
 
-    public static void eventNewPost(
+    public static void eventPost(
         String action,
         String title,
         String description,
@@ -305,15 +311,15 @@ public class Events extends BaseController
             }
             event.eventStart = eventSt;
             event.eventEnd = eventEn;
+            event.privacy = privacy;
+            event.type = type;
+            event.currency = currency;
+            event.price = new BigDecimal(price);
+            event.charging = charging;
+            event.chargingTime = chargingTime;
+            event.chatEnabled = chatEnabled != null ? true : false;
+            event.commentsEnabled = commentsEnabled != null ? true : false;
             event.lastModified = new Date();
-            event.charging = charging.equals(event.listing.charging) ? null : charging;
-            event.chargingTime = chargingTime.equals(event.listing.chargingTime) ? null : chargingTime;
-            event.privacy = charging.equals(event.listing.privacy) ? null : privacy;
-            event.price = price.equals(event.listing.price) ? null : new BigDecimal(price);
-            event.currency = currency.equals(event.listing.currency) ? null : currency;
-            event.type = type.equals(event.listing.type) ? null : type;
-            event.chatEnabled = chatEnabled != null && chatEnabled.equals("chatEnabled") ? true : false;
-            event.commentsEnabled = commentsEnabled != null && commentsEnabled.equals("commentsEnabled") ? true : false;
             event.save();
 
             // mark file upload as stored
@@ -351,7 +357,14 @@ public class Events extends BaseController
         event.listing_uuid = listing.uuid;
         event.uuid = RandomUtil.getUUID();
         event.roomSecret = RandomUtil.getUUID();
-        event.listing.imageUrl = FileuploadController.PATH_TO_LISTING_AVATARS + "ava_" + RandomUtil.getRandomInteger(22) + ".png";
+        event.privacy = listing.privacy;
+        event.type = listing.type;
+        event.currency = listing.currency;
+        event.price = listing.price;
+        event.charging = listing.charging;
+        event.chargingTime = listing.chargingTime;
+        event.chatEnabled = listing.chatEnabled;
+        event.commentsEnabled = listing.commentsEnabled;
         if (proposal)
         {
             user = User.getUserByUUID(userId);
@@ -477,18 +490,30 @@ public class Events extends BaseController
         if (user == null || !user.isOwner(e))
             forbidden();
 
-        e.state = Event.EVENT_STATE_USER_DECLINED;
-        e.archived = true;
-        e.lastModified = new Date();
+        e.state = Event.EVENT_STATE_USER_ACCEPTED;
         e.save();
 
         final Activity act = new Activity();
-        act.type = Activity.ACTIVITY_EVENT_DECLINED;
+        act.type = Activity.ACTIVITY_EVENT_APPROVED;
         act.user = user;
-        act.eventName = e.listing.title;
         act.event = e;
+        act.eventName = e.listing.title;
         act.saveActivity();
 
+        redirectTo(url);
+    }
+
+    public static void start(String uuid, String url)
+    {
+        final User user = getLoggedUser();
+        final Event e = Event.get(uuid);
+
+        // permissions check
+        if (user == null || !user.isOwner(e))
+            forbidden();
+
+        e.started = new Date();
+        e.save();
         redirectTo(url);
     }
 
@@ -564,6 +589,7 @@ public class Events extends BaseController
                 // create attendance on the background for user creator
                 Attendance a = new Attendance();
                 a.user = user;
+                a.result = Attendance.ATTENDANCE_RESULT_ACCEPTED;
                 a.name = user.getFullName();
                 a.email = user.login;
                 a.event = event;

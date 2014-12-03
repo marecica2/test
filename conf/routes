@@ -4,6 +4,7 @@ GET     /search									Application.search
 GET     /dashboard			                    Application.dashboard
 GET     /calendar                               Application.calendar
 GET     /user/{login}/calendar		      		Application.calendarUser
+GET     /user/{login}/calendar/{public}    		Application.calendarUser
 GET     /channels								Application.channels
 
 GET		/login									Secure.login
@@ -17,19 +18,20 @@ GET 	/channel-delete							Listings.deleteListing
 GET     /channel-reset-image					Listings.resetImage
 GET     /channels-get							Listings.listingsRest
 
-GET     /event      		       				Events.eventNew
-GET     /event/{uuid} 		       				Events.eventNew
-POST    /event		             				Events.eventNewPost
+GET     /event      		       				Events.event
+GET     /event/{uuid} 		       				Events.event
+POST    /event		             				Events.eventPost
 GET     /events                  				Events.events
-GET     /event		              				Events.event
+GET     /event-delete              				Events.eventDelete
+POST    /event/invite              				Events.eventInvite
 POST    /event/save              				Events.eventSaveRest
 POST    /event/update              				Events.eventUpdateRest
 DELETE  /event/delete              				Events.eventDeleteRest
-GET     /event-delete              				Events.eventDelete
-POST    /event/invite              				Events.eventInvite
-GET     /event/reset-image						Events.resetImage
 GET     /event-approve            				Events.approve
 GET     /event-decline            				Events.decline
+GET     /event-start            				Events.start
+GET     /hangout-air-start       				Events.hangoutYoutubeId
+GET     /hangout-air-start/rest    				Events.hangoutYoutubeIdRest
 
 POST    /attendance-new-save           			Attendances.attendanceNewSave
 GET     /attendance-new-edit           			Attendances.attendanceNewEdit
@@ -70,6 +72,7 @@ GET 	/public/activities						Public.activities
 GET 	/public/facebook/registration			Public.facebookRegistration
 GET 	/wiki									Public.wiki
 GET 	/account/activate						Public.activate
+GET 	/about									Public.about
 
 GET		/remove-upload							FileuploadController.removeFile	
 POST    /fileupload								FileuploadController.uploadFile
@@ -96,6 +99,7 @@ GET   	/mail/{id}         						Messages.detail
 
 GET     /room			                       	Hangout.room
 GET     /join-room			                  	Hangout.joinRoom
+POST    /join-room			                  	Hangout.joinRoomPost
 
 GET 	/test-email								Accounts.testEmail
 GET 	/follow									Accounts.follow

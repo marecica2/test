@@ -79,4 +79,11 @@ public class StringUtils
             return null;
     }
 
+    public static String getBoolean(Boolean firstFree)
+    {
+        if (firstFree != null && firstFree)
+            return "true";
+        return "false";
+    }
+
 }

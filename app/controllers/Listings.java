@@ -84,7 +84,7 @@ public class Listings extends BaseController
                     temp, commentTemp, fromEvent);
         } else
         {
-            final List<Comment> comments = Comment.getByObject(uuid);
+            final List<Comment> comments = Comment.getByListing(listing);
             final List<Rating> ratings = listing != null ? Rating.getByObject(uuid) : null;
             final Map<String, Object> stats = listing != null ? Rating.calculateStats(ratings) : null;
 

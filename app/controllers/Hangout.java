@@ -1,49 +1,45 @@
 package controllers;
 
-import models.Account;
 import models.Event;
 import models.User;
-import play.mvc.Before;
-import utils.NetUtils;
 
 public class Hangout extends BaseController
 {
-    @Before(unless = { "events", "eventNew" })
+    //@Before(only = { "createRoom" })
     static void checkAccess()
     {
         checkAuthorizedAccess();
     }
 
-    public static void room(String id, String transactionId) throws Throwable
+    public static void room(String id, String transactionId, String tempName) throws Throwable
     {
         final User user = getLoggedUser();
-        final Account account = user.account;
         final Event event = Event.get(id);
         final Event e = event;
 
-        checkPayPalPayment(e, transactionId, request.url);
+        if (user == null && tempName == null)
+            joinRoom(id, request.url);
+        if (!e.isFree())
+            checkPayPalPayment(e, transactionId, request.url);
 
-        final String name = user.getFullName();
+        final String name = user != null ? user.getFullName() : tempName;
         final String room = id;
-        String serverIp = NetUtils.getIp();
-
-        if (isProd() || serverIp == null)
-            serverIp = getProperty(CONFIG_SERVER_DOMAIN);
-
-        serverIp = "localhost";
-        serverIp = "192.168.1.100";
-        //serverIp = "192.168.2.81";
-        render(user, name, room, serverIp, account, event, e);
+        final String socketIo = getProperty(CONFIG_SOCKET_IO);
+        //final String socketIo = "https://192.168.1.100:10002/"
+        render(user, name, room, socketIo, event, e);
     }
 
-    public static void joinRoom(String id)
+    public static void joinRoom(String id, String url)
     {
-        User user = getLoggedUser();
-        String roomName = id;
-        render(user, roomName);
+        render(id, url);
     }
 
-    public static void createRoomView()
+    public static void joinRoomPost(String name, String id, String url)
+    {
+        redirectTo(url + "&tempName=" + name);
+    }
+
+    public static void createRoom()
     {
         User user = getLoggedUser();
         render(user);

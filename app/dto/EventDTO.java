@@ -38,11 +38,17 @@ public class EventDTO
 
     public String price;
 
+    public String priceTotal;
+
     public String currency;
 
     public String charging;
 
+    public String chargingTime;
+
     public boolean isEditable;
+
+    public boolean firstFree;
 
     public boolean isOwner;
 
@@ -58,13 +64,13 @@ public class EventDTO
 
     public String state;
 
-    private boolean invisible;
+    public String createdByLogin;
 
-    private String createdByLogin;
+    public Boolean archived;
 
-    private Boolean archived;
+    public Boolean invisible;
 
-    private String category;
+    public String category;
 
     public List<CommentDTO> comments = new ArrayList<CommentDTO>();
 
@@ -73,35 +79,38 @@ public class EventDTO
         EventDTO e = new EventDTO();
         e.color = event.listing.color;
         e.description = event.listing.description;
+        e.firstFree = event.listing.firstFree;
         e.eventEnd = event.eventEnd.getTime();
         e.eventStart = event.eventStart.getTime();
         e.title = event.listing.title;
+        e.category = event.listing.category;
+        e.imageUrl = event.listing.imageUrl;
+        e.state = event.state;
+        e.privacy = event.privacy;
+        e.type = event.type;
+        e.currency = event.currency;
+        e.price = event.price.toString();
+        e.priceTotal = event.getTotalPrice().toString();
+        e.charging = event.charging;
+        e.uuid = event.uuid;
+        e.archived = event.archived;
+        e.createdByUser = event.createdByUser;
+        if (event.chargingTime != null)
+            e.chargingTime = event.chargingTime.toString();
         if (user != null)
             e.isOwner = event.isOwner(user);
         else
             e.isOwner = false;
-        e.type = event.listing.type;
-        e.price = event.listing.price.toString();
-        e.currency = event.listing.currency;
-        e.category = event.listing.category;
-        e.state = event.state;
-        e.charging = event.listing.charging;
-        e.imageUrl = event.listing.imageUrl;
-        e.archived = event.archived;
-        e.type = event.listing.type;
-        e.privacy = event.listing.privacy;
-        e.uuid = event.uuid;
-        e.isInvited = e.isOwner ? false : true;
-        e.createdByUser = event.createdByUser;
+        if (user != null)
+            e.isInvited = event.hasInviteFor(user);
+        else
+            e.isInvited = false;
         if (event.customer != null)
         {
             e.customerAvatarUrl = event.customer.avatarUrl;
             e.customerLogin = event.customer.login;
             e.customer = event.customer.getFullName();
         }
-
-        if (event.created != null)
-            e.created = event.created.getTime();
         if (event.user != null)
         {
             e.createdByName = event.user.getFullName();
@@ -109,7 +118,8 @@ public class EventDTO
             e.createdBy = event.user.uuid;
             e.createdByAvatarUrl = event.user.avatarUrl;
         }
-
+        if (event.created != null)
+            e.created = event.created.getTime();
         if (event.attendances != null && event.attendances.size() > 0)
             e.notifyInvited = true;
         else
@@ -119,19 +129,20 @@ public class EventDTO
 
     public static EventDTO postProcessHiddenEvent(EventDTO e)
     {
-        e.title = "";
-        e.type = "";
+        e.title = null;
+        e.type = null;
         e.privacy = e.privacy;
-        e.description = "";
-        e.charging = "";
-        e.price = "";
+        e.description = null;
+        e.charging = null;
+        e.price = null;
         e.color = "#FF0000";
         e.invisible = true;
-        e.uuid = "";
-        e.category = "";
+        e.uuid = null;
+        e.category = null;
+        e.imageUrl = null;
         e.comments = null;
-        e.currency = "";
-        e.state = "";
+        e.currency = null;
+        e.state = null;
         e.created = 0;
         return e;
     }
