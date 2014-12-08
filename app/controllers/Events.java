@@ -1,5 +1,8 @@
 package controllers;
 
+import google.CalendarClient;
+import google.LiveStreams;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,8 +28,6 @@ import utils.DateTimeUtils;
 import utils.JsonUtils;
 import utils.NumberUtils;
 import utils.RandomUtil;
-import utils.StringUtils;
-import youtube.LiveStreams;
 
 import com.google.gson.JsonObject;
 
@@ -36,7 +37,7 @@ import email.Notification;
 
 public class Events extends BaseController
 {
-    @Before(unless = { "events", "eventNew" })
+    @Before(unless = { "events", "event" })
     static void checkAccess()
     {
         checkAuthorizedAccess();
@@ -45,6 +46,7 @@ public class Events extends BaseController
     public static void events()
     {
         final Boolean showArchived = false;
+        final Boolean showGoogleEvents = true;
         final DateTimeUtils dt = new DateTimeUtils(DateTimeUtils.TYPE_OTHER);
         final Date from = dt.fromJson(request.params.get("start"));
         final Date to = dt.fromJson(request.params.get("end"));
@@ -87,6 +89,28 @@ public class Events extends BaseController
                 }
             }
         }
+
+        if (user != null && showGoogleEvents)
+        {
+            if (user.googleCalendarId == null)
+            {
+                String id = CalendarClient.getPrimaryCalendar(user);
+                System.err.println(id);
+                User usr = getLoggedUserNotCache();
+                usr.googleCalendarId = id;
+                usr.save();
+                clearUserFromCache();
+            } else
+            {
+                List<EventDTO> eventsDtoGoogle = CalendarClient.getEvents(user, user.googleCalendarId, from, to);
+                for (EventDTO eDto : eventsDtoGoogle)
+                {
+                    if (!eventsDto.contains(eDto))
+                        eventsDto.add(eDto);
+                }
+            }
+        }
+
         renderJSON(eventsDto);
     }
 
@@ -149,6 +173,8 @@ public class Events extends BaseController
         final Boolean paid = (user != null && attendance != null && attendance.paid != null && attendance.paid) || isOwner ? true : false;
 
         // check access
+        if (event != null && edit && (event.isLocked() || event.isEnded()))
+            forbidden();
         if (event == null && !isNew)
             notFound();
         if (event != null && !isOwner && edit)
@@ -170,7 +196,7 @@ public class Events extends BaseController
         if (event != null)
         {
             DateTimeUtils dt = new DateTimeUtils();
-            final Integer offset = NumberUtils.parseInt(request.cookies.get("timezoneJs").value);
+            final Integer offset = NumberUtils.parseInt(request.cookies.get("timezoneJs") != null ? request.cookies.get("timezoneJs").value : "0");
             final Date eventStartOffset = DateTimeUtils.applyOffset(event.eventStart, offset);
             final Date eventEndOffset = DateTimeUtils.applyOffset(event.eventEnd, offset);
             final String eventStart = dt.formatDate(eventStartOffset, new SimpleDateFormat("HH:mm"));
@@ -199,9 +225,9 @@ public class Events extends BaseController
                 params.put("chargingTime", event.chargingTime.toString());
             if (event.listing.firstFree)
                 params.put("firstFree", "true");
-            if (event.chatEnabled)
+            if (event.chatEnabled != null && event.chatEnabled)
                 params.put("chatEnabled", "true");
-            if (event.commentsEnabled)
+            if (event.commentsEnabled != null && event.commentsEnabled)
                 params.put("commentsEnabled", "true");
         } else
         {
@@ -232,7 +258,7 @@ public class Events extends BaseController
         final String rmtp = getProperty(CONFIG_RMTP_PATH);
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
         Map<String, String> errs = new HashMap<String, String>();
-        render("Listings/listingNew.html", user, isOwner, edit, event, attendance, paid, url, errs, name, room, rmtp,
+        render("Listings/listing.html", user, isOwner, edit, event, attendance, paid, url, errs, name, room, rmtp,
                 socketIo, type, files, temp, commentTemp, comments, ratings, stats, listing, fromEvent);
     }
 
@@ -336,7 +362,7 @@ public class Events extends BaseController
             redirect("/event/" + event.uuid);
         }
         params.flash();
-        render("Listings/listingNew.html", user, isOwner, edit, event, url, errs, type, listing, fromEvent);
+        render("Listings/listing.html", user, isOwner, edit, event, url, errs, type, listing, fromEvent);
     }
 
     public static void eventSaveRest()
@@ -344,7 +370,8 @@ public class Events extends BaseController
         final JsonObject jo = JsonUtils.getJson(request.body);
         final DateTimeUtils time = new DateTimeUtils(DateTimeUtils.TYPE_OTHER);
         final String userId = jo.get("user").getAsString();
-        final String listingId = jo.get("listing") != null ? StringUtils.htmlEscape(jo.get("listing").getAsString()) : "";
+        final String listingId = jo.get("listing") != null ? jo.get("listing").getAsString() : "";
+        final String googleId = jo.get("googleId") != null ? jo.get("googleId").getAsString() : null;
         final Boolean proposal = jo.get("proposal").getAsBoolean();
         User user = getLoggedUser();
         User customer = user;
@@ -354,6 +381,7 @@ public class Events extends BaseController
         Event event = new Event();
         event = eventFromJson(time, jo, event);
         event.listing = listing;
+        event.googleId = googleId;
         event.listing_uuid = listing.uuid;
         event.uuid = RandomUtil.getUUID();
         event.roomSecret = RandomUtil.getUUID();
@@ -428,6 +456,8 @@ public class Events extends BaseController
         act.event = event;
         act.eventName = event.listing.title;
         act.saveActivity();
+
+        CalendarClient.updateEvent(user, user.googleCalendarId, event.googleId, event.eventStart, event.eventEnd);
 
         renderJSON(EventDTO.convert(event, user));
     }
@@ -515,6 +545,14 @@ public class Events extends BaseController
         e.started = new Date();
         e.save();
         redirectTo(url);
+    }
+
+    public static void hangoutCallback(String uuid, String url)
+    {
+        final User user = getLoggedUser();
+        System.err.println("jsonpost callback received");
+        System.err.println(request.params);
+        renderJSON("ok");
     }
 
     public static void eventInvite(String message, String eventId, String url, String[] invite)

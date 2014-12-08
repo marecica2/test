@@ -8,28 +8,26 @@
 #{set 'moreStyles'}
 #{/set}
 
-#{set background:'true' /} 
 
 #{include 'userTop.html' /}
 
-<div class="container">				
+<div class="container" style="min-height:60vh">				
 	<div class="row">
 		<div class="col-md-8">
-			<div>
-				<h2 class="">About ${usr.firstName}</h2>
-				<div class="separator-2"></div>
-				#{set usr:usr /}
-				#{include 'userAbout.html' /}
-			</div>
-			
-			<br>
 			#{if listings}
 				<h2>All channels from ${usr.firstName}</h2>
 				<div class="separator-2"></div>
 				#{set items:listings /}
 				#{set forEvents:false /}
 				#{include 'listingsList.html' /}
-			#{/if}	
+			#{/if}			
+		
+			<div>
+				<h2 class="">About ${usr.firstName}</h2>
+				<div class="separator-2"></div>
+				#{set usr:usr /}
+				#{include 'userAbout.html' /}
+			</div>
 						
 			<div>
 				#{set object:usr /}
@@ -39,6 +37,7 @@
 	  	
 		
 	  	<div class="col-md-4">
+	  		#{set mail:true /}
 	  		#{include 'leftPanel.html' /}
 	  	</div>
 	  	

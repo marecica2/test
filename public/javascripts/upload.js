@@ -8,10 +8,10 @@ $(document).ready(function(){
         var params = "";
         
         var params = "";
-        if(starInit.event != undefined){
-            params = "?item="+starInit.event;
+        if(starCalendar.event != undefined){
+            params = "?item="+starCalendar.event;
         } else {
-            params = "?temp="+starInit.temp;
+            params = "?temp="+starCalendar.temp;
         }
         params += "&avatar=true";
         
@@ -25,7 +25,7 @@ $(document).ready(function(){
             $("#imageUrl").val("public/uploads/"+resp.url+"");
             $("#imageId").val(resp.uuid);
             jQuery(function($) {
-                $('#image').Jcrop({aspectRatio:starInit.aspectRatio, setSelect: [ 0, 0, 100, 100 ], bgColor: 'black',  onChange: showCoords});
+                $('#image').Jcrop({aspectRatio:starCalendar.aspectRatio, setSelect: [ 0, 0, 100, 100 ], bgColor: 'black',  onChange: showCoords});
             });
         });
     });

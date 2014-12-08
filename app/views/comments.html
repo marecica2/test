@@ -1,5 +1,4 @@
-#{if objectType == "user" || (!edit && user && object && object.commentsEnabled)}
-
+#{if objectType == "user" || (!edit && user && isOwner && object && object.commentsEnabled)}
 <div class="row">
 <div class="col-md-12">
     <div class="modal-comments">
@@ -80,50 +79,70 @@
 </div>    
 #{/if}	
     
-    
-    		
+
 #{if comments}
 <div class="row">	
 	<div class="col-md-12">
-		<table class="table table-hover ">
+		<div>
 			#{list items:comments, as:'item'}
-		       <tr class='' style='position:relative'>
-		       	   <td>
-			       	   #{if item.user.uuid == user.uuid}
-					       <a href="/event/comment/delete?uuid=${item.uuid}&url=${request.url.urlEncode()}"><i class='pull-right color-link fa fa-times delete-comment'></i></a>
-				       #{/if} 
-				        
-				       <div style='display:table-cell;padding-right:10px'>
-				       	<img class='img-circle avatar32'  src='../${item.user.avatarUrl}'> 
-				       </div>
-				
-				       <div style='display:table-cell;vertical-align:top;'>
-					       <div>
-					       		<a href='/user/${item.user.login}'>${item.user.fullName}</a> on 
-					   			<span>${item.created.format("dd MMM, yyyy")}</span> 
-				   				<span>#{time time:item.created/}</span>
-					       </div>
-					        <p>${item.comment}</p>
-	    		       		#{if item.files}
-	    		       			<strong>Attachments</strong><br/>
-						       	<table style='color:black'>
-					       			#{list items:item.files, as:'file'}
-					       			<tr>
-					       				<td>
-						       				<span><i class="fa fa-file"></i> <a href="/public/uploads/${file.url}" download="${file.name}">${file.name}</a></span>
-					       				</td>
-					       				<td>
-						       				&nbsp;&nbsp;${file.size.formatSize()}
-					       				</td>
-					       			</tr>
-					       			#{/list}
-						       </table>
-				       		#{/if}
-				       </div>
-		       	   </td>
-				</tr>
+				<div class="image-box shadow-blur mb-20 object-non-visible animated object-visible fadeInLeft" data-animation-effect="fadeInLeft" data-effect-delay="300">
+					<div class="image-box-body">
+				       	#{if user && item.user.uuid == user.uuid}
+							<a href="/event/comment/delete?uuid=${item.uuid}&url=${request.url.urlEncode()}"><i class='pull-right color-link fa fa-times delete-comment'></i></a>
+					    #{/if} 					
+						<div class="title">
+							<img src='../${item.user.avatarUrl}_64x64' style="height:40px;float:left;margin-right:10px"> 
+							<a href='/user/${item.user.login}'><strong>${item.user.fullName}</strong></a><br/> on
+				   			<span>${item.created.format("dd MMM, yyyy")}</span> 
+			   				<span>#{time time:item.created/}</span>							
+						</div>
+						<div style="margin:10px 0">${item.comment}</div>
+						
+			   	   		#{if dashboard && (item.event || item.listing)}
+							<div class="overlay-container">
+							    #{if item.event}
+							    	#{set url:item.event.listing.imageUrl /}
+							    	#{set title:item.event.listing.title /}
+							    	#{set link:"/event/"+item.event.uuid /}
+							    #{/if}
+							    #{if item.listing}
+							    	#{set url:item.listing.imageUrl /}
+							    	#{set title:item.listing.title /}
+							    	#{set link:"/channel/"+item.listing.uuid /}
+							    #{/if}
+							    <div style="width:100%;height:200px;background: url('${url}'); background-size: cover;padding:10px">
+							    	<h4 class="shadow margin-clear text-shadow">${title}</h4>
+							    </div>
+								<div class="overlay">
+									<div class="overlay-links">
+										<a href="${link}"><i class="fa fa-link"></i></a>
+										<a href="${url}" class="popup-img"><i class="fa fa-search-plus"></i></a>
+									</div>
+								</div>
+							</div>
+					    #{/if}							
+						
+	       				#{if item.files}
+					    	<br/>
+    		       			<strong>Attachments</strong>
+					    	<table>
+				       			#{list items:item.files, as:'file'}
+				       			<tr>
+				       				<td>
+					       				<span><i class="fa fa-file"></i> <a href="/public/uploads/${file.url}" download="${file.name}">${file.name}</a></span>
+				       				</td>
+				       				<td>
+					       				&nbsp;&nbsp;${file.size.formatSize()}
+				       				</td>
+				       			</tr>
+				       			#{/list}
+					    	</table>
+				       	#{/if}
+					</div>
+				</div>			
+			       
 			#{/list}							
-		</table>		 
+		</div>		 
 	</div>
 </div>
 #{/if}	

@@ -73,4 +73,11 @@ public class FileUpload extends Model
             return f.delete();
         return false;
     }
+
+    public boolean isImage()
+    {
+        if (this.contentType.contains("image"))
+            return true;
+        return false;
+    }
 }

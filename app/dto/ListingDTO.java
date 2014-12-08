@@ -55,7 +55,7 @@ public class ListingDTO
 
     public String category;
 
-    public Integer ratingAvg;
+    public Long ratingAvg;
 
     public Integer ratingCount;
 
@@ -72,9 +72,9 @@ public class ListingDTO
         l.description = listing.description;
         l.title = listing.title;
         l.type = listing.type;
-        l.ratingAvg = listing.getRatingAvg();
-        l.ratingCount = listing.ratingCount != null ? listing.ratingCount : 0;
-        l.price = listing.price.toString();
+        l.ratingAvg = listing.ratingAvg;
+        l.ratingCount = listing.ratingStars != null ? listing.ratingStars : 0;
+        l.price = listing.price != null ? listing.price.toString() : null;
         l.currency = listing.currency;
         l.category = listing.category;
         l.state = listing.state;
@@ -83,14 +83,13 @@ public class ListingDTO
         l.type = listing.type;
         l.privacy = listing.privacy;
         l.uuid = listing.uuid;
-        l.isInvited = l.isOwner ? false : true;
-        l.createdByUser = false;
-        l.created = listing.created.getTime();
-        l.createdByName = listing.user.getFullName();
-        l.createdByLogin = listing.user.login;
         l.firstFree = listing.firstFree;
-        l.createdBy = listing.user.uuid;
-        l.createdByAvatarUrl = listing.user.avatarUrl;
+        l.isInvited = l.isOwner ? false : true;
+        l.createdBy = listing.user != null ? listing.user.uuid : null;
+        l.createdByUser = false;
+        l.createdByName = listing.user != null ? listing.user.getFullName() : null;
+        l.createdByLogin = listing.user != null ? listing.user.login : null;
+        l.createdByAvatarUrl = listing.user != null ? listing.user.avatarUrl : null;
         return l;
     }
 

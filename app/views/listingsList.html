@@ -5,30 +5,25 @@
 	    });
 	});
 </script>
+
 #{list items:items, as:'item'}
 <div class="shadow-blur" style="background: #fafafa; width:100%; margin:0 0 20px 0;">
-	
-	<div class="anchorLink" data-href="/channel/${item.uuid}" style="cursor:pointer;display:table;text-align:left;width:100%">
-   		
-   		<div style="display:table-cell; height:128px; width:200px; min-width:200px; background: url('/${item.imageUrl}') no-repeat center; background-size:cover; border-right:5px solid #{if item && item.color} ${item.color} #{/if} #{else} #3A87AD #{/else};">
+	<div class="anchorLink" data-href="/channel/${item.uuid}" style="cursor:pointer;text-align:left;width:100%">
+   		<div class="listing-item-top" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover; border-bottom:5px solid #{if item && item.color} ${item.color} #{/if} #{else} #3A87AD #{/else};">
+   		</div>
+
+   		<div class="listing-item" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover; border-right:5px solid #{if item && item.color} ${item.color} #{/if} #{else} #3A87AD #{/else};">
    		</div>
    		
-   		<div style="display:table-cell;vertical-align:top;padding:0 15px 0 15px;position:relative;">
-			<h4>${item.title.trimDot(90)}</h4>
-			<p style="margin-bottom:5px">
+   		<div class="listing-item-right">
+			<h4 class="margin-clear">${item.title.trimDot(90)}</h4>
+			<p style="width: 100%; margin:5px 0">
 				<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
 				<strong>${item.user.fullName}</strong>  &middot; 
 				${item.category}  &middot; 
 				${item.privacy}  &middot; 
 				${item.type}
 			</p>
-			#{if isOwner}
-				<a href="/event?action=edit&url=${request.url.urlEncode()}&listingId=${item.uuid}" class="btn btn-light-gray btn-sm btn-right btn-margin">Create event</a>
-			#{/if}
-			
-			#{else}
-				<a href="/user/${usr.login}/calendar?listing=${item.uuid}" class="btn btn-light-gray btn-sm btn-right btn-margin"><i class="fa fa-calendar"></i> Request a Time</a>
-			#{/else}
 			
 			
 			<span class="truncate">${item.getDescriptionHtml().trimDot(90).raw()}</span>
@@ -45,17 +40,23 @@
    			#{/if}
    			</p>
    			
-   			<p>
        		#{list items:1..5, as:'i'} 
-       			#{if i <= item.getRatingAvg()} 
+       			#{if i <= item.ratingAvg} 
 				    <i class="fa fa-star text-default" data-value="1"></i>
        			#{/if}
        			#{else}
 				    <i class="fa fa-star-o" data-value="1"></i>
        			#{/else}
 			#{/list}
-            ${item.ratingCount} reviews   			
-   			<p>
+            ${item.ratingStars} reviews   	
+           
+			#{if isOwner}
+				<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&listingId=${item.uuid}" class="btn btn-gray btn-sm btn-margin pull-right">Create event</a>
+			#{/if}
+			
+			#{else}
+				<a href="/user/${usr.login}/calendar?listing=${item.uuid}" class="btn btn-gray btn-sm btn-margin pull-right "><i class="fa fa-calendar"></i> Request a Time</a>
+			#{/else}            		
    		</div>
    	</div>		
 </div>	   

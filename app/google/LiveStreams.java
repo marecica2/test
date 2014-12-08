@@ -1,9 +1,9 @@
-package youtube;
+package google;
 
 import java.io.IOException;
 import java.util.List;
 
-import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.LiveBroadcast;
@@ -30,7 +30,8 @@ public class LiveStreams
 
         try
         {
-            Credential credential = Auth.authorize(scopes, "listbroadcasts", user);
+            GoogleCredential credential = new GoogleCredential().setAccessToken("");
+            //Credential credential = Auth.authorize(scopes, "listbroadcasts", user);
             youtube = new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
                     .setApplicationName("youtube-cmdline-listbroadcasts-sample").build();
 

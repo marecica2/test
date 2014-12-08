@@ -1,159 +1,174 @@
-#{if ratings && ratings.size() > 0}
-<br/>
-<br/>
-<br/>
-<br/>
-<h2 class="margin-top-clear">User Reviews</h2>
-<div class="separator-2"></div>
 
-<div class="row">
-	<div class="col-md-5">
-		<p>
-       		#{list items:1..5, as:'i'} 
-       			#{if stats.get("avgStars") >= i}
-				    <i class="fa fa-star fa-2x text-default" data-value="1"></i>
-       			#{/if}
-       			#{else}
-				    <i class="fa fa-star-o fa-2x" data-value="1"></i>
-       			#{/else}
-			#{/list}
-			<span style="position:relative;bottom:5px">from ${stats.get("totalStars")} reviews</span>
-		</p>
-	</div>
-	<div class="col-md-7">
-		<dl class="dl-horizontal">
-			<dt>Five Stars (${stats.get("fiveStars")})</dt>
-			<dd>
-				<div class="progress">
-					<div class="progress-bar progress-bar-default" role="progressbar" data-animate-width="${stats.get("fiveStarsPercent")}%" >
-					</div>
-				</div>
-			</dd>
-			<dt>Four Stars (${stats.get("fourStars")})</dt>
-			<dd>
-				<div class="progress">
-					<div class="progress-bar progress-bar-gray" role="progressbar"  data-animate-width="${stats.get("fourStarsPercent")}%">
-					</div>
-				</div>
-			</dd>
-			<dt>Three Stars (${stats.get("threeStars")})</dt>
-			<dd>
-				<div class="progress">
-					<div class="progress-bar progress-bar-dark" role="progressbar" data-animate-width="${stats.get("threeStarsPercent")}%">
-					</div>
-				</div>
-			</dd>
-			<dt>Two Stars (${stats.get("twoStars")})</dt>
-			<dd>
-				<div class="progress">
-					<div class="progress-bar progress-bar-info" role="progressbar" data-animate-width="${stats.get("twoStarsPercent")}%">
-					</div>
-				</div>
-			</dd>
-			<dt>One Star (${stats.get("oneStars")})</dt>
-			<dd>
-				<div class="progress">
-					<div class="progress-bar progress-bar-danger" role="progressbar" data-animate-width="${stats.get("oneStarsPercent")}%">
-					</div>
-				</div>
-			</dd>
-		</dl>			
-	</div>
-</div>
-#{/if}
-<br/>
 
-<div class="row">
-	<div class="col-md-12">
-	
-		#{if user && !isOwner && listing}
-		<div class="modal-comments">
-			<div class="">
-				<form action="/rating?url=${request.url.urlEncode()}" method="post">
-					<h3><img class="img-circle" style="float:left" src="../${user.avatarUrl}_32x32">&nbsp;Write your review</h3>
-					<input type="number" name="stars" data-max="4" id="stars" class="rating" data-icon-lib="fa" data-active-icon="fa-star blue" data-inactive-icon="fa-star-o" data-clearable-icon="fa-times"/>
-			      	<input type="hidden" name="type" value="${ratingType}">
-			      	<input type="hidden" name="uuid" value="${object.uuid}">
-			      	#{if ratingType && ratingType != "user"}
-			      		<input type="hidden" name="userUuid" value="${object.user.uuid}">
-			      	#{/if}
-			      	#{else}
-			      		<input type="hidden" name="userUuid" value="${object.uuid}">
-			      	#{/else}
-			      	
-					<br/>
-			    	<div class="form-group">
-			    		<textarea rows="4" class="form-control" maxlength="900" placeholder="&{'dashboard.addComment'}" name="comment" id="dialog-comment-input"></textarea>
-			    	</div>
-			    	
-		   	        <button class="btn btn-default btn-primary pull-right" id="dialog-comment-button" type="submit">Submit</button>
-		   	        <div class="clearfix"></div>
-				</form>
-			</div>
-			<br/>
-		</div>	
-		#{/if}
+<section class="main-container object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="500">
+
+	<!-- section start -->
+	<!-- ================ -->
+	<div class="clearfix">
+		<div class="scontainer">
 		
-		#{if ratings && ratings.size() > 0}
-		<table class="table table-hover">
-			#{list items:ratings, as:'item'}
-		       <tr>
-		       	   <td>
-			       	   #{if user && item.user.uuid == user.uuid}
-					       	<a href="/rating/delete?uuid=${item.uuid}&url=${request.url.urlEncode()}"><i style="margin:10px" class='pull-right color-link fa fa-times delete-comment'></i></a>
-				       #{/if} 
-				       #{if user} 
-				       		<a href="/rating/${item.uuid}/abuse?url=${request.url.urlEncode()}"><i style="margin:10px" class='pull-right color-link fa fa-flag'></i></a>
-				       #{/if} 
-				        
-				       <div style='display:table-cell'>
-				       		<img class=''  src='../${item.user.avatarUrl}_32x32'> 
-				       </div>
+			#{if ratings && ratings.size() > 0}
+			<div class="row">
+				<div class="col-md-5">
+					<h2 class="margin-top-clear">User Reviews</h2>
+					<div class="separator-2"></div>
+									
+					<p>
+			       		#{list items:1..5, as:'i'} 
+			       			#{if stats.get("avgStars") >= i}
+							    <i class="fa fa-star fa-2x text-default" data-value="1"></i>
+			       			#{/if}
+			       			#{else}
+							    <i class="fa fa-star-o fa-2x" data-value="1"></i>
+			       			#{/else}
+						#{/list}
+						<span style="position:relative;bottom:5px">from ${stats.get("totalStars")} reviews</span>
+					</p>
+				</div>
+				<div class="col-md-7">
+					<dl class="dl-horizontal">
+						<dt>Five Stars (${stats.get("fiveStars")})</dt>
+						<dd>
+							<div class="progress">
+								<div class="progress-bar progress-bar-default" role="progressbar" data-animate-width="${stats.get("fiveStarsPercent")}%" >
+								</div>
+							</div>
+						</dd>
+						<dt>Four Stars (${stats.get("fourStars")})</dt>
+						<dd>
+							<div class="progress">
+								<div class="progress-bar progress-bar-gray" role="progressbar"  data-animate-width="${stats.get("fourStarsPercent")}%">
+								</div>
+							</div>
+						</dd>
+						<dt>Three Stars (${stats.get("threeStars")})</dt>
+						<dd>
+							<div class="progress">
+								<div class="progress-bar progress-bar-dark" role="progressbar" data-animate-width="${stats.get("threeStarsPercent")}%">
+								</div>
+							</div>
+						</dd>
+						<dt>Two Stars (${stats.get("twoStars")})</dt>
+						<dd>
+							<div class="progress">
+								<div class="progress-bar progress-bar-info" role="progressbar" data-animate-width="${stats.get("twoStarsPercent")}%">
+								</div>
+							</div>
+						</dd>
+						<dt>One Star (${stats.get("oneStars")})</dt>
+						<dd>
+							<div class="progress">
+								<div class="progress-bar progress-bar-danger" role="progressbar" data-animate-width="${stats.get("oneStarsPercent")}%">
+								</div>
+							</div>
+						</dd>
+					</dl>			
+				</div>
+			</div>
+			#{/if}		
+		
+		
+			<div class="row">
+				<div class="col-md-12">
 				
-				       <div style='display:table-cell;vertical-align:top;width:100%'>
-					       <div style='font-size:0.9em;width:100%;padding-top:5px'>
-					       		#{list items:1..5, as:'i'}
-					       			#{if item.stars >= i}
-									    <i style="font-size:1.5em" class="fa fa-star blue" data-value="1"></i>
-					       			#{/if}
-					       			#{else}
-									    <i style="font-size:1.5em" class="fa fa-star-o" data-value="1"></i>
-					       			#{/else}
-								#{/list}
-										
-						   		<span>${item.created.format("dd MMM, yyyy")} #{time time:item.created /}</span>
-					       </div>
-					       <div style="width:100%">
-					       		<p style='color:black;padding-top:5px;width:100%'>
-						       		${item.comment}
-					       		</p>
-				       			<img class="img-circle avatar22" src="/${item.user.avatarUrl}_32x32">
-				       			<span><a href='/user/${item.user.login}'>${item.user.fullName}</a></span>
-				       			<br/>
-					       		
-					       		#{if item.comment && item.comment.length() > 10}
-	    				       		<p style="position:relative;top:8px;">Was this rating helpful?</p>  
-						       		#{if user}
-										<div class="btn-group pull-right" style="">
-										  <a href="/rating/${item.uuid}/vote?url=${request.url.urlEncode()}" class="btn btn-white btn-sm controls">Yes</a>
-										  <a href="/rating/${item.uuid}/unvote?url=${request.url.urlEncode()}" class="btn btn-white btn-sm controls">No</a>
-										</div>
-									#{/if}					       			
-								#{/if}					       			
+						
+					#{if user && !isOwner && listing}
+					<div class="modal-comments">
+						<div class="">
+							<form action="/rating?url=${request.url.urlEncode()}" method="post">
+								<h3><img class="img-circle" style="float:left" src="../${user.avatarUrl}_32x32">&nbsp;Write your review</h3>
+								<input type="number" name="stars" data-max="4" id="stars" class="rating" data-icon-lib="fa" data-active-icon="fa-star blue" data-inactive-icon="fa-star-o" data-clearable-icon="fa-times"/>
+						      	<input type="hidden" name="type" value="${ratingType}">
+						      	<input type="hidden" name="uuid" value="${object.uuid}">
+						      	#{if ratingType && ratingType != "user"}
+						      		<input type="hidden" name="userUuid" value="${object.user.uuid}">
+						      	#{/if}
+						      	#{else}
+						      		<input type="hidden" name="userUuid" value="${object.uuid}">
+						      	#{/else}
+						      	
+								<br/>
+						    	<div class="form-group">
+						    		<textarea rows="4" class="form-control" maxlength="900" placeholder="&{'dashboard.addComment'}" name="comment" id="dialog-comment-input"></textarea>
+						    	</div>
+						    	
+					   	        <button class="btn btn-default btn-primary pull-right" id="dialog-comment-button" type="submit">Submit</button>
+					   	        <div class="clearfix"></div>
+							</form>
+						</div>
+						<br/>
+					</div>	
+					#{/if}
+					
+					#{if ratings && ratings.size() > 0}
+					<table class="table table-hover">
+						#{list items:ratings, as:'item'}
+					       <tr>
+					       	   <td style="position:relative"> 
+						       	   #{if user && (item.user.equals(user) || user.isAdmin())}
+								       	<a href="/rating/delete?uuid=${item.uuid}&url=${request.url.urlEncode()}"><i style="position:absolute;right:15px;top:15px;" class='pull-right color-link fa fa-times delete-comment'></i></a>
+							       #{/if} 
+							       #{if user && false} 
+							       		<a href="/rating/${item.uuid}/abuse?url=${request.url.urlEncode()}"><i style="margin:10px" class='pull-right color-link fa fa-flag'></i></a>
+							       #{/if} 
+							        
+							       <div style='display:table-cell'>
+							       		<img class=''  src='../${item.user.avatarUrl}_32x32'> 
+							       </div>
+							
+							       <div style='display:table-cell;vertical-align:top;width:100%'>
+								       <div style='font-size:0.9em;width:100%;padding-top:5px'>
+								       		#{list items:1..5, as:'i'}
+								       			#{if item.stars >= i}
+												    <i style="font-size:1.5em" class="fa fa-star blue" data-value="1"></i>
+								       			#{/if}
+								       			#{else}
+												    <i style="font-size:1.5em" class="fa fa-star-o" data-value="1"></i>
+								       			#{/else}
+											#{/list}
+													
+									   		<span>${item.created.format("dd MMM, yyyy")} #{time time:item.created /}</span>
+									   		
+								       </div>
+								       <div style="width:100%">
+								       		<p style='color:black;padding-top:5px;width:100%'>
+									       		${item.comment}
+								       		</p>
+								       		<p>
+							       				<img class="img-circle avatar22" src="/${item.user.avatarUrl}_32x32">
+							       				<span><a href='/user/${item.user.login}'>${item.user.fullName}</a></span>
+											</p>
+								       		
+								       		#{if user && item.user != user && !item.hasVoted(user) && item.comment && item.comment.length() > 10}
+				    				       		<p>
+					    				       		Was this rating helpful?
+													<span class="btn-group pull-right">
+													  <a href="/rating/${item.uuid}/vote?url=${request.url.urlEncode()}" class="btn btn-light-gray btn-short">Yes</a>
+													  <a href="/rating/${item.uuid}/unvote?url=${request.url.urlEncode()}" class="btn btn-light-gray btn-short">No</a>
+													</span>
+				    				       		</p>  
+											#{/if}					       			
+											<div class="clearfix"></div>
+								       </div>
+							       </div>
+				       	   		</td>
+							</tr>
+						#{/list}							
+					</table>	
+					#{/if}
+					#{else}
+						<h3 style="text-align:center">No reviews yet</h3>
+						<br/>
+					#{/else}
+			
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- section end -->
 
-								<div class="clearfix"></div>
-					       </div>
-				       </div>
-	       	   		</td>
-				</tr>
-			#{/list}							
-		</table>	
-		#{/if}
-		#{else}
-			<h3 style="text-align:center">No reviews yet</h3>
-			<br/>
-		#{/else}
-				
-	</div>	
-</div> 
+</section>
+<!-- main-container end -->	
+
 

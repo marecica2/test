@@ -6,6 +6,11 @@ import java.util.List;
 import models.Event;
 import models.User;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import com.google.gson.JsonObject;
+
 public class EventDTO
 {
     public String uuid;
@@ -64,6 +69,8 @@ public class EventDTO
 
     public String state;
 
+    public String googleId;
+
     public String createdByLogin;
 
     public Boolean archived;
@@ -95,6 +102,7 @@ public class EventDTO
         e.uuid = event.uuid;
         e.archived = event.archived;
         e.createdByUser = event.createdByUser;
+        e.googleId = event.googleId;
         if (event.chargingTime != null)
             e.chargingTime = event.chargingTime.toString();
         if (user != null)
@@ -172,7 +180,11 @@ public class EventDTO
             return false;
         if (getClass() != obj.getClass())
             return false;
+
         EventDTO other = (EventDTO) obj;
+        if (googleId != null && other.googleId != null && googleId.equals(other.googleId))
+            return true;
+
         if (uuid == null)
         {
             if (other.uuid != null)
@@ -182,4 +194,25 @@ public class EventDTO
         return true;
     }
 
+    public static EventDTO convertGoogle(JsonObject event, User user)
+    {
+        final DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZZ");
+        final String start = event.get("start").getAsJsonObject().get("dateTime").getAsString();
+        final String end = event.get("end").getAsJsonObject().get("dateTime").getAsString();
+
+        EventDTO e = new EventDTO();
+        e.color = "#000000";
+        e.googleId = event.get("id").getAsString();
+        e.eventStart = dtf.parseDateTime(start).getMillis();
+        e.eventEnd = dtf.parseDateTime(end).getMillis();
+        e.title = event.get("summary").getAsString();
+        if (user != null)
+        {
+            e.createdByName = user.getFullName();
+            e.createdByLogin = user.login;
+            e.createdBy = user.uuid;
+            e.createdByAvatarUrl = user.avatarUrl;
+        }
+        return e;
+    }
 }

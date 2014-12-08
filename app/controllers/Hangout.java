@@ -25,7 +25,7 @@ public class Hangout extends BaseController
         final String name = user != null ? user.getFullName() : tempName;
         final String room = id;
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
-        //final String socketIo = "https://192.168.1.100:10002/"
+        //final String socketIo = "https://192.168.1.100:10002";
         render(user, name, room, socketIo, event, e);
     }
 

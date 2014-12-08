@@ -94,7 +94,6 @@ $(document).ready(function() {
     
     $(document).on("click", ".popup-event-edit", function(){
         starCalendar.calendar.fullCalendar('rerender');
-        starCalendar.selectedEventId = event;
         var event = $(this).attr("data-event");
         if(!starCalendar.isPublic)
             window.location.replace("?event="+event);
@@ -281,13 +280,10 @@ starCalendar.popupSaveNewEvent = function(proposal){
     event.eventStart = starCalendar.start; 
     event.eventEnd = starCalendar.end;
     event.title = $("#popup-event-title").val();
-    event.description = $("#popup-event-title").val();
-    event.currency = starCalendar.defaultCurrency;
-    event.type = "p2p";
-    event.charging = "free";
-    event.privacy = "private";
     event.listing = $("#popup-listing").val();
-    
+    console.log("aa");
+    if(star.selectedEvent.googleId != undefined)
+        event.googleId = star.selectedEvent.googleId;
     if(starCalendar.userDisplayed != undefined && proposal != undefined && proposal == true){
         event.user = starCalendar.userDisplayed;
         event.proposal = true;
@@ -297,11 +293,8 @@ starCalendar.popupSaveNewEvent = function(proposal){
     }
     
     starServices.createEvent(event, function(successEvent){
-        starCalendar.selectedEventUUID = successEvent.uuid;
-        starCalendar.selectedEvent = successEvent;
-        starCalendar.selectedEventId = successEvent.uuid;
         starCalendar.calendar.fullCalendar('refetchEvents');
-        starEvent.inviteLoad(successEvent.uuid);
+
         // set share link url
         $(".event-link-share").each(function() {
             if(starCalendar.isPublic){
@@ -321,10 +314,9 @@ starCalendar.popupSaveNewEvent = function(proposal){
 
 
 // selection event
-starCalendar.selectionNewEvent = function(ccc, start, end, allDay) {
+starCalendar.selectionNewEvent = function(ccc, start, end, allDay, event) {
     // create popup and fill data
     var popup = $("#myPopover");
-    $('#myPopover').modal('show');
     
     // in case of month view create default time for new event 
     if(allDay){
@@ -334,39 +326,50 @@ starCalendar.selectionNewEvent = function(ccc, start, end, allDay) {
         start.setMinutes(minutes);
         end = new Date(start.getTime() + 1000*60*30);
     }
-    
     starCalendar.calendar = ccc;
     starCalendar.start = start;
     starCalendar.end = end;
     starCalendar.allDay = allDay;
+
     $(".event-title").html(star.utils.trimTo(i18n("New Event"), 35));
+    console.log("xx");
+    if(event != undefined){
+        $(".event-title").html(star.utils.trimTo(i18n("Add Google event"), 35));
+        star.selectedEvent = event;
+    } else {
+        star.selectedEvent = null;
+    }
+    
     $(".event-time-from").html(starUtils.formatDateTime(start));
     $(".event-time-to").html(starUtils.formatTime(end));
-    
-    // show popup after selection is made
     $(".popup-edit-event").hide();
     $(".popup-new-event").show();
     $(".popup-event-description").html("");
     $('#myPopover').modal('show');
     $("#popup-event-title").val("");
     $("#popup-event-title").focus();
+    $('#myPopover').modal('show');
 };
 
 
 starCalendar.clickEvent = function(event, jsEvent, view) {
-
     // show hide appropriate content
     starCalendar.selectedEvent = event;
     var popup = $("#myPopover");
     
     // copy values to the event detail page dialog
-    if(jsEvent != undefined && event.uuid != undefined){
+    if(event.uuid != undefined){
         starEvent.inviteLoad(event.uuid, function(){
             starCalendar.copyValuesToDialog(event);
             if(event.uuid.length > 0){
                 $('#myPopover').modal('show');
             }
         });
+    }
+
+    if(event.googleId != null){
+        if(starCalendar.listings)
+            starCalendar.selectionNewEvent(starCalendar.calendar, event.start, event.end, false, event);
     }
     
     // reinit facebook
@@ -392,9 +395,10 @@ starCalendar.copyValuesToDialog = function(event){
     $(".event-edit").hide();
     $(".event-view").show();
     var el = $(".event-detail-container");
-    var html = "<span>" + (event.charging != "free" && event.price.length > 0 ? ("<span style='font-size:1em' class='label label-primary'>" + event.price + " " + event.currency + "</span> "): "") + starEvent.eventIcons(event) + "</span>";
+    if(event.uuid != undefined)
+        var html = "<span>" + (event.charging != "free" && event.price.length > 0 ? ("<span style='font-size:1em' class='label label-primary'>" + event.price + " " + event.currency + "</span> "): "") + starEvent.eventIcons(event) + "</span>";
     el.html(html);
-
+    $(".popup-event-charging").html(html);
     $(".popup-edit-event").show();
     $(".popup-new-event").hide();
     $("#modal-validation-price").hide();
@@ -439,8 +443,6 @@ starCalendar.copyValuesToDialog = function(event){
     }
         
     $(".popup-event-description").html(star.utils.trimTo(event.description, 250));
-    var html = "<span>" + (event.charging != "free" && event.price.length > 0 ? ("<span style='font-size:1em' class='label label-primary'>" + event.price + " " + event.currency + "</span> "): "") + starEvent.eventIcons(event) + "</span>";
-    $(".popup-event-charging").html(html);
     
     $(".event-anchor").each(function() {
         if(starCalendar.isPublic){
@@ -477,11 +479,6 @@ starCalendar.copyValuesToDialog = function(event){
     $("#event-description").html(star.utils.trimTo(event.description, 100));
     $("#event-description-label").html(event.description);
     $(".event-charging-price").val(event.price);
-    $("#event-color").val(event.backgroundColor);
-    $("#selectedColor").css("background-color",event.backgroundColor);
-    if(event.backgroundColor == null || event.backgroundColor.length == 0)
-        $("#selectedColor").css("background-color","#3A87AD");
-    
 };
 
 
@@ -510,17 +507,13 @@ starCalendar.defaultColor = "#3A87AD";
 
 starCalendar.getEvents = function(start, end, callback) {
     var clbck = callback; 
-
     var url = "start="+start.toJSON()+"&end="+end.toJSON()+"&uuid="+starCalendar.userUUID+"&type=calendar";
-    if(starCalendar.userDisplayedLogin != undefined){
-        url = "start="+start.toJSON()+"&end="+end.toJSON()+"&uuid="+starCalendar.userUUID+"&user="+starCalendar.userDisplayedLogin+"&type=request";
-    }
+
     if(starCalendar.userDisplayedLogin != undefined){
         url = "start="+start.toJSON()+"&end="+end.toJSON()+"&uuid="+starCalendar.userUUID+"&user="+starCalendar.userDisplayedLogin+"&type=request";
     }
     if(starCalendar.listing != undefined){
         url = "start="+start.toJSON()+"&end="+end.toJSON()+"&uuid="+starCalendar.userUUID+"&user="+starCalendar.userDisplayedLogin+"&type=request";
-        //url = "start="+start.toJSON()+"&end="+end.toJSON()+"&uuid="+starCalendar.userUUID+"&listing="+starCalendar.listing+"&type=request";
     }
     
     starCalendar.start = start;
@@ -531,16 +524,18 @@ starCalendar.getEvents = function(start, end, callback) {
         var events = [];
         var d = new Date();
         for(var i = 0; i < data.length; i++){
-            var s = new Date();
-            s.setTime(new Date(data[i].eventStart));
-            var e = new Date();
-            e.setTime(new Date(data[i].eventEnd));
-            var d = new Date();
-            d.setTime(new Date(data[i].created));
+            var ev = data[i];
             
-            var isInvited = data[i].isInvited;
-            var isOwner = data[i].isOwner;
-            var color = data[i].color;
+            var s = new Date();
+            s.setTime(new Date(ev.eventStart));
+            var e = new Date();
+            e.setTime(new Date(ev.eventEnd));
+            var d = new Date();
+            d.setTime(new Date(ev.created));
+            
+            var isInvited = ev.isInvited;
+            var isOwner = ev.isOwner;
+            var color = ev.color;
             if(color == undefined || color == null || color == "")
                 color = starCalendar.defaultColor;
 
@@ -550,41 +545,46 @@ starCalendar.getEvents = function(start, end, callback) {
                     color = "rgba("+rgb.r+","+rgb.g+","+rgb.b+",0.5)";
             }
             
-            if(data[i].state == "customer_created"){
+            if(ev.state == "customer_created"){
                 color = "rgba(255,0,0,0.4)";
             }
             console.log(data[i]);
             
             event = {};
-            event.isInvite = data[i].isInvite;
-            event.user = data[i].user;
-            event.invisible = data[i].invisible;
-            event.title = data[i].title;
-            event.description = data[i].description;
+            event.isInvite = ev.isInvite;
+            event.user = ev.user;
+            event.invisible = ev.invisible;
+            event.title = ev.title;
+            event.description = ev.description;
             event.start = s;
             event.end = e;
-            event.uuid = data[i].uuid;
-            event.state = data[i].state;
-            event.isInvite = data[i].isInvite;
-            event.price = data[i].price;
-            event.charging = data[i].charging;
-            event.comments = data[i].comments;
-            event.currency = data[i].currency;
+            event.uuid = ev.uuid;
+            event.state = ev.state;
+            event.isInvite = ev.isInvite;
+            event.price = ev.price;
+            event.charging = ev.charging;
+            event.comments = ev.comments;
+            event.currency = ev.currency;
             event.allDay = false;
-            event.type = data[i].type;
-            event.privacy = data[i].privacy;
-            event.isOwner = data[i].isOwner;
+            event.type = ev.type;
+            event.privacy = ev.privacy;
+            event.isOwner = ev.isOwner;
             event.backgroundColor = color;
-            event.notifyInvited = data[i].notifyInvited;
+            event.notifyInvited = ev.notifyInvited;
             event.created = d;
-            event.createdBy = data[i].createdBy;
-            event.createdByName = data[i].createdByName;
-            event.createdByLogin = data[i].createdByLogin;
-            event.createdByAvatarUrl = data[i].createdByAvatarUrl;
-            if(data[i].isEditable)
+            event.createdBy = ev.createdBy;
+            event.createdByName = ev.createdByName;
+            event.createdByLogin = ev.createdByLogin;
+            event.createdByAvatarUrl = ev.createdByAvatarUrl;
+            if(ev.isEditable)
                 event.editable = true;
             else
                 event.editable = false;
+
+            if(ev.googleId != null){
+                event.googleId = ev.googleId;
+                event.editable = true;
+            }
 
             // update selected event 
             if(starCalendar.selectedEvent != undefined && event.uuid == starCalendar.selectedEvent.uuid){

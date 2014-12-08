@@ -1,7 +1,11 @@
 package controllers;
 
+import java.util.List;
+import java.util.Map;
+
 import models.Listing;
 import models.Rating;
+import models.RatingVote;
 import models.User;
 import play.mvc.With;
 import utils.RandomUtil;
@@ -21,8 +25,6 @@ public class Ratings extends BaseController
         r.stars = stars;
         r.objectUuid = uuid;
         r.userUuid = userUuid;
-        r.votes = 0;
-        r.abuses = 0;
         r.type = type;
         r.uuid = RandomUtil.getUUID();
         r.comment = comment;
@@ -30,81 +32,61 @@ public class Ratings extends BaseController
 
         if (type.equals(Rating.TYPE_LISTING))
         {
-            Listing listing = Listing.get(uuid);
-            if (listing != null)
-            {
-                if (listing.ratingCount == null)
-                    listing.ratingCount = 0;
-                if (listing.ratingStars == null)
-                    listing.ratingStars = 0;
-                listing.ratingCount += 1;
-                listing.ratingStars += stars;
-                listing.save();
-            }
+            List<Rating> ratings = Rating.getByObject(r.objectUuid);
+            Map<String, Object> stats = Rating.calculateStats(ratings);
+            Listing listing = Listing.get(r.objectUuid);
+            listing.ratingAvg = (Long) stats.get("avgStars");
+            listing.ratingStars = (Integer) stats.get("totalStars");
+            listing.save();
         }
         redirectTo(url);
     }
 
     public static void deleteRating(String uuid, String url)
     {
-        try
-        {
-            final Rating r = Rating.getByUuid(uuid);
-            r.delete();
+        final Rating r = Rating.getByUuid(uuid);
+        r.delete();
 
-            if (r.type.equals(Rating.TYPE_LISTING))
-            {
-                Listing listing = Listing.get(r.objectUuid);
-                if (listing != null)
-                {
-                    if (listing.ratingCount != null && listing.ratingCount > 0)
-                    {
-                        listing.ratingCount -= 1;
-                    }
-                    if (listing.ratingStars != null && listing.ratingStars > 0)
-                    {
-                        listing.ratingStars -= r.stars;
-                    }
-                    listing.save();
-                }
-            }
-
-            redirectTo(url);
-        } catch (Exception e)
+        if (r.type.equals(Rating.TYPE_LISTING))
         {
-            redirectTo(url);
+            List<Rating> ratings = Rating.getByObject(r.objectUuid);
+            Map<String, Object> stats = Rating.calculateStats(ratings);
+            Listing listing = Listing.get(r.objectUuid);
+            listing.ratingAvg = (Long) stats.get("avgStars");
+            listing.ratingStars = (Integer) stats.get("totalStars");
+            listing.save();
         }
+        redirectTo(url);
     }
 
     public static void voteForRating(String uuid, String url)
     {
+        final User user = getLoggedUser();
         final Rating r = Rating.getByUuid(uuid);
-        if (r.votes == null)
-            r.votes = 1;
-        else
-            r.votes = r.votes + 1;
-        r.save();
+        RatingVote rv = new RatingVote();
+        rv.user = user;
+        rv.rating = r;
+        rv.vote = 1;
+        rv.save();
         redirectTo(url);
     }
 
     public static void unvoteForRating(String uuid, String url)
     {
+        final User user = getLoggedUser();
         final Rating r = Rating.getByUuid(uuid);
-        if (r.votes == null)
-            r.votes = 0;
-        else
-            r.votes = r.votes - 1;
-        r.save();
+
+        RatingVote rv = new RatingVote();
+        rv.user = user;
+        rv.rating = r;
+        rv.vote = -1;
+        rv.save();
         redirectTo(url);
     }
 
     public static void abuseForRating(String uuid, String url)
     {
         final Rating r = Rating.getByUuid(uuid);
-        if (r.abuses == null)
-            r.abuses = 1;
-        else
-            r.abuses = r.abuses + 1;
         r.save();
         redirectTo(url);
     }

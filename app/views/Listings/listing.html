@@ -1,26 +1,23 @@
 #{extends 'main.html' /} 
 
 #{set 'moreScripts'}
+	<script>
+	starCalendar.aspectRatio = 2.5;
+	#{if listing}
+    	starCalendar.listing = "${listing.uuid}";
+    	starCalendar.user = "${listing.user.login}";	
+	#{/if}
+    #{elseif event}
+       	starCalendar.event = "${event.uuid}" 
+	#{/elseif}
+	#{else}
+		starCalendar.temp = "${temp}";
+	#{/else}	
+	</script>	
 	<script src="@{'/public/javascripts/lib/bootstrap-timepicker.min.js'}" type="text/javascript"></script>
 	<script src="@{'/public/javascripts/lib/simpleWebRtc.js'}" type="text/javascript" ></script>
 	<script src="@{'/public/javascripts/lib/bootstrap-datepicker.js'}" type="text/javascript"></script>	
 	<script src="@{'/public/javascripts/lib/jquery.Jcrop.min.js'}"></script>
-	<script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>	
-	<script>
-		starInit.aspectRatio = 2.5;
-		#{if listing}
-			starInit.event = "${listing.uuid}" 
-		#{/if}
-        #{else}
-        	starInit.temp = "${temp}";
-        #{/else}	
-        #{if event}
-			starInit.event = "${event.uuid}" 
-		#{/if}
-		#{else}
-			starInit.temp = "${temp}";
-		#{/else}	
-	</script>	
 	<script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>	
 	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
 	<script src="@{'/public/javascripts/upload.js'}" type="text/javascript"></script>	
@@ -28,12 +25,12 @@
 	#{if listing}
 	<script>
 		$(document).ready(function(){
-			starInit.listing = "${listing.uuid}";
 			var now = (new Date(new Date().getTime())).toJSON();
-			var params = "&start="+now+"&end="+now+"&listing="+starInit.listing+"&direction=upcoming&type=listing";
+			
+			var params = "&start="+now+"&end="+now+"&listing="+starCalendar.listing+"&user="+starCalendar.user+"&direction=upcoming&type=listing";
 			star.initItems("Upcoming", params);
 	
-			var params1 = "&start="+now+"&end="+now+"&listing="+starInit.listing+"&direction=previous&type=listing";
+			var params1 = "&start="+now+"&end="+now+"&listing="+starCalendar.listing+"&user="+starCalendar.user+"&direction=previous&type=listing";
 			star.initItems("Previous", params1);
 		});
 	</script>			
@@ -94,8 +91,13 @@
 	<div class="container">
 	   	<div class="pull-left">
 		   	<h3 style="margin-top:10px">
-		   		<a href="/channels?category=${listing.category}" class="anchor"><i><strong>${listing.category.capAll()}</strong></i></a> 
-		   		/ <i><a class="anchor" href="/channel/${listing.uuid}">${listing.title}</a></i>
+		   		#{if listing}
+			   		<a href="/channels?category=${listing.category}" class="anchor"><i><strong>${listing.category.capAll()}</strong></i></a> 
+			   		/ <i><a class="anchor" href="/channel/${listing.uuid}">${listing.title}</a></i>
+		   		#{/if}
+		   		#{else}
+		   			New Channel
+		   		#{/else}
 		   		#{if event}
 			   		<small>
 				   		/
@@ -161,10 +163,10 @@
 					#{/if}	
 					
 					#{if !edit && event.type == 'hangout'}
-						<a class="btn btn-default btn-sm btn-margin" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank"><i class="fa fa-arrow-circle-o-right"></i> Start Hangout</a>
+						<a class="btn btn-default btn-sm btn-margin" href="//plus.google.com/hangouts/_/?gid=647254293629&start_data=XXXX" target="_blank"><i class="fa fa-arrow-circle-o-right"></i> Start Hangout</a>
 					#{/if}											
 					
-					#{if !edit && isOwner}
+					#{if !edit && isOwner && !event.isLocked()}
 					<a href="/event?action=edit&uuid=${request.params.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm margin-clear">
 						<i class="dialog-event-edit color-link fa fa-pencil fa-1x"></i> Edit Event
 					</a>
@@ -343,7 +345,7 @@
 <div class="container">		
 	<br/>
 	<div class="row">
-		<div class="col-md-8 side vertical-divider-right" style="padding-top:0px;margin-right:0px">
+		<div class="col-md-8" >
 			<!-- description -->
 			<div>
     	   	   <h2>
@@ -353,7 +355,7 @@
     	   	   	</h2>
     	   	   	<div class="separator-2"></div>
     	   	   	
-    	   	   	<a href="/user/${listing.user.login}"><img class="avatar16 img-circle" src="/${listing.user.avatarUrl}_32x32"> <span>${listing.user.fullName}</span></a> 
+    	   	   	Author &middot; <strong><a href="/user/${listing.user.login}"><img class="avatar16 img-circle" src="/${listing.user.avatarUrl}_32x32"> <span>${listing.user.fullName}</span></a></strong> 
     	   	 	&middot;
 
  	    	   	<span>
@@ -496,19 +498,39 @@
 
 			<!-- ratings -->
 			<div>
-				<!-- ratings -->
 				#{if listing}
 					#{set object:listing /}
 					#{set ratingType:"listing" /}
 				#{/if}
 				#{include 'ratings.html' /}				
 			</div>		
+			<!-- ratings -->
+
 		</div>
 	
-	
-		<div class="col-md-4">
+		<div class="col-md-4 side ">
 		
-			<!-- invites -->
+			#{if comments}
+			<h2>Media</h2>
+			<div style="width:100%; padding:0px">
+				#{list items:comments, as:'item'}
+					#{list items:item.files, as:'file'}
+						#{if file.isImage()}
+							<span style="float:left;" title="${file.name}">
+							<span class="overlay-container">
+								<img src="/public/uploads/${file.url}" style="height:62px" alt="${file.name}">
+								<a href="/public/uploads/${file.url}" class="overlay small popup-img">
+									<i class="fa fa-search-plus"></i>
+								</a>
+							</span>		
+							</span>		
+						#{/if}
+					#{/list}
+				#{/list}
+				<div class="clearfix"></div>
+			</div>
+			#{/if}		
+		
 			#{if fromEvent && !edit}
 			<!-- guests -->
 			<div>
@@ -632,6 +654,7 @@
   			<!-- guests -->				
 			#{/if}
 
+			#{set mail:true /}
 			#{include 'leftPanel.html' /}
 		</div>
 	</div>	

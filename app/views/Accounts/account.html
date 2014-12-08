@@ -9,7 +9,7 @@
 	<script src="@{'/public/javascripts/lib/jquery.Jcrop.min.js'}"></script>
 	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>
 	<script>
-		starInit.aspectRatio = 1;
+		starCalendar.aspectRatio = 1;
 
 		$(document).ready(function(){
 			if ($("[rel=tooltip]").length) {
@@ -22,6 +22,7 @@
 
 
 #{set 'moreHtml'}
+	*{
 	<!-- Color Switcher (Remove these lines) -->
 	<script type="text/javascript" src="@{'/public/style-switcher/style-switcher.js'}"></script>
 	<div class="style-switcher closed">
@@ -77,9 +78,9 @@
 		</div>
 	</div>
 	<!-- Color Switcher End -->
+	}*
 #{/set}
 
-#{set background:'true' /} 
 <form id="cropForm" action="/crop" method="post">
 	<input type="hidden" id="url" name="url" value="${request.url.urlEncode()}" />
 	<input type="hidden" id="x1" name="x1" />
@@ -108,6 +109,7 @@
 					#{else}
 						<a class="btn btn-light-gray btn-sm btn-margin" href="/settings"><i class="fa fa-times"></i> &{'cancel'}</a>
 					#{/else}
+						<a class="btn btn-light-gray btn-sm btn-margin" href="/google?url=${request.url.urlEncode()}"><i class="fa fa-google"></i> google oauth</a>
 				</span>
 			</h2>
 			
@@ -277,21 +279,24 @@
 			<div class="form-group">
 				<label for="userAbout" class="col-sm-2 control-label">&{'account.userAbout'}</label>
 			    <div class="col-sm-10">
-			      <textarea type="text" class="form-control" id="userAbout" placeholder="&{'account.userAbout'}" name="userAbout" rows="10">${params.userAbout}</textarea>
+			      <textarea class="form-control" id="userAbout" placeholder="&{'account.userAbout'}" name="userAbout" rows="10">${params.userAbout}</textarea>
+			      #{include 'help.html' /}
 			      <div class="error">#{error 'userAbout' /}</div>
 			    </div>
 			</div>
 			<div class="form-group">
 				<label for="userEducation" class="col-sm-2 control-label">&{'account.userEducation'}</label>
 			    <div class="col-sm-10">
-			      <textarea type="text" class="form-control" id="userEducation" placeholder="&{'account.userEducation'}" name="userEducation" rows="10">${params.userEducation}</textarea>
+			      <textarea class="form-control" id="userEducation" placeholder="&{'account.userEducation'}" name="userEducation" rows="10">${params.userEducation}</textarea>
+			      #{include 'help.html' /}
 			      <div class="error">#{error 'userEducation' /}</div>
 			    </div>
 			</div>
 			<div class="form-group">
 				<label for="userExperiences" class="col-sm-2 control-label">&{'account.userExperiences'}</label>
 			    <div class="col-sm-10">
-			      <textarea type="text" class="form-control" id="userExperiences" placeholder="&{'account.userExperiences'}" name="userExperiences" rows="10">${params.userExperiences}</textarea>
+			      <textarea class="form-control" id="userExperiences" placeholder="&{'account.userExperiences'}" name="userExperiences" rows="10">${params.userExperiences}</textarea>
+			      #{include 'help.html' /}
 			      <div class="error">#{error 'userExperiences' /}</div>
 			    </div>
 			</div>
@@ -539,7 +544,7 @@
 				<dt></dt>
 				#{/if}
 				<dd>
-					<a href="#" id="test-email">&{'email.test.link'}</a><span class="spinner-small spinner-test"></span> |
+					<a style="cursor:pointer" id="test-email">&{'email.test.link'}</a><span class="spinner-small spinner-test"></span> |
 					<a href="/settings/smtp/reset?url=${request.url.urlEncode()}">Reset to default</a>
 				</dd>
 			</dl>

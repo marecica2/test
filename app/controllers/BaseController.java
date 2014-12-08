@@ -25,6 +25,8 @@ public class BaseController extends Controller
     public static final String CONFIG_RMTP_PATH = "star.configuration.rmtp";
     public static final String CONFIG_STREAM_PATH = "star.configuration.stream";
 
+    public static final String CONFIG_GOOGLE_OAUTH_CALLBACK = "star.google.oauth.callback";
+
     public static final String CONFIG_PAYPAL_PROVIDER_ACCOUNT = "star.configuration.paypal.provider.account";
     public static final String CONFIG_PAYPAL_PROVIDER_ACCOUNT_MICROPAYMENT = "star.configuration.paypal.provider.account.micropayment";
     public static final String CONFIG_PAYPAL_ENDPOINT = "star.configuration.paypal.endpoint";
@@ -48,16 +50,20 @@ public class BaseController extends Controller
     public static User getLoggedUser()
     {
         final String userLogin = getUserLogin();
-        User u = (User) Cache.get(userLogin);
-        if (u != null)
+        if (userLogin != null)
         {
-            return u;
-        } else
-        {
-            u = User.getUserByLogin(userLogin);
-            Cache.set(userLogin, u);
+            User u = (User) Cache.get(userLogin);
+            if (u != null)
+            {
+                return u;
+            } else
+            {
+                u = User.getUserByLogin(userLogin);
+                Cache.set(userLogin, u);
+                return u;
+            }
         }
-        return u;
+        return null;
     }
 
     public static boolean clearUserFromCache()

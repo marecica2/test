@@ -1,6 +1,5 @@
 package controllers;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +7,6 @@ import models.Comment;
 import models.Contact;
 import models.Event;
 import models.Listing;
-import models.Rating;
 import models.Search;
 import models.User;
 import play.cache.Cache;
@@ -41,14 +39,7 @@ public class Application extends BaseController
         //TODO update this condition
         if (ratings == null || true)
         {
-            ratings = new HashMap<String, Object>();
-            Object r1 = Rating.getPopularByCategory("education");
-            Object r2 = Rating.getPopularByCategory("sport");
-            Object r3 = Rating.getPopularByCategory("health");
-            ratings.put("education", r1);
-            ratings.put("sport", r2);
-            ratings.put("health", r3);
-            Cache.add("ratings", ratings, "1h");
+
         }
         return ratings;
     }
@@ -70,6 +61,7 @@ public class Application extends BaseController
         results = results == null ? 20 : results + 20;
         final User user = getLoggedUser();
         final Boolean isOwner = true;
+        final Boolean dashboard = true;
         final String temp = RandomUtil.getUUID();
         final String commentTemp = RandomUtil.getUUID();
         final List<Event> watchList = user != null ? Event.getWatchList(user) : null;
@@ -80,12 +72,13 @@ public class Application extends BaseController
 
         if (user != null && !user.isPublisher())
             flash.success("Help others and become a publisher. Request for publisher account <a href='/settings'>here</a>");
+
         //Http.Cookie c = new Http.Cookie();
         //c.name = "timezone";
         //c.value = user.timezone.toString();
         //request.cookies.put("timezone", c);
 
-        render(user, watchList, listings, approved, type, isOwner, contacts, comments, temp, commentTemp, results);
+        render(user, watchList, listings, approved, type, isOwner, contacts, comments, temp, commentTemp, results, dashboard);
     }
 
     public static void calendarUser(String login, String channel) throws Throwable

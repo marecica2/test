@@ -243,7 +243,6 @@
 				<div class="colorHover" onclick="starCalendar.dialogColorPick('#2633C7');" style="height:30px;width:30px;background:#2633C7;float:left;margin:3px;"></div>
 				<input type="hidden" id="event-color" name="color" value="#{if listing}${listing.color}#{/if}"/>
 				<script>
-                       var starCalendar = {};
                        starCalendar.dialogColorPick = function(hex) {
                            $("#event-color").val(hex);
                            $("#selectedColor").css("background-color",hex);
@@ -265,8 +264,10 @@
 			<script>
 				$(document).ready(function(){
 					$('#event-tags').tagsinput({
-					    typeahead: {
-					      source: ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo']
+					    typeahead: {                  
+					        source: function(query) {
+					          return $.get('/channels/tags?query='+query);
+					        }
 					    }
 					});
 				});		

@@ -6,20 +6,11 @@
 	<script src="@{'/public/javascripts/dashboard.js'}" type="text/javascript"></script>	
 #{/set}
 
-<div class="padding container-xs-height">
+<div class="padding container container-xs-height">
 	<div class="row row-xs-height">
 
-		<div class="col-md-4 col-xs-height col-top">
+		<div class="col-md-8 col-xs-height col-top">
 
-			#{list items:contacts, as:'item'}
-		  		#{if item.contact.isOnline()}
-					<a href="/user/${item.contact.login}"><img class="pull-left" style="height:40px;margin:1px" src="/${item.contact.avatarUrl}_64x64"></a>
-				#{/if}
-				#{else}
-					<a href="/user/${item.contact.login}"><img class="pull-left" style="height:40px;margin:1px;opacity:0.2" src="/${item.contact.avatarUrl}_64x64"></a>
-				#{/else}			
-			#{/list}		
-		
 			#{set objectType:"user" /}
 			#{set object:user /}
 			#{include 'comments.html' /}
@@ -31,10 +22,11 @@
 			</div>				
 		</div>
 	
+		<div>
+			<a href="/channel/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray"><i class="fa fa-plus"></i> New Channel</a>
+		</div>			
+		*{
 		<div class="col-md-5 col-xs-height col-top">
-			<div>
-				<a href="/channel/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray"><i class="fa fa-plus"></i> New Channel</a>
-			</div>			
 			#{if listings}
 				#{set items:listings /}
 				#{set forEvents:false /}
@@ -89,10 +81,10 @@
 				</div>
 			</div>		
 		</div>		
+		}*
 		
 		
-		
-		<div class="col-md-3 col-xs-height col-top" style="background: #fdfdfd;" >
+		<div class="col-md-4 col-xs-height col-top" style="background: #fdfdfd;" >
 			#{include 'activities.html' /}
 		</div>	
 				

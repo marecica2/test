@@ -39,12 +39,10 @@
 							<div class="container-fluid">
 
 								<!-- Toggle get grouped for better mobile display -->
-								<div class="navbar-header">
-									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+								<div class="navbar-header" style="padding:15px;">
+									<button type="button" class="navbar-toggle btn  btn-block margin-clear" data-toggle="collapse" data-target="#navbar-collapse-1">
 										<span class="sr-only">Toggle navigation</span>
-										<span class="icon-bar"></span>
-										<span class="icon-bar"></span>
-										<span class="icon-bar"></span>
+										<span class="fa fa-chevron-down fa-1x "></span>
 									</button>
 								</div>
 
@@ -52,7 +50,9 @@
 								<div class="collapse navbar-collapse" id="navbar-collapse-1">
 									<ul class="nav navbar-nav navbar-right">
 								 	  	#{if user && user.unreadMessages}
-								  	  		<li><a href="/mail" id="public-btn-logout"><i style="font-size:1.3em" class="blink text-default fa fa-envelope-o" title="&{'Received new message'}"></i> </a></li>
+								  	  		<li>
+								  	  			<a href="/mail" class="object-non-visible animated object-visible wobble" data-animation-effect="wobble" data-effect-delay="6000" ><i style="font-size:1.3em" class="blink text-default fa fa-envelope title="&{'Received new message'}"></i></a>
+								  	  		</li>
 									  	#{/if}
    								  	   <li #{if request.url.indexOf("home")>=0}class="active"#{/if}><a href="/home" id="public-btn-logout">Home</a></li>
 									 	#{if user}

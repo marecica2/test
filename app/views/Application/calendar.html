@@ -167,8 +167,9 @@
 		#{set usr: userDisplayed/}
 		#{include 'userTop.html' /}
 	#{/elseif}	
-		
-<div id='calendar' class="container" style="min-height:60%;">
+	
+<section class="main-container object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="300">		
+<div class="container" style="min-height:60%;">
 	<div class="row">
 		<div class="col-md-12">
 			#{if userDisplayed && !isOwner}
@@ -184,6 +185,7 @@
 		</div>
 	</div>
 </div>
+</section>
 
 
 

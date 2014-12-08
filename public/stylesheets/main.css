@@ -76,6 +76,10 @@ img {
 		max-width: 180px;
 	}	
 }
+
+.vertical-divider-left {
+	margin-left: 0px;
+}
 /* theme fixes */
 
 
@@ -87,13 +91,50 @@ img {
 
 
 /* various */
+
+
 .separator-timepicker {
 	width:20px;
 }
+
+.listing-item-top {
+	display: none;
+	height: 170px;	
+	width: 100%;
+}
+
+.listing-item {
+	display: table-cell;
+	height: 128px;
+	width: 200px;
+	min-width: 200px;
+}
+
+.listing-item-right {
+	display: table-cell;
+	vertical-align: top;
+	padding: 15px;
+	width: 100%
+}
+
+@media screen and (max-width: 667px) {
+	.listing-item {
+		display: none;
+	}
+	.listing-item-top {
+		display: block;
+		height: 170px;
+	}	
+	.listing-item-right {
+		display: block;
+	}	
+}
+
 @media screen and (min-width: 767px) {
 	.banner-search {
+		max-width:400px;
 		position:absolute;
-		top:-24%;
+		top:-18%;
 		left:15px;
 		z-index: 9999;	
 	}
@@ -103,7 +144,7 @@ img {
 }
 @media screen and (max-width: 767px) {
 	div.banner {
-		display:none;	
+		//display:none;	
 	}
 	
 	.input-block {
@@ -123,8 +164,8 @@ img {
 }
 
 .btn-medium {
-	min-width:50px !important;
-	margin:0px;
+	min-width:40px !important;
+	margin:0px !important;
 }
 
 .btn-short {
@@ -325,6 +366,11 @@ img {
 	color:rgba(255,255,255,0.3);
 }
 
+.text-shadow {
+	color:white;
+	text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.7);
+}
+
 .shadow {
  # -webkit-box-shadow: 0px 0px 4px 2px rgba(0,0,0,0.1);
  # -moz-box-shadow: 0px 0px 4px 2px rgba(0,0,0,0.1);
@@ -343,19 +389,21 @@ img {
   box-shadow: 0px 0px 12px 2px rgba(0,0,0,0.2);
 }
 
-.shadow-inset {
--webkit-box-shadow: inset 0px 0px 90px 49px rgba(0,0,0,1);
--moz-box-shadow: inset 0px 0px 90px 49px rgba(0,0,0,1);
-box-shadow: inset 0px 0px 90px 49px rgba(0,0,0,1);
+
+@media screen and (min-width: 767px) {
+	.shadow-inset {
+		-webkit-box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 1);
+		-moz-box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 1);
+		box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 1);
+	}
 }
 
 .colorHover:hover{
 	border:1px solid gray;
 }
 
-.fc-header-title {
-	font-family:Segoe UI Light;
-	font-size: 0.5em;
+.fc-corner-left {
+	margin-left:15px !important;
 }
 
 .fc-event{
@@ -541,10 +589,6 @@ object {
 	#myModal {
 		margin:0px 10px;
 	}
-	
-	video {
-		width: 100% !important;
-	}
 	.proggresive {
 		width:100%;
 	}
@@ -563,6 +607,17 @@ object {
 	vertical-align:middle;
 }
 
+
+.user-elm {
+	z-index:500;
+	text-align:center;
+	position:relative;
+	float:left;
+	margin-right:0px;
+	border:3px solid rgba(0,0,0,1);
+	margin-bottom:0px;
+}
+
 .peer-avatar-label {
 	background: rgba(0, 0, 0, 0.5);
 	display: table-cell;
@@ -575,16 +630,6 @@ object {
 	padding: 0px
 }
 
-.user-elm {
-	z-index:500;
-	text-align:center;
-	position:relative;
-	float:left;
-	margin-right:0px;
-	border:3px solid rgba(0,0,0,1);
-	margin-bottom:0px;
-}
-
 .videoContainer {
     position: relative;
     width: 150px;
@@ -592,12 +637,32 @@ object {
     overflow:hidden;
 }
 
-#localScreen {
-	display:none;
-}
-
 .btn-peer {
 	width:150px;
+}
+
+@media screen and (max-width: 700px) {
+	.peer-avatar-label {
+		font-size:0.7em;
+		overflow:hidden;
+		width: 90px;
+		max-width: 90px;
+		height: 90px;
+	}
+	
+	.videoContainer {
+	    width: 90px;
+	    height: 90px;
+	}
+	
+	.btn-peer {
+		font-size:0.6em;
+		width:90px;
+	}
+}
+
+#localScreen {
+	display:none;
 }
 
 .peer-controls {

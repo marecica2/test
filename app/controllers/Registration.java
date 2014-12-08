@@ -103,6 +103,7 @@ public class Registration extends BaseController
         String token,
         Integer offset)
     {
+
         validation.required(firstName);
         validation.required(lastName);
         validation.email(login).message("validation.login");

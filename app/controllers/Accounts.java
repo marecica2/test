@@ -251,6 +251,8 @@ public class Accounts extends BaseController
             final User user = getLoggedUser();
             final String from = user.login;
             final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
+
+            System.err.println("sending mail to " + user.login);
             final EmailProvider emailProvider = new EmailProvider(user.account.smtpHost, user.account.smtpPort,
                     user.account.smtpAccount, user.account.smtpPassword, "10000", user.account.smtpProtocol, true);
             final String title = "Email Test";
@@ -258,7 +260,7 @@ public class Accounts extends BaseController
 
             final VelocityContext ctx = VelocityTemplate.createBasicTemplate(null, baseUrl, title, message);
             final String body = VelocityTemplate.processTemplate(ctx, VelocityTemplate.getTemplateContent(VelocityTemplate.CONTACT_INVITE_TEMPLATE));
-            new Notification(emailProvider, from, "Email Test", user.login, body).execute();
+            new Notification(emailProvider, from, "Email Test", from, body).execute();
             renderJSON("{\"response\":\"" + Messages.get("email.test.response.ok") + "\"}");
         } catch (Exception e)
         {

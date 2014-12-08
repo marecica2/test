@@ -12,11 +12,15 @@ GET		/login/									Secure.login
 POST   	/login          						Secure.authenticate
 GET	   	/logout									Secure.logout
 
-GET 	/channel/{uuid}							Listings.listingNew
-POST	/channel/{uuid}							Listings.listingNewPost
+GET	   	/google									GoogleOauth.authorize
+GET   	/google-oauth							GoogleOauth.callback
+
+GET 	/channel/{uuid}							Listings.listing
+POST	/channel/{uuid}							Listings.listingPost
 GET 	/channel-delete							Listings.deleteListing
 GET     /channel-reset-image					Listings.resetImage
 GET     /channels-get							Listings.listingsRest
+GET     /channels/tags							Listings.tagsRest
 
 GET     /event      		       				Events.event
 GET     /event/{uuid} 		       				Events.event
@@ -32,6 +36,7 @@ GET     /event-decline            				Events.decline
 GET     /event-start            				Events.start
 GET     /hangout-air-start       				Events.hangoutYoutubeId
 GET     /hangout-air-start/rest    				Events.hangoutYoutubeIdRest
+GET     /hangout-callback	    				Events.hangoutCallback
 
 POST    /attendance-new-save           			Attendances.attendanceNewSave
 GET     /attendance-new-edit           			Attendances.attendanceNewEdit
@@ -116,6 +121,7 @@ GET 	/admin/publishers						Admin.publishers
 GET 	/admin/users							Admin.users
 GET 	/admin/approve							Admin.approve
 GET 	/admin/deny								Admin.deny
+GET 	/admin/refresh 							Admin.refreshIndexes
 
 
 # Map static resources from the /app/public folder to the /public path

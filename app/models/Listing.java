@@ -2,12 +2,14 @@ package models;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import play.db.jpa.Model;
@@ -73,7 +75,7 @@ public class Listing extends Model
 
     public String privacy;
 
-    public Integer ratingCount;
+    public Long ratingAvg;
 
     public Integer ratingStars;
 
@@ -105,6 +107,86 @@ public class Listing extends Model
     public static List<Listing> getForUser(User user)
     {
         return Listing.find("from Listing where user = ? and deleted is null", user).fetch(500);
+    }
+
+    public static List<Listing> getSearch(Integer first, Integer count, ListingFilter filter)
+    {
+
+        String query = "";
+        query += " SELECT uuid, title,firstname, lastname, avatarUrl, "
+                + "category, privacy, charging, price, currency, imageUrl, "
+                + "tags, type, ratingStars, ratingAvg, login ";
+        query += " FROM search_index ";
+        query += " WHERE 1 = 1 ";
+
+        if (filter.category != null)
+        {
+            query += " AND category = :category ";
+        }
+
+        if (filter.search != null)
+        {
+            filter.search = filter.search.trim();
+            filter.search = filter.search.replaceAll("\\s+", " ");
+            filter.search = filter.search.replaceAll("(\\b[^\\s]+\\b)", "$1:*");
+            filter.search = filter.search.replaceAll("\\s+", " & ");
+            System.err.println("query string " + filter.search);
+            query += " AND document @@ to_tsquery('english', :search) ";
+        }
+
+        if (filter.category != null && filter.category.equals("match"))
+            query += " ORDER BY ts_rank(document, to_tsquery('english', :search)) DESC ";
+        else
+            query += " ORDER BY (ratingStars * ratingAvg) desc ";
+
+        Query q = Listing.em().createNativeQuery(query);
+        if (filter.search != null)
+            q.setParameter("search", filter.search);
+        if (filter.category != null)
+            q.setParameter("category", filter.category);
+
+        q.setFirstResult(first);
+        q.setMaxResults(count);
+        List<Object> result = q.getResultList();
+        List<Listing> listings = new LinkedList<Listing>();
+        for (Object object : result)
+        {
+            Object[] item = (Object[]) object;
+            Listing l = new Listing();
+            User u = new User();
+            l.uuid = (String) item[0];
+            l.title = (String) item[1];
+            u.firstName = (String) item[2];
+            u.lastName = (String) item[3];
+            u.avatarUrl = (String) item[4];
+            l.category = (String) item[5];
+            l.privacy = (String) item[6];
+            l.charging = (String) item[7];
+            l.price = (BigDecimal) item[8];
+            l.currency = (String) item[9];
+            l.imageUrl = (String) item[10];
+            l.tags = (String) item[11];
+            l.type = (String) item[12];
+            l.ratingStars = (Integer) item[13];
+            l.ratingAvg = item[14] != null ? new Long(item[14].toString()) : null;
+            u.login = (String) item[15];
+            l.user = u;
+            listings.add(l);
+        }
+        return listings;
+    }
+
+    public static List<String> getTags(String q)
+    {
+        String query = "";
+        query += " SELECT term ";
+        query += " FROM tags ";
+        query += " WHERE term like ? ";
+
+        Query qr = Listing.em().createNativeQuery(query);
+        qr.setParameter(1, "%" + q + "%");
+        List<String> res = qr.getResultList();
+        return res;
     }
 
     public static List<Listing> getFiltered(Integer first, Integer count, ListingFilter listing)
@@ -142,12 +224,11 @@ public class Listing extends Model
         return WikiUtils.parseToHtml(this.description);
     }
 
-    public Integer getRatingAvg()
+    public Long getRatingAvg()
     {
-        if (ratingCount == null || ratingStars == null)
-            return 0;
-        float sum = ratingStars;
-        return Math.round(sum / ratingCount);
+        if (ratingAvg == null)
+            return 0L;
+        return ratingAvg;
     }
 
 }

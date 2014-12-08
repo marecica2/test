@@ -21,13 +21,13 @@ import dto.ListingDTO;
 
 public class Listings extends BaseController
 {
-    @Before(unless = { "listingNew", "listingsRest" })
+    @Before(unless = { "listing", "listingsRest" })
     static void checkAccess()
     {
         checkAuthorizedAccess();
     }
 
-    public static void listingNew(String uuid, String action, String url, String type)
+    public static void listing(String uuid, String action, String url, String type)
     {
         final Boolean isNew = request.params.get("new") != null ? true : false;
         final Boolean edit = action != null && action.equals("edit") ? true : false;
@@ -93,7 +93,7 @@ public class Listings extends BaseController
         }
     }
 
-    public static void listingNewPost(
+    public static void listingPost(
         String uuid,
         String action,
         String title,
@@ -189,7 +189,7 @@ public class Listings extends BaseController
             redirectTo(url);
         }
         params.flash();
-        render("Listings/listingNew.html", user, edit, listing);
+        render("Listings/listing.html", user, edit, listing);
     }
 
     public static void deleteListing(String uuid)
@@ -232,12 +232,19 @@ public class Listings extends BaseController
         filterListing.category = StringUtils.getStringOrNull(request.params.get("category"));
 
         List<ListingDTO> ListingsDto = new ArrayList<ListingDTO>();
-        List<Listing> listings = Listing.getFiltered(first, count, filterListing);
+        //List<Listing> listings = Listing.getFiltered(first, count, filterListing);
+        List<Listing> listings = Listing.getSearch(first, count, filterListing);
         for (Listing l : listings)
         {
             ListingDTO lDto = ListingDTO.convert(l, user);
             ListingsDto.add(lDto);
         }
         renderJSON(ListingsDto);
+    }
+
+    public static void tagsRest(String query)
+    {
+        List<String> tags = Listing.getTags(query);
+        renderJSON(tags);
     }
 }

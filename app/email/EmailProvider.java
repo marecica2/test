@@ -27,7 +27,7 @@ public class EmailProvider
     private final String port;
     private final String username;
     private final String password;
-    private final String protocol;
+    private String protocol;
     //private final String timeout;
     private boolean tls = false;
     private final Properties props = System.getProperties();
@@ -41,15 +41,14 @@ public class EmailProvider
             this.port = Constants.MAIL_PORT;
             this.username = Constants.MAIL_ACCOUNT;
             this.password = Constants.MAIL_PASSWORD;
-            this.protocol = Constants.MAIL_PROTOCOL_SMTPS;
-            this.tls = tls;
+            this.protocol = Constants.MAIL_PROTOCOL_SMTP;
+            this.tls = true;
         } else
         {
             this.host = host;
             this.port = port;
             this.username = email;
             this.password = password;
-            //this.timeout = timeout;
             this.protocol = protocol.toLowerCase();
             this.tls = tls;
         }
@@ -64,7 +63,7 @@ public class EmailProvider
         this.username = Constants.MAIL_ACCOUNT;
         this.password = Constants.MAIL_PASSWORD;
         this.protocol = Constants.MAIL_PROTOCOL_SMTPS;
-        this.tls = false;
+        this.tls = true;
         emailSettings();
         createSession();
     }
@@ -73,18 +72,19 @@ public class EmailProvider
     {
         props.put("mail.transport.protocol", protocol);
         props.put("mail." + protocol + ".host", host);
-        props.put("mail." + protocol + ".timeout", "10000");
+        props.put("mail." + protocol + ".starttls.enable", tls);
         props.put("mail." + protocol + ".port", port);
         props.put("mail." + protocol + ".auth", "true");
-        props.put("mail." + protocol + ".starttls.enable", tls);
+        props.put("mail." + protocol + ".timeout", "10000");
 
         if (host.contains("live.com"))
-            props.put("mail." + protocol + ".socketFactory.class", "mail.HotmailSSLSocketFactory");
+            props.put("mail." + protocol + ".socketFactory.class", "email.HotmailSSLSocketFactory");
 
-        if ("smtps".equals(protocol))
-            props.put("mail." + protocol + ".ssl.enable", "true");
-        else
-            props.put("mail." + protocol + ".ssl.enable", "false");
+        //
+        //        if ("smtps".equals(protocol))
+        //            props.put("mail." + protocol + ".ssl.enable", "true");
+        //        else
+        //            props.put("mail." + protocol + ".ssl.enable", "false");
 
     }
 
@@ -98,6 +98,7 @@ public class EmailProvider
                 return new PasswordAuthentication(username, password);
             }
         });
+        //session.setDebug(true);
     }
 
     public boolean sendMessage(String toEmail, String subject, String msg) throws Exception

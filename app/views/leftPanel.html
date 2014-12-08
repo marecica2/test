@@ -1,8 +1,27 @@
-#{if !isOwner}
-<h2><a href="/mail?action=new&to=${usr.login}" style="text-decoration:none">Write a message&nbsp;<i class="fa fa-envelope-o"></i></a></h2>
+#{if !isOwner && mail}
+<h2><a href="/mail?action=new&to=${usr.login}" style="text-decoration:none">Write a message</a></h2>
+<div class="separator-2"></div>
 <br/>
 #{/if}
 
 <h2>Tips for First timers</h2>
-<p>No cancellation fee</p>
+<div class="separator-2"></div>
 <br/>
+
+<h5><i class="fa fa-globe fa-1x"></i> Get modern browser</h5>
+<p>To get full user experience update your browser to latest</p>
+
+<h5><i class="fa fa-video-camera fa-1x"></i> Set up your camera</h5>
+<p>All Wigdr events happen over camera, so be sure that yours works properly</p>
+
+<h5><i class="fa fa-microphone fa-1x"></i> Set up your mic</h5>
+<p>All Wigdr events happen over camera, so be sure that yours works properly</p>
+
+<h5><i class="fa fa-youtube fa-1x"></i> Video tutorials</h5>
+<ul>
+	<li><a href="">How to request for publisher account</a>
+	<li><a href="">How to create a channel</a>
+</ul>
+
+<br/>
+

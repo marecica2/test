@@ -88,6 +88,14 @@ public class User extends Model
 
     public String footer;
 
+    public String googleAccessToken;
+
+    public String googleRefreshToken;
+
+    public Date googleTokenExpires;
+
+    public String googleCalendarId;
+
     // random secret uuid token for invitations
     public String referrerToken;
 
@@ -203,7 +211,7 @@ public class User extends Model
 
     public Boolean isOwner(Listing listing)
     {
-        if (listing != null && this.equals(listing.user))
+        if (listing != null && listing.user != null && this.equals(listing.user))
             return true;
         return false;
     }

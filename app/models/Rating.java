@@ -1,14 +1,22 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Query;
+import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cascade;
+
+import play.db.jpa.JPA;
 import play.db.jpa.Model;
 
 @Entity
@@ -21,8 +29,9 @@ public class Rating extends Model
     public User user;
 
     public String type;
-    public Integer votes;
-    public Integer abuses;
+    @Transient
+    public Long votes;
+
     public Integer stars;
     public String uuid;
     public Date created;
@@ -32,25 +41,37 @@ public class Rating extends Model
     @Column(length = 1000)
     public String comment;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rating", orphanRemoval = true)
+    @Cascade({ org.hibernate.annotations.CascadeType.DELETE })
+    public List<RatingVote> voteList = new ArrayList<RatingVote>();
+
     public static List<Rating> getByObject(String uuid)
     {
-        return Rating.find("objectUuid = ? order by votes desc, created desc", uuid).fetch();
+
+        Query query = JPA.em().createQuery(
+                "select r,  COALESCE(sum(vote.vote),0) as sumVotes from Rating r "
+                        + "left outer join r.voteList as vote where r.objectUuid = ? "
+                        + "group by r order by COALESCE(sum(vote.vote), 0) desc nulls first");
+        query.setParameter(1, uuid);
+        List<Object[]> result = query.getResultList();
+        List<Rating> ratings = new ArrayList<Rating>();
+        for (Object[] objects : result)
+        {
+            final Rating rating = (Rating) objects[0];
+            rating.votes = (Long) objects[1];
+            ratings.add(rating);
+        }
+        return ratings;
     }
 
     public static List<Rating> getByUser(String uuid)
     {
-        return Rating.find("userUuid = ? order by votes desc, created desc", uuid).fetch();
+        return Rating.find("userUuid = ? order by created desc", uuid).fetch();
     }
 
     public static Rating getByUuid(String uuid)
     {
         return Rating.find("uuid = ?", uuid).first();
-    }
-
-    public static Object getPopularByCategory(String category)
-    {
-        return Rating.find("select r, l from Rating r, Listing l where r.objectUuid = l.uuid and r.type = 'listing' and l.category = ? and r.stars > 3 order by r.votes desc r.stars desc ",
-                category).first();
     }
 
     public Rating saveRating()
@@ -112,4 +133,13 @@ public class Rating extends Model
         return stats;
     }
 
+    public boolean hasVoted(User user)
+    {
+        for (RatingVote rv : this.voteList)
+        {
+            if (rv.user.equals(user))
+                return true;
+        }
+        return false;
+    }
 }

@@ -1,10 +1,32 @@
 <div class="container">	
 	<div class="row">
 		<div class="col-md-12">
+		
+			
+		
 			#{set cols: event.chatEnabled?8:12 /} 
 			<div class="row">
 			
 				#{if event.type == "broadcast" && !isOwner}
+				
+				<!-- 
+					<script src="//jwpsrv.com/library/JKCVFHmREeS3EA6sC0aurw.js"></script>
+					<div id="myElement">Loading the player...</div>
+					<script type="text/javascript">
+						console.log("${rmtp}&myStreamName=${event.uuid}");
+					    jwplayer("myElement").setup({
+					        file: "${rmtp}&myStreamName=${event.uuid}",
+					        rtmp: {
+					            subscribe: true
+					        },
+					        width: 640,
+					        height: 360
+					    });
+					</script>					
+				 -->
+										
+					<!-- 
+					 -->
 					<div class="col-md-${cols}" style="padding:0px;">
 						<object height="500" style="background:black;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/downstream.swf">
 						    <param name='src' value='/public/images/downstream.swf'/>
@@ -21,7 +43,7 @@
 				
 				#{if event.type == 'broadcast' && isOwner}
 					<div class="col-md-${cols}" style="padding:0px;">
-						 <object class=""  style="background:black;width:100%;min-height:500px;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/upstream.swf">
+						 <object class="" style="background:black;width:100%;min-height:500px;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/upstream.swf">
 						    <param name='src' value='/public/images/upstream.swf'/>
 							<param name="movie" value="/public/images/upstream.swf" />
 							<param name=FlashVars value="myServerUrl=${rmtp}&myStreamName=${event.uuid}" />
@@ -34,10 +56,12 @@
 				#{/if}
 				
 				#{if event.type == 'p2p'}
-					<div class="col-md-${cols}" style="padding:0px;#{if event.chatEnabled}height:500px;#{/if}#{else}height:100px#{/else}">
-						 <div class="higlight" style="width:100%;height:100px;text-align: center">
-						 	<div style="height: 200px;width: 200px;position: absolute;margin: -50px 0 0 -50px;left:45%;top: 50%;">
-							 	<a class="anchor text-default" style="text-decoration: none" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank" ><i style="font-size:4em" class="fa fa-comments"></i><span style="font-size:1.5em"> Join video conference</span></a>
+					<div class="col-md-${cols}" style="padding:0px;#{if event.chatEnabled}height:500px;#{/if}#{else}height:200px#{/else}">
+						 <div class="higlight" style="width:100%;text-align: center">
+						 	<div style="width: 200px;position: absolute;margin: -50px 0 0 -50px;left:45%;top: 50%;padding:20px">
+							 	<a class="anchor text-default" style="text-decoration: none;" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank" >
+							 		<i style="font-size:4em" class="fa fa-comments"></i><span style="font-size:1.5em"> Join </span>
+							 	</a>
 						 	</div>
 						 </div>	
 					</div>		
@@ -55,6 +79,7 @@
 						<div style="height:100%">
 							<div id="content" class="form-control" style="opacity: 0.7;height:410px;color:white;font-size:0.8em;background: black;overflow-y: scroll;"></div>
 							<div class="controls">
+								#{if user}
 								<form onsubmit="return false;">
 									<div class="input-group">
 										<input id="chat-text" class="form-control"> <input id="chat-name" type="hidden" value="${name}"> 
@@ -66,6 +91,7 @@
 										<div class="clearfix"></div>
 									</div>
 								</form>
+								#{/if}
 							</div>
 						</div>
 					</div>

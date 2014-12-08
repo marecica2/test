@@ -13,6 +13,9 @@ public class DateTimeUtils
     public static final String TYPE_OTHER = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String TYPE_PAYPAL = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
+    // 2014-12-02T11:59:01+01:00
+    public static final String TYPE_GOOGLE = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
     public static final String TYPE_DATE_ONLY = "dd/MM/yyyy";
     public static final String TYPE_TIME_ONLY = "HH:mm";
 

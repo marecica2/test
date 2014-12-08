@@ -92,7 +92,7 @@ star.generateItemsHtml = function(data, prefix){
             html += "       <div class='overlay'>";
             html += "           <div class='overlay-links'>";
             html += "               <a href='/channel/"+item.uuid+"'><i class='fa fa-link'></i></a>";
-            html += "               <a href='/user/"+item.createdByLogin+"'><i class='fa fa-user'></i></a>";
+            html += "               <a href='/user/"+item.createdByLogin+"'><i class='icon-user'></i></a>";
             html += "           </div>";
             html += "       </div>";
             html += "   </div>";
@@ -152,7 +152,7 @@ star.generateItemsHtml = function(data, prefix){
                 html += "       <div class='overlay'>";
                 html += "           <div class='overlay-links'>";
                 html += "               <a href='/event/"+item.uuid+"'><i class='fa fa-link'></i></a>";
-                html += "               <a href='/user/"+item.createdByLogin+"'><i class='fa fa-user'></i></a>";
+                html += "               <a href='/user/"+item.createdByLogin+"'><i class='icon-user'></i></a>";
                 html += "           </div>";
                 html += "       </div>";
                 html += "   </div>";
@@ -359,15 +359,14 @@ starEvent.inviteLoad = function(event, clbck){
                 html += "</td>";
                 html += "<td style='text-align:right;vertical-align:middle;'>";
                 
-                html += "<nobr>";
+                html += "<nobr style='font-size:1.4em'>";
                 if(starCalendar.login == data[i].email){
-                    html += "<a href='#' class='color-link ' title='"+i18n("app.acceptedInvitation")+"'><i data-uuid='" + data[i].uuid + "' class='fa fa-check dialog-invite-accept fa-1x'></i></a> ";
+                    html += "<a href='#' class='color-link ' title='"+i18n("app.acceptedInvitation")+"'><i data-uuid='" + data[i].uuid + "' class='fa fa-check dialog-invite-accept fa-1x'></i></a> &nbsp; ";
                     html += "<a href='#' class='color-link ' title='"+i18n("app.declineInvitation")+"'><i data-uuid='" + data[i].uuid + "'  class='fa fa-times dialog-invite-decline fa-1x'></i></a> &nbsp; ";
                 }
                 if(starCalendar.selectedEvent.editable){
                     html += "<a href='#' class='color-link ' title='"+i18n("app.deleteInvitation")+"'><i data-uuid='" + data[i].uuid + "' class='fa fa-trash dialog-invite-delete fa-1x'></i></a> ";
                 }
-
                 html += "</nobr>";
                 html += "</td>";
                 html += "</tr>";

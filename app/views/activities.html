@@ -1,11 +1,26 @@
 <div style="min-height:80vh">
 	<div class="pull-left">
-		<span id="day" class="segoe" style="font-size:1.2em"></span><br/>
-		<span id="txt1" class="segoe" style="font-size:2.8em;position:relative;left:0px;bottom:0px;"></span>
+		<span id="day"></span><br/>
+		<span id="txt1" style="font-size:2.8em;position:relative;left:0px;bottom:0px;"></span>
 	</div>
 	<div class="clearfix"></div>
+
+	<h3>Contacts <a href="/contacts" class="btn btn-light-gray btn-sm">manage</a></h3>
+	<p>
+		#{list items:contacts, as:'item'}
+	  		#{if item.contact.isOnline()}
+				<a href="/user/${item.contact.login}"><img class="pull-left" style="height:32px;margin:1px" src="/${item.contact.avatarUrl}_64x64" title="${item.contact.fullName}"></a>
+			#{/if}
+			#{else}
+				<a href="/user/${item.contact.login}"><img class="pull-left" style="height:32px;margin:1px;opacity:0.2" src="/${item.contact.avatarUrl}_64x64" title="${item.contact.fullName}"></a>
+			#{/else}			
+		#{/list}	
+	</p>
+	<br/>
+	<br/>
+
 	
-	<h2>Activities  <span style="font-size:0.5em"><i class="activities-refresh color-link  fa fa-refresh"></i></span> </h2>
+	<h3>Activities  <span style="font-size:0.9em"><i class="activities-refresh color-link  fa fa-refresh"></i></span> </h3>
 	<ul style="width:100%;" class="table  list-unstyled   activities "></ul>
 	<div style="width:100%;text-align:center;">
 		<i class="activities-more color-link fa fa-chevron-down"></i>

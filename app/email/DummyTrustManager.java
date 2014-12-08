@@ -9,14 +9,14 @@ public class DummyTrustManager implements X509TrustManager
 {
 
     @Override
-    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException
+    public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException
     {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException
+    public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException
     {
         // TODO Auto-generated method stub
 
@@ -27,5 +27,4 @@ public class DummyTrustManager implements X509TrustManager
     {
         return new X509Certificate[0];
     }
-
 }

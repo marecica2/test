@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Text Formatting Notation Help</title>
+<title>Text Formatting Help</title>
+		<link rel="shortcut icon" href="/images/favicon.png">
 		<!-- Web Fonts -->
 		<link href='//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,300&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 		<link href='//fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'>
@@ -22,6 +23,7 @@
 		<link href="@{'/public/plugins/magnific-popup/magnific-popup.css'}" rel="stylesheet">
 		<link href="@{'/public/css/animations.css'}" rel="stylesheet">
 		<link href="@{'/public/plugins/owl-carousel/owl.carousel.css'}" rel="stylesheet">
+		<link href="/css/skins/purple.css"  rel="stylesheet">
 		<style>
 			td, th {
 				padding-left:10px;
@@ -270,20 +272,8 @@
 							<tbody>
 								<tr>
 									<td><pre>
-											<code>[#anchor]
-[^attachment.ext]
-</code>
-										</pre></td>
-									<td>Creates an internal hyperlink to the specified anchor
-										or attachment. Appending the '#' sign followed by an anchor
-										name will lead into a specific bookmarked point of the desired
-										page. Having the '^' followed by the name of an attachment
-										will lead into a link to the attachment of the current issue.</td>
-								</tr>
-								<tr>
-									<td><pre>
-											<code>[http://jira.atlassian.com]
-[Atlassian|http://atlassian.com]
+											<code>[http://example.com]
+[Example|http://example.com]
 </code>
 										</pre></td>
 									<td>
@@ -294,70 +284,28 @@
 											you do not want to use any alias for the link.</p>
 										<p>Examples:</p>
 										<p>
-											<a href="http://jira.atlassian.com">&#104;ttp://jira.atlassian.com</a><br />
-											<a href="http://atlassian.com">Atlassian</a>
+											<a href="http://example.com">&#104;ttp://example.com</a><br />
+											<a href="http://example.com">Example</a>
 										</p>
 									</td>
 								</tr>
 								<tr>
 									<td><pre>
-											<code>[mailto:legendaryservice@atlassian.com]</code>
+											<code>[mailto:example@example.com]</code>
 										</pre></td>
 									<td>
 										<p>Creates a link to an email address, complete with mail
 											icon.</p>
 										<p>Example:</p>
 										<p>
-											<span style="white-space: nowrap;"> <img
-												src="/images/icons/mail_small.gif" height="12" width="13"
-												align="absmiddle" alt="&gt;&gt;" border="0" /><a href="#">legendaryservice@atlassian.com</a>
+											<span style="white-space: nowrap;"><a href="mailto:example@example.com">example@example.com</a>
 											</span>
 										</p>
 									</td>
 								</tr>
-								<tr>
-									<td><pre>
-											<code>[file:///c:/temp/foo.txt]
-[file:///z:/file/on/network/share.txt]
-</code>
-										</pre></td>
-									<td>
-										<p>Creates a download link to a file on your computer or
-											on a network share that you have mapped to a drive. To access
-											the file, you must right click on the link and choose "Save
-											Target As".</p>
-										<p>
-											By default, this only works on Internet Explorer but can also
-											be enabled in Firefox (see <a target='_blank' href='$extLink'>docs</a>).
-										</p>
-									</td>
-								</tr>
-								<tr>
-									<td><pre>
-											<code>{anchor:anchorname}</code>
-										</pre></td>
-									<td>Creates a bookmark anchor inside the page. You can
-										then create links directly to that anchor. So the link [My
-										Page#here] will link to wherever in "My Page" there is an
-										{anchor:here} macro, and the link [#there] will link to
-										wherever in the current page there is an {anchor:there} macro.</td>
-								</tr>
-								<tr>
-									<td><pre>
-											<code>[~username]</code>
-										</pre></td>
-									<td>Creates a link to the user profile page of a
-										particular user, with a user icon and the user's full name.</td>
-								</tr>
-								<tr>
-									<td>[pagetitle] or [spacekey:pagetitle]</td>
-									<td>Creates a link to the specified page in the desired
-										space (or the confluence space associated with this JIRA
-										project if you dont specify any space).</td>
-								</tr>
-								$descriptor.help $descriptor.help $descriptor.help
 							</tbody>
 						</table>
+						
 						<h2>Lists</h2>
 						<p>Lists allow you to present information as a series of
 							ordered items.</p>
@@ -478,6 +426,8 @@
 								</tr>
 							</tbody>
 						</table>
+						
+*{						
 						<h2>Images</h2>
 						<p>Images can be embedded into a wiki renderable field from
 							attached files or remote sources.</p>
@@ -839,6 +789,8 @@ public String getFoo()
 								</tr>
 							</tbody>
 						</table>
+}*						
+						
 					</section>
 				</div>
 			</div>

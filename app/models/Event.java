@@ -82,6 +82,8 @@ public class Event extends Model
 
     public String youtubeId;
 
+    public String googleId;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", orphanRemoval = true)
     @Cascade({ org.hibernate.annotations.CascadeType.DELETE })
     public List<Attendance> attendances = new ArrayList<Attendance>();
@@ -263,6 +265,26 @@ public class Event extends Model
                 return true;
             }
         }
+        return false;
+    }
+
+    public boolean isLocked()
+    {
+        final List<Attendance> list = this.attendances;
+        for (Attendance attendance : list)
+        {
+            if (attendance.paid != null && attendance.paid)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isEnded()
+    {
+        if (this.eventEnd.getTime() < System.currentTimeMillis())
+            return true;
         return false;
     }
 
