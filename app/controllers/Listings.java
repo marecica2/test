@@ -84,12 +84,16 @@ public class Listings extends BaseController
                     temp, commentTemp, fromEvent);
         } else
         {
+            final String name = user != null ? user.getFullName() : null;
+            final String room = listing != null ? listing.uuid : null;
+            final String rmtp = getProperty(CONFIG_RMTP_PATH);
+            final String socketIo = getProperty(CONFIG_SOCKET_IO);
             final List<Comment> comments = Comment.getByListing(listing);
             final List<Rating> ratings = listing != null ? Rating.getByObject(uuid) : null;
             final Map<String, Object> stats = listing != null ? Rating.calculateStats(ratings) : null;
 
             render(user, isOwner, edit, listing, url, errs, type,
-                    temp, commentTemp, comments, ratings, stats, fromEvent, listings);
+                    temp, commentTemp, comments, ratings, stats, fromEvent, listings, rmtp, socketIo, room, name);
         }
     }
 
@@ -204,6 +208,75 @@ public class Listings extends BaseController
         listing.deleted = true;
         listing.save();
         redirectTo("/");
+    }
+
+    public static void start(String id, String url)
+    {
+        final User user = getLoggedUser();
+        final Listing l = Listing.get(id);
+
+        if (user == null)
+            forbidden();
+        if (!l.user.equals(user))
+            forbidden();
+
+        l.started = new Date();
+        l.ended = null;
+        l.save();
+
+        redirectTo(url);
+    }
+
+    public static void privateRoom(String id)
+    {
+        final User user = getLoggedUser();
+        final Listing l = Listing.get(id);
+
+        if (user == null)
+            forbidden();
+        if (!l.user.equals(user))
+            forbidden();
+
+        Event e = new Event();
+        e.listing = l;
+        e.listing_uuid = l.uuid;
+        e.uuid = RandomUtil.getUUID();
+        e.roomSecret = RandomUtil.getUUID();
+        e.eventStart = new Date();
+        e.eventEnd = new Date(e.eventStart.getTime() + (1000 * 60 * l.chargingTime));
+
+        e.charging = l.charging;
+        e.price = l.price;
+        e.currency = l.currency;
+        e.chargingTime = l.chargingTime;
+
+        e.createdByUser = true;
+        e.state = Event.EVENT_STATE_USER_CREATED;
+        e.chatEnabled = true;
+        e.commentsEnabled = false;
+        e.privacy = Event.EVENT_VISIBILITY_PUBLIC;
+        e.type = l.type;
+        e.created = new Date();
+        e.user = l.user;
+        e.save();
+
+        l.started = new Date();
+        l.ended = null;
+        l.instantBroadcast = e.uuid;
+        l.save();
+
+        redirectTo("/event/" + e.uuid);
+    }
+
+    public static void stop(String id, String url)
+    {
+        final User user = getLoggedUser();
+        final Listing e = Listing.get(id);
+
+        e.started = null;
+        e.ended = new Date();
+        e.save();
+        redirectTo(url);
     }
 
     public static void resetImage(String uuid, String url)

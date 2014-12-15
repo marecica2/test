@@ -103,7 +103,6 @@ star.generateItemsHtml = function(data, prefix){
             if(item.charging == 'free'){
                 html += "<strong>Free</strong>";
             }
-
             if(item.charging == 'before'){
                 html += "<strong>"+item.price+"</strong> <small>"+item.currency+"</small>";
             }       
@@ -112,8 +111,7 @@ star.generateItemsHtml = function(data, prefix){
             }       
             
             
-            html += "       <p class='event-box-links'><span><a href='/channel/"+item.uuid+"' class='link-left'><span>"+star.utils.trimTo(item.title, 30)+"</span></a></span></p>";
-
+            html += "   <p class='event-box-links'><span><a href='/channel/"+item.uuid+"' class='link-left'><span>"+star.utils.trimTo(item.title, 30)+"</span></a></span></p>";
             html += "   <p class='event-box-link'>";            
             for(var j = 0; j < 5; j++){
                 if(j < item.ratingAvg)
@@ -122,6 +120,7 @@ star.generateItemsHtml = function(data, prefix){
                     html += "<i class='fa fa-star-o' data-value='1'></i>";
             }
             html += " " + item.ratingCount + " reviews";
+            
             html += "   </p>";
             
             html += "   </div>";
@@ -178,7 +177,7 @@ star.generateItemsHtml = function(data, prefix){
                 }
                 html += "       </p>";
                 
-                html += "       <p class='event-box-link'><span><a href='/event/"+item.uuid+"' class='link-left'><span>"+star.utils.trimTo(item.title, 30)+"</span></a></span></p>";
+                html += "       <p class='event-box-link'><a href='/event/"+item.uuid+"' class=''><span>"+star.utils.trimTo(item.title, 30)+"</span></a></p>";
                 html += "   </div>";
                 html += "</div>";                           
             }
@@ -359,15 +358,16 @@ starEvent.inviteLoad = function(event, clbck){
                 html += "</td>";
                 html += "<td style='text-align:right;vertical-align:middle;'>";
                 
-                html += "<nobr style='font-size:1.4em'>";
-                if(starCalendar.login == data[i].email){
-                    html += "<a href='#' class='color-link ' title='"+i18n("app.acceptedInvitation")+"'><i data-uuid='" + data[i].uuid + "' class='fa fa-check dialog-invite-accept fa-1x'></i></a> &nbsp; ";
-                    html += "<a href='#' class='color-link ' title='"+i18n("app.declineInvitation")+"'><i data-uuid='" + data[i].uuid + "'  class='fa fa-times dialog-invite-decline fa-1x'></i></a> &nbsp; ";
-                }
-                if(starCalendar.selectedEvent.editable){
-                    html += "<a href='#' class='color-link ' title='"+i18n("app.deleteInvitation")+"'><i data-uuid='" + data[i].uuid + "' class='fa fa-trash dialog-invite-delete fa-1x'></i></a> ";
-                }
-                html += "</nobr>";
+                //html += "<nobr style='font-size:1.4em'>";
+                //if(starCalendar.login == data[i].email){
+                //    html += "<a href='#' class='color-link ' title='"+i18n("app.acceptedInvitation")+"'><i data-uuid='" + data[i].uuid + "' class='fa fa-check dialog-invite-accept fa-1x'></i></a> &nbsp; ";
+                //    html += "<a href='#' class='color-link ' title='"+i18n("app.declineInvitation")+"'><i data-uuid='" + data[i].uuid + "'  class='fa fa-times dialog-invite-decline fa-1x'></i></a> &nbsp; ";
+                //}
+                //if(starCalendar.selectedEvent.editable){
+                //    html += "<a href='#' class='color-link ' title='"+i18n("app.deleteInvitation")+"'><i data-uuid='" + data[i].uuid + "' class='fa fa-trash dialog-invite-delete fa-1x'></i></a> ";
+                //}
+                //html += "</nobr>";
+                
                 html += "</td>";
                 html += "</tr>";
                 
@@ -703,16 +703,6 @@ starServices.deleteComment = function(data, success, error){
     });
 };
 
-starServices.setAgendaType = function(data, success, error){
-    $.ajax({
-        type: "POST",
-        url: "/settings/agenda",
-        data: JSON.stringify(data),
-        success: success,
-        error: error,
-        contentType: "application/json"
-    });
-};
 
 //
 //star utils

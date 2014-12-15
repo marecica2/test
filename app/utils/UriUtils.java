@@ -52,6 +52,18 @@ public class UriUtils
         return url;
     }
 
+    public static String urlDecode(String url)
+    {
+        try
+        {
+            url = URLDecoder.decode(url, "UTF-8");
+        } catch (UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
+        return url;
+    }
+
     public static Map<String, List<String>> getQueryParams(String url)
     {
         try

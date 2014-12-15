@@ -179,8 +179,6 @@ login.return=Return to login page
 invitationCreated=Invited <a class=popup-event-edit href=/user/%s>%s</a> to event <a class=popup-event-edit href=/event/%s>%s</a>
 invitationAccepted=Accepted invitation for event <a class=popup-event-edit href=/event/%s>%s</a>
 invitationDeclined=Declined invitation for event <a class=popup-event-edit href=/event/%s>%s</a>
-invitationAcceptedCust=Accepted invitation for event <a class=popup-event-edit href=/event/%s>%s</a>
-invitationDeclinedCust=Declined invitation for event <a class=popup-event-edit href=/event/%s>%s</a>
 eventDeleted=Cancelled event <a class=popup-event-edit href=/event/%s>%s</a>
 eventDeletedCust=Cancelled event <a class=popup-event-edit data-event=%s href=#>%s</a>
 eventCreatedUsr=Created event <a class=popup-event-edit href=/event/%s>%s</a>

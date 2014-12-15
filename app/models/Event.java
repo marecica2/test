@@ -31,6 +31,7 @@ public class Event extends Model
 
     public static String EVENT_TYPE_P2P_CALL = "p2p";
     public static String EVENT_TYPE_BROADCAST = "live";
+    public static String EVENT_TYPE_INSTANT_BROADCAST = "instant";
     public static String EVENT_VISIBILITY_PUBLIC = "public";
     public static String EVENT_VISIBILITY_PRIVATE = "private";
     public static String EVENT_STATE_USER_CREATED = "user_created";
@@ -49,6 +50,8 @@ public class Event extends Model
     public Date created;
 
     public Date started;
+
+    public Date ended;
 
     public String roomSecret;
 
@@ -82,6 +85,8 @@ public class Event extends Model
 
     public String youtubeId;
 
+    public String hangoutUrl;
+
     public String googleId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", orphanRemoval = true)
@@ -102,16 +107,10 @@ public class Event extends Model
     @JoinColumn(name = "customer_id")
     public User customer;
 
-    public Event save(Account account)
+    public Event saveEvent()
     {
         this.created = new Date();
         Event event = this.save();
-        return event;
-    }
-
-    public static Event get(String uuid, Account account)
-    {
-        Event event = Event.find("byUuidAndAccount", uuid, account).first();
         return event;
     }
 
@@ -119,17 +118,6 @@ public class Event extends Model
     {
         Event event = Event.find("byUuid", uuid).first();
         return event;
-    }
-
-    public static Event getByRoomSecret(String uuid)
-    {
-        Event event = Event.find("byRoomSecret", uuid).first();
-        return event;
-    }
-
-    public static List<Event> getAll(Account account)
-    {
-        return Event.findAll();
     }
 
     public static List<Event> getWatchList(User user)
@@ -146,7 +134,6 @@ public class Event extends Model
         String query = "Select distinct ev from Event ev where user = :user and state = 'customer_created' order by ev.eventStart asc";
         TypedQuery<Event> q = Event.em().createQuery(query, Event.class);
         q.setParameter("user", user);
-        q.setMaxResults(200);
         List<Event> events = q.getResultList();
         return events;
     }
@@ -169,11 +156,21 @@ public class Event extends Model
             from = null;
         }
 
-        String query = "Select distinct ev from Event ev join ev.attendances att where 1 = 1 ";
+        String query = "Select distinct ev from Event ev left outer join ev.attendances att where 1 = 1 ";
+
+        if (user != null)
+        {
+            query += " and ev.user = :user ";
+        }
 
         if (!isListing && includeAttendances)
         {
-            query += " and ( att.customer = :cust ";
+            if (user != null)
+                query += " or ";
+            else
+                query += " and ";
+
+            query += " ( att.customer = :cust ";
             if (from != null)
                 query += " and ev.eventStart >= :start ";
             if (to != null)
@@ -211,6 +208,8 @@ public class Event extends Model
         //Logger.error(query);
         TypedQuery<Event> q = Event.em().createQuery(query, Event.class);
 
+        if (user != null)
+            q.setParameter("user", user);
         if (from != null)
             q.setParameter("start", from);
         if (to != null)
@@ -255,83 +254,26 @@ public class Event extends Model
         return this;
     }
 
-    public boolean hasInviteFor(String email)
-    {
-        final List<Attendance> list = this.attendances;
-        for (Attendance attendance : list)
-        {
-            if (email.equals(attendance.email))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isLocked()
-    {
-        final List<Attendance> list = this.attendances;
-        for (Attendance attendance : list)
-        {
-            if (attendance.paid != null && attendance.paid)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isEnded()
-    {
-        if (this.eventEnd.getTime() < System.currentTimeMillis())
-            return true;
-        return false;
-    }
-
-    public boolean hasInviteFor(User user)
-    {
-        if (getInviteForCustomer(user) == null)
-        {
-            return false;
-        } else
-        {
-            return true;
-        }
-    }
-
-    public Attendance getInviteForCustomer(User user)
-    {
-        List<Attendance> attendances = Attendance.getByEvent(this);
-        Attendance a = null;
-        for (Attendance attendance : attendances)
-        {
-            if (attendance.email.equals(user.login))
-            {
-                a = attendance;
-            }
-        }
-        return a;
-    }
-
     @Override
     public String toString()
     {
         return "Event [uuid=" + uuid + ", eventStart=" + eventStart + ", eventEnd=" + eventEnd + "]";
     }
 
-    public Boolean isOwner(User user)
+    public Attendance getInviteForCustomer(User user)
     {
-        return user != null && user.uuid.equals(this.user.uuid) ? true : false;
-    }
+        Attendance a = null;
+        if (user == null)
+            return null;
 
-    public Boolean isPrivate()
-    {
-        return this.privacy.equals(EVENT_VISIBILITY_PRIVATE);
-    }
-
-    public Boolean isFree()
-    {
-        return this.charging.equals(EVENT_CHARGING_FREE);
+        for (Attendance attendance : this.attendances)
+        {
+            if (attendance.customer.equals(user))
+            {
+                a = attendance;
+            }
+        }
+        return a;
     }
 
     public Integer getMinutes()
@@ -353,5 +295,78 @@ public class Event extends Model
             return totalPrice;
         }
         return null;
+    }
+
+    private boolean isEnded()
+    {
+        if (this.eventEnd.getTime() < System.currentTimeMillis())
+            return true;
+        return false;
+    }
+
+    public boolean hasInviteForCustomer(User user)
+    {
+        if (user == null)
+            return false;
+        if (getInviteForCustomer(user) != null)
+            return true;
+        return false;
+    }
+
+    public Boolean isOwner(User user)
+    {
+        return user != null && user.uuid.equals(this.user.uuid) ? true : false;
+    }
+
+    public Boolean isPrivate()
+    {
+        return this.privacy.equals(EVENT_VISIBILITY_PRIVATE);
+    }
+
+    public Boolean isPublic()
+    {
+        return this.privacy.equals(EVENT_VISIBILITY_PUBLIC);
+    }
+
+    public Boolean isFree()
+    {
+        return this.charging.equals(EVENT_CHARGING_FREE);
+    }
+
+    public Boolean isVisible(User user)
+    {
+        if (this.isPublic())
+            return true;
+        if (this.isOwner(user))
+            return true;
+        if (this.hasInviteForCustomer(user))
+            return true;
+        return false;
+    }
+
+    private boolean isLocked()
+    {
+        // TODO fix the return type later
+        if (this.isEnded())
+            return false;
+
+        final List<Attendance> list = this.attendances;
+        for (Attendance attendance : list)
+        {
+            if (attendance.paid != null && attendance.paid)
+            {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public Boolean isEditable(User user)
+    {
+        if (this.isOwner(user) && !this.isLocked())
+            return true;
+        if (user != null && this.hasInviteForCustomer(user) && this.state.equals(EVENT_STATE_CUSTOMER_CREATED))
+            return true;
+        return false;
     }
 }

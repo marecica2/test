@@ -20,7 +20,8 @@ SELECT listing.uuid,
        users.login as login,
        setweight(to_tsvector('english'::regconfig, listing.title), 'A') || 
        setweight(to_tsvector('simple', listing.tags), 'B') ||
-       setweight(to_tsvector('simple', concat(users.firstName, ' ', users.lastName, ' ', users.login)), 'C') as document
+       setweight(to_tsvector('simple', listing.description), 'C') ||
+       setweight(to_tsvector('simple', concat(users.firstName, ' ', users.lastName, ' ', users.login)), 'D') as document
 FROM listing
 JOIN users ON users.id = listing.user_id;
 CREATE INDEX idx_fts_search ON search_index USING gin(document);

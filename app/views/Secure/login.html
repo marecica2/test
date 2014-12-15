@@ -1,52 +1,23 @@
 #{extends 'main.html' /} 
 #{set title:'Login' /} 
 #{set 'moreScripts'}
+	<script>
+	  star.fbClbck = function() {
+	      
+	      FB.api('/me', function(response) {
+	        $.post("/login/facebook?id="+response.id+"&authenticityToken="+$("input[name='authenticityToken']").val(), function(redirect){
+	            window.location = redirect;
+	        });
+	      });
+	  
+	  }
+	</script>
+	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
 #{/set}
 
-#{if isPublic}
+
 <div id="fb-root"></div>
-<script>
-	window.fbAsyncInit = function() {
-	    FB.init({
-	      appId      : '117287758301883',
-	      status     : false, 
-	      cookie     : true,
-	      xfbml      : true
-	    });
-	
-	    FB.Event.subscribe('auth.authResponseChange', function(response) {
-	      console.log(response);
-	      if (response.status === 'connected') {
-	        resp();
-	        window.location.replace("/public/facebook/login?facebook="+response.authResponse.userID+"&id="+getParameterByName("id"));
-	      } else if (response.status === 'not_authorized') {
-	      } else {
-	      }
-	    });
-    };
 
-    (function(d){
-     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement('script'); js.id = id; js.async = true;
-     js.src = "//connect.facebook.net/en_US/all.js";
-     ref.parentNode.insertBefore(js, ref);
-    }(document));
-
-    function resp() {
-      FB.api('/me', function(response) {
-        console.log(response);
-      });
-    }
-    
-    function getParameterByName(name) {
-        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-            results = regex.exec(document.URL);
-        return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    };    
-</script>
-#{/if}
 
 <div class="container">
 	<div class="row">
@@ -58,23 +29,9 @@
 			    <h2 class=""><i class="fa fa-sign-in"></i> &{'logIn'}</h2>
 			    <div class="divider"></div>
 			    
-				#{if flash.securityError}	
-				<div class="alert alert-danger alert-dismissable">
-			  		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-			  		<small><strong>${flash.securityError}</strong></small>
-				</div>
-				#{/if}
-		
-				#{if flash.access}	
-				<div class="alert alert-danger alert-dismissable">
-			  		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-			  		<small><strong>${flash.access}</strong></small>
-				</div>
-				#{/if}
-				
 				<div class="form-group">
 					<label class="" for="login">&{'login'}</label>
-					<input type="hidden" class="form-control" id="url" name="url" value="${request.params.url}"/>
+					<input type="hidden" class="form-control" id="url" name="url" value="${flash.url}"/>
 					<input type="text" class="form-control" id="login" name="username" placeholder="&{'login'}" autofocus/>
 				</div>
 		
@@ -88,23 +45,8 @@
 					&{'or'} <a href="/password-reset">&{'reset.password'}</a>
 					<br/>
 					<br/>
-					<table class="pull-right">
-						<tr>
-							#{if isPublic}
-							<td>
-								<div class="fb-login-button" onlogin="facebookLogin"  data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
-							</td>
-							<td>
-							&nbsp;
-							</td>
-							#{/if}
-							<td>
-								<button class="btn btn-default pull-right"><i class="fa fa-sign-in"></i> &{'logIn'}</button>
-							</td>
-						</tr>
-					</table>
-					
-					
+					<div class="pull-left fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
+					<button class="pull-right btn btn-default margin-clear"><i class="fa fa-sign-in"></i> &{'logIn'}</button>
 					<div style="clear:both;"></div>
 				</div>
 			</form>

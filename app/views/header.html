@@ -57,7 +57,7 @@
    								  	   <li #{if request.url.indexOf("home")>=0}class="active"#{/if}><a href="/home" id="public-btn-logout">Home</a></li>
 									 	#{if user}
 									      <li #{if request.url.indexOf("dashboard")>=0}class="active" #{/if}><a href="/dashboard">Dashboard</a></li>
-									      <li #{if request.url.indexOf("calendar")>=0}class="active" #{/if}><a href="/user/${user.login}/calendar">Planning</a></li>
+									      <li #{if request.url.indexOf("calendar")>=0}class="active" #{/if}><a href="/user/${user.login}/calendar">Calendar</a></li>
 										#{/if}
 										
 										

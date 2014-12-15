@@ -1,9 +1,10 @@
 #{if !isOwner && mail}
-<h2><a href="/mail?action=new&to=${usr.login}" style="text-decoration:none">Write a message</a></h2>
-<div class="separator-2"></div>
+<br/>
+<a href="/mail?action=new&to=${usr.login}" class="btn btn-default btn-block"><i class="fa fa-envelope"></i> Write a message for ${usr.firstName}</a>
 <br/>
 #{/if}
 
+*{
 <h2>Tips for First timers</h2>
 <div class="separator-2"></div>
 <br/>
@@ -22,6 +23,5 @@
 	<li><a href="">How to request for publisher account</a>
 	<li><a href="">How to create a channel</a>
 </ul>
-
 <br/>
-
+}*

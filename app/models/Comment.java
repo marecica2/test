@@ -46,7 +46,7 @@ public class Comment extends Model
     @Column(length = 10)
     public String type;
 
-    @Column(length = 20)
+    @Column(length = 40)
     public String uuid;
 
     @Column(length = 10)

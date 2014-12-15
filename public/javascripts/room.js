@@ -51,6 +51,21 @@ if(webrtc != null){
          });
 
          // muting unmuting
+         $("#controls-camera").click(function(){
+             if(!star.cameraoOff){
+                 star.cameraoOff = true;
+                 webrtc.pauseVideo();
+                 $(this).removeClass("btn-dark");
+                 $(this).addClass("btn-danger");
+             } else {
+                 star.cameraoOff = false;
+                 webrtc.resumeVideo();
+                 $(this).removeClass("btn-danger");
+                 $(this).addClass("btn-dark");
+             }
+         });
+
+         // muting unmuting
          $("#controls-mute").click(function(){
              if(star.muted == false){
                  $(this).removeClass("btn-dark");
@@ -829,7 +844,7 @@ $(document).ready(function(){
     
     // chat
     $("#content").click(function() {
-        $("#chat-text").focus();
+        //$("#chat-text").focus();
     });
 
     // chat send

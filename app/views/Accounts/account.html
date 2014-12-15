@@ -134,56 +134,73 @@
 			
 			
 
-			#{if !user.account.newPlanApplied()}
+			#{if user.account.currentPlan() != user.account.planRequest}
 			<div class="shadow alert alert-info alert-dismissible" role="alert">
 			    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-					Change to ${user.account.planRequest} plan will be applied after 
+					Change to plan ${user.account.planRequest} will be applied after 
 					${account.planRequestFrom.format("dd MMM, yyyy")}
-					<span>#{time time:account.planRequestFrom/}</span>
 			</div>
 			#{/if}					
+
+
+			*{
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="active"><a href="#h2tab1" role="tab" data-toggle="tab" class="">&{'account.account'}</a></li>
+				<li><a href="#h2tab2" role="tab" data-toggle="tab" class="">&{'About You'}</a></li>
+				<li><a href="#h2tab3" role="tab" data-toggle="tab" class="">&{'Paypal Account'}</a></li>
+				<li><a href="#h2tab4" role="tab" data-toggle="tab" class="">&{'Outgoing Email'}</a></li>
+				<li><a href="#h2tab4" role="tab" data-toggle="tab" class="">&{'Website embedding'}</a></li>
+			</ul>
+			}*
 
 
 			<h3>&{'account.account'}</h3>
 			<div class="separator-2"></div>
 			#{if !edit}
 			<dl class="dl-horizontal">
-				<dt>&{'account.plan'}</dt>
+				<dt>&{'Accout plan'}</dt>
 				<dd>
 					${user.account.currentPlan()}
 				</dd>
-				<dt>&{'account.accountType'}</dt>
+				<dt>&{'Account type'}</dt>
 				<dd>
-					${user.account.type} &nbsp; 
-					#{if user && user.account.type == "standard"}
-						<br/><a href="/settings/request-publisher?url=${request.url.urlEncode()}">Become a Publisher</a>
-						<i class="fa fa-question-circle" rel="tooltip" data-placement="right" data-original-title="To become a publisher you must have filled in personal information and created at least one channel. To create new channel go to Dashboard and click 'new channel' button."></i>
-					#{/if}
+					
 					#{if user && user.account.type == "publisherReq"}
-						<br/>Waiting for approvement
+						${user.account.type} <span class="label label-success" style="font-size:0.8em">Waiting for approvement</span>
 					#{/if}
+					#{elseif user && user.account.type == "standard"}
+						<span class="label label-primary" style="font-size:0.8em">${user.account.type}</span>
+						<strong><a href="/settings/request-publisher?url=${request.url.urlEncode()}">Become a Publisher</a></strong>
+						<i class="fa fa-question-circle" rel="tooltip" data-placement="right" data-original-title="To become a publisher you must have filled in personal information and created at least one channel. To create new channel go to Dashboard and click 'new channel' button."></i>
+					#{/elseif}
+					#{else}
+						<span class="label label-success" style="font-size:0.8em">${user.account.type}</span>
+					#{/else}
 				</dd>
 				
-				<dt>&{'account.company'}</dt>
+				<dt>&{'Company'}</dt>
 				<dd>${user.account.name} &nbsp;</dd>
 				
-				<dt>&{'name'}</dt>
+				<dt>&{'Name'}</dt>
 				<dd>${user.firstName} ${user.lastName}</dd>
 				
-				<dt>&{'login'}</dt>
+				<dt>&{'Login'}</dt>
 				<dd>${user.login}</dd>
 				
-				<dt>&{'password'}</dt>
+				<dt>&{'Password'}</dt>
 				<dd><a href="/password">&{'account.changeYourPassword'}</a></dd>
 				
 				<dt>&{'language'}</dt>
 				<dd>${user.locale} &nbsp;</dd>
 				
 				<dt>&{'timezone'}</dt>
-				<dd>${user.timezone} &nbsp;</dd>			
+				<dd>#{if user.timezone} #{if user.timezone > 0} - #{/if} #{else} + #{/else} ${user.timezone / -60}:00 hours #{/if}&nbsp;</dd>			
 				
 				<dt>&{'EmailNotification'}</dt>
-				<dd>${user.emailNotification} &nbsp;</dd>			
+				<dd>${user.emailNotification} &nbsp;</dd>	
+				
+				<dt>&{'Facebook account'}</dt>
+				<dd>${user.facebookName}</dd>
 			</dl>
 			#{/if}
 			#{else}
@@ -233,22 +250,53 @@
 				<label for="locale" class="col-sm-2 control-label">&{'timezone'}</label>
 			    <div class="col-sm-10">
 					<select class="form-control" name="timezone" id="timezone">
-						<option #{if params.timezone == "-360"}  selected='selected'#{/if} value="-360">- 06:00 &{'hrs'} New York</option>
-						<option #{if params.timezone == "-300"}  selected='selected'#{/if} value="-300">- 05:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-240"}  selected='selected'#{/if} value="-240">- 04:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-180"}  selected='selected'#{/if} value="-180">- 03:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-120"}  selected='selected'#{/if} value="-120">- 02:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-60"}  selected='selected'#{/if} value="-60">- 01:00 &{'hrs'}</option>
-						<option #{if params.timezone == "0"} selected='selected'#{/if} value="0">&nbsp; 00:00 &{'hrs'} GMT Greenwich</option>
-						<option #{if params.timezone == "60"} selected='selected'#{/if} value="60">+ 01:00 &{'hrs'}</option>
-						<option #{if params.timezone == "120"}selected='selected'#{/if} value="120">+ 02:00 &{'hrs'}</option>
-						<option #{if params.timezone == "180"}selected='selected'#{/if} value="180">+ 03:00 &{'hrs'}</option>
-						<option #{if params.timezone == "240"}selected='selected'#{/if} value="240">+ 04:00 &{'hrs'}</option>
-						<option #{if params.timezone == "300"}selected='selected'#{/if} value="300">+ 05:00 &{'hrs'}</option>
-						<option #{if params.timezone == "360"}selected='selected'#{/if} value="360">+ 06:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-720"}  selected='selected'#{/if} value="-720">+ 12:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-660"}  selected='selected'#{/if} value="-660">+ 11:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-600"}  selected='selected'#{/if} value="-600">+ 10:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-540"}  selected='selected'#{/if} value="-540">+ 09:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-480"}  selected='selected'#{/if} value="-480">+ 08:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-420"}  selected='selected'#{/if} value="-420">+ 07:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-360"}  selected='selected'#{/if} value="-360">+ 06:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-300"}  selected='selected'#{/if} value="-300">+ 05:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-240"}  selected='selected'#{/if} value="-240">+ 04:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-180"}  selected='selected'#{/if} value="-180">+ 03:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-120"}  selected='selected'#{/if} value="-120">+ 02:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-60"}  selected='selected'#{/if} value="-60">+ 01:00 &{'hrs'}</option>
+						<option #{if params.timezone == "0"} selected='selected'#{/if} value="0">&nbsp; 00:00 &{'hrs'}</option>
+						<option #{if params.timezone == "60"} selected='selected'#{/if} value="60">- 01:00 &{'hrs'}</option>
+						<option #{if params.timezone == "120"}selected='selected'#{/if} value="120">- 02:00 &{'hrs'}</option>
+						<option #{if params.timezone == "180"}selected='selected'#{/if} value="180">- 03:00 &{'hrs'}</option>
+						<option #{if params.timezone == "240"}selected='selected'#{/if} value="240">- 04:00 &{'hrs'}</option>
+						<option #{if params.timezone == "300"}selected='selected'#{/if} value="300">- 05:00 &{'hrs'}</option>
+						<option #{if params.timezone == "360"}selected='selected'#{/if} value="360">- 06:00 &{'hrs'}</option>
+						<option #{if params.timezone == "420"}selected='selected'#{/if} value="420">- 07:00 &{'hrs'}</option>
+						<option #{if params.timezone == "480"}selected='selected'#{/if} value="480">- 08:00 &{'hrs'}</option>
+						<option #{if params.timezone == "540"}selected='selected'#{/if} value="540">- 09:00 &{'hrs'}</option>
+						<option #{if params.timezone == "600"}selected='selected'#{/if} value="600">- 10:00 &{'hrs'}</option>
+						<option #{if params.timezone == "660"}selected='selected'#{/if} value="660">- 11:00 &{'hrs'}</option>
+						<option #{if params.timezone == "720"}selected='selected'#{/if} value="720">- 12:00 &{'hrs'}</option>
 					</select>
 					<div class="error">#{error 'locale' /}</div>
 			    </div>
+			</div>				
+			<div class="form-group">
+				<label for="facebook" class="col-sm-2 control-label">&{'Facebook ID'}</label>
+				<div class="col-sm-10">
+					<input type="hidden" class="form-control" id="facebookId" placeholder="&{'Facebook ID'}" name="facebookId" value="${params.facebookId}">
+					<input type="text" class="disabled form-control" id="facebookName" name="facebookName" value="${params.facebookName}" readonly>
+				  	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
+					<script>
+					  star.fbClbck = function() {
+					      FB.api('/me', function(response) {
+					        $("#facebookId").val(response.id);
+					        $("#facebookName").val(response.name);
+					      });
+					  }
+					</script>		
+					<br/>
+					<strong>Log in to get Facebook Account</strong> <div class="fb-login-button" data-max-rows="1" data-scope="public_profile" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>						
+					<div id="fb-root"></div>
+				</div>				
 			</div>				
 			<div class="form-group">
 			<label for="locale" class="col-sm-2 control-label">&{'Email notification'}</label>
@@ -276,29 +324,29 @@
 				#{include 'userAbout.html' /}
 			#{/if}
 			#{else}
-			<div class="form-group">
+			<div class="form-group has-feedback">
 				<label for="userAbout" class="col-sm-2 control-label">&{'account.userAbout'}</label>
 			    <div class="col-sm-10">
 			      <textarea class="form-control" id="userAbout" placeholder="&{'account.userAbout'}" name="userAbout" rows="10">${params.userAbout}</textarea>
-			      #{include 'help.html' /}
 			      <div class="error">#{error 'userAbout' /}</div>
 			    </div>
+			    #{include 'help.html' /}
 			</div>
-			<div class="form-group">
+			<div class="form-group has-feedback">
 				<label for="userEducation" class="col-sm-2 control-label">&{'account.userEducation'}</label>
 			    <div class="col-sm-10">
 			      <textarea class="form-control" id="userEducation" placeholder="&{'account.userEducation'}" name="userEducation" rows="10">${params.userEducation}</textarea>
-			      #{include 'help.html' /}
 			      <div class="error">#{error 'userEducation' /}</div>
 			    </div>
+  		        #{include 'help.html' /}
 			</div>
-			<div class="form-group">
+			<div class="form-group has-feedback">
 				<label for="userExperiences" class="col-sm-2 control-label">&{'account.userExperiences'}</label>
 			    <div class="col-sm-10">
 			      <textarea class="form-control" id="userExperiences" placeholder="&{'account.userExperiences'}" name="userExperiences" rows="10">${params.userExperiences}</textarea>
-			      #{include 'help.html' /}
 			      <div class="error">#{error 'userExperiences' /}</div>
 			    </div>
+			    #{include 'help.html' /}
 			</div>
 			<div class="form-group">
 				<label for="website" class="col-sm-2 control-label">&{'account.website'}</label>
@@ -346,12 +394,6 @@
 			
 			
 			
-			
-			
-		    
-	  	
-	  	
-	  	
 	  	
 	  		<br/>
 			<h3>&{'Your Calendar'}</h3>
@@ -618,7 +660,7 @@
 			
 			
 			
-			
+			*{
 			<br/>
 			<h3>Website Embedding</h3>
 			<div class="separator-2"></div>
@@ -630,12 +672,12 @@
 				<dt>&{'account.viaLink'}</dt>
 				<dd><textarea class="form-control" rows="1" >${baseUrl}/public/calendar?id=${user.uuid}</textarea></dd>
 			</dl>
+			}*
 
 
 
 
-
-
+			<br/>
 
 			#{if edit}
 			<div class="form-group">

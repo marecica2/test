@@ -57,14 +57,12 @@
    	   	   	</div>
 			
 			<br/>
-			<form method="POST" action="/paypal/checkout/${e.uuid}" onsubmit="return validate()" >
+			<form method="POST" action="/checkout/${e.uuid}" onsubmit="return validate()" >
 	    		<input type="image" class="pull-right" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" border="0" align="top" alt="Check out with PayPal"/>
-				<input type="hidden" name="url" value="${url.urlEncode()}">
-				<!-- 
-				<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-				<button class="btn btn-primary btn-lg">Check out with PayPal</button>
-				 -->
+				<input type="hidden" name="url" value="${url}">
+				<input type="radio" name="payment" value="paypal" id="paypal" checked="checked"> <label for="paypal">Pay with Paypal</label>
 				<div class="clearfix"></div>
+				
 			</form>
 		</div>
 	</div>

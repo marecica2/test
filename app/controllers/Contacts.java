@@ -41,13 +41,16 @@ public class Contacts extends BaseController
         User u = User.getUserByLogin(email);
         if (u != null)
         {
-            validation.addError("error", email + " " + Messages.get("is already registered"));
+            validation.addError("error", "");
+            flash.error(Messages.get("%s is already registered", email));
             params.put("email", email);
             params.flash();
             validation.keep();
             flash("email", email);
         } else
         {
+            flash.success(Messages.get("invitation sent to %s", email));
+
             // baseUrl in format https://localhost:10001/
             final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
             final String locale = "en";

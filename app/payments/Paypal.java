@@ -23,7 +23,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 
-import play.Logger;
 import utils.DateTimeUtils;
 import utils.StringUtils;
 
@@ -140,7 +139,7 @@ public class Paypal
         sb.append("&VERSION=" + URLEncoder.encode(version, "UTF-8"));
         sb.append("&CANCELURL=" + URLEncoder.encode(cancelUrl, "UTF-8"));
         sb.append("&RETURNURL=" + URLEncoder.encode(returnUrl, "UTF-8"));
-        sb.append("&RETURN=" + returnUrl);
+        sb.append("&RETURN=" + URLEncoder.encode(returnUrl, "UTF-8"));
 
         processDetails(event, sb, null);
 
@@ -159,18 +158,18 @@ public class Paypal
         return token;
     }
 
-    public String getExpressCheckoutDetail(String token) throws Exception
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append("USER=" + user);
-        sb.append("&PWD=" + pwd);
-        sb.append("&SIGNATURE=" + signature);
-        sb.append("&METHOD=" + URLEncoder.encode(getExpressCheckoutDetails, "UTF-8"));
-        sb.append("&VERSION=" + URLEncoder.encode(version, "UTF-8"));
-        sb.append("&TOKEN=" + token);
-        String resp = executeRequest(sb);
-        return resp;
-    }
+    //    public String getExpressCheckoutDetail(String token) throws Exception
+    //    {
+    //        StringBuilder sb = new StringBuilder();
+    //        sb.append("USER=" + user);
+    //        sb.append("&PWD=" + pwd);
+    //        sb.append("&SIGNATURE=" + signature);
+    //        sb.append("&METHOD=" + URLEncoder.encode(getExpressCheckoutDetails, "UTF-8"));
+    //        sb.append("&VERSION=" + URLEncoder.encode(version, "UTF-8"));
+    //        sb.append("&TOKEN=" + token);
+    //        String resp = executeRequest(sb);
+    //        return resp;
+    //    }
 
     private void processDetails(Event event, StringBuilder sb, DoExpressCheckoutResponse response) throws UnsupportedEncodingException
     {
@@ -229,8 +228,8 @@ public class Paypal
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse response = httpClient.execute(post);
         String resp = EntityUtils.toString(response.getEntity());
-        Logger.error("========= ");
-        Logger.error("Paypal response " + resp);
+        //Logger.error("========= ");
+        //Logger.error("Paypal response " + resp);
         return resp;
     }
 

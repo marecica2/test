@@ -1,6 +1,5 @@
 package controllers;
 
-import google.CalendarClient;
 import google.LiveStreams;
 
 import java.math.BigDecimal;
@@ -70,7 +69,7 @@ public class Events extends BaseController
             {
                 EventDTO eDto = EventDTO.convert(event, user);
                 if (!eventsDto.contains(eDto))
-                    convertEvent(eventsDto, event, eDto, user);
+                    eventsDto.add(eDto);
             }
         }
 
@@ -85,56 +84,37 @@ public class Events extends BaseController
                 {
                     EventDTO eDto = EventDTO.convert(event, user);
                     if (!eventsDto.contains(eDto))
-                        convertEvent(eventsDto, event, eDto, user);
-                }
-            }
-        }
-
-        if (user != null && showGoogleEvents)
-        {
-            if (user.googleCalendarId == null)
-            {
-                String id = CalendarClient.getPrimaryCalendar(user);
-                System.err.println(id);
-                User usr = getLoggedUserNotCache();
-                usr.googleCalendarId = id;
-                usr.save();
-                clearUserFromCache();
-            } else
-            {
-                List<EventDTO> eventsDtoGoogle = CalendarClient.getEvents(user, user.googleCalendarId, from, to);
-                for (EventDTO eDto : eventsDtoGoogle)
-                {
-                    if (!eventsDto.contains(eDto))
                         eventsDto.add(eDto);
                 }
             }
         }
 
+        //        if (user != null && showGoogleEvents)
+        //        {
+        //            if (user.googleCalendarId == null)
+        //            {
+        //                String id = CalendarClient.getPrimaryCalendar(user);
+        //                System.err.println(id);
+        //                User usr = getLoggedUserNotCache();
+        //                usr.googleCalendarId = id;
+        //                usr.save();
+        //                clearUserFromCache();
+        //            } else
+        //            {
+        //                List<EventDTO> eventsDtoGoogle = CalendarClient.getEvents(user, user.googleCalendarId, from, to);
+        //                for (EventDTO eDto : eventsDtoGoogle)
+        //                {
+        //                    if (!eventsDto.contains(eDto))
+        //                        eventsDto.add(eDto);
+        //                }
+        //            }
+        //        }
+
+        for (EventDTO eventDTO : eventsDto)
+            if (eventDTO.invisible)
+                eventDTO = eventDTO.postProcessHiddenEvent(eventDTO);
+
         renderJSON(eventsDto);
-    }
-
-    private static void convertEvent(List<EventDTO> eventsDto, Event event, EventDTO eDto, User user)
-    {
-        // public event render
-
-        final Boolean isPublic = event.privacy.equals(Event.EVENT_VISIBILITY_PUBLIC) ? true : false;
-        final Boolean isOwner = user != null ? event.isOwner(user) : false;
-        final Boolean isInvited = user != null && event.hasInviteFor(user) ? true : false;
-        final Boolean isCustomerCreated = user != null && event.state.equals(Event.EVENT_STATE_CUSTOMER_CREATED) ? true : false;
-
-        // isOwner
-        eDto.isOwner = isOwner;
-
-        eDto.isInvited = isInvited;
-
-        // isEditable
-        eDto.isEditable = isOwner || isCustomerCreated ? true : false;
-
-        if (!isPublic && !isInvited)
-            eDto = EventDTO.postProcessHiddenEvent(eDto);
-
-        eventsDto.add(eDto);
     }
 
     public static void hangoutYoutubeId(String id)
@@ -162,27 +142,35 @@ public class Events extends BaseController
         renderJSON(jo);
     }
 
-    public static void event(String action, String newEvent, String uuid, String url, String type, String listingId)
+    public static void event(String action,
+        String newEvent,
+        String uuid,
+        String url,
+        String type,
+        String listingId
+        ) throws Throwable
     {
         final User user = getLoggedUser();
-        final Event event = Event.get(uuid);
         final Boolean edit = action != null && action.equals("edit") ? true : false;
-        final Boolean isOwner = event != null ? event.isOwner(user) : false;
         final Boolean isNew = newEvent != null ? true : false;
+
+        final Event event = !isNew ? Event.get(uuid) : null;
+        final Boolean isOwner = event != null ? event.isOwner(user) : false;
         final Attendance attendance = user != null && event != null ? event.getInviteForCustomer(user) : null;
         final Boolean paid = (user != null && attendance != null && attendance.paid != null && attendance.paid) || isOwner ? true : false;
 
         // check access
-        if (event != null && edit && (event.isLocked() || event.isEnded()))
-            forbidden();
-        if (event == null && !isNew)
+        if (!isNew && event == null)
             notFound();
-        if (event != null && !isOwner && edit)
+
+        if (edit && event != null && edit && !event.isEditable(user))
             forbidden();
-        if (event != null && event.isPrivate() && user == null)
+
+        if (event != null && !event.isVisible(user))
             forbidden();
-        if (event != null && event.isPrivate() && !isOwner && !event.hasInviteFor(user))
-            forbidden();
+
+        if (event != null && event.type.equals(Event.EVENT_TYPE_INSTANT_BROADCAST))
+            checkPayment(event, request.url);
 
         final Listing listing = event != null ? event.listing : Listing.get(listingId);
         final Boolean fromEvent = true;
@@ -223,7 +211,7 @@ public class Events extends BaseController
                 params.put("price", event.price.toString());
             if (event.chargingTime != null)
                 params.put("chargingTime", event.chargingTime.toString());
-            if (event.listing.firstFree)
+            if (event.listing.firstFree != null && event.listing.firstFree)
                 params.put("firstFree", "true");
             if (event.chatEnabled != null && event.chatEnabled)
                 params.put("chatEnabled", "true");
@@ -264,6 +252,7 @@ public class Events extends BaseController
 
     public static void eventPost(
         String action,
+        String newEvent,
         String title,
         String description,
         String eventStart,
@@ -292,7 +281,9 @@ public class Events extends BaseController
         final User user = getLoggedUser();
         final Boolean edit = action != null && action.equals("edit") ? true : false;
         final Boolean fromEvent = true;
-        Event event = Event.get(uuid);
+        final Boolean isNew = newEvent != null ? true : false;
+
+        Event event = !isNew ? Event.get(uuid) : null;
         if (event != null)
             listingId = event.listing.uuid;
         final Listing listing = Listing.get(listingId);
@@ -325,7 +316,7 @@ public class Events extends BaseController
                 event = new Event();
                 event.listing = listing;
                 event.listing_uuid = listing.uuid;
-                event.uuid = temp;
+                event.uuid = RandomUtil.getUUID();
                 event.roomSecret = RandomUtil.getUUID();
                 event.created = new Date();
                 event.user = user;
@@ -346,7 +337,7 @@ public class Events extends BaseController
             event.chatEnabled = chatEnabled != null ? true : false;
             event.commentsEnabled = commentsEnabled != null ? true : false;
             event.lastModified = new Date();
-            event.save();
+            event = event.save();
 
             // mark file upload as stored
             if (imageId != null)
@@ -406,7 +397,7 @@ public class Events extends BaseController
             event.createdByUser = true;
             event.user = user;
         }
-        event = event.save(user.account);
+        event = event.saveEvent();
 
         if (proposal)
         {
@@ -439,7 +430,7 @@ public class Events extends BaseController
         Event event = Event.get(uuid);
 
         // permissions check
-        if (user == null || !user.isOwner(event))
+        if (!event.isEditable(user))
             forbidden();
 
         event = eventFromJson(time, jo, event);
@@ -457,8 +448,7 @@ public class Events extends BaseController
         act.eventName = event.listing.title;
         act.saveActivity();
 
-        CalendarClient.updateEvent(user, user.googleCalendarId, event.googleId, event.eventStart, event.eventEnd);
-
+        //CalendarClient.updateEvent(user, user.googleCalendarId, event.googleId, event.eventStart, event.eventEnd);
         renderJSON(EventDTO.convert(event, user));
     }
 
@@ -468,7 +458,7 @@ public class Events extends BaseController
         final JsonObject jo = JsonUtils.getJson(request.body);
         final String uuid = jo.get("uuid").getAsString();
         final Event event = Event.get(uuid);
-        if (user == null || !user.isOwner(event))
+        if (!event.isEditable(user))
             forbidden();
 
         event.deleteEvent();
@@ -533,26 +523,54 @@ public class Events extends BaseController
         redirectTo(url);
     }
 
-    public static void start(String uuid, String url)
+    public static void start(String event, String url)
     {
         final User user = getLoggedUser();
-        final Event e = Event.get(uuid);
+        final Event e = Event.get(event);
 
         // permissions check
-        if (user == null || !user.isOwner(e))
+        if (!e.isEditable(user))
             forbidden();
 
         e.started = new Date();
+        e.ended = null;
         e.save();
         redirectTo(url);
     }
 
-    public static void hangoutCallback(String uuid, String url)
+    public static void stop(String event, String url)
     {
         final User user = getLoggedUser();
-        System.err.println("jsonpost callback received");
-        System.err.println(request.params);
-        renderJSON("ok");
+        final Event e = Event.get(event);
+
+        // permissions check
+        if (!e.isEditable(user))
+            forbidden();
+
+        e.started = null;
+        e.ended = new Date();
+        e.save();
+        redirectTo(url);
+    }
+
+    public static void hangoutCallback(String uuid, String ret, String yt)
+    {
+        //        System.err.println();
+        //        System.err.println("======= hangout callback ======");
+        //        System.err.println(uuid);
+        //        System.err.println(ret);
+        //        System.err.println(yt);
+
+        if (ret != null)
+        {
+            Event e = Event.get(ret);
+            e.hangoutUrl = uuid;
+            e.youtubeId = yt;
+            e.started = new Date();
+            e.ended = null;
+            e.save();
+        }
+        renderJSON("var t = '';");
     }
 
     public static void eventInvite(String message, String eventId, String url, String[] invite)
@@ -561,7 +579,7 @@ public class Events extends BaseController
         final Event event = Event.get(eventId);
 
         // permissions check
-        if (user == null || !user.isOwner(event))
+        if (!event.isEditable(user))
             forbidden();
 
         if (invite != null)

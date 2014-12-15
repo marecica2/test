@@ -28,8 +28,6 @@ public class Comments extends BaseController
         c.type = type;
         c.objectType = objectType;
 
-        System.err.println(type);
-
         if (objectType.equals(Comment.COMMENT_EVENT))
         {
             final Event e = Event.get(uuid);

@@ -216,7 +216,7 @@
 					clsName += ' new';
 				}
 				if (prevMonth.valueOf() === currentDate) {
-					clsName += ' active';
+					clsName += ' default-bg';
 				}
 				html.push('<td class="day '+clsName+'">'+prevMonth.getDate() + '</td>');
 				if (prevMonth.getDay() === this.weekEnd) {
@@ -231,9 +231,9 @@
 						.find('th:eq(1)')
 							.text(year)
 							.end()
-						.find('span').removeClass('active');
+						.find('span').removeClass('default-bg');
 			if (currentYear === year) {
-				months.eq(this.date.getMonth()).addClass('active');
+				months.eq(this.date.getMonth()).addClass('default-bg');
 			}
 			
 			html = '';
@@ -245,7 +245,7 @@
 								.find('td');
 			year -= 1;
 			for (var i = -1; i < 11; i++) {
-				html += '<span class="year'+(i === -1 || i === 10 ? ' old' : '')+(currentYear === year ? ' active' : '')+'">'+year+'</span>';
+				html += '<span class="year'+(i === -1 || i === 10 ? ' old' : '')+(currentYear === year ? ' default-bg' : '')+'">'+year+'</span>';
 				year += 1;
 			}
 			yearCont.html(html);

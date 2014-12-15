@@ -35,7 +35,6 @@ $(document).ready(function() {
             var data = {};
             data.type = cal; 
             document.cookie="agenda="+cal;
-            //starServices.setAgendaType(data, null, null);
         }
     });    
 
@@ -191,7 +190,7 @@ $(document).ready(function() {
             eventMouseout: starCalendar.mouseOutEvent,
             eventMouseover: starCalendar.mouseOverEvent,
             select: function(start, end, allDay) {
-                if(starCalendar.listings)
+                if(starCalendar.listings || starCalendar.listing)
                     starCalendar.selectionNewEvent(calendar, start, end, allDay);
             },
             viewRender: function(view, element) {
@@ -281,8 +280,7 @@ starCalendar.popupSaveNewEvent = function(proposal){
     event.eventEnd = starCalendar.end;
     event.title = $("#popup-event-title").val();
     event.listing = $("#popup-listing").val();
-    console.log("aa");
-    if(star.selectedEvent.googleId != undefined)
+    if(star.selectedEvent != null && star.selectedEvent.googleId != undefined)
         event.googleId = star.selectedEvent.googleId;
     if(starCalendar.userDisplayed != undefined && proposal != undefined && proposal == true){
         event.user = starCalendar.userDisplayed;
@@ -332,7 +330,6 @@ starCalendar.selectionNewEvent = function(ccc, start, end, allDay, event) {
     starCalendar.allDay = allDay;
 
     $(".event-title").html(star.utils.trimTo(i18n("New Event"), 35));
-    console.log("xx");
     if(event != undefined){
         $(".event-title").html(star.utils.trimTo(i18n("Add Google event"), 35));
         star.selectedEvent = event;
@@ -542,7 +539,7 @@ starCalendar.getEvents = function(start, end, callback) {
             if(isInvited && !isOwner){
                 var rgb = starCalendar.hexToRgb(color);
                 if(rgb != null)
-                    color = "rgba("+rgb.r+","+rgb.g+","+rgb.b+",0.5)";
+                    color = "rgba("+rgb.r+","+rgb.g+","+rgb.b+",1)";
             }
             
             if(ev.state == "customer_created"){

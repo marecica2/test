@@ -55,8 +55,6 @@ public class User extends Model
 
     public String workingHourEnd;
 
-    public String agendaType;
-
     public Date lastLoginTime;
 
     public Date lastOnlineTime;
@@ -72,7 +70,15 @@ public class User extends Model
 
     public String facebook;
 
+    public String facebookId;
+
+    public String facebookName;
+
+    public String facebookTab;
+
     public String googlePlus;
+
+    public String googlePlusId;
 
     public String linkedIn;
 
@@ -105,6 +111,21 @@ public class User extends Model
     public static User getUserByLogin(String login)
     {
         return User.find("byLogin", login).first();
+    }
+
+    public static User getUserByFacebook(String id)
+    {
+        return User.find("byFacebookId", id).first();
+    }
+
+    public static User getUserByFacebookPage(String pageId)
+    {
+        return User.find("byFacebookTab", pageId).first();
+    }
+
+    public static User getUserByToken(String token)
+    {
+        return User.find("byReferrerToken", token).first();
     }
 
     public static User getUserByUUID(String uuid)

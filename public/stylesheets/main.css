@@ -35,6 +35,14 @@ border-bottom: 0px solid #f3f3f3;
 	text-decoration: none;
 }
 
+.anchor2 {
+	text-decoration: none !important;
+}
+
+.anchor2:hover {
+	text-decoration: underline !important;
+}
+
 .link-left {
 	text-align:left !important;
 }
@@ -121,6 +129,9 @@ img {
 	.listing-item {
 		display: none;
 	}
+	.footer-hide {
+		display: none;
+	}
 	.listing-item-top {
 		display: block;
 		height: 170px;
@@ -164,7 +175,7 @@ img {
 }
 
 .btn-medium {
-	min-width:40px !important;
+	min-width:50px !important;
 	margin:0px !important;
 }
 
@@ -206,10 +217,16 @@ img {
 
 .event-box {
 	width:270px;
-	height:250px; 
+	height:270px; 
 	float:left;
 	margin:0 15px 15px 0; 
 	text-align:left
+}
+@media screen and (max-width: 550px) {
+	.event-box {
+		width: 100%;
+		height: 360px;
+	}
 }
 
 .full-width > .event-box {
@@ -254,11 +271,11 @@ img {
 }
 
 .error {
+	padding: 0px;
 	margin-top:5px;
-	color: #a94442;
-	background-color: #f2dede;
+	color: #ff2255;
+	font-weight:bold;
 	border-color: #ebccd1;	
-	padding:5px;
 }
 
 .alert-danger:empty {
@@ -368,7 +385,7 @@ img {
 
 .text-shadow {
 	color:white;
-	text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.7);
+	text-shadow: 3px 5px 6px rgba(0, 0, 0, 0.7);
 }
 
 .shadow {
@@ -713,8 +730,7 @@ object {
 
 #chat-container {
 	position:relative;
-	background: #333;
-	opacity: 0.7;
+	background: #111;
 	display: table-cell;
 	vertical-align: middle;
 	padding: 15px;

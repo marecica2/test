@@ -6,10 +6,12 @@ GET     /calendar                               Application.calendar
 GET     /user/{login}/calendar		      		Application.calendarUser
 GET     /user/{login}/calendar/{public}    		Application.calendarUser
 GET     /channels								Application.channels
+*	    /facebook								Application.facebook
 
 GET		/login									Secure.login
 GET		/login/									Secure.login
 POST   	/login          						Secure.authenticate
+POST   	/login/facebook							Secure.authenticateFacebook
 GET	   	/logout									Secure.logout
 
 GET	   	/google									GoogleOauth.authorize
@@ -21,6 +23,9 @@ GET 	/channel-delete							Listings.deleteListing
 GET     /channel-reset-image					Listings.resetImage
 GET     /channels-get							Listings.listingsRest
 GET     /channels/tags							Listings.tagsRest
+GET     /channel-start            				Listings.start
+GET     /channel-stop            				Listings.stop
+GET     /create-room            				Listings.privateRoom
 
 GET     /event      		       				Events.event
 GET     /event/{uuid} 		       				Events.event
@@ -34,6 +39,7 @@ DELETE  /event/delete              				Events.eventDeleteRest
 GET     /event-approve            				Events.approve
 GET     /event-decline            				Events.decline
 GET     /event-start            				Events.start
+GET     /event-stop            					Events.stop
 GET     /hangout-air-start       				Events.hangoutYoutubeId
 GET     /hangout-air-start/rest    				Events.hangoutYoutubeIdRest
 GET     /hangout-callback	    				Events.hangoutCallback
@@ -58,6 +64,7 @@ GET		/password								Registration.password
 POST 	/password								Registration.passwordPost
 GET		/public/password						Registration.passwordCustomer
 POST 	/public/password						Registration.passwordCustomerPost
+POST 	/registration/facebook					Registration.registrationFacebookPost
 
 GET     /contacts								Contacts.contacts
 POST    /contacts/invite						Contacts.contactInvite
@@ -92,8 +99,8 @@ GET  	/rating/{uuid}/vote          			Ratings.voteForRating
 GET  	/rating/{uuid}/unvote          			Ratings.unvoteForRating
 GET  	/rating/{uuid}/abuse         	 		Ratings.abuseForRating
 
-GET		/paypal/checkout/{event}				PaypalController.payBefore
-POST	/paypal/checkout/{event}				PaypalController.payBefore
+GET		/checkout/{event}						PaymentController.payBefore
+POST	/checkout/{event}						PaymentController.payBeforePost
 
 POST    /event/comment                  		Comments.addComment
 GET  	/event/comment/delete              		Comments.deleteComment
@@ -114,8 +121,6 @@ POST 	/settings								Accounts.accountPost
 GET 	/settings								Accounts.account
 GET 	/settings/smtp/reset					Accounts.resetEmail
 GET 	/settings/request-publisher				Accounts.requestPublisher
-POST	/settings/agenda						Accounts.setAgendaType
-POST	/settings/style							Accounts.setStyle
 
 GET 	/admin/publishers						Admin.publishers
 GET 	/admin/users							Admin.users

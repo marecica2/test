@@ -17,72 +17,41 @@
 ﻿  ﻿  <Require feature="views" />
 ﻿  </ModulePrefs>
 ﻿  <Content type="html"><![CDATA[     
-
 <html>
-<body>
+<body style="background:#181818;width:10px;">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
+  
+  <div id="container"></div>
+  
+  <script>
+  function init() {
+    // When API is ready...                                                         
+    gapi.hangout.onApiReady.add(
+        function(eventObj) {
+          if (eventObj.isApiReady) {
+            $(document).ready(function(){
+              console.log(gapi.hangout.getHangoutUrl());
+              console.log(gapi.hangout.onair.getYouTubeLiveId());
+              console.log(gapi.hangout.onair.isOnAirHangout());
 
-<script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
-<script src="https://localhost:10001/public/javascripts/utils.js"></script>
+              var clbck = "//localhost:10001/hangout-callback?ret=" + gapi.hangout.getStartData();
+              if(gapi.hangout.onair.isOnAirHangout()){
+                clbck += "&yt="+gapi.hangout.onair.getYouTubeLiveId();
+                $("#container").append("<a target='_blank' href='//www.youtube.com/my_live_events?action_edit_live_event=1&event_id="+gapi.hangout.onair.getYouTubeLiveId()+"'>After meeting go here</a>");
+              }
+              clbck += "&uuid=" + gapi.hangout.getHangoutUrl();
 
-<h3>Simple Hangout App</h3>
-
-<p>
-<input class="button" type="button" value="Show participants!" id="showParticipants" 
-    style="visibility:hidden;"
-    onClick="showParticipants()"/>
-</p>
-
-<div id="participantsDiv"></div>
-
-<hr>
-
-<p><a href="http://developers.google.com/+/hangouts/getting-started">Read the docs</a> to learn more about developing hangouts!</a></p>
-
-<script>
-function showParticipants() {
-  var participants = gapi.hangout.getParticipants();
-
-  var retVal = '<p>Participants: </p><ul>';
-
-  for (var index in participants) {
-    var participant = participants[index];
-
-    if (!participant.person) {
-      retVal += '<li>A participant not running this app</li>';
-    }
-    retVal += '<li>' + participant.person.displayName + '</li>';
-  }
-
-  retVal += '</ul>';
-
-  var div = document.getElementById('participantsDiv');
-
-  div.innerHTML = retVal;
-}
-
-function init() {
-  // When API is ready...                                                         
-  gapi.hangout.onApiReady.add(
-      function(eventObj) {
-        if (eventObj.isApiReady) {
-          alert("xxxx");
-          console.log("xxxx");
-          console.log(gapi);
+              $("#container").append('<script class="widgr-clbck" src="'+clbck+'" />');
+            });
           
-          $.getJSON("https://widgr.bmsource.org/?", function(result){
-             //response data are now in the result variable
-             alert(result);
-          });
-        
-          document.getElementById('showParticipants')
-            .style.visibility = 'visible';
-        }
-      });
-}
-
-// Wait for gadget to load.                                                       
-gadgets.util.registerOnLoadHandler(init);
-</script>
+          }
+        });
+  }
+  
+  // Wait for gadget to load.                                                       
+  gadgets.util.registerOnLoadHandler(init);
+  </script>
 </body>
 ]]>
 </Content>

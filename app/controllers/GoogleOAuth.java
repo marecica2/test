@@ -95,14 +95,12 @@ public class GoogleOAuth extends BaseController
         // token is valid
         if (user.googleTokenExpires != null && user.googleAccessToken != null && user.googleTokenExpires.getTime() > System.currentTimeMillis())
         {
-            System.err.println("Google oauth token is valid");
             redirect(url);
         }
 
         // token is expired need to refresh
         else if (user.googleTokenExpires != null && user.googleAccessToken != null && user.googleTokenExpires.getTime() < System.currentTimeMillis())
         {
-            System.err.println("Google refreshing token ");
             refreshToken(user);
         }
 
@@ -121,14 +119,12 @@ public class GoogleOAuth extends BaseController
         // token is valid
         if (user.googleTokenExpires != null && user.googleAccessToken != null && user.googleTokenExpires.getTime() > System.currentTimeMillis())
         {
-            System.err.println("Google oauth token is valid");
             return user.googleAccessToken;
         }
 
         // token is expired need to refresh
         else if (user.googleTokenExpires != null && user.googleAccessToken != null && user.googleTokenExpires.getTime() < System.currentTimeMillis())
         {
-            System.err.println("Google refreshing token ");
             return refreshToken(user).googleRefreshToken;
         } else
         {

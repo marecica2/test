@@ -17,8 +17,6 @@ public class Activity extends Model
     public static final String ACTIVITY_EVENT_INVITED = "invitationCreated";
     public static final String ACTIVITY_EVENT_INVITE_ACCEPTED = "invitationAccepted";
     public static final String ACTIVITY_EVENT_INVITE_DECLINED = "invitationDeclined";
-    public static final String ACTIVITY_EVENT_INVITE_ACCEPTED_CUSTOMER = "invitationAcceptedCust";
-    public static final String ACTIVITY_EVENT_INVITE_DECLINED_CUSTOMER = "invitationDeclinedCust";
     public static final String ACTIVITY_EVENT_DELETED = "eventDeleted";
     public static final String ACTIVITY_EVENT_DELETED_CUSTOMER = "eventDeletedCust";
     public static final String ACTIVITY_EVENT_CREATED_BY_USER = "eventCreatedUsr";

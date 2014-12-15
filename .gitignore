@@ -60,3 +60,4 @@ src/test/resources/mule.test.properties
 /lib
 /eclipse
 /tokens
+/logs

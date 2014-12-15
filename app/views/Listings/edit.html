@@ -79,7 +79,7 @@
 	                }).data('datepicker');
 	                
 	                #{if params.eventDate == null || params.eventDate.length() == 0}
-	                	$('#eventDate').datepicker('setValue', new Date());
+	                	$('#eventDate').datepicker('setValue', now);
 	                #{/if}
 				});	                
 			</script>
@@ -93,9 +93,6 @@
 			  </label>
 			  <label class="btn btn-light-gray #{if params.type == "broadcast"} active #{/if}" >
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "broadcast"} checked="checked" #{/if} value="broadcast"> Live Broadcast
-			  </label>
-			  <label class="btn btn-light-gray #{if params.type == "instant"} active #{/if}" >
-			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "instant"} checked="checked" #{/if} value="instant"> Instant Broadcast
 			  </label>
 			  <label class="btn btn-light-gray #{if params.type == "hangout"} active #{/if}" >
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangout"} checked="checked" #{/if} value="hangout"><i class="fa fa-google-plus"></i> Google Hangout
@@ -307,19 +304,19 @@
 		<div class="form-group">
 			<div class="btn-group" data-toggle="buttons">
 			  <label class="btn btn-light-gray #{if params.type == "p2p"} active #{/if}" >
-			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "p2p"} checked="checked" #{/if} value="p2p"> Peer to peer
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "p2p"} checked="checked" #{/if} value="p2p"> Video Conference
 			  </label>
 			  <label class="btn btn-light-gray #{if params.type == "livecast"} active #{/if}" >
-			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "livecast"} checked="checked" #{/if} value="livecast"> Broadcast
-			  </label>
-			  <label class="btn btn-light-gray #{if params.type == "hangout"} active #{/if}" >
-			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangout"} checked="checked" #{/if} value="hangout"> Hangout
-			  </label>
-			  <label class="btn btn-light-gray #{if params.type == "hangoutAir"} active #{/if}" >
-			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangoutAir"} checked="checked" #{/if} value="hangoutAir"> Hangout on Air
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "livecast"} checked="checked" #{/if} value="livecast"> Live Broadcast
 			  </label>
 			  <label class="btn btn-light-gray #{if params.type == "instant"} active #{/if}" >
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "instant"} checked="checked" #{/if} value="instant"> Instant Broadcast
+			  </label>
+			  <label class="btn btn-light-gray #{if params.type == "hangout"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangout"} checked="checked" #{/if} value="hangout"> Google Hangout
+			  </label>
+			  <label class="btn btn-light-gray #{if params.type == "hangoutAir"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangoutAir"} checked="checked" #{/if} value="hangoutAir"> Google Hangout on Air
 			  </label>
 			</div>				
 		</div>

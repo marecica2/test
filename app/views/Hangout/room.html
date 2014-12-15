@@ -60,7 +60,7 @@
 			<div class="controls">
 				<form onsubmit="return false;">
 					<div class="input-group">
-						<input type="text" id="chat-text" class="form-control transparent" style="height:40px;"><input id="chat-name" type="hidden" value="${name}"> 
+						<input type="text" id="chat-text" class="form-control" style="height:40px;"><input id="chat-name" type="hidden" value="${name}"> 
 						<span class="input-group-btn">
 							<button id="chat-send" class="btn btn-gray btn-short margin-clear" style="height:40px;">Send</button>
 						</span>
@@ -94,12 +94,13 @@
 <div style="text-align:center;">
 	<br/>
 	<div style="opacity:0.7">
-		<div class="button-group">
-			<button type="button" id="controls-mute" class="controls btn btn-dark btn-sm btn-medium" ><i class="icon-sound"></i></button>
-			<button type="button" id="screenShareButton" class="controls btn btn-dark btn-sm btn-medium"><i class="fa fa-desktop"></i></button>
-			<button class="controls btn btn-dark btn-sm btn-medium" data-toggle="modal" data-target="#myModal"><i class="fa fa-link"></i></button>
-			<a href="${request.url}" class="btn btn-dark btn-sm btn-medium" ><i class="fa fa-refresh"></i></a>
-			<button type="button" id="controls-hangup" class="controls btn btn-danger btn-sm btn-medium" ><i class="fa fa-phone"></i></button>
+		<div class="btn-group">
+			<button type="button" id="controls-mute" class="controls btn btn-dark btn-medium" ><i class="icon-sound"></i></button>
+			<button type="button" id="controls-camera" class="controls btn btn-dark btn-medium" ><i class="icon-camera"></i></button>
+			<button type="button" id="screenShareButton" class="controls btn btn-dark btn-medium"><i class="fa fa-desktop"></i></button>
+			<button class="controls btn btn-dark btn-medium" data-toggle="modal" data-target="#myModal"><i class="fa fa-link"></i></button>
+			<a href="${request.url}" class="btn btn-dark btn-medium" ><i class="fa fa-refresh"></i></a>
+			<button type="button" id="controls-hangup" class="controls btn btn-danger btn-medium" ><i class="fa fa-phone"></i></button>
 		</div>
 	</div>
 	

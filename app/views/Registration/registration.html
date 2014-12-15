@@ -1,55 +1,29 @@
 #{extends 'main.html' /}
-#{set background:'true' /} 
 
 #{set 'moreScripts'}
+	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
+	<script>
+      $("#offset").val(timezoneOffset);
+	  
+      star.fbClbck = function() {
+	      FB.api('/me', function(data) {
+	        console.log(data);
+          	$("#firstName").val(data.first_name);
+          	$("#lastName").val(data.last_name);
+          	$("#login").val(data.email);
+          	$("#facebook").val(data.id);
+          	$("#facebookName").val(data.name);
+          	$("#url").val(data.link);
+          	
+            $('#registrationForm').attr('action', "/registration/facebook");
+            $("#registrationForm").submit();
+            e.preventDefault();
+	      });
+	  }
+	</script>
 #{/set}
 
 <div id="fb-root"></div>
-<script>
-(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=117287758301883";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-
-function facebookLogin(){
-    FB.getLoginStatus(function(response) {
-        if (response.status === 'connected') {
-          var uid = response.authResponse.userID;
-          var accessToken = response.authResponse.accessToken;
-          $(".spinner-fb").show();
-          console.log("ajax fb access token " + accessToken);
-          $.ajax({
-              type: "GET",
-              url: "/public/facebook/registration?accessToken="+accessToken,
-              success: userDetails,
-              error: function(data){
-                  		console.log("error" + data);$(".spinner-fb").hide();
-              },
-              contentType: "application/json"
-          });  
-          
-        } else if (response.status === 'not_authorized') {
-
-        } else {
-        
-        }
-    });    
-};
-
-function userDetails(data) {
-	$("#firstName").val(data.firstName);
-	$("#lastName").val(data.lastName);
-	$("#login").val(data.email);
-	$("#facebook").val(data.id);
-	$("#name").val(data.name);
-	$("#url").val(data.link);
-	$(".spinner-fb").hide();
-}
-
-</script>
 
 
 
@@ -58,24 +32,23 @@ function userDetails(data) {
 	<div class="col-md-3">
 	</div>
 	<div class="col-md-6">
-		<form action="/registration" method="POST">
+		<form action="/registration" method="POST" id="registrationForm">
 		    	<h2 class="segoe-bold-h1">&{'registration.registration'}</h2>
 			    <div class="separator-2"></div>
-				
-			    #{if errors}
-			    	<div class="error">
-			    		#{error 'all' /}
-			    	</div>
-			    #{/if}
+
+				<h4>
+					Register with Facebook
+					<span class="pull-right fb-login-button" data-max-rows="1" data-size="large" data-scope="email" data-show-faces="false" data-auto-logout-link="false"></span>
+				</h4>
+				<br/>				
 	
 				<div class="form-group">
 					<label class="" for="login">&{'registration.login'}</label>
 					<input type="text" class="form-control" id="login" name="login" value="#{if request.params.email}${request.params.email}#{/if}#{else}${params.login}#{/else}" placeholder="&{'registration.login'}"/>
-					
-					<input type="hidden" class="form-control" id="url" name="token" value="${request.params.token}"/>
-					<input type="hidden" class="form-control" id="url" name="invitation" value="${request.params.invitation}"/>
+					<input type="hidden" class="form-control" id="token" name="token" value="${request.params.token}"/>
+					<input type="hidden" class="form-control" id="invitation" name="invitation" value="${request.params.invitation}"/>
 					<input type="hidden" class="form-control" id="facebook" name="facebook"  />
-					<input type="hidden" class="form-control" id="registration" name="registration" value="#{if request.params.id}${request.params.id}#{/if}#{else}${params.registration}#{/else}" />
+					<input type="hidden" class="form-control" id="facebookName" name="facebookName"  />
 					<div class="error">#{error 'login' /}</div>
 				</div>
 				<div class="form-group">
@@ -133,10 +106,10 @@ function userDetails(data) {
 					<img src="/captcha?uuid=${params.uuid}">
 					<div class="error">#{error 'captcha' /}</div>
 				</div>		
-		
+				
 				<div class="form-group">
-					<button class="btn btn-default pull-left">&{'register'}</button>
-					<a class="btn btn-white pull-right" href="/home">&{'cancel'}</a>
+					<button class="btn btn-default pull-left">&{'Submit'}</button>
+					<a class="btn btn-white pull-right" href="/home">&{'Cancel'}</a>
 				</div>
 				<div style="clear:both"></div>
 		</form>		

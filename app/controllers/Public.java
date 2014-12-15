@@ -38,7 +38,6 @@ public class Public extends BaseController
             user.locale = locale;
             user.save();
         }
-        System.err.println(locale);
         Lang.change(locale);
         redirectTo(url);
     }

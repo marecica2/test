@@ -78,7 +78,7 @@ public class Account extends Model
 
     public Boolean newPlanApplied()
     {
-        if (this.planRequestFrom == null || this.planRequestFrom.getTime() < System.currentTimeMillis())
+        if (this.planRequestFrom == null || (this.planRequestFrom.getTime() < System.currentTimeMillis()))
             return true;
         return false;
     }

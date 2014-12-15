@@ -11,40 +11,42 @@
 
 		<div class="col-md-8 col-xs-height col-top">
 
-			#{set objectType:"user" /}
-			#{set object:user /}
-			#{include 'comments.html' /}
-			
-			<div class="spinner-container1">
-				<div class="spinner-container">
-					<a id="moreResultsComments" href="/dashboard?results=${results}" class="spinner-more"><i class=" icon-plus-circled"></i></a>
-				</div>
-			</div>				
-		</div>
-	
-		<div>
-			<a href="/channel/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray"><i class="fa fa-plus"></i> New Channel</a>
-		</div>			
-		*{
-		<div class="col-md-5 col-xs-height col-top">
+			<div>
+				<a href="/channel/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-block margin-clear"><i class="fa fa-plus"></i> Create Channel</a>
+			</div>	
+			<br/>	
 			#{if listings}
 				#{set items:listings /}
 				#{set forEvents:false /}
 				#{include 'listingsList.html' /}
 			#{/if}	
-					
+			
+
 			<div class="tabs-style-2">
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs" role="tablist">
-					<li class="active"><a href="#h2tab4" role="tab" data-toggle="tab" class="side-padding-short">Upcoming</a></li>
-					<li><a href="#h2tab5" role="tab" data-toggle="tab" class="side-padding-short">Previous</a></li>
-					<li><a href="#h2tab3" role="tab" data-toggle="tab" class="side-padding-short">Requests</a></li>
+					<li class="active"><a href="#h2tab6" role="tab" data-toggle="tab" class="">Latest Posts</a></li>
+					<li><a href="#h2tab4" role="tab" data-toggle="tab" class="">Upcoming Events</a></li>
+					<li><a href="#h2tab5" role="tab" data-toggle="tab" class="">Previous Events</a></li>
+					<li><a href="#h2tab3" role="tab" data-toggle="tab" class="">Requests</a></li>
 					<!-- 
 					<li><a href="#h2tab2" role="tab" data-toggle="tab"><i class="fa fa-list pr-5"></i>Watchlist</a></li>
 					 -->
 				</ul>
 				<!-- Tab panes -->
 				<div class="tab-content">
+					<div class="tab-pane fade tab-pane in active" id="h2tab6">
+						#{set objectType:"user" /}
+						#{set object:user /}
+						#{include 'comments.html' /}
+						
+						<div class="spinner-container1">
+							<div class="spinner-container">
+								<a id="moreResultsComments" href="/dashboard?results=${results}" class="spinner-more"><i class=" icon-plus-circled"></i></a>
+							</div>
+						</div>							
+					</div>
+
 					<div class="tab-pane fade" id="h2tab2">
 						#{if watchList && watchList.size() > 0}
 							#{set items:watchList /}
@@ -59,7 +61,7 @@
 						#{/if}	
 					</div>
 					
-					<div class="tab-pane fade tab-pane in active" id="h2tab4">
+					<div class="tab-pane fade" id="h2tab4">
 						<div id="itemsListUpcoming" class="full-widthd"></div>
 						<div class="spinner-container1">
 							<div class="spinner-container">
@@ -80,8 +82,7 @@
 					</div>
 				</div>
 			</div>		
-		</div>		
-		}*
+		</div>
 		
 		
 		<div class="col-md-4 col-xs-height col-top" style="background: #fdfdfd;" >

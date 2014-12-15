@@ -27,7 +27,6 @@ public class CustomTags extends play.templates.FastTags
 
     public static void _formatTime(Map<?, ?> args, Closure body, PrintWriter out, ExecutableTemplate template, int fromLine)
     {
-        System.err.println(args);
         SimpleDateFormat df = new SimpleDateFormat("kk:mm");
         Long l = Long.parseLong(JavaExtensions.toString(body));
         Date d = new Date(l);

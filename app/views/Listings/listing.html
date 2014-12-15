@@ -46,6 +46,10 @@
     	.vertical-divider-right {
 			padding-right: 15px !important;
     	}	
+    	iframe[data-gapiattached="true"] {
+    		position:relative !important;
+    		top:10px !important;
+    	}
     </style>
 #{/set}
 
@@ -99,12 +103,13 @@
 		   			New Channel
 		   		#{/else}
 		   		#{if event}
-			   		<small>
-				   		/
-				   		<span>${event.eventStart.format("dd MMM, yyyy")}</span>
+		   			/
+			   		<i style="font-size:0.7em;font-weight:bold;" class="">
+				   		<span>${event.eventStart.format("dd MMM")}, </span>
 				   		<span>#{time time:event.eventStart/}</span> - 
-				   		<span>#{time time:event.eventEnd/}</span>		   		
-			   		</small>
+				   		<span>#{time time:event.eventEnd/}</span> &middot;		   		
+				   		<span>${event.getMinutes()} min</span>		   		
+			   		</i>
 		   		#{/if}
 		   		
 		   		
@@ -114,7 +119,7 @@
 					#{if event.charging && attendance}
 						#{if !paid }
 							#{set displayStream:false /}
-							<a href="/paypal/checkout/${event.uuid}?url=${request.url.urlEncode()}" class="btn btn-warning btn-sm margin-clear">
+							<a href="/checkout/${event.uuid}?url=${request.url.urlEncode()}" class="btn btn-warning btn-sm margin-clear">
 								<i class="dialog-event-edit color-link fa fa-paypal fa-1x"></i> Pay for event now
 							</a>
 						#{/if}
@@ -126,53 +131,63 @@
 					#{/if}
 
 					#{if isOwner && (event.state == 'customer_created' || event.state == 'user_declined')}
-						<a class="btn btn-light-gray btn-sm margin-clear" href="/event-approve?event=${event.uuid}&url=${request.url.urlEncode()}"><i class="fa fa-check"></i> &{'Approve'}</a>
-						<a class="btn btn-light-gray btn-sm margin-clear" href="/event-decline?event=${event.uuid}&url=${request.url.urlEncode()}"><i class="fa fa-times"></i> &{'Decline'}</a>				   	
+						<a class="btn btn-success btn-sm margin-clear" href="/event-approve?event=${event.uuid}&url=${request.url.urlEncode()}"><i class="fa fa-check"></i> &{'Approve'}</a>
+						<a href="/event-delete?uuid=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('delete?')){return true;} else {return false;}" class="btn btn-danger btn-sm margin-clear">
+							<i class="dialog-event-edit color-link fa fa-times fa-1x"></i> &{'Decline'}
+						</a>						
 				   	#{/if} 				
 					
 					#{if !edit && event.type == 'p2p'}
-						<a class="btn btn-default btn-sm btn-margin" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank"><i class="fa fa-arrow-circle-o-right"></i> Join Video Conference</a>
+						<a class="btn btn-default btn-sm btn-margin" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank">Join Video Conference</a>
 					#{/if}		
 					
 					#{if isOwner && !edit && event.type == 'broadcast'}
-						<a class="btn btn-default btn-sm btn-margin" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank"><i class="fa fa-arrow-circle-o-right"></i> Start Broadcast</a>
+						#{if event.started == null}
+							<a class="btn btn-default btn-sm btn-margin" href="/event-start?event=${event.uuid}&url=${request.url.urlEncode()}" >Start Live Broadcast</a>
+						#{/if}
+						#{else}
+							<a class="btn btn-default btn-sm btn-margin" href="/event-stop?event=${event.uuid}&url=${request.url.urlEncode()}" >Stop Live Broadcast</a>
+						#{/else}
 					#{/if}			
 					
-					#{if isOwner && !edit && event.type == 'instant'}
-						<a class="btn btn-default btn-sm btn-margin" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank"><i class="fa fa-arrow-circle-o-right"></i> Start Instant Broadcast</a>
-					#{/if}							
-					
 					#{if isOwner && !edit && event.type == 'hangoutAir'}
-							<a href="/hangout-air-start?id=${event.uuid}" target="_blank" id="hangout-button" class="btn btn-default btn-sm margin-clear"><i class="fa fa-arrow-circle-o-right"></i> Start Hangout Air</a>
-							<span id="youtube-link"></span>
-							<script>
-								var interval = null;
-								function check() {
-								    $.get("/hangout-air-start/rest?id=${event.uuid}", function(data){
-								        if(data.members != undefined && data.members.youtube != undefined){
-								            console.log("found, clearing interval");
-								            $("#youtube-link").html("<a class='btn btn-light-gray btn-sm'  target='_blank' href='http://www.youtube.com/watch?v="+data.members.youtube+"'>youtube link</a>")
-								            clearInterval(interval);
-								        }
-								    });
-								}
-								$("#hangout-button").click(function(){
-									interval = setInterval(function(){check()}, 10000);
-								})
-							</script>
+							
+						<span style="display:nones;">
+						<script src="https://apis.google.com/js/platform.js" ></script>
+						<span id="placeholder"></span>
+						<script>
+						  gapi.hangout.render('placeholder', {
+						    'render': 'createhangout',
+						    'hangout_type': 'onair',
+						    'initial_apps': [{'app_id' : '647254293629', 'start_data' : '${event.uuid}', 'app_type' : 'ROOM_APP', 'invites' : [{'id' : 'marecica2@gmail.com', 'invite_type' : 'EMAIL'}] }],
+						    'widget_size': 175
+						  });
+						</script>		
+						</span>
+											
 					#{/if}	
 					
-					#{if !edit && event.type == 'hangout'}
-						<a class="btn btn-default btn-sm btn-margin" href="//plus.google.com/hangouts/_/?gid=647254293629&start_data=XXXX" target="_blank"><i class="fa fa-arrow-circle-o-right"></i> Start Hangout</a>
+					
+					#{if isOwner && !edit && event.type == 'hangout'}
+						<a class="btn btn-default btn-sm btn-margin" href="//plus.google.com/hangouts/_/?gid=647254293629&gd=${event.uuid}" target="_blank">Start Hangout</a>
+					#{/if}											
+					#{if !isOwner && !edit && event.type == 'hangout'}
+						#{if event.hangoutUrl}
+							<a class="btn btn-default btn-sm btn-margin" href="${event.hangoutUrl}" target="_blank">Join Hangout</a>
+						#{/if}											
+						#{else}
+							<a class="btn btn-default btn-sm btn-margin" href="">Refresh</a>
+						#{/else}											
 					#{/if}											
 					
-					#{if !edit && isOwner && !event.isLocked()}
+					
+					#{if !edit && isOwner && !event.isEditable()}
 					<a href="/event?action=edit&uuid=${request.params.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm margin-clear">
 						<i class="dialog-event-edit color-link fa fa-pencil fa-1x"></i> Edit Event
 					</a>
 					#{/if}
 
-					#{if !edit && isOwner}
+					#{if !edit && isOwner && !event.isEditable()}
 					<a href="/event-delete?uuid=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('delete?')){return true;} else {return false;}" class="btn btn-light-gray btn-sm margin-clear">
 						<i class="dialog-event-edit color-link fa fa-times fa-1x"></i> Delete Event
 					</a>
@@ -189,8 +204,27 @@
 				
 				#{else}	 
 					<br/>
+					#{if isOwner && !edit && listing.type == 'instant'}
+						#{if listing.started == null}
+							#{set displayStream:false /}
+							<a class="btn btn-default btn-sm btn-margin" href="/channel-start?id=${listing.uuid}&url=${request.url.urlEncode()}" >Start Instant Broadcast</a>
+						#{/if}
+						#{else}
+							#{set displayStream:true /}
+							<a class="btn btn-default btn-sm btn-margin" href="/channel-stop?id=${listing.uuid}&url=${request.url.urlEncode()}" >Stop Instant Broadcast</a>
+							<a class="btn btn-default btn-sm btn-margin" href="/create-room?id=${listing.uuid}&url=${request.url.urlEncode()}" >Go to private room</a>
+						#{/else}
+					#{/if}		
+					#{if !isOwner && !edit && listing.type == 'instant' && listing.instantBroadcast != null}
+							<a class="btn btn-default btn-sm btn-margin" href="/event/${listing.instantBroadcast}" >Go to private room</a>
+					#{/if}		
+					
+					#{if !isOwner && !edit && listing.type == 'instant' && listing.started == null}
+							#{set displayStream:false /}
+					#{/if}
+					
 					#{if !edit && isOwner}
-						#{if user.isPublisher()}
+						#{if user.isPublisher() && listing.type != 'instant'}
 						<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&listingId=${listing.uuid}" class="btn btn-light-gray btn-sm margin-clear">
 							<i class="color-link fa fa-plus fa-1x"></i> Create Event
 						</a>
@@ -216,7 +250,7 @@
 		<!-- social -->
 	   	<div class="pull-right">
 			<ul class="social-links colored clearfix" style="margin:0px">
-				<li class="default"><a href="" data-toggle="modal" data-target="#myModal" onclick="$('#share-link').select();"><i class="fa fa-link"></i></a></li>
+				<li class="dribbble"><a href="" data-toggle="modal" data-target="#myModal" onclick="$('#share-link').select();"><i class="fa fa-link"></i></a></li>
 				<li class="twitter"><a target="_blank" href="http://www.twitter.com"><i class="fa fa-twitter"></i></a></li>
 				<li class="linkedin"><a target="_blank" href="http://www.skype.com"><i class="fa fa-linkedin"></i></a></li>
 				<li class="facebook"><a target="_blank" href="http://www.facebook.com"><i class="fa fa-facebook"></i></a></li>
@@ -257,14 +291,14 @@
 				#{/if}
 	
 				#{else}
-					#{if fromEvent && displayStream}
+					#{if displayStream}
 						#{include 'Listings/stream.html' /}
 					#{/if}
 					#{else}
 						<div id="image"style="overflow: hidden;width:100%;height:400px;background: url(/${listing.imageUrl}); background-size: cover;text-align:center">
 							<div class="shadow-inset" style="height:130%;position:relative;top:-60px;"></div>
 							#{if listing && listing.video}
-								<a style="position:absolute;top:50%;left:42%" class="anchor-link popup-iframe" href="${listing.video}"><i class="fa fa-youtube-play fa-3x"></i><br/>Play Introduction</a>
+								<a style="position:absolute;top:50%;left:43%" class="popup-iframe text-shadow" href="${listing.video}"><i class="fa fa-youtube-play fa-3x"></i><br/>Play Introduction</a>
 							#{/if}
 						</div>		
 					#{/else}				
@@ -288,23 +322,23 @@
 
 <!-- parallax -->
 #{if !edit}
-<div class="section parallax light-translucent-bg parallax-bg-3" style="background-position: 50% 216px;padding:15px 0 0 0">
+<div class="section parallax default-translucent-bg parallax-bg-2" style="">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-8">
-				<h1 class="title text-center">
-					<a class="anchor" href="/channel/${listing.uuid}">${listing.title}</a>		
-				</h1>
-				<p class="text-center" style="margin:0 0 15px 0">
+				<h2 class="title text-center text-shadow" style="font-size:2.5em">
+					<a class="anchor2" href="/channel/${listing.uuid}">${listing.title}</a>		
+				</h2>
+				<h5 class="text-center text-shadow" >
 					<span>
 						#{if event && fromEvent}
 							#{if item && item.charging == 'free'}
 								<strong>Free</strong>
 							#{/if}
 							#{else}
-								<strong>Price ${event.getTotalPrice()} ${event.currency} for ${event.getMinutes()} min</strong>							
-								#{if listing.firstFree}
-									<span class="label default-bg">First Event is free</span>
+								<strong>Total price: ${event.getTotalPrice()} ${event.currency} for ${event.getMinutes()} min</strong>							
+								#{if !fromEvent && listing.firstFree}
+									<span class="label btn-dark">First Event is free</span>
 								#{/if}
 							#{/else}
 							
@@ -317,19 +351,19 @@
 								<strong>From ${listing.price} ${item.currency}</strong>
 								<strong>for ${listing.chargingTime} min</strong>
 								#{if listing.firstFree}
-									<span class="label default-bg">First Event is free</span>
+									<span class="label btn-dark">First Event is free</span>
 								#{/if}
 							#{/else}	
 						#{/else}
 					
 					</span>				
-				</p>
+				</h5>
 			</div>
 			<div class="col-md-4">
 				#{if !isOwner}
 				<div class="text-center">
 					<a href="/user/${usr.login}"><img style="height:61px;" src="/${usr.avatarUrl}_64x64"></a>				
-					<a href="/user/${usr.login}/calendar?channel=${listing.uuid}" class="btn btn-default btn-lg"><i class="fa fa-calendar"></i> Request a Time</a>
+					<a href="/user/${usr.login}/calendar?channel=${listing.uuid}" class="btn btn-dark btn-lg"><i class="fa fa-calendar"></i> Request for event</a>
 				</div>
 				#{/if}
 			</div>
@@ -355,7 +389,7 @@
     	   	   	</h2>
     	   	   	<div class="separator-2"></div>
     	   	   	
-    	   	   	Author &middot; <strong><a href="/user/${listing.user.login}"><img class="avatar16 img-circle" src="/${listing.user.avatarUrl}_32x32"> <span>${listing.user.fullName}</span></a></strong> 
+    	   	   	<strong><a href="/user/${listing.user.login}"><img class="avatar16 img-circle" src="/${listing.user.avatarUrl}_32x32"> <span>${listing.user.fullName}</span></a></strong> 
     	   	 	&middot;
 
  	    	   	<span>
@@ -365,41 +399,22 @@
 						#{/if}
 						
 						#{if event.privacy == 'public'}
-							<span class="labels "><i class="fa fa-unlock" title="${event.privacy}"></i> ${event.privacy}</span> &middot;
+							<span class="labels "><i class="fa fa-unlock" title="${event.privacy}"></i> ${event.privacy}</span> 
 						#{/if}
 						
-						<span class="labels "><i class="fa fa-comments" title="${event.type}"></i> ${event.type}</span> &middot;
+						<span class="labels "><i class="fa fa-comments" title="${event.type}"></i> ${event.type}</span> 
 
-						#{if event.charging != 'free'}
-							<span class="label label-default">From ${event.getTotalPrice()} ${event.currency} for ${event.getMinutes()} min</span> 
-						#{/if}		
-						#{else}
-							<span class="labels ">Free event</span>
-						#{/else}	
-						#{if listing && listing.firstFree}
-							<span class="label default-bg">First Event is free</span>
-						#{/if}								
 					#{/if}		 	    	   	
 					#{else}
 						#{if listing.privacy == 'private'}
-							<span class="labels "><i class="fa fa-lock" title="${listing.privacy}"></i> ${listing.privacy}</span>
+							<span class="labels "><i class="fa fa-lock" title="${listing.privacy}"></i> ${listing.privacy}</span> &middot;
 						#{/if}
 						
 						#{if listing.privacy == 'public'}
-							<span class="labels "><i class="fa fa-unlock" title="${listing.privacy}"></i> ${listing.privacy}</span>
+							<span class="labels "><i class="fa fa-unlock" title="${listing.privacy}"></i> ${listing.privacy}</span> &middot;
 						#{/if}
 						
 						<span class="labels "><i class="fa fa-comments" title="${listing.type}"></i> ${listing.type}</span>
-						
-						#{if listing.charging != 'free'}
-							<span class="label label-default">From ${listing.price} ${listing.currency} for ${listing.chargingTime} min</span>
-						#{/if}
-						#{else}
-							<span class="label label-default">Free</span>
-						#{/else}
-						#{if listing && listing.firstFree}
-							<span class="label default-bg">First Event is free</span>
-						#{/if}										
 					#{/else}		    	   
 	    	   	</span>
     	   	   	
@@ -438,10 +453,10 @@
 			<br/>
 			<br/>
 			<div>
-				<div class="pull-left" style="width:50%;padding-right:7px">
-					<h4>
-						<i class="icon-cw"></i>Upcoming Events
-					</h4>
+				<div class="pull-left" style="text-align:center;width:50%;padding-right:7px">
+					<h3>
+						Upcoming Events
+					</h3>
 					<div id="itemsListUpcoming" class="full-width"></div>
 					<div class="spinner-container1">
 						<div class="spinner-container">
@@ -450,10 +465,10 @@
 						</div>
 					</div>
 				</div>
-				<div class="pull-left" style="width:50%;padding-left:7px">
-					<h4>
-						<i class="icon-ccw"></i>Recent Events
-					</h4>
+				<div class="pull-left" style="text-align:center;width:50%;padding-left:7px">
+					<h3>
+						Recent Events
+					</h3>
 					<div id="itemsListPrevious" class="full-width"></div>
 					<div class="spinner-container1">
 						<div class="spinner-container">
@@ -509,9 +524,8 @@
 		</div>
 	
 		<div class="col-md-4 side ">
-		
+			<a name="invitation"></a>
 			#{if comments}
-			<h2>Media</h2>
 			<div style="width:100%; padding:0px">
 				#{list items:comments, as:'item'}
 					#{list items:item.files, as:'file'}
@@ -535,12 +549,12 @@
 			<!-- guests -->
 			<div>
 				<h2>
-					<a name="invitation"></a>
 					<label style="font-weight:500" for="notify-check-all">&{'dashboard.guests'}</label>
 					#{if isOwner}
 						<input id='notify-check-all' type='checkbox' style='position:relative;top:2px;' class='notify-check-all' value='all'>
 					#{/if}
 				</h2>
+				<div class="separator-2"></div>
 				
 				#{if false && event && (attendance == null || !attendance.watchlist)}
 					<a href="/watchlist/add?event=${event.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm margin-clear">
@@ -627,13 +641,10 @@
 							    		<a class="" href="/attendance-new-edit?type=accepted&uuid=${item.uuid}&url=${request.url.urlEncode()}#invitation">
 							    			<i class="fa fa-check color-link fa-1x"></i>
 							    		</a>
-							    		<a class="" href="/attendance-new-edit?type=declined&uuid=${item.uuid}&url=${request.url.urlEncode()}#invitation">
-							    			<i class="fa fa-times color-link fa-1x"></i>
-							    		</a>
 							    		#{/if}
-							    		#{if isOwner}
+							    		#{if (user && item.email == user.login && !isOwner) || (isOwner && user && item.email != user.login)}
 							    		<a class="" href="/attendance-new-delete?uuid=${item.uuid}&url=${request.url.urlEncode()}#invitation">
-							    			<i class="fa fa-minus-square color-link fa-1x"></i>
+							    			<i class="fa fa-times color-link fa-1x"></i>
 							    		</a>
 							    		#{/if}
 							    	</td>
@@ -664,7 +675,7 @@
 
 
 
-#{if !edit && event && event.chatEnabled}
+#{if !edit && obj && obj.chatEnabled}
 <script>
     star.user = '${name}';
     star.room = '${room}';

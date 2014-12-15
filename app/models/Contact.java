@@ -27,20 +27,17 @@ public class Contact extends Model
 
     public static List<Contact> getContacts(User user)
     {
-        return Contact.em().createQuery("from Contact where user = :user order by contact.firstName asc contact.lastName asc").setParameter("user", user).getResultList();
+        return Contact.find("from Contact where user = ? order by contact.firstName asc contact.lastName asc", user).fetch();
     }
 
     public static List<Contact> getFollowing(User user)
     {
-        return Contact.em().createQuery("from Contact where contact = :user and following = true  order by contact.firstName asc contact.lastName asc").setParameter("user", user)
-                .getResultList();
+        return Contact.find("from Contact where user = ? and following = true order by user.firstName asc user.lastName asc", user).fetch();
     }
 
     public static List<Contact> getFollowers(User user)
     {
-        return Contact.em().createQuery("from Contact where contact = :user and following = true  order by contact.firstName asc contact.lastName asc").setParameter("user", user)
-                .getResultList();
-
+        return Contact.find("from Contact where contact = ? and following = true  order by contact.firstName asc contact.lastName asc", user).fetch();
     }
 
     public static List<Contact> getContacts(User user, String search)

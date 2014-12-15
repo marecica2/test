@@ -17,8 +17,13 @@ import utils.RandomUtil;
 @Table(name = "Attendance")
 public class Attendance extends Model
 {
+    public static final String PAYMENT_METHOD_PAYPAL = "paypal";
+
     public static final String ATTENDANCE_RESULT_ACCEPTED = "accepted";
     public static final String ATTENDANCE_RESULT_DECLINED = "declined";
+
+    public static final String ATTENDANCE_PAYMENT_PAYPAL = "paypal";
+    public static final String ATTENDANCE_PAYMENT_GOOGLE = "google";
 
     @ManyToOne()
     @JoinColumn(name = "event_id")
@@ -30,6 +35,7 @@ public class Attendance extends Model
     @ManyToOne
     public User customer;
 
+    public Boolean watchlist;
     public String email;
     public String name;
     public Boolean paid;
@@ -37,20 +43,22 @@ public class Attendance extends Model
     public String result;
     public Date created;
     public Boolean isForUser;
-    public String accessToken;
-    public Date accessTokenValidity;
-    public String payerId;
-    public String transactionId;
-    public Date transactionDate;
-    public String transactionIdProvider;
-    public Boolean refunded;
-    public String currency;
+
     public BigDecimal price;
     public BigDecimal fee;
     public BigDecimal providerPrice;
+    public String currency;
+    public Boolean refunded;
+    public String paymentMethod;
+
+    public String paypalAccessToken;
+    public Date paypalAccessTokenValidity;
+    public String paypalPayerId;
+    public String paypalTransactionId;
+    public Date paypalTransactionDate;
+    public String paypalTransactionIdProvider;
     public String paypalAccount;
     public String paypalAccountProvider;
-    public Boolean watchlist;
 
     public static List<Attendance> getByEvent(Event event)
     {

@@ -19,8 +19,9 @@ public class Hangout extends BaseController
 
         if (user == null && tempName == null)
             joinRoom(id, request.url);
+
         if (!e.isFree())
-            checkPayPalPayment(e, transactionId, request.url);
+            checkPayment(e, request.url);
 
         final String name = user != null ? user.getFullName() : tempName;
         final String room = id;

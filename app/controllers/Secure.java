@@ -11,10 +11,10 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.utils.Java;
 
-public class Secure extends Controller
+public class Secure extends BaseController
 {
 
-    @Before(unless = { "login", "authenticate", "logout" })
+    @Before(unless = { "login", "authenticate", "logout", "authenticateFacebook" })
     static void checkAccess() throws Throwable
     {
         // Authent
@@ -53,6 +53,7 @@ public class Secure extends Controller
 
     public static void login()
     {
+        User user = getLoggedUser();
         Http.Cookie remember = request.cookies.get("rememberme");
         if (remember != null && remember.value.indexOf("-") > 0)
         {
@@ -64,8 +65,11 @@ public class Secure extends Controller
                 redirectToOriginalURL();
             }
         }
+
+        if (flash.get("url") == null)
+            flash.put("url", request.params.get("url"));
         flash.keep("url");
-        render();
+        render(user);
     }
 
     public static void authenticate(@Required String username, String password, boolean remember) throws Throwable
@@ -91,6 +95,34 @@ public class Secure extends Controller
         redirectToOriginalURL();
     }
 
+    public static void authenticateFacebook(String id, String token) throws Throwable
+    {
+        checkAuthenticity();
+        User user = User.getUserByFacebook(id);
+        if (user == null)
+        {
+            flash.error(Messages.get("User does not exist"));
+            return;
+        }
+
+        if (!user.activated)
+        {
+            flash.error(Messages.get("Your account is not activated"));
+            return;
+        }
+
+        if (user != null)
+        {
+            user.lastLoginTime = new Date();
+            user.lastOnlineTime = new Date();
+            session.put("username", user.login);
+            user.save();
+
+            String url = getRedirectUrl();
+            renderText(url);
+        }
+    }
+
     public static void logout() throws Throwable
     {
         Security.invoke("onDisconnect");
@@ -109,20 +141,33 @@ public class Secure extends Controller
     static void redirectToOriginalURL()
     {
         Security.invoke("onAuthenticated");
+        String url = getRedirectUrl();
+        redirect(url);
+    }
+
+    private static String getRedirectUrl()
+    {
         String url = flash.get("url");
         if (url == null)
         {
             url = request.params.get("url");
             if ("/login".equals(url))
-                url = "/home";
+                url = "/dashboard";
             if ("/login/".equals(url))
-                url = "/home";
+                url = "/dashboard";
             if ("".equals(url))
-                url = "/home";
+                url = "/dashboard";
             if (url == null)
-                url = "/home";
+                url = "/dashboard";
         }
-        redirect(url);
+        if (url != null && url.equals("null"))
+            url = "/dashboard";
+        if (url != null && url.equals(""))
+            url = "/dashboard";
+        if (url != null && url.equals("/"))
+            url = "/dashboard";
+
+        return url;
     }
 
     public static class Security extends Controller
@@ -155,7 +200,7 @@ public class Secure extends Controller
 
             if (user != null && !user.activated)
             {
-                flash("securityError", Messages.get("Your account is not activated"));
+                flash.error(Messages.get("Your account is not activated"));
                 return false;
             }
 
@@ -167,7 +212,7 @@ public class Secure extends Controller
                 return true;
             }
 
-            flash("securityError", Messages.get("Incorrect login or password"));
+            flash.error(Messages.get("Incorrect login or password"));
             return false;
         }
 

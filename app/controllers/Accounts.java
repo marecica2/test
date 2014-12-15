@@ -63,13 +63,15 @@ public class Accounts extends BaseController
         if (edit)
         {
             // account
-            params.put("type", account.type);
+            params.put("type", account.currentPlan());
             params.put("accName", account.name);
             params.put("firstName", user.firstName);
             params.put("lastName", user.lastName);
             params.put("locale", user.locale);
             params.put("emailNotification", user.emailNotification + "");
             params.put("timezone", user.timezone + "");
+            params.put("facebookId", user.facebookId);
+            params.put("facebookName", user.facebookName);
 
             params.put("userAbout", user.userAbout);
             params.put("userEducation", user.userEducation);
@@ -108,8 +110,8 @@ public class Accounts extends BaseController
     public static void accountPost(
         String accPlan,
         String userAbout, String userExperiences, String userEducation,
-        String skype, String googlePlus, String linkedIn, String twitter, String facebook,
-        String url, String locale, String accName, Boolean emailNotification,
+        String skype, String googlePlus, String linkedIn, String twitter, String facebook, String facebookName,
+        String url, String locale, String accName, Boolean emailNotification, String facebookId,
         String paypal, String currency,
         String firstName, String lastName, String smtpHost, String smtpPort,
         String smtpAccount, String smtpPassword, String smtpProtocol,
@@ -128,26 +130,20 @@ public class Accounts extends BaseController
         if (!validation.hasErrors())
         {
 
-            user.timezone = timezone;
-            user.firstName = firstName;
-            user.lastName = lastName;
-            user.locale = locale;
-            user.emailNotification = emailNotification;
-
-            user.userAbout = StringUtils.htmlEscape(userAbout);
-            user.userEducation = StringUtils.htmlEscape(userEducation);
-            user.userExperiences = StringUtils.htmlEscape(userExperiences);
-            user.facebook = facebook;
-            user.googlePlus = googlePlus;
-            user.twitter = twitter;
-            user.linkedIn = linkedIn;
-            user.skype = skype;
-
-            if (account.planRequestFrom == null || account.planRequestFrom.getTime() < System.currentTimeMillis() || true)
+            if (account.planRequestFrom == null || (account.planRequestFrom.getTime() < System.currentTimeMillis()))
             {
                 account.planCurrent = account.planRequest;
                 account.planRequest = accPlan;
-                account.planRequestFrom = new Date(System.currentTimeMillis() + 60000);
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.MONTH, 1);
+                calendar.set(Calendar.DATE, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                Date nextMonthFirstDay = calendar.getTime();
+                account.planRequestFrom = nextMonthFirstDay;
             }
             account.name = accName;
             account.requestTime = new Date();
@@ -160,6 +156,22 @@ public class Accounts extends BaseController
             account.paypalAccount = paypal;
             account.currency = currency;
             account.save();
+
+            user.facebookId = facebookId;
+            user.facebookName = facebookName;
+            user.timezone = timezone;
+            user.firstName = firstName;
+            user.lastName = lastName;
+            user.locale = locale;
+            user.emailNotification = emailNotification;
+            user.userAbout = StringUtils.htmlEscape(userAbout);
+            user.userEducation = StringUtils.htmlEscape(userEducation);
+            user.userExperiences = StringUtils.htmlEscape(userExperiences);
+            user.facebook = facebook;
+            user.googlePlus = googlePlus;
+            user.twitter = twitter;
+            user.linkedIn = linkedIn;
+            user.skype = skype;
 
             if (imageUrl != null)
             {
@@ -177,8 +189,8 @@ public class Accounts extends BaseController
                 }
             }
             user.hiddenDays = hidden;
-            user.save(account);
 
+            user.save(account);
             Cache.delete(user.login);
             Lang.change(locale);
             redirect("/settings");
@@ -197,16 +209,19 @@ public class Accounts extends BaseController
 
         if (listings == null || listings.size() == 0)
         {
-            validation.addError("request", "You need at least one listing.");
+            validation.addError("type", "");
+            flash.error("You need at least one listing");
         }
         if (user.userAbout == null || user.userAbout.length() < 10)
         {
-            validation.addError("request", "Please fill in information about you.");
+            validation.addError("type", "");
+            flash.error("Please fill in information about you");
         }
-        if (user.account.paypalAccount == null || user.account.paypalAccount.length() < 2)
-        {
-            validation.addError("request", "Invalid Paypal account");
-        }
+        //        if (user.account.paypalAccount == null || user.account.paypalAccount.length() < 2)
+        //        {
+        //            validation.addError("type", "");
+        //            flash.error("Invalid Paypal account");
+        //        }
 
         if (!validation.hasErrors())
         {
@@ -217,8 +232,8 @@ public class Accounts extends BaseController
             user.save();
         }
 
-        params.flash(); // add http parameters to the flash scope
-        validation.keep(); // keep the errors for the next request
+        params.flash();
+        validation.keep();
         account();
     }
 
@@ -270,17 +285,6 @@ public class Accounts extends BaseController
         }
     }
 
-    public static void setAgendaType()
-    {
-        final User user = getLoggedUserNotCache();
-        final JsonObject jo = JsonUtils.getJson(request.body);
-        final String type = jo.get("type").getAsString();
-        user.agendaType = type;
-        user.save();
-        clearUserFromCache();
-        renderJSON("ok");
-    }
-
     public static void payments()
     {
         final DateTimeUtils dt = new DateTimeUtils(DateTimeUtils.TYPE_DATE_ONLY);
@@ -306,11 +310,11 @@ public class Accounts extends BaseController
             if (attendance.fee != null)
                 fee = fee.add(attendance.fee);
 
-            if (attendance.transactionDate != null)
+            if (attendance.paypalTransactionDate != null)
             {
                 BigDecimal val = attendance.providerPrice;
                 Calendar cal = Calendar.getInstance();
-                cal.setTime(attendance.transactionDate);
+                cal.setTime(attendance.paypalTransactionDate);
                 cal.set(Calendar.HOUR, 1);
                 cal.set(Calendar.MINUTE, 1);
                 cal.set(Calendar.SECOND, 0);

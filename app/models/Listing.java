@@ -89,6 +89,12 @@ public class Listing extends Model
 
     public Integer chargingTime;
 
+    public Date started;
+
+    public Date ended;
+
+    public String instantBroadcast;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     public User user;
@@ -129,7 +135,7 @@ public class Listing extends Model
             filter.search = filter.search.trim();
             filter.search = filter.search.replaceAll("\\s+", " ");
             filter.search = filter.search.replaceAll("(\\b[^\\s]+\\b)", "$1:*");
-            filter.search = filter.search.replaceAll("\\s+", " & ");
+            filter.search = filter.search.replaceAll("\\s+", " | ");
             System.err.println("query string " + filter.search);
             query += " AND document @@ to_tsquery('english', :search) ";
         }

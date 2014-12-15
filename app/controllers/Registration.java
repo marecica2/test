@@ -4,6 +4,7 @@ import java.util.Date;
 
 import models.Account;
 import models.Attendance;
+import models.Contact;
 import models.User;
 
 import org.apache.velocity.VelocityContext;
@@ -30,7 +31,7 @@ public class Registration extends BaseController
     {
         Images.Captcha captcha = Images.captcha();
         String code = captcha.getText(5);
-        String expiration = "10mn";
+        String expiration = "5mn";
         if (exp != null)
             expiration = exp + "s";
         Cache.set("captcha." + uuid, code, expiration);
@@ -66,7 +67,7 @@ public class Registration extends BaseController
                 final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
                 final EmailProvider emailProvider = new EmailProvider();
                 final String title = "Widgr: Password reset";
-                final String message = "<p>Your Widgr password has been reseted.<br/></p>New password: <strong>" + user.password
+                final String message = "<p>Your password has been reseted.<br/></p>New password: <strong>" + user.password
                         + "</strong> <p>It is highly recommended to change this password <a href='"
                         + baseUrl + "password'>here</a></p>";
 
@@ -103,7 +104,6 @@ public class Registration extends BaseController
         String token,
         Integer offset)
     {
-
         validation.required(firstName);
         validation.required(lastName);
         validation.email(login).message("validation.login");
@@ -111,77 +111,91 @@ public class Registration extends BaseController
         validation.required(password);
         validation.equals(password, passwordRepeat).message("validation.passwordMatch");
         validation.required(captcha);
+
         final Object cap = Cache.get("captcha." + uuid);
         if (captcha != null && cap != null)
             validation.equals(captcha, cap).message("invalid.captcha");
 
+        final User checkUser = User.getUserByLogin(login);
+        if (checkUser != null)
+            validation.addError("login", "Login already used");
+
         if (!validation.hasErrors())
         {
-            Account account = new Account();
-            account.key = RandomUtil.getUUID();
-            account.smtpHost = "DEFAULT";
-            account.name = firstName + " " + lastName;
-            account.type = Account.TYPE_STANDARD;
-            account.planCurrent = Account.TYPE_STANDARD;
-            account.planRequest = Account.PLAN_TYPE_STANDARD;
-            account.planRequestFrom = new Date();
+            Account account = createDefaultAccount(firstName, lastName);
             account.save();
 
-            User user = new User();
-            user.timezone = offset;
-            user.workingHourStart = "8";
-            user.workingHourEnd = "16";
-            user.agendaType = "agendaWeek";
-            user.role = User.ROLE_ADMIN;
-            user.uuid = RandomUtil.getUUID();
-            user.login = login;
-            user.emailNotification = true;
-            user.activated = false;
-            user.password = password;
-            user.firstName = StringUtils.htmlEscape(firstName);
-            user.lastName = StringUtils.htmlEscape(lastName);
-            user.stylesheet = "purple";
-            user.pattern = "pattern-4";
-            user.layout = "wide";
-            user.footer = "dark";
-            user.registrationToken = token;
-            user.referrerToken = RandomUtil.getUUID();
-            user.save(account);
+            User user = createDefaultUser(login, password, firstName, lastName, token, offset);
+            user = user.save(account);
+
+            // if user used invitation link
+            if (token != null)
+                createReferrerContacts(token, user);
 
             // if user was logged using email link, update his attendance
             if (invitation != null)
-            {
-                Attendance a = Attendance.get(invitation);
-                if (a != null)
-                {
-                    user = User.getUserByUUID(user.uuid);
-                    a.email = user.login;
-                    a.customer = user;
-                    a.save();
-                }
-            }
+                createInvitation(invitation, user);
 
-            final String from = user.login;
-            final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
-            final EmailProvider emailProvider = new EmailProvider();
-            final String title = "Widgr: Account activation";
-            final String message = "<p>To activate your Widgr account click <a href='" + baseUrl + "account/activate?uuid=" + user.uuid
-                    + "'>here</a> or paste this url to the browser address bar <p>"
-                    + baseUrl + "account/activate?uuid=" + user.uuid + "</p>";
-
-            final VelocityContext ctx = VelocityTemplate.createBasicTemplate(null, baseUrl, title, message);
-            final String body = VelocityTemplate.processTemplate(ctx, VelocityTemplate.getTemplateContent(VelocityTemplate.CONTACT_INVITE_TEMPLATE));
-            new Notification(emailProvider, from, title, user.login, body).execute();
+            // send email
+            activationEmail(user);
 
             flash.success("Check out Your email for activating this account");
             flash.keep();
             redirect("/login");
         } else
         {
-            System.err.println("Invalid captcha");
             params.flash();
             render("Registration/registration.html");
         }
+    }
+
+    public static void registrationFacebookPost(
+        String login,
+        String facebook,
+        String facebookName,
+        String firstName,
+        String lastName,
+        String uuid,
+        String invitation,
+        String token,
+        Integer offset)
+    {
+        validation.required(firstName);
+        validation.required(lastName);
+        validation.email(login).message("validation.login");
+        validation.required(login);
+
+        final User checkUser = User.getUserByLogin(login);
+        if (checkUser != null)
+            validation.addError("login", "Login already used");
+
+        if (!validation.hasErrors())
+        {
+            final Account account = createDefaultAccount(firstName, lastName);
+            account.save();
+
+            final String password = RandomUtil.getRandomString(10);
+            User user = createDefaultUser(login, password, firstName, lastName, token, offset);
+            user.activated = true;
+            user.facebookId = facebook;
+            user.facebookName = facebookName;
+            user = user.save(account);
+
+            // if user used invitation link
+            if (token != null)
+                createReferrerContacts(token, user);
+
+            // if user was logged using email link, update his attendance
+            if (invitation != null)
+                createInvitation(invitation, user);
+
+            redirectTo("/login");
+        }
+        params.flash();
+        validation.keep();
+        flash.keep();
+        params.flash();
+        registration();
     }
 
     public static void password()
@@ -212,5 +226,94 @@ public class Registration extends BaseController
             params.flash();
             render("Registration/password.html", user, account);
         }
+    }
+
+    private static void createInvitation(String invitation, User user)
+    {
+        Attendance a = Attendance.get(invitation);
+        if (a != null)
+        {
+            a.email = user.login;
+            a.customer = user;
+            a.save();
+        }
+    }
+
+    private static void createReferrerContacts(String token, User user)
+    {
+        User referrerUser = User.getUserByToken(token);
+        if (referrerUser != null)
+        {
+
+            Contact c = new Contact();
+            c.user = user;
+            c.contact = referrerUser;
+            c.following = true;
+            c.saveContact();
+
+            Contact c1 = new Contact();
+            c1.user = referrerUser;
+            c1.contact = user;
+            c1.following = true;
+            c1.saveContact();
+        }
+    }
+
+    private static void activationEmail(User user)
+    {
+        final String from = user.login;
+        final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
+        final EmailProvider emailProvider = new EmailProvider();
+        final String title = "Widgr: Account activation";
+        final String message = "<p>To activate your account click <a href='" + baseUrl + "account/activate?uuid=" + user.uuid
+                + "'>here</a> or paste this url to the browser address bar <p>"
+                + baseUrl + "account/activate?uuid=" + user.uuid + "</p>";
+
+        final VelocityContext ctx = VelocityTemplate.createBasicTemplate(null, baseUrl, title, message);
+        final String body = VelocityTemplate.processTemplate(ctx, VelocityTemplate.getTemplateContent(VelocityTemplate.CONTACT_INVITE_TEMPLATE));
+        new Notification(emailProvider, from, title, user.login, body).execute();
+    }
+
+    private static User createDefaultUser(String login, String password, String firstName, String lastName, String token, Integer offset)
+    {
+        User user = new User();
+        user.login = login;
+        user.firstName = firstName;
+        user.lastName = lastName;
+        user.password = password;
+        user.registrationToken = token;
+        user.timezone = offset;
+
+        user.uuid = RandomUtil.getUUID();
+        user.referrerToken = RandomUtil.getUUID();
+        user.role = User.ROLE_ADMIN;
+        user.activated = false;
+
+        user.workingHourStart = "8";
+        user.workingHourEnd = "16";
+        user.emailNotification = true;
+        user.stylesheet = "purple";
+        user.pattern = "pattern-4";
+        user.layout = "wide";
+        user.footer = "dark";
+        return user;
+    }
+
+    private static Account createDefaultAccount(String firstName, String lastName)
+    {
+        Account account = new Account();
+        account.key = RandomUtil.getUUID();
+        account.smtpHost = "DEFAULT";
+        account.name = firstName + " " + lastName;
+        account.type = Account.TYPE_STANDARD;
+        account.planCurrent = Account.TYPE_STANDARD;
+        account.planRequest = Account.PLAN_TYPE_STANDARD;
+        account.planRequestFrom = new Date();
+        return account;
+    }
+
+    public static void passwordCustomer()
+    {
+
     }
 }

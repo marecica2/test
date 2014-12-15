@@ -86,7 +86,8 @@ public class EventDTO
         EventDTO e = new EventDTO();
         e.color = event.listing.color;
         e.description = event.listing.description;
-        e.firstFree = event.listing.firstFree;
+        if (event.listing.firstFree != null)
+            e.firstFree = event.listing.firstFree;
         e.eventEnd = event.eventEnd.getTime();
         e.eventStart = event.eventStart.getTime();
         e.title = event.listing.title;
@@ -96,23 +97,17 @@ public class EventDTO
         e.privacy = event.privacy;
         e.type = event.type;
         e.currency = event.currency;
-        e.price = event.price.toString();
+        if (event.price != null)
+            e.price = event.price.toString();
         e.priceTotal = event.getTotalPrice().toString();
         e.charging = event.charging;
         e.uuid = event.uuid;
         e.archived = event.archived;
+        e.notifyInvited = false;
         e.createdByUser = event.createdByUser;
         e.googleId = event.googleId;
         if (event.chargingTime != null)
             e.chargingTime = event.chargingTime.toString();
-        if (user != null)
-            e.isOwner = event.isOwner(user);
-        else
-            e.isOwner = false;
-        if (user != null)
-            e.isInvited = event.hasInviteFor(user);
-        else
-            e.isInvited = false;
         if (event.customer != null)
         {
             e.customerAvatarUrl = event.customer.avatarUrl;
@@ -128,29 +123,41 @@ public class EventDTO
         }
         if (event.created != null)
             e.created = event.created.getTime();
-        if (event.attendances != null && event.attendances.size() > 0)
-            e.notifyInvited = true;
-        else
-            e.notifyInvited = false;
+
+        // visibility
+        e.isEditable = event.isEditable(user);
+        e.isOwner = event.isOwner(user);
+        e.isInvited = event.hasInviteForCustomer(user);
+        e.invisible = !event.isVisible(user);
         return e;
     }
 
     public static EventDTO postProcessHiddenEvent(EventDTO e)
     {
-        e.title = null;
-        e.type = null;
-        e.privacy = e.privacy;
-        e.description = null;
-        e.charging = null;
-        e.price = null;
-        e.color = "#FF0000";
-        e.invisible = true;
         e.uuid = null;
         e.category = null;
         e.imageUrl = null;
         e.comments = null;
         e.currency = null;
         e.state = null;
+        e.title = null;
+        e.type = null;
+        e.privacy = null;
+        e.description = null;
+        e.charging = null;
+        e.price = null;
+        e.priceTotal = null;
+        e.createdBy = null;
+        e.createdByAvatarUrl = null;
+        e.createdByLogin = null;
+        e.createdByName = null;
+        e.createdByUser = null;
+        e.color = "#FF0000";
+        e.chargingTime = null;
+        e.privacy = null;
+        e.isOwner = false;
+        e.isInvited = false;
+        e.invisible = true;
         e.created = 0;
         return e;
     }

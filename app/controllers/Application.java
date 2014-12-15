@@ -1,5 +1,6 @@
 package controllers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -9,9 +10,17 @@ import models.Event;
 import models.Listing;
 import models.Search;
 import models.User;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.StringUtils;
+
+import play.Logger;
 import play.cache.Cache;
 import play.mvc.Before;
 import utils.RandomUtil;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 //@With(Secure.class)
 public class Application extends BaseController
@@ -20,6 +29,35 @@ public class Application extends BaseController
     static void checkAccess() throws Throwable
     {
         checkAuthorizedAccess();
+    }
+
+    public static void facebook() throws IOException
+    {
+        String userId = null;
+        String pageId = null;
+        Boolean admin = null;
+        String param = request.params.get("signed_request");
+        if (param != null)
+        {
+            String[] parts = param.split("\\.");
+            String part = StringUtils.newStringUtf8(Base64.decodeBase64(parts[1]));
+            JsonObject jo = new JsonParser().parse(part).getAsJsonObject();
+            userId = jo.get("user_id").getAsString();
+            pageId = jo.get("page").getAsJsonObject().get("id").getAsString();
+            admin = jo.get("page").getAsJsonObject().get("admin").getAsBoolean();
+            session.put("pageId", pageId);
+            session.put("admin", admin);
+        }
+
+        User user = getLoggedUser();
+        if (admin != null && user == null)
+            redirect("/login?url=" + request.url);
+
+        if (pageId == null)
+            pageId = session.get("pageId");
+
+        User displayedUser = pageId != null ? User.getUserByFacebookPage(pageId) : null;
+        render(user, displayedUser, admin, pageId);
     }
 
     public static void home()
@@ -52,6 +90,11 @@ public class Application extends BaseController
 
     public static void channels()
     {
+        Logger.info("home info");
+        Logger.debug("home debug");
+        Logger.warn("home warn");
+        Logger.error("home error");
+
         final User user = getLoggedUser();
         render(user);
     }

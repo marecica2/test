@@ -1,7 +1,6 @@
 package controllers;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class Attendances extends BaseController
     public static void invites(String str)
     {
         final User user = getLoggedUser();
-        List<Contact> c = Contact.getContacts(user, str);
+        List<Contact> c = Contact.getContacts(user, str.toLowerCase());
         List<UserDTO> contacts = new LinkedList<UserDTO>();
         for (Contact contact : c)
             contacts.add(UserDTO.convert(contact.contact));
@@ -75,6 +74,7 @@ public class Attendances extends BaseController
         {
             Attendance a = new Attendance();
             a.event = event;
+            a.uuid = RandomUtil.getUUID();
             a.user = event.user;
             a.email = StringUtils.htmlEscape(email);
             a.isForUser = isForUser;
@@ -98,30 +98,76 @@ public class Attendances extends BaseController
             act.eventName = a.event.listing.title;
             act.saveActivity();
 
-            Contact contact1 = Contact.get(user, customer);
-            if (contact1 == null)
+            if (customer != null)
             {
-                contact1 = new Contact();
-                contact1.user = user;
-                contact1.contact = customer;
-                contact1.following = false;
-                contact1.saveContact();
-            }
+                Contact contact1 = Contact.get(user, customer);
+                if (contact1 == null)
+                {
+                    contact1 = new Contact();
+                    contact1.user = user;
+                    contact1.contact = customer;
+                    contact1.following = false;
+                    contact1.saveContact();
+                }
 
-            Contact contact2 = Contact.get(customer, user);
-            if (contact2 == null)
-            {
-                contact2 = new Contact();
-                contact2.user = customer;
-                contact2.contact = user;
-                contact2.following = false;
-                contact2.saveContact();
+                Contact contact2 = Contact.get(customer, user);
+                if (contact2 == null)
+                {
+                    contact2 = new Contact();
+                    contact2.user = customer;
+                    contact2.contact = user;
+                    contact2.following = false;
+                    contact2.saveContact();
+                }
             }
-
         }
         params.flash();
         validation.keep();
         redirect(UriUtils.redirectStr(url));
+    }
+
+    public static void attendanceNewDelete(String uuid, String url)
+    {
+        User user = getLoggedUser();
+
+        Attendance a = Attendance.get(uuid);
+        a.delete();
+
+        if (!a.event.user.equals(user))
+        {
+            final Activity act = new Activity();
+            act.type = Activity.ACTIVITY_EVENT_INVITE_DECLINED;
+            act.user = user;
+            act.event = a.event;
+            act.eventName = a.event.listing.title;
+            act.saveActivity();
+        }
+        redirectTo(url);
+    }
+
+    public static void attendanceNewEdit(String uuid, String url, String type)
+    {
+        try
+        {
+            final User user = getLoggedUser();
+            final String result = type.equals("accepted") ? Attendance.ATTENDANCE_RESULT_ACCEPTED : Attendance.ATTENDANCE_RESULT_DECLINED;
+            final Attendance a = Attendance.get(uuid);
+            a.result = result;
+            a.save();
+
+            final Activity act = new Activity();
+            if (result.equals(Attendance.ATTENDANCE_RESULT_ACCEPTED))
+                act.type = Activity.ACTIVITY_EVENT_INVITE_ACCEPTED;
+            act.user = user;
+            act.event = a.event;
+            act.eventName = a.event.listing.title;
+            act.saveActivity();
+
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        redirectTo(url);
     }
 
     public static void attendanceRestUpdate()
@@ -172,76 +218,40 @@ public class Attendances extends BaseController
         }
     }
 
-    public static void watchListAdd(String event, String url)
-    {
-        final Event e = Event.get(event);
-        final User user = getLoggedUser();
-        Attendance a = Attendance.getByCustomerEvent(user, e);
-
-        if (a == null)
-        {
-            a = new Attendance();
-            a.customer = user;
-            a.event = e;
-            a.created = new Date();
-            a.email = user.login;
-            a.result = Attendance.ATTENDANCE_RESULT_ACCEPTED;
-            a.name = user.getFullName();
-            a.watchlist = true;
-            a.uuid = RandomUtil.getUUID();
-        } else
-        {
-            a.watchlist = true;
-        }
-        a.save();
-        redirectTo(url);
-    }
-
-    public static void watchListRemove(String id, String url)
-    {
-        Attendance a = Attendance.get(id);
-        if (a != null)
-        {
-            a.watchlist = null;
-            a.save();
-        }
-        redirectTo(url);
-    }
-
-    public static void attendanceNewDelete(String uuid, String url)
-    {
-        try
-        {
-            Attendance a = Attendance.get(uuid);
-            a.delete();
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        redirect(UriUtils.redirectStr(url));
-    }
-
-    public static void attendanceNewEdit(String uuid, String url, String type)
-    {
-        try
-        {
-            final User user = getLoggedUser();
-            final String result = type.equals("accepted") ? Attendance.ATTENDANCE_RESULT_ACCEPTED : Attendance.ATTENDANCE_RESULT_DECLINED;
-            final Attendance a = Attendance.get(uuid);
-            a.result = result;
-            a.save();
-
-            final Activity act = new Activity();
-            act.type = result;
-            act.user = user;
-            act.event = a.event;
-            act.eventName = a.event.listing.title;
-            act.saveActivity();
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        redirect(UriUtils.redirectStr(url));
-    }
+    //    public static void watchListAdd(String event, String url)
+    //    {
+    //        final Event e = Event.get(event);
+    //        final User user = getLoggedUser();
+    //        Attendance a = Attendance.getByCustomerEvent(user, e);
+    //
+    //        if (a == null)
+    //        {
+    //            a = new Attendance();
+    //            a.customer = user;
+    //            a.event = e;
+    //            a.created = new Date();
+    //            a.email = user.login;
+    //            a.result = Attendance.ATTENDANCE_RESULT_ACCEPTED;
+    //            a.name = user.getFullName();
+    //            a.watchlist = true;
+    //            a.uuid = RandomUtil.getUUID();
+    //        } else
+    //        {
+    //            a.watchlist = true;
+    //        }
+    //        a.save();
+    //        redirectTo(url);
+    //    }
+    //
+    //    public static void watchListRemove(String id, String url)
+    //    {
+    //        Attendance a = Attendance.get(id);
+    //        if (a != null)
+    //        {
+    //            a.watchlist = null;
+    //            a.save();
+    //        }
+    //        redirectTo(url);
+    //    }
 
 }

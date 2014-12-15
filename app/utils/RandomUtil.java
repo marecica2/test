@@ -5,6 +5,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 import java.util.UUID;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 public class RandomUtil
 {
     public static String getUUID()
@@ -22,6 +24,11 @@ public class RandomUtil
     {
         Random r = new Random();
         return r.nextInt(number);
+    }
+
+    public static String getRandomString(int number)
+    {
+        return RandomStringUtils.random(number, true, true);
     }
 
     public static String getMD5Hex(final String inputString)

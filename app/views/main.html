@@ -11,8 +11,8 @@
         <meta name="viewport" content="width=100,initial-scale=1, maximum-scale=1, minimum-scale=1"/>
 		<meta class="fb-app-id" property="fb:app_id" content="117287758301883" /> 
 		#{if user}<meta class="fb-meta-url" property="og:url" content='${request.base + "/public/calendar/" + user.uuid}' />#{/if}
-		<meta class="fb-meta-title" property="og:title" content="com-manager" /> 
-		<meta class="fb-meta-description" property="og:description" content="com-manager - tool for online communication" /> 
+		<meta class="fb-meta-title" property="og:title" content="widgr" /> 
+		<meta class="fb-meta-description" property="og:description" content="widgr - share your knowledge" /> 
 		<meta class="fb-meta-image" property="og:image" content="${request.base}/public/images/logo.jpg" />  
 				
 		<meta name="description" content="iDea a Bootstrap-based, Responsive HTML5 Template">
@@ -90,7 +90,7 @@
 	    	    // if running in iframe
 		    	if(window.self !== window.top){
 		    	    $("#footer").hide();
-		    	    $("header").hide();
+		    	    //$("header").hide();
 		    	    $("body").css("background", "white");
 		    	}
 	    	    *{
@@ -143,14 +143,12 @@
 									</div>
 								#{/if}
 					
-								*{
-								#{list items:errors, as:'error'}
-									<div class="shadow alert alert-danger alert-dismissible" role="alert">
-									  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-									  <strong>Error!</strong> ${error.raw()} 
-									</div>				
-								#{/list}
-								}*
+								#{if flash.error}
+								<div class="shadow alert alert-danger alert-dismissible" role="alert">
+								  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+								  <strong>Error!</strong> ${flash.error} 
+								</div>				
+								#{/if}
 							</div>
 						</div>
 					</div>
@@ -184,7 +182,8 @@
 												<li class="linkedin"><a target="_blank" href="http://www.linkedin.com/"><i class="fa fa-linkedin"></i></a></li>
 											</ul>
 										</div>
-										<div class="col-sm-4">
+										
+										<div class="col-sm-4 footer-hide">
 											<ul class="list-icons">
 												<li><i class="fa fa-map-marker pr-10"></i> One infinity loop, 54100</li>
 												<li><i class="fa fa-phone pr-10"></i> +00 1234567890</li>
@@ -192,7 +191,8 @@
 												<li><i class="fa fa-envelope-o pr-10"></i> info@widgr.me</li>
 											</ul>
 										</div>
-										<div class="col-sm-2">
+										
+										<div class="col-sm-2 footer-hide">
 											<div class="footer-content">
 												<nav>
 													<ul class="nav nav-pills nav-stacked">

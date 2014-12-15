@@ -54,7 +54,7 @@
 				#{/if}				
 			</h2>
 			<ul class="list-icons">
-				<li><i class="fa fa-user"></i> Last Active on ${usr.lastOnlineTime.format("dd MMM, yyyy")} #{time time:usr.lastOnlineTime/}</li>
+				<li><i class="fa fa-user"></i> Last Active on #{if usr.lastOnlineTime} ${usr.lastOnlineTime.format("dd MMM, yyyy")} #{time time:usr.lastOnlineTime/} #{/if}</li>
 				<li><i class="fa fa-calendar pr-5"></i><a href="/user/${usr.login}/calendar/public">Show public calendar</a></li>
 				<li><i class="fa fa-envelope pr-5"></i>${usr.login}</li>
 			</ul>

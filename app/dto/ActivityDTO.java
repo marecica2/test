@@ -54,10 +54,6 @@ public class ActivityDTO extends Model
             aDto.message = a.getText(a.event.uuid, a.eventName);
         if (Activity.ACTIVITY_EVENT_INVITE_DECLINED.equals(a.type))
             aDto.message = a.getText(a.event.uuid, a.eventName);
-        if (Activity.ACTIVITY_EVENT_INVITE_ACCEPTED_CUSTOMER.equals(a.type))
-            aDto.message = a.getText(a.event.uuid, a.eventName);
-        if (Activity.ACTIVITY_EVENT_INVITE_DECLINED_CUSTOMER.equals(a.type))
-            aDto.message = a.getText(a.event.uuid, a.eventName);
         if (Activity.ACTIVITY_EVENT_DELETED.equals(a.type))
             aDto.message = a.getText(a.event.uuid, a.eventName);
         if (Activity.ACTIVITY_EVENT_DELETED_CUSTOMER.equals(a.type))
