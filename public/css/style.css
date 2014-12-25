@@ -3784,7 +3784,7 @@ a.overlay.small i {
 }
 .main-container .site-slogan {
 	color: inherit;
-	text-align: center;
+	text-align: left;
 	margin-bottom: 20px;
 }
 .logo-footer {
@@ -3798,7 +3798,7 @@ a.overlay.small i {
 		margin: 0 auto;
 	}
 	.site-slogan {
-		text-align: center;
+		text-align: left;
 	}
 }
 

@@ -33,6 +33,54 @@ if(star.userInRoom){
 }
 
 
+// events for instant room
+$(document).ready(function(){
+    // stop instant broadcast
+    $(".btn-instant-stop").click(function(){
+        send_chat(' stopped broadcasting', star.user);
+       
+        var data = {};
+        data.id = socket.socket.sessionid;
+        socket_message_broadcast("instant-room-stop-broadcast", data);
+        window.location = $(this).attr("data-href");
+          
+    });
+
+    // go to private room
+    $(".btn-instant-room").click(function(){
+        send_chat(' went to private room', star.user);
+        
+        var data = {};
+        data.id = socket.socket.sessionid;
+        socket_message_broadcast("instant-room-private-broadcast", data);
+        window.location = $(this).attr("data-href");        
+    });
+
+    // stop instant broadcast
+    $(".btn-instant-start").click(function(){
+        
+        var data = {};
+        data.id = socket.socket.sessionid;
+        socket_message_broadcast("instant-room-start-broadcast", data);
+        window.location = $(this).attr("data-href");        
+    });
+});
+
+socket.on('socket_message', function(data) {
+    if(data.event == "instant-room-private-broadcast"){
+        setTimeout(function(){ window.location.reload();
+        }, 5000);
+    } 
+    if(data.event == "instant-room-stop-broadcast"){
+        window.location.reload();
+    } 
+    if(data.event == "instant-room-start-broadcast"){
+        setTimeout(function(){ window.location.reload();
+        }, 5000);
+    } 
+ });
+
+
 // if user is room
 if(webrtc != null){
     
@@ -545,6 +593,8 @@ function showVolume(el, volume) {
 //
 //
 
+
+if(webrtc != null){
 socket.on('socket_message', function(data) {
 
     // notify other that user has joined
@@ -672,10 +722,9 @@ socket.on('user_disconnect', function(data) {
 });
 
 socket.on('user_update', function(data) {
-    console.log("user_update event");
     usersRender(data);
 });
-
+}
 
 
 
@@ -862,9 +911,8 @@ socket.on('message', function(data) {
     if (data.message) {
         var html = '';
         if(data.username){
-            var date = new Date().toLocaleString();
-            html += '<b title="'+date+'">' + (data.username ? data.username : 'Server') + ': </b>';
-            html += data.message + '<br />';
+            html += '<strong>' + (data.username ? data.username : 'Server').replace(/>/g, '&gt;') + ': </strong>';
+            html += data.message.replace(/>/g, '&gt;') + '<br />';
         }
         content.innerHTML = content.innerHTML + html;
         
@@ -884,7 +932,7 @@ socket.on('message', function(data) {
 
 $("#chat-send").click(function(){
     var data = {};
-    data.event = star.room;
+    data.uuid = star.room;
     data.name = star.user;
     data.comment = $("#chat-text").val();
     roomServices.saveFeed(data, function(){

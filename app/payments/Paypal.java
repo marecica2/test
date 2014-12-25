@@ -35,7 +35,7 @@ public class Paypal
     private String signature = "Ahi6toXd.Z09uBAi9TXUZIR3VEUjAI810NXwhh8lXf.N.aUDqMUKfbIe";
 
     private final String setExpressCheckout = "SetExpressCheckout";
-    private final String getExpressCheckoutDetails = "GetExpressCheckoutDetails";
+    //private final String getExpressCheckoutDetails = "GetExpressCheckoutDetails";
     private final String doExpressCheckout = "DoExpressCheckoutPayment";
 
     private final String version = "93";
@@ -97,7 +97,7 @@ public class Paypal
         return paymentUrl + token;
     }
 
-    public DoExpressCheckoutResponse doExpressCheckoutDual(String token, String payerId, Event event) throws Exception
+    public DoExpressCheckoutResponse doExpressCheckoutDual(String token, String payerId, Event event, Boolean dual) throws Exception
     {
         StringBuilder sb = new StringBuilder();
         sb.append("USER=" + user);
@@ -109,7 +109,7 @@ public class Paypal
         sb.append("&PAYERID=" + payerId);
 
         DoExpressCheckoutResponse response = new DoExpressCheckoutResponse();
-        processDetails(event, sb, response);
+        processDetails(event, sb, response, dual);
 
         //locale
         sb.append("&LC=" + "US");
@@ -129,7 +129,7 @@ public class Paypal
         return response;
     }
 
-    public AccessToken setExpressCheckoutDual(Event event) throws Exception
+    public AccessToken setExpressCheckoutDual(Event event, Boolean dual) throws Exception
     {
         StringBuilder sb = new StringBuilder();
         sb.append("USER=" + user);
@@ -141,7 +141,7 @@ public class Paypal
         sb.append("&RETURNURL=" + URLEncoder.encode(returnUrl, "UTF-8"));
         sb.append("&RETURN=" + URLEncoder.encode(returnUrl, "UTF-8"));
 
-        processDetails(event, sb, null);
+        processDetails(event, sb, null, dual);
 
         //locale
         sb.append("&LC=" + "US");
@@ -171,14 +171,13 @@ public class Paypal
     //        return resp;
     //    }
 
-    private void processDetails(Event event, StringBuilder sb, DoExpressCheckoutResponse response) throws UnsupportedEncodingException
+    private void processDetails(Event event, StringBuilder sb, DoExpressCheckoutResponse response, Boolean dual) throws UnsupportedEncodingException
     {
         final BigDecimal price = paymentAmount;
-        final BigDecimal fee = price.multiply(new BigDecimal(percentage)).round(new MathContext(2));
-
+        final BigDecimal fee = dual ? price.multiply(new BigDecimal(percentage)).round(new MathContext(2)) : new BigDecimal(0);
         final BigDecimal providerPrice = price.subtract(fee);
         String paypalAccount = providerPaypalAccount;
-        if (providerPrice.compareTo(new BigDecimal("5")) < 0)
+        if (providerPrice.compareTo(new BigDecimal("3")) < 0)
             paypalAccount = providerPaypalAccountMicropayment;
 
         if (response != null)
@@ -201,22 +200,26 @@ public class Paypal
         sb.append("&PAYMENTREQUEST_0_AMT=" + URLEncoder.encode(providerPrice.toPlainString(), "UTF-8"));
         sb.append("&PAYMENTREQUEST_0_PAYMENTREQUESTID=" + URLEncoder.encode(event.id + "_provider", "UTF-8"));
 
-        // our payment
-        sb.append("&PAYMENTREQUEST_1_PAYMENTACTION=" + URLEncoder.encode("Order", "UTF-8"));
-        sb.append("&PAYMENTREQUEST_1_DESC=" + URLEncoder.encode(StringUtils.getStringNotNullMaxLen(event.listing.title, 100), "UTF-8"));
-        //sb.append("&PAYMENTREQUEST_1_SELLERPAYPALACCOUNTID=" + paypalAccount);
-        sb.append("&PAYMENTREQUEST_1_SELLERPAYPALACCOUNTID=" + "marecica22@yahoo.com");
-        sb.append("&PAYMENTREQUEST_1_CURRENCYCODE=" + URLEncoder.encode(paymentCurrency, "UTF-8"));
-        sb.append("&PAYMENTREQUEST_1_AMT=" + URLEncoder.encode(fee.toPlainString(), "UTF-8"));
-        sb.append("&PAYMENTREQUEST_1_PAYMENTREQUESTID=" + URLEncoder.encode(event.id + "_our", "UTF-8"));
-
         // item details
         sb.append("&L_PAYMENTREQUEST_0_NAME0=" + StringUtils.getStringNotNullMaxLen(event.listing.title, 100));
         //sb.append("&L_PAYMENTREQUEST_0_DESC0=" + StringUtils.getStringNotNullMaxLen(event.description, 100));
         sb.append("&L_PAYMENTREQUEST_0_AMT0=" + URLEncoder.encode(providerPrice.toPlainString(), "UTF-8"));
 
-        sb.append("&L_PAYMENTREQUEST_1_NAME0=" + "Servise provider fee");
-        sb.append("&L_PAYMENTREQUEST_1_AMT0=" + URLEncoder.encode(fee.toPlainString(), "UTF-8"));
+        if (dual)
+        {
+            // our payment
+            sb.append("&PAYMENTREQUEST_1_PAYMENTACTION=" + URLEncoder.encode("Order", "UTF-8"));
+            sb.append("&PAYMENTREQUEST_1_DESC=" + URLEncoder.encode(StringUtils.getStringNotNullMaxLen(event.listing.title, 100), "UTF-8"));
+            //sb.append("&PAYMENTREQUEST_1_SELLERPAYPALACCOUNTID=" + paypalAccount);
+            sb.append("&PAYMENTREQUEST_1_SELLERPAYPALACCOUNTID=" + "marecica22@yahoo.com");
+            sb.append("&PAYMENTREQUEST_1_CURRENCYCODE=" + URLEncoder.encode(paymentCurrency, "UTF-8"));
+            sb.append("&PAYMENTREQUEST_1_AMT=" + URLEncoder.encode(fee.toPlainString(), "UTF-8"));
+            sb.append("&PAYMENTREQUEST_1_PAYMENTREQUESTID=" + URLEncoder.encode(event.id + "_our", "UTF-8"));
+
+            // item details
+            sb.append("&L_PAYMENTREQUEST_1_NAME0=" + "Servise provider fee");
+            sb.append("&L_PAYMENTREQUEST_1_AMT0=" + URLEncoder.encode(fee.toPlainString(), "UTF-8"));
+        }
     }
 
     private String executeRequest(StringBuilder sb) throws UnsupportedEncodingException, IOException, ClientProtocolException
@@ -356,65 +359,4 @@ public class Paypal
 
     }
 
-    //    public String doExpressCheckout(String token, String payerId, Event event) throws Exception
-    //    {
-    //        StringBuilder sb = new StringBuilder();
-    //        sb.append("USER=" + user);
-    //        sb.append("&PWD=" + pwd);
-    //        sb.append("&SIGNATURE=" + signature);
-    //        sb.append("&METHOD=" + URLEncoder.encode(doExpressCheckout, "UTF-8"));
-    //        sb.append("&VERSION=" + URLEncoder.encode(version, "UTF-8"));
-    //        sb.append("&TOKEN=" + token);
-    //        sb.append("&PAYERID=" + payerId);
-    //        sb.append("&PAYMENTREQUEST_0_PAYMENTACTION=" + URLEncoder.encode(paymentAction, "UTF-8"));
-    //        sb.append("&PAYMENTREQUEST_0_AMT=" + URLEncoder.encode(paymentAmount, "UTF-8"));
-    //        sb.append("&PAYMENTREQUEST_0_CURRENCYCODE=" + URLEncoder.encode(paymentCurrency, "UTF-8"));
-    //
-    //        String resp = executeRequest(sb);
-    //        return resp;
-    //    }
-
-    //    public AccessToken getAccessToken(Event event) throws Exception
-    //    {
-    //        StringBuilder sb = new StringBuilder();
-    //        sb.append("USER=" + user);
-    //        sb.append("&PWD=" + pwd);
-    //        sb.append("&SIGNATURE=" + signature);
-    //        sb.append("&METHOD=" + URLEncoder.encode(setExpressCheckout, "UTF-8"));
-    //        sb.append("&VERSION=" + URLEncoder.encode(version, "UTF-8"));
-    //
-    //        // item
-    //        sb.append("&L_PAYMENTREQUEST_0_NAME0=" + event.title);
-    //        sb.append("&L_PAYMENTREQUEST_0_NUMBER0=" + event.id);
-    //        sb.append("&L_PAYMENTREQUEST_0_DESC0=" + event.description);
-    //        sb.append("&L_PAYMENTREQUEST_0_AMT0=" + URLEncoder.encode(paymentAmount, "UTF-8"));
-    //        sb.append("&L_PAYMENTREQUEST_0_QTY0=" + "1");
-    //
-    //        // total
-    //        sb.append("&PAYMENTREQUEST_0_PAYMENTACTION=" + URLEncoder.encode(paymentAction, "UTF-8"));
-    //        sb.append("&PAYMENTREQUEST_0_CURRENCYCODE=" + URLEncoder.encode(paymentCurrency, "UTF-8"));
-    //        sb.append("&PAYMENTREQUEST_0_AMT=" + URLEncoder.encode(paymentAmount, "UTF-8"));
-    //
-    //        sb.append("&CANCELURL=" + URLEncoder.encode(cancelUrl, "UTF-8"));
-    //        sb.append("&RETURNURL=" + URLEncoder.encode(returnUrl, "UTF-8"));
-    //        sb.append("&RETURN=" + returnUrl);
-    //
-    //        //
-    //        // extra parameters
-    //        //
-    //
-    //        //locale
-    //        sb.append("&LC=" + "US");
-    //        //locale
-    //        sb.append("&LOCALECODE=" + "US");
-    //        //hide shipping address
-    //        sb.append("&NOSHIPPING=" + "1");
-    //        // post all parameters back
-    //        sb.append("&RM=" + 2);
-    //
-    //        String resp = executeRequest(sb);
-    //        AccessToken token = new AccessToken();
-    //        token.parseToken(resp);
-    //        return token;
-    //    }
 }

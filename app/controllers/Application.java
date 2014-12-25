@@ -14,7 +14,6 @@ import models.User;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
 
-import play.Logger;
 import play.cache.Cache;
 import play.mvc.Before;
 import utils.RandomUtil;
@@ -25,7 +24,7 @@ import com.google.gson.JsonParser;
 //@With(Secure.class)
 public class Application extends BaseController
 {
-    @Before(unless = { "home", "channels", "calendarUser" })
+    @Before(unless = { "home", "channels", "calendarUser", "facebook" })
     static void checkAccess() throws Throwable
     {
         checkAuthorizedAccess();
@@ -33,31 +32,72 @@ public class Application extends BaseController
 
     public static void facebook() throws IOException
     {
+        final User user = getLoggedUser();
+        final String param = request.params.get("signed_request");
         String userId = null;
         String pageId = null;
-        Boolean admin = null;
-        String param = request.params.get("signed_request");
+        Boolean admin = false;
+
         if (param != null)
         {
-            String[] parts = param.split("\\.");
-            String part = StringUtils.newStringUtf8(Base64.decodeBase64(parts[1]));
-            JsonObject jo = new JsonParser().parse(part).getAsJsonObject();
-            userId = jo.get("user_id").getAsString();
-            pageId = jo.get("page").getAsJsonObject().get("id").getAsString();
-            admin = jo.get("page").getAsJsonObject().get("admin").getAsBoolean();
-            session.put("pageId", pageId);
-            session.put("admin", admin);
+            final String[] parts = param.split("\\.");
+            final String part = StringUtils.newStringUtf8(Base64.decodeBase64(parts[1]));
+            final JsonObject jo = new JsonParser().parse(part).getAsJsonObject();
+            if (jo.get("user_id") != null)
+                userId = jo.get("user_id").getAsString();
+            if (jo.get("page") != null && jo.get("page").getAsJsonObject().get("id") != null)
+                pageId = jo.get("page").getAsJsonObject().get("id").getAsString();
+            if (jo.get("page") != null && jo.get("page").getAsJsonObject().get("admin") != null)
+                admin = jo.get("page").getAsJsonObject().get("admin").getAsBoolean();
+            if (admin != null && admin)
+            {
+                session.put("pageId", pageId);
+                session.put("admin", admin);
+            }
+
+            // if owner opens tab
+            if (user != null && userId != null && userId.equals(user.facebookId))
+            {
+                System.err.println("is Admin");
+                final User usr = getLoggedUserNotCache();
+                usr.facebookTab = pageId;
+                usr.save();
+                clearUserFromCache();
+                session.put("facebookTab", true);
+            }
         }
 
-        User user = getLoggedUser();
-        if (admin != null && user == null)
+        if (admin && user == null)
             redirect("/login?url=" + request.url);
 
         if (pageId == null)
             pageId = session.get("pageId");
 
         User displayedUser = pageId != null ? User.getUserByFacebookPage(pageId) : null;
-        render(user, displayedUser, admin, pageId);
+        List<Listing> listings = null;
+        if (displayedUser != null && admin)
+            listings = Listing.getForUser(displayedUser);
+
+        if (displayedUser != null && displayedUser.facebookPageType != null)
+        {
+            if (displayedUser.facebookPageType.equals("calendar"))
+                redirect("/user/" + displayedUser.login + "/calendar");
+            if (displayedUser.facebookPageType.equals("profile"))
+                redirect("/user/" + displayedUser.login);
+            if (displayedUser.facebookPageType.equals("channel"))
+                redirect("/channel/" + displayedUser.facebookPageChannel);
+        }
+        redirect("/dashboard");
+    }
+
+    public static void facebookPost(String id, String type, String channel) throws IOException
+    {
+        User user = User.getUserByUUID(id);
+        user.facebookPageType = type;
+        user.facebookPageChannel = channel;
+        user.save();
+        clearUserFromCache();
+        facebook();
     }
 
     public static void home()
@@ -90,18 +130,12 @@ public class Application extends BaseController
 
     public static void channels()
     {
-        Logger.info("home info");
-        Logger.debug("home debug");
-        Logger.warn("home warn");
-        Logger.error("home error");
-
         final User user = getLoggedUser();
         render(user);
     }
 
     public static void dashboard(String type, Integer results)
     {
-        results = results == null ? 20 : results + 20;
         final User user = getLoggedUser();
         final Boolean isOwner = true;
         final Boolean dashboard = true;
@@ -111,7 +145,8 @@ public class Application extends BaseController
         final List<Event> approved = user != null ? Event.getApprovement(user) : null;
         final List<Listing> listings = user != null ? Listing.getForUser(user) : null;
         final List<Contact> contacts = Contact.getContacts(user);
-        final List<Comment> comments = Comment.getByFollower(user, results);
+
+        final List<Comment> comments = Comment.getByFollower(user, 0, 200);
 
         if (user != null && !user.isPublisher())
             flash.success("Help others and become a publisher. Request for publisher account <a href='/settings'>here</a>");
@@ -120,7 +155,6 @@ public class Application extends BaseController
         //c.name = "timezone";
         //c.value = user.timezone.toString();
         //request.cookies.put("timezone", c);
-
         render(user, watchList, listings, approved, type, isOwner, contacts, comments, temp, commentTemp, results, dashboard);
     }
 

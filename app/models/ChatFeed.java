@@ -4,45 +4,29 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import play.db.jpa.Model;
-import utils.RandomUtil;
 
 @Entity
 @Table(name = "chat_feed")
 public class ChatFeed extends Model
 {
-    @ManyToOne
-    public User user;
-
-    @ManyToOne
-    public User customer;
-
-    public String event;
-    public String name;
-    public String account;
-    public String comment;
     public String uuid;
+    public String name;
+    public String comment;
     public Date created;
 
-    public static List<ChatFeed> getByEvent(String event)
+    public static List<ChatFeed> getByUuid(String uuid)
     {
-        return ChatFeed.find("event = ? order by created desc", event).fetch(100);
+        return ChatFeed.find("uuid = ? order by created desc", uuid).fetch(20);
     }
 
     public ChatFeed saveFeed()
     {
         this.created = new Date();
-        this.uuid = RandomUtil.getUUID();
         ChatFeed a = this.save();
         return a;
     }
 
-    @Override
-    public String toString()
-    {
-        return "Comment [event=" + event + ", user=" + user + ", customer=" + customer + ", comment=" + comment + ", uuid=" + uuid + ", created=" + created + "]";
-    }
 }

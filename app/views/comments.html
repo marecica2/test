@@ -1,160 +1,143 @@
 #{if objectType == "user" || (!edit && !fromEvent && isOwner) || (!edit && fromEvent && user && object && object.commentsEnabled)}
 <div class="row">
 <div class="col-md-12">
-    <div class="modal-comments">
-		<div class="">
-			<form action="/event/comment?uuid=${object.uuid}&objectType=${objectType}&url=${request.url.urlEncode()}" method="post">
-				<h2><img class="img-circle" style="float:left" src="/${user.avatarUrl}_32x32">&nbsp;Share what's new</h2>
-			    <div>
-			    	<div class="form-group">
-			    		<textarea rows="1" class="form-control" maxlength="1000" name="comment" id="dialog-comment-input"></textarea>
-			    	</div>
-			    	
-	    	        <button class="btn btn-light-gray pull-right margin-clear" style="" id="dialog-comment-button" type="submit">Submit</button>
-					
-					<div class="form-group">
-						<div class="btn-group pull-left" data-toggle="buttons">
-						  #{if isOwner}
-						  <label class="btn btn-light-gray active btn-short margin-clear" >
-						    <input type="radio" name="type" id="upload-buttonLink" checked="checked" value="text"><i class="fa fa-pencil"></i> Text
-						  </label>
-						  
-						  *{
-						  <label class="btn btn-light-gray btn-short margin-clear" >
-						    <input type="radio" name="type" id="upload-buttonLink" value="link"><i class="fa fa-link"></i> Link
-						  </label>
-						  <label class="btn btn-light-gray btn-short margin-clear" >
-						    <input type="radio" name="type" id="upload-buttonMedia" value="media"><i class="fa fa-file-image-o"></i> Media
-						  </label>
-						  }*
-						  <label class="btn btn-light-gray btn-short margin-clear" id="upload-buttonComments">
-						    <input type="radio" name="type" id="upload-buttonComments1" value="file" ><i class="fa fa-upload"></i> File
-						  </label>
-						  #{/if}
-						  #{else}
-	  				      	<input type="hidden" name="type" id="upload-buttonLink" checked="checked" value="text">
-						  #{/else}
-						</div>				
-					</div>					
-					<br/>
-					<br/>
-					
-					<!-- File upload -->
-					<input type="file" id="uploadComments" name="upload" style="display:none" multiple="multiple">
-					<input type="hidden" id="comment" name="tempId" value="${commentTemp}">
-					<input type="hidden" id="fileUploadComments" name="fileUpload">
-					<script>
-						$(document).ready(function(){
-							$("#upload-buttonComments").click(function(){
-							    $("#uploadComments").click();
-							});
-							$("#uploadComments").change(function(){
-							    // on edit page set ads uuid 
-							    var params = "";
-							    #{if temp}params = "?temp=${commentTemp}";#{/if}
-							    
-					    		star.utils.uploadFiles('/fileupload'+params, this.files, function(json){
-					    		    var resp = JSON.parse(json);
-					    		    if(resp.extension.indexOf("image") != -1){
-						    		    $("#images").append("<img class='img-thumbnail' style='height:100px;margin-bottom:4px' src='/public/uploads/"+resp.url+"_thumb'>");
-					    		    } else {
-					    		        $("#images").append("<span class='label default_bg'><i class='fa fa-file'></i> "+resp.name+"</span><br/>");
-					    		    }
-				    		        $("#fileUploadComments").val(resp.uuid);
-				    		        $("#typeComments").val("file");
-					    		});
-							});
-						});
-					</script>
-					
-					<div id="progresses" >
-					</div>
-					<div id="images">
-						#{if files}
-							#{list items:files, as:'file'}
-								<div style="position:relative; float:left;">
-						        <img class="img-thumbnail" style="height:100px;margin-bottom:4px" src="/public/uploads/${file.url}_thumb" alt="${file.name}" title="${file.name}">
-									<a class="btn btn-default btn-xs" href="/remove-upload?uuid=${file.uuid}&url=${request.url.urlEncode()}" style=""><i class="fa fa-times"></i></a>
-								</div>
-							#{/list}
-						#{/if}
-					</div>	
-					<!-- File upload -->
-	   	        </div>
-			</form>
+	<form role="form" action="/event/comment?uuid=${object.uuid}&objectType=${objectType}&url=${request.url.urlEncode()}" id="comment-form" method="post">
+		<h2><img class="img-circle" style="float:left" src="/${user.avatarUrl}_32x32">&nbsp;Share what's new</h2>
+    	<div class="form-group has-feedback">
+    		<div class="">
+	    		<textarea rows="3" class="form-control" maxlength="1000" name="comment" id="dialog-comment-input"></textarea>
+    		</div>
+	   		#{include 'help.html' /}
+    	</div>
+	    	
+  	        <button class="btn btn-light-gray pull-right margin-clear" id="comment-save" type="button">Submit</button>
+		
+		<div class="form-group">
+			<div class="btn-group pull-left" data-toggle="buttons">
+			  #{if isOwner}
+				  <label class="btn btn-light-gray active btn-short margin-clear" >
+				    <input type="radio" name="type" id="upload-buttonLink" checked="checked" value="text"><i class="fa fa-pencil"></i> Text
+				  </label>
+				  <label class="btn btn-light-gray btn-short margin-clear" id="upload-buttonComments">
+				    <input type="radio" name="type" id="upload-buttonComments1" value="file" ><i class="fa fa-upload"></i> File
+				  </label>
+			  #{/if}
+			  #{else}
+				      	  <input type="hidden" name="type" id="upload-buttonLink" checked="checked" value="text">
+			  #{/else}
+			</div>				
+		</div>					
+		<br/>
+		<br/>
+		
+		<!-- File upload -->
+		<input type="file" id="uploadComments" name="upload" style="display:none" multiple="multiple">
+		<input type="hidden" id="comment" name="tempId" value="${commentTemp}">
+		<input type="hidden" id="fileUploadComments" name="fileUpload">
+		<script>
+			$(document).ready(function(){
+				$("#upload-buttonComments").click(function(){
+				    $("#uploadComments").click();
+				});
+				$("#uploadComments").change(function(){
+				    // on edit page set ads uuid 
+				    var params = "";
+				    #{if temp}params = "?temp=${commentTemp}";#{/if}
+				    
+		    		star.utils.uploadFiles('/fileupload'+params, this.files, function(json){
+		    		    var resp = JSON.parse(json);
+		    		    if(resp.extension.indexOf("image") != -1){
+			    		    $("#images").append("<img class='img-thumbnail' style='height:100px;margin-bottom:4px' src='/public/uploads/"+resp.url+"_thumb'>");
+		    		    } else {
+		    		        $("#images").append("<span class='label default_bg'><i class='fa fa-file'></i> "+resp.name+"</span><br/>");
+		    		    }
+	    		        $("#fileUploadComments").val(resp.uuid);
+	    		        $("#typeComments").val("file");
+		    		});
+				});
+			});
+		</script>
+		
+		<div id="progresses" >
 		</div>
-    </div>		
+		<div id="images">
+			#{if files}
+				#{list items:files, as:'file'}
+					<div style="position:relative; float:left;">
+			        <img class="img-thumbnail" style="height:100px;margin-bottom:4px" src="/public/uploads/${file.url}_thumb" alt="${file.name}" title="${file.name}">
+						<a class="btn btn-default btn-xs" href="/remove-upload?uuid=${file.uuid}&url=${request.url.urlEncode()}" style=""><i class="fa fa-times"></i></a>
+					</div>
+				#{/list}
+			#{/if}
+		</div>	
+		<!-- File upload -->
+	</form>
 </div>    
 </div>    
 #{/if}	
     
-
-#{if comments}
-<div class="row">	
-	<div class="col-md-12">
-		<div>
-			#{list items:comments, as:'item'}
-				<div class="image-box shadow-blur mb-20 object-non-visible animated object-visible fadeInLeft" data-animation-effect="fadeInLeft" data-effect-delay="300">
-					<div class="image-box-body">
-				       	#{if user && item.user.uuid == user.uuid}
-							<a href="/event/comment/delete?uuid=${item.uuid}&url=${request.url.urlEncode()}"><i class='pull-right color-link fa fa-times delete-comment'></i></a>
-					    #{/if} 					
-						<div class="title">
-							<img src='../${item.user.avatarUrl}_64x64' style="height:40px;float:left;margin-right:10px"> 
-							<a href='/user/${item.user.login}'><strong>${item.user.fullName}</strong></a><br/> on
-				   			<span>${item.created.format("dd MMM, yyyy")}</span> 
-			   				<span>#{time time:item.created/}</span>							
-						</div>
-						<div style="margin:10px 0">${item.comment}</div>
-						
-			   	   		#{if dashboard && (item.event || item.listing)}
-							<div class="overlay-container">
-							    #{if item.event}
-							    	#{set url:item.event.listing.imageUrl /}
-							    	#{set title:item.event.listing.title /}
-							    	#{set link:"/event/"+item.event.uuid /}
-							    #{/if}
-							    #{if item.listing}
-							    	#{set url:item.listing.imageUrl /}
-							    	#{set title:item.listing.title /}
-							    	#{set link:"/channel/"+item.listing.uuid /}
-							    #{/if}
-							    <div style="width:100%;height:200px;background: url('${url}'); background-size: cover;padding:10px">
-							    	<h4 class="shadow margin-clear text-shadow">${title}</h4>
-							    </div>
-								<div class="overlay">
-									<div class="overlay-links">
-										<a href="${link}"><i class="fa fa-link"></i></a>
-										<a href="${url}" class="popup-img"><i class="fa fa-search-plus"></i></a>
-									</div>
-								</div>
-							</div>
-					    #{/if}							
-						
-	       				#{if item.files}
-					    	<br/>
-    		       			<strong>Attachments</strong>
-					    	<table>
-				       			#{list items:item.files, as:'file'}
-				       			<tr>
-				       				<td>
-					       				<span><i class="fa fa-file"></i> <a href="/public/uploads/${file.url}" download="${file.name}">${file.name}</a></span>
-				       				</td>
-				       				<td>
-					       				&nbsp;&nbsp;${file.size.formatSize()}
-				       				</td>
-				       			</tr>
-				       			#{/list}
-					    	</table>
-				       	#{/if}
-					</div>
-				</div>			
-			       
-			#{/list}							
-		</div>		 
+    
+<div id="comments-container"></div>   
+<div class="spinner-container2" style="display:table;width:100%">
+	<div class="spinner-container">
+		<div id="spinnerComments" class="spinner-load"></div>
+		<a id="moreResultsComments" class="spinner-more"><i class=" icon-plus-circled"></i></a>
 	</div>
 </div>
-#{/if}	
+<script>
+	$(document).ready(function(){
+	    var params = "";
+	    if(starCalendar.event != undefined){
+		    params = "event="+starCalendar.event+"&";
+		    params  += "type="+"event"+"&";
+	    } else if(starCalendar.listing != undefined){
+		    params = "listing="+starCalendar.listing+"&";
+		    params  += "type="+"listing"+"&";
+	    } else {
+		    params  += "type="+"user"+"&";
+	    }
+	    star.loadComments(params, star.dashboard);
+	    
+	    $("#moreResultsComments").click(function(){
+	        star.moreComments(params, star.dashboard);
+	    });
 
-						
+	    $("#comment-save").click(function(e){
+	        e.preventDefault();
+	        $.post($("#comment-form").attr("action"), $( "#comment-form" ).serialize(), function(){
+	            $('#comment-form')[0].reset();
+	            $('#images').html("");
+		        star.loadComments(params, star.dashboard);
+	        });
+	    });
+	    
+	    $(document).on("click", ".comment-delete", function(){
+	        if(confirm("Do you really want to delete selected comment?")){
+		        $.get($(this).attr("data-href"), function(){
+			        star.loadComments(params, star.dashboard);
+		        });
+	        }
+	    });
 
+	    $(document).on("click", ".comment-reply", function(e){
+	        e.preventDefault();
+	        $('.comment-reply').show();
+	        $('.comment-reply-input').hide();
+	        $(this).next().show();
+	        $(this).hide();
+	    });
+
+	    $(document).on("click", ".comment-reply-submit", function(e){
+	        e.preventDefault();
+	        var txt = $(this).prev().val();
+	        var data = {};
+	        data.comment = txt;
+	        data.id = $(this).attr("data-id");
+	        starServices.addCommentReply(data, function(){
+		        $(this).prev().val("");
+		        console.log(txt);
+		        star.loadComments(params, star.dashboard);
+	        });
+	    });
+	})
+</script> 

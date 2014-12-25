@@ -30,8 +30,11 @@ public class Event extends Model
     public static String EVENT_TYPE_CALENDAR = "calendar";
 
     public static String EVENT_TYPE_P2P_CALL = "p2p";
-    public static String EVENT_TYPE_BROADCAST = "live";
+    public static String EVENT_TYPE_BROADCAST = "broadcast";
     public static String EVENT_TYPE_INSTANT_BROADCAST = "instant";
+    public static String EVENT_TYPE_HANGOUT = "hangout";
+    public static String EVENT_TYPE_HANGOUT_AIR = "hangoutAir";
+
     public static String EVENT_VISIBILITY_PUBLIC = "public";
     public static String EVENT_VISIBILITY_PRIVATE = "private";
     public static String EVENT_STATE_USER_CREATED = "user_created";
@@ -161,6 +164,10 @@ public class Event extends Model
         if (user != null)
         {
             query += " and ev.user = :user ";
+            if (from != null)
+                query += " and ev.eventStart >= :start ";
+            if (to != null)
+                query += " and ev.eventStart <= :end ";
         }
 
         if (!isListing && includeAttendances)
@@ -235,7 +242,7 @@ public class Event extends Model
         this.attendances.clear();
 
         // delete comments
-        final List<Comment> comments = Comment.getByEvent(this);
+        final List<Comment> comments = Comment.getByEvent(this, 0, 200);
         for (Comment c : comments)
         {
             List<FileUpload> files = c.files;

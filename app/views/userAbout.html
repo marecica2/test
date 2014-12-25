@@ -14,11 +14,10 @@
 #{/if}
 
 <ul class="social-links colored clearfix" >
-	#{if usr.linkedIn}<a class="color-link" target="_blank" href="${usr.linkedIn}"><i class="fa fa-linkedin-square fa-2x"></i></a> #{/if}
-	#{if usr.twitter}<li class="twitter"><a target="_blank" href="http://www.twitter.com"><i class="fa fa-twitter"></i></a></li>#{/if}
-	#{if usr.linkedIn}<li class="linkedin"><a target="_blank" href="http://www.skype.com"><i class="fa fa-linkedin"></i></a></li>#{/if}
-	#{if usr.facebook}<li class="facebook"><a target="_blank" href="http://www.facebook.com"><i class="fa fa-facebook"></i></a></li>#{/if}
-	#{if usr.googlePlus}<li class="googleplus"><a target="_blank" href="http://plus.google.com"><i class="fa fa-google-plus"></i></a></li>#{/if}
+	#{if usr.facebook}<li class="facebook"><a target="_blank" href="${usr.facebook}"><i class="fa fa-facebook"></i></a></li>#{/if}
+	#{if usr.twitter}<li class="twitter"><a target="_blank" href="${usr.twitter}"><i class="fa fa-twitter"></i></a></li>#{/if}
+	#{if usr.linkedIn}<li class="linkedin"><a target="_blank" href="${usr.linkedIn}"><i class="fa fa-linkedin"></i></a></li> #{/if}
+	#{if usr.googlePlus}<li class="googleplus"><a target="_blank" href="${usr.googlePlus}"><i class="fa fa-google-plus"></i></a></li>#{/if}
 </ul>
 
 #{if usr.account.url}

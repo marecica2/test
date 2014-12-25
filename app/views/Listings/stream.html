@@ -20,7 +20,7 @@
 					</div>
 				#{/if}
 				
-				#{if (obj.type == 'broadcast' || obj.type == 'instant') && !isOwner && obj.started != null}
+				#{if (obj.type == 'broadcast' || obj.type == 'instant') && !isOwner && obj.started}
 				
 				<!-- 
 					<script src="//jwpsrv.com/library/JKCVFHmREeS3EA6sC0aurw.js"></script>
@@ -40,6 +40,7 @@
 										
 					<!-- 
 					 -->
+					 
 					<div class="col-md-${cols}" style="padding:0px;">
 						<object height="500" style="background:black;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/downstream.swf">
 						    <param name='src' value='/public/images/downstream.swf'/>

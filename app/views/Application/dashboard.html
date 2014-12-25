@@ -4,6 +4,12 @@
 #{set 'moreScripts'}
 	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
 	<script src="@{'/public/javascripts/dashboard.js'}" type="text/javascript"></script>	
+	<script>
+	    star.dashboard = true;
+		#{if user}
+	   		star.user = "${user.uuid}";	
+		#{/if}
+	</script>
 #{/set}
 
 <div class="padding container container-xs-height">
@@ -39,12 +45,6 @@
 						#{set objectType:"user" /}
 						#{set object:user /}
 						#{include 'comments.html' /}
-						
-						<div class="spinner-container1">
-							<div class="spinner-container">
-								<a id="moreResultsComments" href="/dashboard?results=${results}" class="spinner-more"><i class=" icon-plus-circled"></i></a>
-							</div>
-						</div>							
 					</div>
 
 					<div class="tab-pane fade" id="h2tab2">

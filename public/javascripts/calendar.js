@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
     var lang = starUtils.getCookie("PLAY_LANG");
         
@@ -10,8 +9,6 @@ $(document).ready(function() {
     $(".event-dialog-save-notify").click(starCalendar.saveNotifyEventDialog);
     $(".event-dialog-create").click(starCalendar.popupSaveNewEvent);
     $(".event-dialog-propose").click(starCalendar.popupSaveNewEventPropose);
-    $(".event-dialog-create-edit").click(starCalendar.popupSaveNewEventEdit);
-    $("#dialog-invite-button").click(starEvent.inviteAdd);
     $(document).on("click", ".dialog-invite-delete", starEvent.inviteDelete);
     $(document).on("click", ".dialog-invite-accept", starEvent.inviteAccept);
     $(document).on("click", ".dialog-invite-decline", starEvent.inviteDecline);
@@ -55,26 +52,6 @@ $(document).ready(function() {
         }
     });
 
-    $(".facebook-share").click(function(){
-        FB.ui(
-            {
-             method: 'feed',
-             name: starCalendar.selectedEvent.title,
-             caption: "com-manager",
-             description: (starCalendar.selectedEvent.description),
-             link: document.URL,
-             picture: location.origin+"/public/images/logo.jpg"
-            },
-            function(response) {
-              if (response && response.post_id) {
-                console.log('Post was published.');
-              } else {
-                console.log('Post was not published.');
-              }
-            }
-         ); 
-    });
-
     $(".event-charging").change(function(){
         if("free" == starUtils.getRadio("event-charging"))
             $(".price-container").hide();
@@ -110,7 +87,7 @@ $(document).ready(function() {
     });
 
     
-    $("#popup-event-delete").click(function(){
+    $(".popup-event-delete").click(function(){
         var ok = confirm(i18n("app.confirmDeleteEvent"));
         if(ok){
             var event = {};
@@ -317,19 +294,14 @@ starCalendar.selectionNewEvent = function(ccc, start, end, allDay, event) {
     var popup = $("#myPopover");
     
     // in case of month view create default time for new event 
-    if(allDay){
-        var now = new Date();
-        start.setHours(now.getMinutes() >= 30 ? now.getHours()+1 : now.getHours());
-        var minutes = now.getMinutes() >= 30 ? 0 : 30;
-        start.setMinutes(minutes);
-        end = new Date(start.getTime() + 1000*60*30);
-    }
     starCalendar.calendar = ccc;
     starCalendar.start = start;
     starCalendar.end = end;
     starCalendar.allDay = allDay;
+    
 
-    $(".event-title").html(star.utils.trimTo(i18n("New Event"), 35));
+
+    $(".event-title").html(star.utils.trimTo(i18n("New event"), 35));
     if(event != undefined){
         $(".event-title").html(star.utils.trimTo(i18n("Add Google event"), 35));
         star.selectedEvent = event;
@@ -337,15 +309,29 @@ starCalendar.selectionNewEvent = function(ccc, start, end, allDay, event) {
         star.selectedEvent = null;
     }
     
-    $(".event-time-from").html(starUtils.formatDateTime(start));
-    $(".event-time-to").html(starUtils.formatTime(end));
+    $(".event-time-from").html("");
+    $(".event-time-to").html("");
+    $("#timepicker1").val();
+    $('#timepicker1').timepicker('setTime', start.getHours()+":"+start.getMinutes());
+    $('#timepicker2').timepicker('setTime', end.getHours()+":"+end.getMinutes());
     $(".popup-edit-event").hide();
+    $(".popup-event-delete").hide();
     $(".popup-new-event").show();
+    $(".popup-event-view").hide();
     $(".popup-event-description").html("");
     $('#myPopover').modal('show');
     $("#popup-event-title").val("");
     $("#popup-event-title").focus();
     $('#myPopover').modal('show');
+    $(".event-dialog-propose").show();
+    $(".event-dialog-create").show();
+
+    if(ccc.fullCalendar('getView').name == "month"){
+        var now = new Date();
+        var later = new Date(now.getTime() + (1000 * 60 * 15));
+        $('.timepicker1').val((now.getHours()<10?'0':'') + now.getHours()+":"+(now.getMinutes()<10?'0':'') + now.getMinutes());
+        $('.timepicker2').val((later.getHours()<10?'0':'') + later.getHours()+":"+(later.getMinutes()<10?'0':'') + later.getMinutes());
+    }
 };
 
 
@@ -421,22 +407,22 @@ starCalendar.copyValuesToDialog = function(event){
         $(".popup-event-approvement").show();
     }
     
+    $(".event-dialog-propose").hide();
+    $(".event-dialog-create").hide();
     if(!event.editable){
-        $("#popup-event-edit").hide();
         $(".event-title-label").show();
         $(".event-description-label").show();
         $(".event-dialog-save-notify").hide();
-        $("#popup-event-delete").hide();
+        $(".popup-event-delete").hide();
         $(".popup-event-notify").hide();
     } else {
-        $("#popup-event-edit").show();
         $(".event-title-label").hide();
         $(".event-description-label").hide();
         $(".event-dialog-save").show();
         $(".event-dialog-save-notify").show();
         $(".popup-event-notify").show();
         $(".notify-check-all").show();
-        $("#popup-event-delete").show();
+        $(".popup-event-delete").show();
     }
         
     $(".popup-event-description").html(star.utils.trimTo(event.description, 250));

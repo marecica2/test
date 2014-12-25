@@ -88,7 +88,9 @@ public class Listings extends BaseController
             final String room = listing != null ? listing.uuid : null;
             final String rmtp = getProperty(CONFIG_RMTP_PATH);
             final String socketIo = getProperty(CONFIG_SOCKET_IO);
+
             final List<Comment> comments = Comment.getByListing(listing);
+
             final List<Rating> ratings = listing != null ? Rating.getByObject(uuid) : null;
             final Map<String, Object> stats = listing != null ? Rating.calculateStats(ratings) : null;
 
@@ -249,6 +251,7 @@ public class Listings extends BaseController
         e.price = l.price;
         e.currency = l.currency;
         e.chargingTime = l.chargingTime;
+        e.started = new Date();
 
         e.createdByUser = true;
         e.state = Event.EVENT_STATE_USER_CREATED;
@@ -270,11 +273,10 @@ public class Listings extends BaseController
 
     public static void stop(String id, String url)
     {
-        final User user = getLoggedUser();
         final Listing e = Listing.get(id);
-
         e.started = null;
         e.ended = new Date();
+        e.instantBroadcast = null;
         e.save();
         redirectTo(url);
     }

@@ -1,50 +1,66 @@
 package dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import models.Comment;
-import play.db.jpa.Model;
+import models.CommentReply;
+import models.FileUpload;
+import models.User;
 import utils.WikiUtils;
 
-public class CommentDTO extends Model
+public class CommentDTO
 {
     public String uuid;
-    public String result;
-    public String avatar;
-    public String created;
-    public String createdBy;
     public String comment;
-    public Boolean isForUser;
-    public String type;
-    public String url;
-    public String fileName;
-    public String fileSize;
-    public String fileExtension;
-    public String filePath;
+    public long created;
+    public String createdBy;
+    public String createdByName;
+    public String createdByLogin;
+    public String createdByAvatarUrl;
+    public String objectType;
+    public String event;
+    public long eventStart;
+    public long eventEnd;
+    public String listing;
+    public String listingName;
+    public String listingImage;
+    public boolean isDeletable;
+    public List<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
+    public List<CommentReplyDTO> replies = new ArrayList<CommentReplyDTO>();
 
-    public static CommentDTO convert(Comment c)
+    public static CommentDTO convert(Comment com, User user)
     {
-        CommentDTO cDto = new CommentDTO();
-        cDto.created = c.created != null ? c.created.getTime() + "" : "";
-        cDto.comment = WikiUtils.parseToHtml(c.comment);
-        cDto.uuid = c.uuid;
-        cDto.url = c.url;
-        cDto.type = c.type;
-        if (c.files != null)
+        CommentDTO c = new CommentDTO();
+        c.uuid = com.uuid;
+        c.comment = WikiUtils.parseToHtml(com.comment);
+        c.created = com.created.getTime();
+        c.createdBy = com.user.uuid;
+        c.createdByLogin = com.user.login;
+        c.createdByName = com.user.getFullName();
+        c.createdByAvatarUrl = com.user.getAvatarUrl();
+        c.objectType = com.objectType;
+        c.isDeletable = com.canDelete(user);
+        if (com.event != null)
         {
-            //            cDto.fileName = c.files.name;
-            //            cDto.fileExtension = c.files.contentType;
-            //            cDto.filePath = c.files.url;
-            //            cDto.fileSize = c.files.size + "";
+            c.event = com.event.uuid;
+            c.eventStart = com.event.eventStart.getTime();
+            c.eventEnd = com.event.eventEnd.getTime();
+            c.listingName = com.event.listing.title;
+            c.listingImage = com.event.listing.imageUrl;
         }
-        //        if (c.customer != null)
-        //        {
-        //            cDto.createdBy = c.customer.getFullName();
-        //            cDto.avatar = c.customer.avatarUrlSmall;
-        //        }
-        if (c.user != null)
+        if (com.listing != null)
         {
-            cDto.createdBy = c.user.getFullName();
-            cDto.avatar = c.user.avatarUrl;
+            c.listing = com.listing.uuid;
+            c.listingName = com.listing.title;
+            c.listingImage = com.listing.imageUrl;
         }
-        return cDto;
+
+        for (FileUpload fu : com.files)
+            c.attachments.add(new AttachmentDTO(fu.name, fu.contentType, fu.url, fu.size));
+        for (CommentReply cr : com.replies)
+            c.replies.add(CommentReplyDTO.convert(cr));
+
+        return c;
     }
 }

@@ -1,8 +1,5 @@
 package dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import models.Event;
 import models.User;
 
@@ -79,8 +76,6 @@ public class EventDTO
 
     public String category;
 
-    public List<CommentDTO> comments = new ArrayList<CommentDTO>();
-
     public static EventDTO convert(Event event, User user)
     {
         EventDTO e = new EventDTO();
@@ -137,7 +132,6 @@ public class EventDTO
         e.uuid = null;
         e.category = null;
         e.imageUrl = null;
-        e.comments = null;
         e.currency = null;
         e.state = null;
         e.title = null;

@@ -1,7 +1,7 @@
 <header class="header fixed clearfix">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-3">
+			<div class="col-md-2">
 
 				<!-- header-left start -->
 				<!-- ================ -->
@@ -10,7 +10,7 @@
 					<!-- logo -->
 					<div class="logo">
 						<a href="/home">
-							<img id="logo" src="/images/logo_purple.png" style="" alt="widgr">
+							<img id="logo" src="/images/logo_purple.png" style="height:40px;margin-top:5px" alt="widgr">
 						</a>
 					</div>
 
@@ -23,7 +23,7 @@
 				<!-- header-left end -->
 
 			</div>
-			<div class="col-md-9">
+			<div class="col-md-10">
 
 				<!-- header-right start -->
 				<!-- ================ -->
@@ -54,46 +54,59 @@
 								  	  			<a href="/mail" class="object-non-visible animated object-visible wobble" data-animation-effect="wobble" data-effect-delay="6000" ><i style="font-size:1.3em" class="blink text-default fa fa-envelope title="&{'Received new message'}"></i></a>
 								  	  		</li>
 									  	#{/if}
-   								  	   <li #{if request.url.indexOf("home")>=0}class="active"#{/if}><a href="/home" id="public-btn-logout">Home</a></li>
+									  	
+									  	
 									 	#{if user}
-									      <li #{if request.url.indexOf("dashboard")>=0}class="active" #{/if}><a href="/dashboard">Dashboard</a></li>
-									      <li #{if request.url.indexOf("calendar")>=0}class="active" #{/if}><a href="/user/${user.login}/calendar">Calendar</a></li>
+									      <li #{if request.url.indexOf("dashboard")>=0}class="active" #{/if}><a href="/dashboard"><i class="fa fa-desktop"></i> Dashboard</a></li>
+									      <li #{if request.url.indexOf("calendar")>=0}class="active" #{/if}><a href="/user/${user.login}/calendar"><i class="fa fa-calendar"></i> Calendar</a></li>
 										#{/if}
 										
-										
-									      <li class='dropdown #{if request.url.indexOf("about")>=0} active #{/if}'>
+								 	  	#{if user == null}
+					  	   				<li #{if request.url.indexOf("home")>=0}class="active"#{/if}><a href="/home" id="public-btn-logout"><i class="fa fa-home"></i> Home</a></li>
+									  	#{/if}
+   								  	   	<li #{if request.url.indexOf("channels")>=0}class="active"#{/if}><a href="/channels" id="public-btn-logout"><i class="fa fa-search"></i> Channels</a></li>
+									   	<li class='dropdown #{if request.url.indexOf("about")>=0} active #{/if}'>
 									    	<a class="dropdown-toggle" data-toggle="dropdown" href="/about" >About</a>
 									        <ul class="dropdown-menu">
 									      		<li><a href="/about#pricing">Pricing</a></li>
 									      		<li><a href="/about#features">Features</a></li>
 									      		<li><a href="/about#contact">Contact Us</a></li>
 									        </ul>
-									      </li>   
-									      <li class="dropdown" style="">
+									    </li>   
+									    
+								    	<li class="dropdown" style="">
 									    	<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="" ><span><img src='/public/images/flags/#{if request.cookies.get("PLAY_LANG") != null}${request.cookies.get("PLAY_LANG").value}#{/if}#{else}${lang}#{/else}.gif'></span></a>
 									        <ul class="dropdown-menu">
 									            <li><a href="/locale?locale=en&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/en.gif'> English</a></li>
 									            <li><a href="/locale?locale=de&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/de.gif'> Deutsch</a></li>
 									            <li><a href="/locale?locale=pl&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/pl.gif'> Polski</a></li>
 									            <li><a href="/locale?locale=sk&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/sk.gif'> Slovensky</a></li>
-									            <li><a href="/locale?locale=cz&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/cz.gif'> Česky</a></li>
+									            <li><a href="/locale?locale=cz&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/cz.gif'> Cesky</a></li>
 									            <li><a href="/locale?locale=hu&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/hu.gif'> Magyar</a></li>
 									        </ul>
-									      </li>   
+									    </li> 											
+										
+									  	#{if !user}
+									      <li> 
+									      	<a href="/login?url=${request.url.urlEncode()}" id="public-btn-logout" title="&{'menu.login'}">
+									      		<i class="black fa fa-power-off fa-1x"> </i>
+									      	</a>
+									      </li>  
+										#{/if} 	
 										
 									  	#{if user}
-										  #{if user.isAdmin()}
+							  				#{if user.isAdmin()}
 									      <li class="dropdown">
-									        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Setup</a>
+									        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
 									        <ul class="dropdown-menu">
 									          	<li><a href="/admin/users"><i class="icon-users"></i> Users</a></li>
 									          	<li><a href="/admin/publishers"><i class="icon-users"></i> Publisher Requests</a></li>
 									        </ul>
 									      </li>	
-									      #{/if}
+									      #{/if}									  	
 									      <li class="dropdown">
 									        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-									        	<img class="img-circle inline" title="${user.fullName}" style="height:24px;" src="/${user.avatarUrl}_64x64">&nbsp;${user.firstName}
+									        	<img class="img-circle inline" title="${user.fullName}" style="height:24px;" src="/${user.avatarUrl}_64x64">
 									        </a>
 									        <ul class="dropdown-menu">
 									          	<li><a href="/user/${user.login}"><i class="icon-user"></i> &{'menu.profile'}</a></li>
@@ -108,15 +121,7 @@
 									      		</li>          
 									        </ul>
 									      </li>	
-										#{/if}  	
-											
-									  	#{if !user}
-									      <li> 
-									      	<a href="/login?url=${request.url.urlEncode()}" id="public-btn-logout" title="&{'menu.login'}">
-									      		<i class="black fa fa-power-off fa-1x"> </i>
-									      	</a>
-									      </li>  
-										#{/if} 									
+										#{/if} 																		
 									</ul>
 								</div>
 

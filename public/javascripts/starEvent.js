@@ -1,3 +1,145 @@
+
+star.moreComments = function(params, dashboard){
+    star.comments.first += star.comments.size;
+    params += "first="+star.comments.first+"&count="+star.comments.count+"&";
+
+    $("#spinnerComments").show();
+    $("#moreResultsComments").hide();
+    starServices.getComments(params, function(data){
+        $("#spinnerComments").hide();
+        $("#moreResultsComments").show();
+
+        var html = star.renderComments(data, dashboard);
+        $("#comments-container").append(html);
+    });
+}
+
+star.loadComments = function(params, dashboard){
+    star.comments = {};
+    star.comments.size = 4;
+    star.comments.first = 0;
+    star.comments.count = star.comments.size;
+    
+    params += "first="+star.comments.first+"&count="+star.comments.count+"&";
+    
+    $("#spinnerComments").show();
+    $("#moreResultsComments").hide();
+    starServices.getComments(params, function(data){
+        $("#comments-container").html("");
+        $("#spinnerComments").hide();
+        $("#moreResultsComments").show();
+        
+        var html = star.renderComments(data, dashboard);
+        $("#comments-container").append(html);
+    });
+    
+    $(window).scroll(function() {
+        var diff = Math.abs($(window).scrollTop() - ($(document).height() - $(window).height()));
+        if(diff < 1) {
+            $("#moreResultsComments").click();              
+        }
+   });     
+}
+
+star.renderComments = function(data, dashboard){
+    var html = "";
+    for(var i = 0; i < data.length; i++){
+        var item = data[i];
+        //console.log(item);
+        html += "<div class='image-box shadow-blur mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
+        html += "   <div class='image-box-body'>";
+        
+ 
+        
+        if(dashboard && item.event != undefined){
+            html += "           <div class='overlay-container'>";
+            html += "               <div style='width:100%;height:120px;background: url(\"/"+item.listingImage+"\"); background-size: cover;padding:10px'>";
+            html += "                   <h3 class='shadow margin-clear text-shadow'>"+item.listingName+"</h3>";
+            html += "                   <span class='text-shadow'>"+starUtils.formatDate(item.eventStart)+"</span>";
+            html += "                   <span class='text-shadow'>"+starUtils.formatTime(item.eventStart)+"</span> - ";
+            html += "                   <span class='text-shadow'>"+starUtils.formatTime(item.eventEnd)+"</span>";
+            html += "               </div>";
+            html += "               <div class='overlay'>";
+            html += "                   <div class='overlay-links'>";
+            html += "                       <a href='/event/"+item.event+"'><i class='fa fa-link'></i></a>";
+            html += "                   </div>";
+            html += "               </div>";
+            html += "           </div>";
+        }
+        
+        else if(dashboard && item.listing != undefined){
+            html += "           <div class='overlay-container'>";
+            html += "               <div style='width:100%;height:120px;background: url(\"/"+item.listingImage+"\"); background-size: cover;padding:10px'>";
+            html += "                   <h3 class='shadow margin-clear text-shadow'>"+item.listingName+"</h3>";
+            html += "               </div>";
+            html += "               <div class='overlay'>";
+            html += "                   <div class='overlay-links'>";
+            html += "                       <a href='/channel/"+item.listing+"'><i class='fa fa-link'></i></a>";
+            html += "                   </div>";
+            html += "               </div>";
+            html += "           </div>";
+        }
+        
+        if(item.isDeletable != undefined && item.isDeletable){
+            html += "           <a data-href='/event/comment/delete?uuid="+item.uuid+"' style='position:absolute;right:20px;top:15px' class='btn btn-light-gray btn-short comment-delete'><i class='color-link fa fa-times'></i></a>";
+        }  
+        
+        html += "       <div class='title'>";
+        html += "           <img src='../"+item.createdByAvatarUrl+"_64x64' style='height:40px;float:left;margin-right:10px'> ";
+        html += "           <a href='/user/"+item.createdByLogin+"'><strong>"+item.createdByName+"</strong></a><br/>";
+        html += "               <span class='tip'>on "+starUtils.formatDate(item.created)+"</span> ";
+        html += "               <span class='tip'>"+starUtils.formatTime(item.created)+"</span>";
+        html += "       </div>";
+        html += "       <div style='color:black'>"+item.comment+"</div>";
+        
+        if(item.attachments.length > 0){
+            html += "           <strong>Attachments</strong>";
+            html += "           <table>";
+            for(var j = 0; j < item.attachments.length; j++){
+            var a = item.attachments[j];
+            html += "               <tr>";
+            html += "                   <td>";
+            html += "                       <span><i class='fa fa-file'></i> <a href='/public/uploads/"+a.path+"' download='"+a.name+"'>"+a.name+"</a></span>";
+            html += "                       </td>";
+            html += "                       <td>";
+            html += "                       &nbsp;&nbsp;"+starUtils.formatFilesize(a.size)+"";
+            html += "                       </td>";
+            html += "               </tr>";
+            }
+            html += "           </table>";
+            if(dashboard){
+                html += "<br/>";
+            }
+        }        
+        
+        if(item.replies.length > 0){
+            html += "<div class='small'>";
+            for(var j = 0; j < item.replies.length; j++){
+                var r = item.replies[j];
+                html += "<div class='padding-bottom'>";
+                html += "   <img class='avatar16' src='/"+r.createdByAvatarUrl+"_32x32'> ";
+                html += "   <a href=''>"+r.createdByName+"</a> <span class='opacity'>" + starUtils.formatDate(r.created) + " " + starUtils.formatTime(r.created) + "</span><br/>";
+                html +=     r.comment;
+                html += "</div>";
+            }
+            html += "</div>";
+        }   
+
+        if(star.user){
+            html += "<a href='#' class='comment-reply pull-right margin-top'>Reply</a>";
+            html += "<div style='display:none' class='comment-reply-input margin-top'>";
+            html += "   <textarea class='form-control' placeholder='Write a reply'></textarea>";
+            html += "   <button class='btn btn-default pull-right comment-reply-submit' data-id='"+item.uuid+"'>Submit</button>";
+            html += "</div>";
+            html += "<div class='clearfix'></div>"
+        }
+        
+        html += "   </div>";
+        html += "</div> ";        
+    }
+    return html;
+}
+
 star.initItems = function(prefix, urlParams){
     $(document).ready(function(){
         star[prefix] = {};
@@ -10,12 +152,11 @@ star.initItems = function(prefix, urlParams){
         var params = {};
         params.url = url;
         params.prefix = prefix;
-        
 
         starServices.getItems(prefix, params, function(data){
             $("#spinner"+prefix).show();
             $("#moreResults"+prefix).hide();
-            var html = star.generateItemsHtml(data, prefix);
+            var html = star.renderItems(data, prefix);
             var f = function(html){
                 $(html).hide().appendTo($("#itemsList"+prefix)).fadeIn(500);
                 $("#spinner"+prefix).hide();
@@ -48,18 +189,11 @@ star.initItems = function(prefix, urlParams){
     });    
 };
 
-
-
-
-
-
-
-
 star.loadItems = function(prefix, urlParams){
     $("#spinner"+prefix).show();
     $("#moreResults"+prefix).hide();
     starServices.getItems(prefix, urlParams, function(data){
-        var html = star.generateItemsHtml(data, urlParams.prefix);
+        var html = star.renderItems(data, urlParams.prefix);
            var f = function(html){
                 $(html).hide().appendTo($("#itemsList"+urlParams.prefix)).fadeIn(500);
                 $("#spinner"+urlParams.prefix).hide();
@@ -71,7 +205,7 @@ star.loadItems = function(prefix, urlParams){
     });
 };
 
-star.generateItemsHtml = function(data, prefix){
+star.renderItems = function(data, prefix){
     var current_date = new Date().getTime();
     var days, hours, minutes, seconds;
     var _second = 1000;
@@ -186,11 +320,6 @@ star.generateItemsHtml = function(data, prefix){
     return html    
 };
 
-
-
-
-
-
 starEvent.editEventDialogShow = function(elm){
     if($(elm).attr("edit") == undefined){
         $(".event-view").hide();
@@ -281,10 +410,6 @@ starEvent.updateEvent = function(event, timeChanged, success) {
     eventUpdate.title = event.title;
     eventUpdate.color = event.backgroundColor;
     eventUpdate.type = event.type;
-    //eventUpdate.privacy = event.privacy;
-    //eventUpdate.price = event.price;
-    //eventUpdate.currency = event.currency;
-    //eventUpdate.charging = event.charging;
     if(timeChanged != undefined){
         eventUpdate.changedTime = true;
     }
@@ -381,18 +506,6 @@ starEvent.inviteLoad = function(event, clbck){
     });
 };
 
-
-starEvent.inviteAdd = function(){
-    var data = {};
-    data.email = $("#dialog-invite-input").val();
-    data.event = starCalendar.selectedEvent.uuid;
-    if(data.email.length > 0){
-        starServices.createAttendance(data, function(res){
-            starEvent.inviteLoad(starCalendar.selectedEvent.uuid);
-            $("#dialog-invite-input").val("");
-        });
-    }
-};
 
 
 
@@ -492,7 +605,7 @@ starEvent.loadActivities = function(uuid){
             prev = avatar;
             html += "</td>";
             html += "<td style='padding-left:5px;vertical-align:top;'>";
-            html += "<div style='font-size:0.9em;color:#ccc'>";
+            html += "<div style='font-size:0.8em;opacity:0.6'>";
             var url = success[i].byCustomer ? "/user/"+success[i].customerLogin : "/user/"+success[i].userLogin;
             var name = success[i].byCustomer ? success[i].customer : success[i].user;
             html += "<a class='' href='" + url +"'>" + name + "</a>&nbsp;on ";
@@ -692,10 +805,31 @@ starServices.addComment = function(data, success, error){
     });
 };
 
+starServices.getComments = function(params, success, error){
+    $.ajax({
+        type: "GET",
+        url: "/comments?"+params,
+        success: success,
+        error: error,
+        contentType: "application/json"
+    });
+};
+
 starServices.deleteComment = function(data, success, error){
     $.ajax({
         type: "DELETE",
         url: "/event/comment",
+        data: JSON.stringify(data),
+        success: success,
+        error: error,
+        contentType: "application/json"
+    });
+};
+
+starServices.addCommentReply = function(data, success, error){
+    $.ajax({
+        type: "POST",
+        url: "/comment/reply",
         data: JSON.stringify(data),
         success: success,
         error: error,
@@ -723,6 +857,16 @@ starUtils.setRadio = function(name, value) {
 starUtils.uuid = function() {
  return starUtils.s4() + starUtils.s4() + '-' + starUtils.s4() + '-' + starUtils.s4() + '-' +
  starUtils.s4() + '-' + starUtils.s4() + starUtils.s4() + starUtils.s4();
+};
+
+starUtils.formatFilesize = function(fileSizeInBytes) {
+    var i = -1;
+    var byteUnits = [' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
+    do {
+        fileSizeInBytes = fileSizeInBytes / 1024;
+        i++;
+    } while (fileSizeInBytes > 1024);
+    return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];    
 };
 
 starUtils.formatDateTime = function(long) {

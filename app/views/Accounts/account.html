@@ -10,12 +10,6 @@
 	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>
 	<script>
 		starCalendar.aspectRatio = 1;
-
-		$(document).ready(function(){
-			if ($("[rel=tooltip]").length) {
-	        	$("[rel=tooltip]").tooltip();
-	        }
-		});				
 	</script>
 
 #{/set}
@@ -98,7 +92,7 @@
 	<div class="row">
 	  	<div class="col-md-12">
 			<h2 class="btn-margin">
-				<i class=" icon-tools"></i>Settings
+				Settings
 				<span class="">
 					#{if event && params.image && params.image.indexOf("uploads") != -1}
 						<a href="/event/reset-image?id=${event.uuid}&url=${request.url.urlEncode()}" id="delete-upload-button" class="btn btn-default btn-margin"><i class="fa fa-times"></i> Remove</a>
@@ -109,12 +103,10 @@
 					#{else}
 						<a class="btn btn-light-gray btn-sm btn-margin" href="/settings"><i class="fa fa-times"></i> &{'cancel'}</a>
 					#{/else}
-						<a class="btn btn-light-gray btn-sm btn-margin" href="/google?url=${request.url.urlEncode()}"><i class="fa fa-google"></i> google oauth</a>
 				</span>
 			</h2>
 			
 			<form class="form-horizontal" role="form" method="post" action="/settings?edit=true">	
-		    
 		    
 			<!-- File upload -->
 			<div>
@@ -158,11 +150,14 @@
 			<div class="separator-2"></div>
 			#{if !edit}
 			<dl class="dl-horizontal">
-				<dt>&{'Accout plan'}</dt>
+				<dt>&{'Account Name'}</dt>
+				<dd>${user.account.name} &nbsp;</dd>
+
+				<dt>&{'Account Plan'}</dt>
 				<dd>
-					${user.account.currentPlan()}
+					<span class="label default-bg" style="font-size:0.8em">${user.account.currentPlan()}</span>
 				</dd>
-				<dt>&{'Account type'}</dt>
+				<dt>&{'Account Type'}</dt>
 				<dd>
 					
 					#{if user && user.account.type == "publisherReq"}
@@ -170,42 +165,55 @@
 					#{/if}
 					#{elseif user && user.account.type == "standard"}
 						<span class="label label-primary" style="font-size:0.8em">${user.account.type}</span>
-						<strong><a href="/settings/request-publisher?url=${request.url.urlEncode()}">Become a Publisher</a></strong>
-						<i class="fa fa-question-circle" rel="tooltip" data-placement="right" data-original-title="To become a publisher you must have filled in personal information and created at least one channel. To create new channel go to Dashboard and click 'new channel' button."></i>
+						<a href="/settings/request-publisher?url=${request.url.urlEncode()}">Become a Publisher</a>
+						<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="To become a publisher you must have filled in personal information and created at least one channel. To create new channel go to Dashboard and click 'new channel' button."></i>
 					#{/elseif}
 					#{else}
-						<span class="label label-success" style="font-size:0.8em">${user.account.type}</span>
+						<span class="label default-bg" style="font-size:0.8em">${user.account.type}</span>
 					#{/else}
+					<br/>
+					<br/>
 				</dd>
 				
-				<dt>&{'Company'}</dt>
-				<dd>${user.account.name} &nbsp;</dd>
-				
-				<dt>&{'Name'}</dt>
-				<dd>${user.firstName} ${user.lastName}</dd>
 				
 				<dt>&{'Login'}</dt>
 				<dd>${user.login}</dd>
+
+				<dt>&{'Display Name'}</dt>
+				<dd>${user.firstName} ${user.lastName}</dd>
 				
 				<dt>&{'Password'}</dt>
-				<dd><a href="/password">&{'account.changeYourPassword'}</a></dd>
+				<dd>****** <a href="/password">&{'account.changeYourPassword'}</a></dd>
 				
-				<dt>&{'language'}</dt>
+				<dt>&{'Language'}</dt>
 				<dd>${user.locale} &nbsp;</dd>
 				
-				<dt>&{'timezone'}</dt>
-				<dd>#{if user.timezone} #{if user.timezone > 0} - #{/if} #{else} + #{/else} ${user.timezone / -60}:00 hours #{/if}&nbsp;</dd>			
+				<dt>&{'Timezone'}</dt>
+				<dd>#{if user.timezone} #{if user.timezone < 0} - #{/if} #{else} + #{/else} ${user.timezone / 60}:00 hours #{/if}&nbsp;</dd>			
 				
-				<dt>&{'EmailNotification'}</dt>
-				<dd>${user.emailNotification} &nbsp;</dd>	
+				<dt>&{'Email Notifications'}</dt>
+				<dd>
+					${user.emailNotification} 
+					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="Enable / Disable sending notification emails"></i>
+				</dd>	
 				
-				<dt>&{'Facebook account'}</dt>
-				<dd>${user.facebookName}</dd>
+				<dt>&{'Facebook ID'}</dt>
+				<dd>
+					${user.facebookName}
+					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="Connect with your facebook account"></i>
+				</dd>
 			</dl>
 			#{/if}
 			#{else}
 			<div class="form-group">
-				<label for="accPlan" class="col-sm-2 control-label">&{'account.plan'}</label>
+				<label for="name" class="col-sm-2 control-label">&{'Account Name'}</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="accName" placeholder="&{'account.accountName'}" name="accName" value="${params.accName}">
+			      <div class="error">#{error 'accName' /}</div>
+			    </div>
+			</div>
+			<div class="form-group">
+				<label for="accPlan" class="col-sm-2 control-label">&{'Account Plan'}</label>
 			    <div class="col-sm-10">
 					<select class="form-control" name="accPlan" id="accPlan">
 						<option #{if params.type == "standard"}  selected='selected' #{/if} value="standard">Standard</option>
@@ -215,13 +223,6 @@
 					<div class="error">#{error 'locale' /}</div>
 			    </div>
 			</div>	
-			<div class="form-group">
-				<label for="name" class="col-sm-2 control-label">&{'account.accountName'}</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="accName" placeholder="&{'account.accountName'}" name="accName" value="${params.accName}">
-			      <div class="error">#{error 'accName' /}</div>
-			    </div>
-			</div>
 			<div class="form-group">
 				<label for="firstName" class="col-sm-2 control-label">&{'firstName'}</label>
 			    <div class="col-sm-10">
@@ -250,35 +251,45 @@
 				<label for="locale" class="col-sm-2 control-label">&{'timezone'}</label>
 			    <div class="col-sm-10">
 					<select class="form-control" name="timezone" id="timezone">
-						<option #{if params.timezone == "-720"}  selected='selected'#{/if} value="-720">+ 12:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-660"}  selected='selected'#{/if} value="-660">+ 11:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-600"}  selected='selected'#{/if} value="-600">+ 10:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-540"}  selected='selected'#{/if} value="-540">+ 09:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-480"}  selected='selected'#{/if} value="-480">+ 08:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-420"}  selected='selected'#{/if} value="-420">+ 07:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-360"}  selected='selected'#{/if} value="-360">+ 06:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-300"}  selected='selected'#{/if} value="-300">+ 05:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-240"}  selected='selected'#{/if} value="-240">+ 04:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-180"}  selected='selected'#{/if} value="-180">+ 03:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-120"}  selected='selected'#{/if} value="-120">+ 02:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-60"}  selected='selected'#{/if} value="-60">+ 01:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-660"}  selected='selected'#{/if} value="-660">- 11:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-600"}  selected='selected'#{/if} value="-600">- 10:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-540"}  selected='selected'#{/if} value="-540">- 09:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-480"}  selected='selected'#{/if} value="-480">- 08:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-420"}  selected='selected'#{/if} value="-420">- 07:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-360"}  selected='selected'#{/if} value="-360">- 06:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-300"}  selected='selected'#{/if} value="-300">- 05:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-240"}  selected='selected'#{/if} value="-240">- 04:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-180"}  selected='selected'#{/if} value="-180">- 03:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-120"}  selected='selected'#{/if} value="-120">- 02:00 &{'hrs'}</option>
+						<option #{if params.timezone == "-60"}  selected='selected'#{/if} value="-60">- 01:00 &{'hrs'}</option>
 						<option #{if params.timezone == "0"} selected='selected'#{/if} value="0">&nbsp; 00:00 &{'hrs'}</option>
-						<option #{if params.timezone == "60"} selected='selected'#{/if} value="60">- 01:00 &{'hrs'}</option>
-						<option #{if params.timezone == "120"}selected='selected'#{/if} value="120">- 02:00 &{'hrs'}</option>
-						<option #{if params.timezone == "180"}selected='selected'#{/if} value="180">- 03:00 &{'hrs'}</option>
-						<option #{if params.timezone == "240"}selected='selected'#{/if} value="240">- 04:00 &{'hrs'}</option>
-						<option #{if params.timezone == "300"}selected='selected'#{/if} value="300">- 05:00 &{'hrs'}</option>
-						<option #{if params.timezone == "360"}selected='selected'#{/if} value="360">- 06:00 &{'hrs'}</option>
-						<option #{if params.timezone == "420"}selected='selected'#{/if} value="420">- 07:00 &{'hrs'}</option>
-						<option #{if params.timezone == "480"}selected='selected'#{/if} value="480">- 08:00 &{'hrs'}</option>
-						<option #{if params.timezone == "540"}selected='selected'#{/if} value="540">- 09:00 &{'hrs'}</option>
-						<option #{if params.timezone == "600"}selected='selected'#{/if} value="600">- 10:00 &{'hrs'}</option>
-						<option #{if params.timezone == "660"}selected='selected'#{/if} value="660">- 11:00 &{'hrs'}</option>
-						<option #{if params.timezone == "720"}selected='selected'#{/if} value="720">- 12:00 &{'hrs'}</option>
+						<option #{if params.timezone == "60"} selected='selected'#{/if} value="60">+ 01:00 &{'hrs'}</option>
+						<option #{if params.timezone == "120"}selected='selected'#{/if} value="120">+ 02:00 &{'hrs'}</option>
+						<option #{if params.timezone == "180"}selected='selected'#{/if} value="180">+ 03:00 &{'hrs'}</option>
+						<option #{if params.timezone == "240"}selected='selected'#{/if} value="240">+ 04:00 &{'hrs'}</option>
+						<option #{if params.timezone == "300"}selected='selected'#{/if} value="300">+ 05:00 &{'hrs'}</option>
+						<option #{if params.timezone == "360"}selected='selected'#{/if} value="360">+ 06:00 &{'hrs'}</option>
+						<option #{if params.timezone == "420"}selected='selected'#{/if} value="420">+ 07:00 &{'hrs'}</option>
+						<option #{if params.timezone == "480"}selected='selected'#{/if} value="480">+ 08:00 &{'hrs'}</option>
+						<option #{if params.timezone == "540"}selected='selected'#{/if} value="540">+ 09:00 &{'hrs'}</option>
+						<option #{if params.timezone == "600"}selected='selected'#{/if} value="600">+ 10:00 &{'hrs'}</option>
+						<option #{if params.timezone == "660"}selected='selected'#{/if} value="660">+ 11:00 &{'hrs'}</option>
+						<option #{if params.timezone == "720"}selected='selected'#{/if} value="720">+ 12:00 &{'hrs'}</option>
 					</select>
 					<div class="error">#{error 'locale' /}</div>
 			    </div>
+			</div>	
+			<div class="form-group">
+			<label for="locale" class="col-sm-2 control-label">&{'Email notification'}</label>
+			<div class="col-sm-10">
+				<label class="radio-inline">
+				  <input type="radio" name="emailNotification" id="inlineRadio1" value="true" #{if params.emailNotification == "null" || params.emailNotification == "true"} checked="checked" #{/if}> enabled
+				</label>
+				<label class="radio-inline">
+				  <input type="radio" name="emailNotification" id="inlineRadio2" value="false" #{if params.emailNotification == 'false'} checked="checked" #{/if}> disabled
+				</label>
 			</div>				
+			</div>						
 			<div class="form-group">
 				<label for="facebook" class="col-sm-2 control-label">&{'Facebook ID'}</label>
 				<div class="col-sm-10">
@@ -294,20 +305,9 @@
 					  }
 					</script>		
 					<br/>
-					<strong>Log in to get Facebook Account</strong> <div class="fb-login-button" data-max-rows="1" data-scope="public_profile" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>						
+					<strong>Connect with your Facebook account</strong> <div class="fb-login-button" data-max-rows="1" data-scope="public_profile" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>						
 					<div id="fb-root"></div>
 				</div>				
-			</div>				
-			<div class="form-group">
-			<label for="locale" class="col-sm-2 control-label">&{'Email notification'}</label>
-			<div class="col-sm-10">
-				<label class="radio-inline">
-				  <input type="radio" name="emailNotification" id="inlineRadio1" value="true" #{if params.emailNotification == "null" || params.emailNotification == "true"} checked="checked" #{/if}> enabled
-				</label>
-				<label class="radio-inline">
-				  <input type="radio" name="emailNotification" id="inlineRadio2" value="false" #{if params.emailNotification == 'false'} checked="checked" #{/if}> disabled
-				</label>
-			</div>				
 			</div>				
 			#{/else}			
 			
@@ -355,6 +355,7 @@
 			      <div class="error">#{error 'url' /}</div>
 			    </div>
 			</div>
+
 			<div class="form-group">
 				<label for="facebook" class="col-sm-2 control-label"> &{'facebook'}</label>
 			    <div class="col-sm-10">
@@ -362,20 +363,7 @@
 			      <div class="error">#{error 'facebook' /}</div>
 			    </div>
 			</div>				
-			<div class="form-group">
-				<label for="googlePlus" class="col-sm-2 control-label"> &{'googlePlus'}</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="googlePlus" placeholder="&{'googlePlus'}" name="googlePlus" value="${params.googlePlus}">
-			      <div class="error">#{error 'googlePlus' /}</div>
-			    </div>
-			</div>				
-			<div class="form-group">
-				<label for="linkedIn" class="col-sm-2 control-label"> &{'linkedIn'}</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="linkedIn" placeholder="&{'linkedIn'}" name="linkedIn" value="${params.linkedIn}">
-			      <div class="error">#{error 'linkedIn' /}</div>
-			    </div>
-			</div>				
+
 			<div class="form-group">
 				<label for="twitter" class="col-sm-2 control-label"> &{'twitter'}</label>
 			    <div class="col-sm-10">
@@ -383,11 +371,20 @@
 			      <div class="error">#{error 'twitter' /}</div>
 			    </div>
 			</div>				
+
 			<div class="form-group">
-				<label for="skype" class="col-sm-2 control-label"> &{'skype'}</label>
+				<label for="linkedIn" class="col-sm-2 control-label"> &{'linkedIn'}</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="skype" placeholder="&{'skype'}" name="skype" value="${params.skype}">
-			      <div class="error">#{error 'skype' /}</div>
+			      <input type="text" class="form-control" id="linkedIn" placeholder="&{'linkedIn'}" name="linkedIn" value="${params.linkedIn}">
+			      <div class="error">#{error 'linkedIn' /}</div>
+			    </div>
+			</div>				
+
+			<div class="form-group">
+				<label for="googlePlus" class="col-sm-2 control-label"> &{'googlePlus'}</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="googlePlus" placeholder="&{'googlePlus'}" name="googlePlus" value="${params.googlePlus}">
+			      <div class="error">#{error 'googlePlus' /}</div>
 			    </div>
 			</div>				
 			#{/else}	
@@ -414,7 +411,13 @@
  					#{if user.hiddenDays.indexOf("6") >= 0}&{'cal.saturday'}#{/if} 
  					#{/if}
 				</dd>
+				<dt>Sync with Google</dt>
+				<dd>
+					<a href="/google?url=${request.url.urlEncode()}">enable synchronization with Google Calendar</a>
+					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="To become a publisher you must have filled in personal infnew channel' button."></i>
+				</dd>
 			</dl>
+`			
 			#{/if}
 			#{else}
 			<div class="form-group">
@@ -520,7 +523,10 @@
 			#{if !edit}
 			<dl class="dl-horizontal">
 				<dt>&{'account.paypalAccount'}</dt>
-				<dd>${user.account.paypalAccount} &nbsp;</dd>
+				<dd>
+					${user.account.paypalAccount}
+					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="When you want to create paid events you need to have valid Paypal Account"></i>
+				</dd>
 				<dt>&{'account.currency'}</dt>
 				<dd>${user.account.currency} &nbsp;</dd>
 			</dl>

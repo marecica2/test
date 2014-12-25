@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import models.Activity;
 import models.ChatFeed;
@@ -44,11 +42,24 @@ public class Public extends BaseController
 
     public static void feeds(String event)
     {
-        final List<ChatFeed> feeds = ChatFeed.getByEvent(event);
+        final List<ChatFeed> feeds = ChatFeed.getByUuid(event);
         final List<ChatFeedDTO> feedsDto = new ArrayList<ChatFeedDTO>();
         for (ChatFeed chatFeed : feeds)
             feedsDto.add(ChatFeedDTO.convert(chatFeed));
         renderJSON(feedsDto);
+    }
+
+    public static void feedSave()
+    {
+        final User user = getLoggedUser();
+        if (user != null)
+        {
+            final JsonObject jo = JsonUtils.getJson(request.body);
+            ChatFeed feed = new ChatFeed();
+            feed = feedFromJson(jo, feed);
+            feed.saveFeed();
+            renderJSON(feed);
+        }
     }
 
     public static void about()
@@ -99,41 +110,11 @@ public class Public extends BaseController
                 followers, follow, ratings, stats, contact);
     }
 
-    public static void feedSave()
-    {
-        try
-        {
-            final JsonObject jo = JsonUtils.getJson(request.body);
-            ChatFeed feed = new ChatFeed();
-            feed = feedFromJson(jo, feed);
-            User user = getLoggedUser();
-            feed.user = user;
-            feed.saveFeed();
-            renderJSON(feed);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-            response.status = 500;
-            renderJSON("Failed to update event. Cause: " + e.getMessage());
-        }
-    }
-
     private static ChatFeed feedFromJson(final JsonObject jo, ChatFeed feed)
     {
-        feed.comment = jo.get("comment").getAsString();
-        Pattern p = Pattern.compile("\\[url\\](.*)\\[/url\\]\\[name\\](.*)\\[/name\\]");
-        Matcher m = p.matcher(feed.comment);
-        if (m.matches())
-        {
-            String url = m.group(1);
-            String name = m.group(2);
-            feed.comment = "<a href='" + url + "' target='_blank'>" + name + "</a>";
-        } else
-        {
-            feed.comment = StringEscapeUtils.escapeHtml(feed.comment);
-        }
-        feed.name = jo.get("name").getAsString();
-        feed.event = jo.get("event").getAsString();
+        feed.uuid = StringEscapeUtils.escapeHtml(jo.get("uuid").getAsString());
+        feed.comment = StringEscapeUtils.escapeHtml(jo.get("comment").getAsString());
+        feed.name = StringEscapeUtils.escapeHtml(jo.get("name").getAsString());
         feed.created = new Date();
         return feed;
     }

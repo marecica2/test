@@ -59,6 +59,7 @@ public class DateTimeUtils
         }
     }
 
+    @SuppressWarnings("deprecation")
     public String convertJsonDate(String jsonDate)
     {
         Date date;

@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TypedQuery;
 
 import org.hibernate.annotations.Cascade;
 
@@ -27,6 +28,7 @@ public class Comment extends Model
     public static final String TYPE_GOOGLE_DOCS = "gdoc";
 
     public Date created;
+    public Date updated;
 
     @ManyToOne
     public User user;
@@ -56,6 +58,10 @@ public class Comment extends Model
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     public List<FileUpload> files;
 
+    @Cascade({ org.hibernate.annotations.CascadeType.DELETE })
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<CommentReply> replies;
+
     public static List<Comment> getByEvent(Event event)
     {
         return Comment.find("from Comment where event = ? order by created desc", event).fetch();
@@ -66,15 +72,48 @@ public class Comment extends Model
         return Comment.find("from Comment where listing = ? order by created desc", listing).fetch();
     }
 
-    public static List<Comment> getByFollower(User user, Integer results)
+    public static List<Comment> getByEvent(Event event, Integer first, Integer count)
     {
         StringBuilder sb = new StringBuilder();
-        sb.append(" select comment from Comment comment left outer join Comment.event e left outer join e.attendances as a where (comment.user in ");
-        sb.append(" (select contact.contact from Contact contact where contact.following = true and contact.user = ? ) ");
-        sb.append(" and (comment.objectType != 'event' or e.privacy = 'public' or (e.privacy = 'private' and a.customer = ?) ) ");
-        sb.append(" ) or comment.user = ? ");
-        sb.append(" order by comment.created desc ");
-        return Comment.find(sb.toString(), user, user, user).fetch(results);
+        sb.append("from Comment where event = :event order by created desc");
+
+        TypedQuery<Comment> q = Comment.em().createQuery(sb.toString(), Comment.class);
+        q.setParameter("event", event);
+
+        q.setFirstResult(first);
+        q.setMaxResults(count);
+        return q.getResultList();
+    }
+
+    public static List<Comment> getByListing(Listing listing, Integer first, Integer count)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("from Comment where listing = :listing order by created desc");
+
+        TypedQuery<Comment> q = Comment.em().createQuery(sb.toString(), Comment.class);
+        q.setParameter("listing", listing);
+
+        q.setFirstResult(first);
+        q.setMaxResults(count);
+        return q.getResultList();
+    }
+
+    public static List<Comment> getByFollower(User user, Integer first, Integer count)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select distinct comment from Comment comment left outer join Comment.event e left outer join e.attendances as a where (comment.user in ");
+        sb.append(" (select contact.contact from Contact contact where contact.following = true and contact.user = :user ) ");
+        sb.append(" and (comment.objectType != 'event' or e.privacy = 'public' or (e.privacy = 'private' and a.customer = :user) ) ");
+        sb.append(" ) or comment.user = :user ");
+        sb.append(" order by comment.updated desc ");
+
+        TypedQuery<Comment> q = Comment.em().createQuery(sb.toString(), Comment.class);
+        q.setParameter("user", user);
+
+        q.setFirstResult(first);
+        q.setMaxResults(count);
+
+        return q.getResultList();
     }
 
     public static Comment getByUuid(String uuid)
@@ -85,6 +124,7 @@ public class Comment extends Model
     public Comment saveComment()
     {
         this.created = new Date();
+        this.updated = new Date();
         Comment a = this.save();
         return a;
     }
@@ -95,4 +135,16 @@ public class Comment extends Model
         return "Comment [user=" + user + ", comment=" + comment + ", uuid=" + uuid + ", created=" + created + "]";
     }
 
+    public boolean canDelete(User user)
+    {
+        if (user == null)
+            return false;
+        if (user.equals(this.user))
+            return true;
+        if (this.event != null && this.event.user.equals(user))
+            return true;
+        if (this.listing != null && this.listing.user.equals(user))
+            return true;
+        return false;
+    }
 }

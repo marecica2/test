@@ -59,7 +59,7 @@ public class ListingDTO
 
     public Integer ratingCount;
 
-    private Boolean firstFree;
+    public Boolean firstFree;
 
     public static ListingDTO convert(Listing listing, User user)
     {

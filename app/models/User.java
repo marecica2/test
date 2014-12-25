@@ -76,6 +76,10 @@ public class User extends Model
 
     public String facebookTab;
 
+    public String facebookPageType;
+
+    public String facebookPageChannel;
+
     public String googlePlus;
 
     public String googlePlusId;

@@ -8,6 +8,7 @@
 
 
   window.fbAsyncInit = function() {
+      FB.Canvas.setSize({ width: 640, height: 2480 });
       FB.Event.subscribe('auth.authResponseChange', function(response) {
         if (response.status === 'connected') {
            star.fbClbck();
@@ -16,3 +17,4 @@
         }
       });
   };
+  

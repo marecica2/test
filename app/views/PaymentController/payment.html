@@ -1,6 +1,4 @@
 #{extends 'main.html' /} 
-#{set background:'true' /} 
-
 
 <div class="container" style="min-height:70vh;">
 <div class="row">
@@ -57,7 +55,7 @@
    	   	   	</div>
 			
 			<br/>
-			<form method="POST" action="/checkout/${e.uuid}" onsubmit="return validate()" >
+			<form method="POST" action="/payment/${e.uuid}" onsubmit="return validate()" >
 	    		<input type="image" class="pull-right" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" border="0" align="top" alt="Check out with PayPal"/>
 				<input type="hidden" name="url" value="${url}">
 				<input type="radio" name="payment" value="paypal" id="paypal" checked="checked"> <label for="paypal">Pay with Paypal</label>

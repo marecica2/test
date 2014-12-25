@@ -20,7 +20,7 @@ public class ActivityDTO extends Model
     public String customerId;
     public String customerAvatar;
     public String customerLogin;
-    private String login;
+    public String login;
 
     public static ActivityDTO convert(Activity a)
     {

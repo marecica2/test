@@ -45,7 +45,7 @@ public class Events extends BaseController
     public static void events()
     {
         final Boolean showArchived = false;
-        final Boolean showGoogleEvents = true;
+        //final Boolean showGoogleEvents = true;
         final DateTimeUtils dt = new DateTimeUtils(DateTimeUtils.TYPE_OTHER);
         final Date from = dt.fromJson(request.params.get("start"));
         final Date to = dt.fromJson(request.params.get("end"));
@@ -170,7 +170,9 @@ public class Events extends BaseController
             forbidden();
 
         if (event != null && event.type.equals(Event.EVENT_TYPE_INSTANT_BROADCAST))
+        {
             checkPayment(event, request.url);
+        }
 
         final Listing listing = event != null ? event.listing : Listing.get(listingId);
         final Boolean fromEvent = true;
@@ -378,6 +380,8 @@ public class Events extends BaseController
         event.roomSecret = RandomUtil.getUUID();
         event.privacy = listing.privacy;
         event.type = listing.type;
+        if (listing.type.equals(Event.EVENT_TYPE_INSTANT_BROADCAST))
+            event.type = Event.EVENT_TYPE_BROADCAST;
         event.currency = listing.currency;
         event.price = listing.price;
         event.charging = listing.charging;

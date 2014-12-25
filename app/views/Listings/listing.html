@@ -3,12 +3,16 @@
 #{set 'moreScripts'}
 	<script>
 	starCalendar.aspectRatio = 2.5;
-	#{if listing}
+	star.dashboard = false;
+	#{if user}
+		star.user = "${user.uuid}";
+	#{/if}
+    #{if event}
+       	starCalendar.event = "${event.uuid}" 
+	#{/if}
+	#{elseif listing}
     	starCalendar.listing = "${listing.uuid}";
     	starCalendar.user = "${listing.user.login}";	
-	#{/if}
-    #{elseif event}
-       	starCalendar.event = "${event.uuid}" 
 	#{/elseif}
 	#{else}
 		starCalendar.temp = "${temp}";
@@ -56,9 +60,11 @@
 <!-- set the item object -->
 #{if fromEvent && event}
 	#{set item:event /}
+	#{set globalObject:event /}
 #{/if}
 #{else}
 	#{set item:listing /}
+	#{set globalObject:listing /}
 #{/else}
 
 #{if listing}
@@ -94,13 +100,13 @@
 <div class="section gray-bg" style="padding-top:15px;padding-bottom:15px">
 	<div class="container">
 	   	<div class="pull-left">
-		   	<h3 style="margin-top:10px">
+		   	<h3 class="margin-clear">
 		   		#{if listing}
 			   		<a href="/channels?category=${listing.category}" class="anchor"><i><strong>${listing.category.capAll()}</strong></i></a> 
 			   		/ <i><a class="anchor" href="/channel/${listing.uuid}">${listing.title}</a></i>
 		   		#{/if}
 		   		#{else}
-		   			New Channel
+		   			<i>Create New Channel</i>
 		   		#{/else}
 		   		#{if event}
 		   			/
@@ -116,16 +122,23 @@
 				<!-- edit buttons -->
 				#{if fromEvent && event}
 					<br/>
-					#{if event.charging && attendance}
+			   		#{if event.state == 'user_accepted'}
+						<span class="btn btn-success btn-sm">Approved</span>
+					#{/if}
+			   		#{if event.state == 'customer_created'}
+						<span class="btn btn-danger btn-sm">Waiting for approvement</span>
+					#{/if}
+					
+					#{if event.charging != null && attendance}
 						#{if !paid }
 							#{set displayStream:false /}
-							<a href="/checkout/${event.uuid}?url=${request.url.urlEncode()}" class="btn btn-warning btn-sm margin-clear">
-								<i class="dialog-event-edit color-link fa fa-paypal fa-1x"></i> Pay for event now
+							<a href="/payment/${event.uuid}?url=${request.url.urlEncode()}" class="btn btn-dark btn-sm margin-clear" rel="tooltip" data-placement="top" title="You can pay for the event before or you can wait until event will start">
+								Pay for event now
 							</a>
 						#{/if}
-						#{elseif paid && attendance.transactionDate}
+						#{elseif paid && attendance.paypalTransactionDate}
 							<span class="btn btn-success btn-sm shadow margin-clear">
-								<i class="dialog-event-edit color-link fa fa-paypal fa-1x"></i> Paid on ${attendance.transactionDate.format("dd MMM, yyyy")}
+								<i class="dialog-event-edit color-link fa fa-paypal fa-1x"></i> Paid on ${attendance.paypalTransactionDate.format("dd MMM, yyyy")}
 							</span>
 						#{/elseif}
 					#{/if}
@@ -148,7 +161,12 @@
 						#{else}
 							<a class="btn btn-default btn-sm btn-margin" href="/event-stop?event=${event.uuid}&url=${request.url.urlEncode()}" >Stop Live Broadcast</a>
 						#{/else}
-					#{/if}			
+					#{/if}		
+					
+					#{if isOwner && !edit && event.type == 'instant'}
+							#{set displayStream:true /}
+							<a class="btn btn-default btn-sm btn-margin btn-instant-stop" data-href='/channel-stop?id=${listing.uuid}&url=${("/channel/"+listing.uuid+"").urlEncode()}' >Stop Instant Broadcast</a>
+					#{/if}							
 					
 					#{if isOwner && !edit && event.type == 'hangoutAir'}
 							
@@ -204,17 +222,20 @@
 				
 				#{else}	 
 					<br/>
+					#{set displayStream:false /}
+					
 					#{if isOwner && !edit && listing.type == 'instant'}
 						#{if listing.started == null}
 							#{set displayStream:false /}
-							<a class="btn btn-default btn-sm btn-margin" href="/channel-start?id=${listing.uuid}&url=${request.url.urlEncode()}" >Start Instant Broadcast</a>
+							<a class="btn btn-default btn-sm btn-margin btn-instant-start" href="/channel-start?id=${listing.uuid}&url=${request.url.urlEncode()}" >Start Instant Broadcast</a>
 						#{/if}
 						#{else}
 							#{set displayStream:true /}
-							<a class="btn btn-default btn-sm btn-margin" href="/channel-stop?id=${listing.uuid}&url=${request.url.urlEncode()}" >Stop Instant Broadcast</a>
-							<a class="btn btn-default btn-sm btn-margin" href="/create-room?id=${listing.uuid}&url=${request.url.urlEncode()}" >Go to private room</a>
+							<a class="btn btn-default btn-sm btn-margin btn-instant-stop" data-href="/channel-stop?id=${listing.uuid}&url=${request.url.urlEncode()}" >Stop Instant Broadcast</a>
+							<a class="btn btn-default btn-sm btn-margin btn-instant-room" data-href="/create-room?id=${listing.uuid}&url=${request.url.urlEncode()}" >Go to private room</a>
 						#{/else}
 					#{/if}		
+					
 					#{if !isOwner && !edit && listing.type == 'instant' && listing.instantBroadcast != null}
 							<a class="btn btn-default btn-sm btn-margin" href="/event/${listing.instantBroadcast}" >Go to private room</a>
 					#{/if}		
@@ -249,14 +270,70 @@
 		
 		<!-- social -->
 	   	<div class="pull-right">
-			<ul class="social-links colored clearfix" style="margin:0px">
+			<ul class="social-links colored clearfix" style="margin:10px">
 				<li class="dribbble"><a href="" data-toggle="modal" data-target="#myModal" onclick="$('#share-link').select();"><i class="fa fa-link"></i></a></li>
-				<li class="twitter"><a target="_blank" href="http://www.twitter.com"><i class="fa fa-twitter"></i></a></li>
-				<li class="linkedin"><a target="_blank" href="http://www.skype.com"><i class="fa fa-linkedin"></i></a></li>
-				<li class="facebook"><a target="_blank" href="http://www.facebook.com"><i class="fa fa-facebook"></i></a></li>
-				<li class="googleplus"><a target="_blank" href="http://plus.google.com"><i class="fa fa-google-plus"></i></a></li>
+				<li class="facebook">
+					<a id="fb-share" href="#"><i class="fa fa-facebook"></i></a>
+				<li class="twitter">
+					<a id="twitter-share-button" href="#"><i class="fa fa-twitter"></i></a>
+				</li>
+				<li class="linkedin">
+					<a id="linkedin-share-button" href="#" ><i class="fa fa-linkedin"></i></a>
+				</li>
+				<li class="googleplus">
+					<a href="https://plus.google.com/share?url=${(request.base+request.url).urlEncode()}" onclick="javascript:window.open(this.href,
+					  '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"><i class="fa fa-google-plus"></i></a>					
+				</li>
 			</ul>
 	   	</div>
+	   	#{if listing}
+		<script>
+			$("#fb-share").click(function(e){
+			    e.preventDefault();
+			    FB.ui(
+			    {
+				    method: 'feed',
+				    name: '${listing.title}',
+				    link: '${request.base}${request.url}',
+				    picture: '${request.base}/${listing.imageUrl}',
+				    caption: 'by ${listing.user.fullName}',
+				    description: "${listing.description}",
+				    message: ''
+			    });
+			});		
+			$("#twitter-share-button").click(function(e){
+			    e.preventDefault();
+			    var width  = 400,
+		        height = 400,
+		        left   = ($(window).width()  - width)  / 2,
+		        top    = ($(window).height() - height) / 2,
+		        url    = this.href,
+		        opts   = 'status=1' +
+		                 ',width='  + width  +
+		                 ',height=' + height +
+		                 ',top='    + top    +
+		                 ',left='   + left;
+			    var url = "https://twitter.com/share?text=${listing.title}";
+		    	window.open(url, 'twitter', opts);						    
+			})	
+			
+			$("#linkedin-share-button").click(function(e){
+			    e.preventDefault();
+			    var width  = 400,
+		        height = 400,
+		        left   = ($(window).width()  - width)  / 2,
+		        top    = ($(window).height() - height) / 2,
+		        url    = this.href,
+		        opts   = 'status=1' +
+		                 ',width='  + width  +
+		                 ',height=' + height +
+		                 ',top='    + top    +
+		                 ',left='   + left;
+			    var url = "//www.linkedin.com/shareArticle?mini=true&url=${request.url.urlEncode()}&title=${listing.title}&summary=${listing.description}&source=${request.url}";
+		    	window.open(url, 'linkedin', opts);						    
+			})
+		</script>	 
+		#{/if}  	
 	   	<div class="clearfix"></div>
 	   	
 	   	
@@ -674,8 +751,7 @@
 #{/if}
 
 
-
-#{if !edit && obj && obj.chatEnabled}
+#{if !edit && globalObject && (globalObject.chatEnabled || globalObject.type == "instant")}
 <script>
     star.user = '${name}';
     star.room = '${room}';

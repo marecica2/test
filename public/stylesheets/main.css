@@ -2,6 +2,9 @@
 body {
 	background: black;
 }
+.dropdown-menu {
+	z-index: 91001;	
+} 
 
 .progress {
 	margin-bottom:0px;
@@ -99,7 +102,31 @@ img {
 
 
 /* various */
+.opacity {
+	opacity: 0.8;	
+}
+.hidden {
+	display: none;
+}
+.margin-top {
+	margin: 10px 0 0 0;
+}
+.margin-right {
+	margin-right: 5px;
+}
 
+.padding-bottom {
+	padding-bottom: 5px;
+}
+
+.flip {
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";	
+}
 
 .separator-timepicker {
 	width:20px;
@@ -190,6 +217,11 @@ img {
 
 .gray-bg-lighter {
 	background-color: #fcfcfc;
+}
+
+.tip {
+	color: silver;
+	font-size: 0.8em
 }
 
 .spinner-container1 {
@@ -385,7 +417,7 @@ img {
 
 .text-shadow {
 	color:white;
-	text-shadow: 3px 5px 6px rgba(0, 0, 0, 0.7);
+	text-shadow: 1px 2px 2px rgba(0, 0, 0, 1);
 }
 
 .shadow {
@@ -599,12 +631,12 @@ object {
 
 
 #myModal {
-	overflow:hidden;
+	#overflow:hidden;
 }
 
 @media screen and (max-width: 700px) {
 	#myModal {
-		margin:0px 10px;
+		#margin:0px 10px;
 	}
 	.proggresive {
 		width:100%;
