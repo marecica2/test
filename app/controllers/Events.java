@@ -10,19 +10,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.Account;
 import models.Activity;
 import models.Attendance;
 import models.Comment;
 import models.Event;
 import models.FileUpload;
 import models.Listing;
+import models.Message;
 import models.Rating;
 import models.User;
-
-import org.apache.velocity.VelocityContext;
-
+import play.Logger;
+import play.i18n.Messages;
 import play.mvc.Before;
-import templates.VelocityTemplate;
 import utils.DateTimeUtils;
 import utils.JsonUtils;
 import utils.NumberUtils;
@@ -31,8 +31,7 @@ import utils.RandomUtil;
 import com.google.gson.JsonObject;
 
 import dto.EventDTO;
-import email.EmailProvider;
-import email.Notification;
+import email.EmailNotificationBuilder;
 
 public class Events extends BaseController
 {
@@ -113,7 +112,6 @@ public class Events extends BaseController
         for (EventDTO eventDTO : eventsDto)
             if (eventDTO.invisible)
                 eventDTO = eventDTO.postProcessHiddenEvent(eventDTO);
-
         renderJSON(eventsDto);
     }
 
@@ -166,12 +164,29 @@ public class Events extends BaseController
         if (edit && event != null && edit && !event.isEditable(user))
             forbidden();
 
+        if (isNew && !user.account.type.equals(Account.TYPE_PUBLISHER))
+            forbidden();
+
         if (event != null && !event.isVisible(user))
             forbidden();
 
         if (event != null && event.type.equals(Event.EVENT_TYPE_INSTANT_BROADCAST))
-        {
             checkPayment(event, request.url);
+
+        if (event != null && event.type.equals(Event.EVENT_TYPE_BROADCAST))
+            checkPayment(event, request.url);
+
+        if (edit || isNew)
+        {
+            if (!user.hasValidPaymentAccount())
+            {
+                flash.success(Messages.get("setup-paypal-account-warning"));
+                //"To create paid Event you must set up your Paypal Account first <a href='/settings?edit=true#paypal'>Set up Paypal Account</a>");
+            }
+            if (!user.paidForCurrentMonth())
+            {
+                flash.success(Messages.get("you-have-not-paid-for-current-month"));
+            }
         }
 
         final Listing listing = event != null ? event.listing : Listing.get(listingId);
@@ -309,6 +324,17 @@ public class Events extends BaseController
         validation.required(eventSt);
         if (eventSt == null || eventEn == null || eventSt.compareTo(eventEn) > 0)
             validation.addError("time", "Invalid time range");
+        if (!charging.equals(Event.EVENT_CHARGING_FREE) && !user.hasValidPaymentAccount())
+        {
+            // "Invalid Paypal account, set the paypal account first <a href='/settings?edit=true#paypal'>Set up Paypal Account</a>");
+            validation.addError("charging", Messages.get("invalid-paypal-account-warning"));
+            flash.error(Messages.get("invalid-paypal-account-warning"));
+        }
+        if (!charging.equals(Event.EVENT_CHARGING_FREE) && !user.paidForCurrentMonth())
+        {
+            validation.addError("charging", Messages.get("you-have-not-paid-for-current-month"));
+            flash.error(Messages.get("you-have-not-paid-for-current-month"));
+        }
 
         if (!validation.hasErrors() && errs.size() == 0)
         {
@@ -360,14 +386,27 @@ public class Events extends BaseController
 
     public static void eventSaveRest()
     {
+        final User user = getLoggedUserNotCache();
         final JsonObject jo = JsonUtils.getJson(request.body);
         final DateTimeUtils time = new DateTimeUtils(DateTimeUtils.TYPE_OTHER);
         final String userId = jo.get("user").getAsString();
-        final String listingId = jo.get("listing") != null ? jo.get("listing").getAsString() : "";
+        final User userTo = User.getUserByUUID(userId);
+        final String listingId = jo.get("listing") != null ? jo.get("listing").getAsString() : null;
         final String googleId = jo.get("googleId") != null ? jo.get("googleId").getAsString() : null;
         final Boolean proposal = jo.get("proposal").getAsBoolean();
-        User user = getLoggedUser();
-        User customer = user;
+        final User customer = user;
+
+        if (user == null)
+            forbidden();
+
+        if (!proposal && !user.isPublisher())
+            forbidden();
+
+        if (proposal)
+        {
+            if (userTo.hasBlockedContact(customer))
+                forbidden();
+        }
 
         // create event
         Listing listing = Listing.get(listingId);
@@ -388,9 +427,11 @@ public class Events extends BaseController
         event.chargingTime = listing.chargingTime;
         event.chatEnabled = listing.chatEnabled;
         event.commentsEnabled = listing.commentsEnabled;
+
         if (proposal)
         {
-            user = User.getUserByUUID(userId);
+            //TODO change this when this could be paid
+            event.charging = Event.EVENT_CHARGING_FREE;
             event.state = Event.EVENT_STATE_CUSTOMER_CREATED;
             event.customer = customer;
             event.createdByUser = false;
@@ -405,9 +446,20 @@ public class Events extends BaseController
 
         if (proposal)
         {
+            final String subject = Messages.get("new-event-proposed-for-channel-subject", event.listing.title);
+            final String message = Messages.get("new-event-proposed-for-channel-message", event.listing.title, getBaseUrl() + "event/" + event.uuid);
+            Message.createNotification(user, userTo, subject, message);
+            new EmailNotificationBuilder()
+                    .setFrom(user)
+                    .setTo(userTo)
+                    .setSubject(subject)
+                    .setMessageWiki(message)
+                    .send();
+
             final Activity act = new Activity();
             act.type = Activity.ACTIVITY_EVENT_PROPOSED_BY_CUSTOMER;
             act.user = customer;
+            act.customer = customer;
             act.event = event;
             act.eventName = event.listing.title;
             act.saveActivity();
@@ -420,7 +472,7 @@ public class Events extends BaseController
             act.eventName = event.listing.title;
             act.saveActivity();
         }
-        createDefaultAttendances(user, customer, event, true, proposal);
+        createDefaultAttendances(userTo, customer, event, true, proposal);
         renderJSON(EventDTO.convert(event, user));
     }
 
@@ -462,6 +514,8 @@ public class Events extends BaseController
         final JsonObject jo = JsonUtils.getJson(request.body);
         final String uuid = jo.get("uuid").getAsString();
         final Event event = Event.get(uuid);
+
+        // permissions check
         if (!event.isEditable(user))
             forbidden();
 
@@ -485,7 +539,7 @@ public class Events extends BaseController
 
     public static void approve(String event, String url)
     {
-        final User user = getLoggedUser();
+        final User user = getLoggedUserNotCache();
         final Event e = Event.get(event);
 
         // permissions check
@@ -559,11 +613,11 @@ public class Events extends BaseController
 
     public static void hangoutCallback(String uuid, String ret, String yt)
     {
-        //        System.err.println();
-        //        System.err.println("======= hangout callback ======");
-        //        System.err.println(uuid);
-        //        System.err.println(ret);
-        //        System.err.println(yt);
+        Logger.info("");
+        Logger.info("======= hangout callback ======");
+        Logger.info(uuid);
+        Logger.info(ret);
+        Logger.info(yt);
 
         if (ret != null)
         {
@@ -579,7 +633,7 @@ public class Events extends BaseController
 
     public static void eventInvite(String message, String eventId, String url, String[] invite)
     {
-        final User user = getLoggedUser();
+        final User user = getLoggedUserNotCache();
         final Event event = Event.get(eventId);
 
         // permissions check
@@ -591,49 +645,27 @@ public class Events extends BaseController
             for (int i = 0; i < invite.length; i++)
             {
                 final Attendance attendance = Attendance.get(invite[i]);
-                final String subject = "Widgr: " + user.getFullName() + " invited you to event " + attendance.event.listing.title;
-                final String locale = "en";
+                final String subject = Messages.get("you-have-been-invited-subject", user.getFullName(), attendance.event.listing.title);
+                final String body = Messages.get("you-have-been-invited-message", user.getFullName(), event.listing.title, event.uuid);
 
-                //                if (attendance.customer != null)
-                //                {
-                //                if (attendance.isForUser && attendance.user != null)
-                //                    locale = attendance.user.locale;
-                //                if (!attendance.isForUser && attendance.customer != null)
-                //                    locale = attendance.customer.locale;
-                //
-                //                    mail.body = message;
-                //                    mail.created = new Date();
-                //                    mail.fromUser = user;
-                //                    mail.toUser = attendance.customer;
-                //                    mail.subject = subject;
-                //                    mail.uuid = RandomUtil.getUUID();
-                //                    mail.save();
-                //                    attendance.customer.unreadMessages = true;
-                //                    attendance.customer.save();
-                //                }
-
-                // notify by email
-                if (attendance.customer == null && !attendance.isForUser)
+                if (attendance.customer != null)
                 {
-                    try
-                    {
-                        final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
-                        final EmailProvider emailProvider = new EmailProvider(user.account.smtpHost, user.account.smtpPort,
-                                user.account.smtpAccount, user.account.smtpPassword, "10000", user.account.smtpProtocol, true);
-                        final VelocityContext ctx = VelocityTemplate.createInvitationTemplate(locale, attendance.email, user, event, baseUrl, attendance.uuid);
-                        if (message != null && message.length() > 0)
-                        {
-                            ctx.put("notification", message);
-                            ctx.put("notificationLabel", user.firstName + " says:");
+                    Message.createNotification(user, attendance.customer, subject, body);
+                }
 
-                        }
-
-                        final String body = VelocityTemplate.processTemplate(ctx, VelocityTemplate.getTemplateContent(VelocityTemplate.CONTACT_INVITE_TEMPLATE));
-                        new Notification(emailProvider, user.login, subject, attendance.email, body).execute();
-                    } catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
+                if (attendance.customer == null || attendance.customer != null && attendance.customer.emailNotification)
+                {
+                    EmailNotificationBuilder e = new EmailNotificationBuilder();
+                    if (attendance.customer != null)
+                        e.setTo(attendance.customer);
+                    else
+                        e.setToEmail(attendance.email);
+                    e.setFrom(user)
+                            .setEvent(event)
+                            .setAttendance(attendance)
+                            .setSubject(subject)
+                            .setMessageWiki(body)
+                            .sendInvitation();
                 }
             }
         }

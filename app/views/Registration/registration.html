@@ -33,17 +33,17 @@
 	</div>
 	<div class="col-md-6">
 		<form action="/registration" method="POST" id="registrationForm">
-		    	<h2 class="segoe-bold-h1">&{'registration.registration'}</h2>
+		    	<h2 class="segoe-bold-h1">&{'registration'}</h2>
 			    <div class="separator-2"></div>
 
 				<h4>
-					Register with Facebook
+					&{'register-with-facebook'}
 					<span class="pull-right fb-login-button" data-max-rows="1" data-size="large" data-scope="email" data-show-faces="false" data-auto-logout-link="false"></span>
 				</h4>
 				<br/>				
 	
 				<div class="form-group">
-					<label class="" for="login">&{'registration.login'}</label>
+					<label class="" for="login">&{'login'}</label>
 					<input type="text" class="form-control" id="login" name="login" value="#{if request.params.email}${request.params.email}#{/if}#{else}${params.login}#{/else}" placeholder="&{'registration.login'}"/>
 					<input type="hidden" class="form-control" id="token" name="token" value="${request.params.token}"/>
 					<input type="hidden" class="form-control" id="invitation" name="invitation" value="${request.params.invitation}"/>
@@ -52,13 +52,13 @@
 					<div class="error">#{error 'login' /}</div>
 				</div>
 				<div class="form-group">
-					<label class="" for="firstName">&{'firstName'}</label>
-					<input type="text" class="form-control" id="firstName" name="firstName" value="${params.firstName}"  placeholder="&{'firstName'}"/>
+					<label class="" for="firstName">&{'first-name'}</label>
+					<input type="text" class="form-control" id="firstName" name="firstName" value="${params.firstName}"  placeholder="&{'first-name'}"/>
 					<div class="error">#{error 'firstName' /}</div>
 				</div>
 				<div class="form-group">
-					<label class="" for="lastName">&{'lastName'}</label>
-					<input type="text" class="form-control" id="lastName" name="lastName" value="${params.lastName}"  placeholder="&{'lastName'}"/>
+					<label class="" for="lastName">&{'last-name'}</label>
+					<input type="text" class="form-control" id="lastName" name="lastName" value="${params.lastName}"  placeholder="&{'last-name'}"/>
 					<div class="error">#{error 'lastName' /}</div>
 				</div>
 				<div class="form-group">
@@ -67,8 +67,8 @@
 					<div class="error">#{error 'password' /}</div>
 				</div>
 				<div class="form-group">
-					<label class="" for="login">&{'password.repeat'}</label>
-					<input type="password" class="form-control" id="passwordRepeat" name="passwordRepeat" value="${params.passwordRepeat}"  placeholder="&{'password.repeat'}"/>
+					<label class="" for="login">&{'password-repeat'}</label>
+					<input type="password" class="form-control" id="passwordRepeat" name="passwordRepeat" value="${params.passwordRepeat}"  placeholder="&{'password-repeat'}"/>
 					<div class="error">#{error 'passwordRepeat' /}</div>
 					<input type="hidden" name="offset" id="offset">
 					<script>
@@ -78,28 +78,6 @@
 					</script>
 				</div>
 		
-				<!-- 
-				<div class="form-group">
-					<label class="segoe" for="event-type">Event type</label>
-					<select class="form-control" id="event-type">
-						<option>Peer to peer call</option>
-						<option>Livecast</option>
-					</select>
-				</div>
-		
-				<div class="form-group">
-					<label class="segoe">Something else</label>
-					<div class="checkbox">
-						<label> <input type="radio" name="event-privacy"
-							value="public"> Public
-						</label> 
-						<label> <input type="radio" name="event-privacy"
-							value="private"> Private
-						</label>
-					</div>
-				</div>
-				 -->
-				 
 				<div class="form-group">
 					<input type="hidden" value="${params.uuid}" name="uuid" />
 					<input type="text" placeholder="&{'captcha'}" class="form-control" style="display:inline !important;width:20%" name="captcha"/>
@@ -108,8 +86,8 @@
 				</div>		
 				
 				<div class="form-group">
-					<button class="btn btn-default pull-left">&{'Submit'}</button>
-					<a class="btn btn-white pull-right" href="/home">&{'Cancel'}</a>
+					<button class="btn btn-default pull-left">&{'submit'}</button>
+					<a class="btn btn-white pull-right" href="/home">&{'cancel'}</a>
 				</div>
 				<div style="clear:both"></div>
 		</form>		

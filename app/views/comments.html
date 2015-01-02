@@ -1,8 +1,9 @@
-#{if objectType == "user" || (!edit && !fromEvent && isOwner) || (!edit && fromEvent && user && object && object.commentsEnabled)}
+#{if objectType == "user" || (!edit && isOwner) || (!edit && fromEvent && user && object && object.commentsEnabled)}
 <div class="row">
 <div class="col-md-12">
 	<form role="form" action="/event/comment?uuid=${object.uuid}&objectType=${objectType}&url=${request.url.urlEncode()}" id="comment-form" method="post">
-		<h2><img class="img-circle" style="float:left" src="/${user.avatarUrl}_32x32">&nbsp;Share what's new</h2>
+	    <br/>
+		<h2><img class="img-circle" style="float:left" src="/${user.avatarUrl}_32x32">&nbsp;&{'share-whats-new'}</h2>
     	<div class="form-group has-feedback">
     		<div class="">
 	    		<textarea rows="3" class="form-control" maxlength="1000" name="comment" id="dialog-comment-input"></textarea>
@@ -10,16 +11,16 @@
 	   		#{include 'help.html' /}
     	</div>
 	    	
-  	        <button class="btn btn-light-gray pull-right margin-clear" id="comment-save" type="button">Submit</button>
+  	        <button class="btn btn-default pull-right margin-clear" id="comment-save" type="button">&{'submit'}</button>
 		
 		<div class="form-group">
 			<div class="btn-group pull-left" data-toggle="buttons">
 			  #{if isOwner}
 				  <label class="btn btn-light-gray active btn-short margin-clear" >
-				    <input type="radio" name="type" id="upload-buttonLink" checked="checked" value="text"><i class="fa fa-pencil"></i> Text
+				    <input type="radio" name="type" id="upload-buttonLink" checked="checked" value="text"><i class="fa fa-pencil"></i> &{'text'}
 				  </label>
 				  <label class="btn btn-light-gray btn-short margin-clear" id="upload-buttonComments">
-				    <input type="radio" name="type" id="upload-buttonComments1" value="file" ><i class="fa fa-upload"></i> File
+				    <input type="radio" name="type" id="upload-buttonComments1" value="file" ><i class="fa fa-upload"></i> &{'file'}
 				  </label>
 			  #{/if}
 			  #{else}
@@ -77,13 +78,17 @@
 #{/if}	
     
     
-<div id="comments-container"></div>   
-<div class="spinner-container2" style="display:table;width:100%">
-	<div class="spinner-container">
-		<div id="spinnerComments" class="spinner-load"></div>
-		<a id="moreResultsComments" class="spinner-more"><i class=" icon-plus-circled"></i></a>
+<div class="commentsContainer" style="display:none;margin-top:40px">
+	<h2>&{'latest-posts'}</h2>
+	<div class="separator-2"></div>
+	<div id="comments-container"></div>   
+	<div class="spinner-container2" style="display:table;width:100%">
+		<div class="spinner-container">
+			<div id="spinnerComments" class="spinner-load"></div>
+			<a id="moreResultsComments" class="spinner-more"><i class=" icon-plus-circled"></i></a>
+		</div>
 	</div>
-</div>
+</div>   
 <script>
 	$(document).ready(function(){
 	    var params = "";

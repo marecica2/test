@@ -53,9 +53,7 @@
 		#{/else}
 		
 	    // set default view
-	    #{if user}
-		    starCalendar.defaultView = star.utils.getCookie("agenda");
-		#{/if}
+		starCalendar.defaultView = star.utils.getCookie("agenda");
 
 		// set hiddenDays
 	    #{if userDisplayed && !isOwner}
@@ -125,12 +123,10 @@
 				#{set usr: userDisplayed /}
 				<br/>
 				<div class="shadow-blur" style="background: #fafafa; width:100%; margin:0 0 20px 0;">
-					
 					<div class="anchorLink" data-href="/channel/${item.uuid}" style="cursor:pointer;display:table;text-align:left;width:100%">
 				   		
 				   		<div style="display:table-cell; height:128px; width:200px; min-width:200px; background: url('/${item.imageUrl}') no-repeat center; background-size:cover; border-right:5px solid #{if item && item.color} ${item.color} #{/if} #{else} #3A87AD #{/else};">
 				   		</div>
-				   		
 				   		<div style="display:table-cell;vertical-align:top;padding:0 15px 0 15px;position:relative;">
 							<h4>${item.title}</h4>
 							<p style="margin-bottom:5px">
@@ -140,19 +136,17 @@
 								${item.privacy}  &middot; 
 								${item.type}
 							</p>
-							
-							
 							<span class="truncate">${item.getDescriptionHtml().trimDot(140).raw()}</span>
 				   			<p>
 				   			#{if item.charging != 'free'}
-				   				<strong>from ${item.price} <small>${item.currency}</small></strong>
-					   			<nobr>for 15</nobr> minutes
+				   				<strong>&{'from'} ${item.price} <small>${item.currency}</small></strong>
+					   			<nobr>&{'for'} 15</nobr> &{'minutes'}
 				   			#{/if}
 				   			#{else}
-				   				<strong class="">Free</strong>
+				   				<strong class="">&{'free'}</strong>
 				   			#{/else}
 				   			#{if item.firstFree}
-				   				<span class="label label-default">first free</span>
+				   				<span class="label label-default">&{'first-event-is-free'}</span>
 				   			#{/if}
 				   			</p>
 				   		</div>
@@ -170,7 +164,7 @@
 		#{include 'userTop.html' /}
 	#{/elseif}	
 	
-<section class="main-container object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="300">		
+<section class="main-container" >		
 <div class="container" style="min-height:60%;">
 	<div class="row">
 		<div class="col-md-12">
@@ -206,14 +200,14 @@
 							<div class="form-group" >
 								<div class="row" style="margin-left:0px" >
 								  <div class="col-lg-6" style="padding-left:0px">
-									<label class="control-label">Start time</label>
+									<label class="control-label">&{'start-time'}</label>
 									<div class="input-group input-append bootstrap-timepicker" style="margin-bottom:5px;">
 										<input id="timepicker1" type="text" class="timepicker1 form-control input-small" name="eventStart" value="${params.eventStart}">
 										<span class="input-group-addon add-on"><i class="fa fa-clock-o"></i></span>
 									</div>
 								  </div>
 								  <div class="col-lg-6" style="padding-left:0px">
-									<label class="control-label">End time</label>
+									<label class="control-label">&{'end-time'}</label>
 									<div class="input-group input-append bootstrap-timepicker" style="margin-bottom:5px;">
 										<input id="timepicker2" type="text" class="timepicker2 form-control input-small" name="eventEnd" value="${params.eventEnd}">
 										<span class="input-group-addon add-on"><i class="fa fa-clock-o"></i></span>
@@ -248,7 +242,7 @@
 						</div>							
 						
 						<div class="popup-edit-event">
-							<h3>About</h3>
+							<h3>&{'about'}</h3>
 							<p class="popup-event-description">
 							</p>
 				
@@ -279,18 +273,18 @@
 				<span style="float:left">
 					<a href='' data-url="/event/" style="margin:2px;" class="btn btn-default event-anchor btn-short popup-event-view">&{'view'}</a>
 					#{if userDisplayed && listing}
-						<button class="btn btn-default btn-short event-dialog-propose">Submit for approval</button> 
+						<button class="btn btn-default btn-short event-dialog-propose">&{'submit-for-approval'}</button> 
 					#{/if}
 					#{else}
-						<button class="btn btn-default btn-short event-dialog-create">&{'dashboard.save'}</button> 
+						<button class="btn btn-default btn-short event-dialog-create">&{'save'}</button> 
 					#{/else}					
 					<span class="popup-event-approvement" style="display:none;">
-						<a class="btn btn-success btn-short event-anchor popup-event-approve" href='' style="margin:2px;" id="" data-url="/event-approve?url=${request.url.urlEncode()}&event="><i class="fa fa-check"></i> &{'dashboard.approve'}</a>
-						<a class="btn btn-danger btn-short event-anchor popup-event-decline" href='' style="margin:2px;" id="" data-url="/event-decline?url=${request.url.urlEncode()}&event="><i class="fa fa-times"></i> &{'dashboard.decline'}</a>
+						<a class="btn btn-success btn-short event-anchor popup-event-approve" href='' style="margin:2px;" id="" data-url="/event-approve?url=${request.url.urlEncode()}&event="><i class="fa fa-check"></i> &{'approve'}</a>
+						<a class="btn btn-danger btn-short event-anchor popup-event-decline" href='' style="margin:2px;" id="" data-url="/event-decline?url=${request.url.urlEncode()}&event="><i class="fa fa-times"></i> &{'decline'}</a>
 					</span>				
 				</span>
 				<span style="float:right">
-					<a href='#' style="margin:2px;" class="btn btn-light-gray btn-short popup-event-delete">&{'dashboard.delete'}</a>
+					<a href='#' style="margin:2px;" class="btn btn-light-gray btn-short popup-event-delete">&{'delete'}</a>
 				</span>	
 			</div>
 		</div>

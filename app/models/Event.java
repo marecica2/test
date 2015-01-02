@@ -275,7 +275,7 @@ public class Event extends Model
 
         for (Attendance attendance : this.attendances)
         {
-            if (attendance.customer.equals(user))
+            if (attendance.customer != null && attendance.customer.equals(user))
             {
                 a = attendance;
             }

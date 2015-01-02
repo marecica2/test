@@ -3,16 +3,16 @@
 <div class="container">
 	
 	<div class="row">
-		<div class="col-lg-3 col-sm-4">
+		<div class="col-lg-3 col-sm-3">
 			<div class="box-style-1 gray-bg team-member">
 				<div class="overlay-container">
 					<img src="/${usr.avatarUrl}" style="width:100%s">
 					<div class="overlay">
 						<ul class="social-links colored clearfix">
-							<li class="facebook"><a target="_blank" href="http://www.facebook.com"><i class="fa fa-facebook"></i></a></li>	
-							<li class="linkedin"><a target="_blank" href="http://www.linkedin.com"><i class="fa fa-linkedin"></i></a></li>
-							<li class="twitter"><a target="_blank" href="http://www.skype.com"><i class="fa fa-twitter"></i></a></li>
-							<li class="googleplus"><a target="_blank" href="http://plus.google.com"><i class="fa fa-google-plus"></i></a></li>
+						#{if usr.facebook}<li class="facebook"><a target="_blank" href="${usr.facebook}"><i class="fa fa-facebook"></i></a></li>#{/if}
+						#{if usr.twitter}<li class="twitter"><a target="_blank" href="${usr.twitter}"><i class="fa fa-twitter"></i></a></li>#{/if}
+						#{if usr.linkedIn}<li class="linkedin"><a target="_blank" href="${usr.linkedIn}"><i class="fa fa-linkedin"></i></a></li> #{/if}
+						#{if usr.googlePlus}<li class="googleplus"><a target="_blank" href="${usr.googlePlus}"><i class="fa fa-google-plus"></i></a></li>#{/if}
 						</ul>
 					</div>
 				</div>
@@ -21,49 +21,47 @@
 		
 
 		
-		<div class="col-lg-6 col-sm-8">
+		<div class="col-lg-5 col-sm-5">
 						
 			<h2 class="margin-clear">
-				<a class="anchor" href="/user/${usr.login}">${usr.fullName}</a>
+				<span style="font-size:0.6em">
 		  		#{if usr.isOnline()}
 		  			<i class="text-default icon-record"></i>
 				#{/if}
 				#{else}
 		  			<i style="color:gray" class="icon-record"></i>
 				#{/else}		
+				</span>
+				<a class="anchor" href="/user/${usr.login}">${usr.fullName}</a>
 						
 		    	#{if userProfile}
 					<span>
 				    	#{if user && isOwner}
-				    		<a href="/settings?edit=true" class="btn btn-light-gray btn-sm controls"><i class="fa fa-pencil"></i> Edit Profile</a> 
+				    		<a href="/settings?edit=true" class="btn btn-light-gray btn-sm controls"><i class="fa fa-pencil"></i> &{'edit-profile'}</a> 
 				    	#{/if}			
 						#{if user && !isOwner}
 						<span>
 							#{if follow && follow.following == true}
-								<a href="/contact-unfollow?uuid=${follow.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-minus"></i> Unfollow</a> 
+								<a href="/contact-unfollow?uuid=${follow.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-minus"></i> &{'unfollow'}</a> 
 							#{/if}
 							#{else}
-								<a href="/contact-follow?uuid=${follow}&usr=${usr.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-plus"></i> Follow</a> 
+								<a href="/contact-follow?uuid=${follow}&usr=${usr.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-plus"></i> &{'follow'}</a> 
 							#{/else}
-							<!-- 
-								<a href="/contact-add?uuid=${usr.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm controls pull-right"><i class="fa fa-plus"></i> Add contact</a> 
-							 -->
 						</span>
 						#{/if}	
 					</span>
 				#{/if}				
 			</h2>
 			<ul class="list-icons">
-				<li><i class="fa fa-user"></i> Last Active on #{if usr.lastOnlineTime} ${usr.lastOnlineTime.format("dd MMM, yyyy")} #{time time:usr.lastOnlineTime/} #{/if}</li>
-				<li><i class="fa fa-calendar pr-5"></i><a href="/user/${usr.login}/calendar/public">Show public calendar</a></li>
+				<li><i class="fa fa-clock-o"></i> &{'last-online'} #{if usr.lastOnlineTime} ${usr.lastOnlineTime.format("dd MMM, yyyy")} #{time time:usr.lastOnlineTime/} #{/if}</li>
+				<li><i class="fa fa-calendar pr-5"></i><a href="/user/${usr.login}/calendar/public">&{'public calendar'}</a></li>
 				<li><i class="fa fa-envelope pr-5"></i>${usr.login}</li>
 			</ul>
-			<br/>
 		</div>
 
-		<div class="col-lg-3 col-sm-8 " style="height:100%">
+		<div class="col-lg-4 col-sm-4 " style="height:100%">
 			<div class="vertical-divider-left-lg side">
-				<h3 class="title margin-top-clear">Followers</h3>
+				<h3 class="title margin-clear">&{'followers'}</h3>
 				#{if followers}
 					<p>
 					#{list items:followers, as:'item'}
@@ -74,7 +72,7 @@
 				<div class="clearfix"></div>
 				<br/>
 				
-				<h3 class="title">Following</h3>
+				<h3 class="title">&{'following'}</h3>
 				#{if followees}
 					<p>
 					#{list items:followees, as:'item'}

@@ -115,6 +115,9 @@ public class Comments extends BaseController
             final Event e = Event.get(uuid);
             c.event = e;
 
+            if (e.user.hasBlockedContact(user))
+                forbidden();
+
             final Activity act = new Activity();
             act.type = Activity.ACTIVITY_EVENT_COMMENTED;
             act.user = user;
@@ -127,6 +130,9 @@ public class Comments extends BaseController
         {
             final Listing l = Listing.get(uuid);
             c.listing = l;
+
+            if (l.user.hasBlockedContact(user))
+                forbidden();
         }
 
         if (objectType.equals(Comment.COMMENT_USER))

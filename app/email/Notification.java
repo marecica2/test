@@ -9,12 +9,10 @@ public class Notification implements Runnable
     private final String email;
     private final String subject;
     private final String htmlPart;
-    private final String from;
 
-    public Notification(EmailProvider ep, String from, String subject, String email, String htmlPart)
+    public Notification(EmailProvider ep, String subject, String email, String htmlPart)
     {
         super();
-        this.from = from;
         this.htmlPart = htmlPart;
         this.subject = subject;
         this.email = email;
@@ -26,8 +24,8 @@ public class Notification implements Runnable
     {
         try
         {
-            emailProvider.sendInvitation(from, subject, email, htmlPart);
-            Logger.info("from thread Notification sent to " + email);
+            emailProvider.sendEmail(subject, email, htmlPart);
+            Logger.info("notification sent to " + email);
         } catch (Exception e)
         {
             e.printStackTrace();

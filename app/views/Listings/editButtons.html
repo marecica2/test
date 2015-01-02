@@ -1,0 +1,145 @@
+<div style="margin-top:5px">
+	<!-- edit buttons -->
+	#{if fromEvent && event}
+   		#{if event.state == 'user_accepted'}
+			<span style="font-size:0.5em" class="btn btn-default btn-sm">&{'approved'}</span>
+		#{/if}
+   		#{if event.state == 'customer_created'}
+			<span style="font-size:0.5em" class="btn btn-default btn-sm">&{'waiting-for-approvement'}</span>
+		#{/if}
+		
+		#{if event.charging != null && attendance && !event.isFree()}
+			#{if !paid }
+				#{set displayStream:false /}
+				<a href="/payment/${event.uuid}?url=${request.url.urlEncode()}" class="btn btn-dark btn-sm margin-clear" rel="tooltip" data-placement="top" title="&{'you-can-pay-for-event-before-or-you-can-wait-until-event-starts'}">
+					&{'pay-for-event-now'}
+				</a>
+			#{/if}
+			#{elseif paid && attendance.paypalTransactionDate}
+				<span style="font-size:0.5em"  class="label label-success">
+					Paid on ${attendance.paypalTransactionDate.format("dd MMM, yyyy")}
+				</span> &nbsp;
+			#{/elseif} 
+		#{/if}
+
+		#{if isOwner && (event.state == 'customer_created' || event.state == 'user_declined')}
+			<a class="btn btn-success btn-sm margin-clear" href="/event-approve?event=${event.uuid}&url=${request.url.urlEncode()}"><i class="fa fa-check"></i> &{'approve'}</a>
+			<a href="/event-delete?uuid=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('delete?')){return true;} else {return false;}" class="btn btn-danger btn-sm margin-clear">
+				<i class="dialog-event-edit color-link fa fa-times fa-1x"></i> &{'decline'}
+			</a>						
+	   	#{/if} 				
+		
+		#{if !edit && event.type == 'p2p'}
+			<a class="btn btn-default btn-sm btn-margin" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank">&{'join-video-conference'}</a>
+		#{/if}		
+		
+		#{if isOwner && !edit && event.type == 'broadcast'}
+			#{if event.started == null}
+				<a class="btn btn-default btn-sm btn-margin" href="/event-start?event=${event.uuid}&url=${request.url.urlEncode()}" >&{'start-live-broadcast'}</a>
+			#{/if}
+			#{else}
+				<a class="btn btn-default btn-sm btn-margin" href="/event-stop?event=${event.uuid}&url=${request.url.urlEncode()}" >&{'stop-live-broadcast'}</a>
+			#{/else}
+		#{/if}		
+		
+		#{if isOwner && !edit && event.type == 'instant'}
+				#{set displayStream:true /}
+				<a class="btn btn-default btn-sm btn-margin btn-instant-stop" data-href='/channel-stop?id=${listing.uuid}&url=${("/channel/"+listing.uuid+"").urlEncode()}' >&{'stop-instant-broadcast'}</a>
+		#{/if}							
+		
+		#{if isOwner && !edit && event.type == 'hangoutAir'}
+				
+			<span style="display:nones;">
+			<script src="https://apis.google.com/js/platform.js" ></script>
+			<span id="placeholder"></span>
+			<script>
+			  gapi.hangout.render('placeholder', {
+			    'render': 'createhangout',
+			    'hangout_type': 'onair',
+			    'initial_apps': [{'app_id' : '647254293629', 'start_data' : '${event.uuid}', 'app_type' : 'ROOM_APP', 'invites' : [{'id' : 'marecica2@gmail.com', 'invite_type' : 'EMAIL'}] }],
+			    'widget_size': 175
+			  });
+			</script>		
+			</span>
+								
+		#{/if}	
+		
+		
+		#{if isOwner && !edit && event.type == 'hangout'}
+			<a class="btn btn-default btn-sm btn-margin" href="//plus.google.com/hangouts/_/?gid=647254293629&gd=${event.uuid}" target="_blank">&{'start-hangout'}</a>
+		#{/if}											
+		#{if !isOwner && !edit && event.type == 'hangout'}
+			#{if event.hangoutUrl}
+				<a class="btn btn-default btn-sm btn-margin" href="${event.hangoutUrl}" target="_blank">&{'join-hangout'}</a>
+			#{/if}											
+			#{else}
+				<a class="btn btn-default btn-sm btn-margin" href="">&{'refresh'}</a>
+			#{/else}											
+		#{/if}											
+		
+		
+		#{if !edit && isOwner && !event.isEditable()}
+		<a href="/event?action=edit&uuid=${request.params.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm margin-clear">
+			<i class="dialog-event-edit color-link fa fa-pencil fa-1x"></i> &{'edit-event'}
+		</a>
+		#{/if}
+
+		#{if !edit && isOwner && !event.isEditable()}
+		<a href="/event-delete?uuid=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('&{'delete-selected-item'}?')){return true;} else {return false;}" class="btn btn-light-gray btn-sm margin-clear">
+			<i class="dialog-event-edit color-link fa fa-times fa-1x"></i> &{'delete-event'}
+		</a>
+		#{/if}
+		
+		#{if edit}
+			<a href="${request.params.url}" class="btn btn-light-gray btn-sm margin-clear">
+				&{'cancel'}
+			</a>		
+		#{/if}	
+	#{/if}	
+	
+	
+	
+	#{else}	 
+		#{set displayStream:false /}
+		
+		#{if isOwner && !edit && listing.type == 'instant'}
+			#{if listing.started == null}
+				#{set displayStream:false /}
+				<a class="btn btn-default btn-sm btn-margin btn-instant-start" href="/channel-start?id=${listing.uuid}&url=${request.url.urlEncode()}" >&{'star-instant-broadcast'}</a>
+			#{/if}
+			#{else}
+				#{set displayStream:true /}
+				<a class="btn btn-default btn-sm btn-margin btn-instant-stop" data-href="/channel-stop?id=${listing.uuid}&url=${request.url.urlEncode()}" >&{'stop-instant-broadcast'}</a>
+				<a class="btn btn-default btn-sm btn-margin btn-instant-room" data-href="/create-room?id=${listing.uuid}&url=${request.url.urlEncode()}" >&{'go-to-private-room'}</a>
+			#{/else}
+		#{/if}		
+		
+		#{if !isOwner && !edit && listing.type == 'instant' && listing.instantBroadcast != null}
+				<a class="btn btn-default btn-sm btn-margin" href="/event/${listing.instantBroadcast}" >&{'go-to-private-room'}</a>
+		#{/if}		
+		
+		#{if !isOwner && !edit && listing.type == 'instant' && listing.started == null}
+				#{set displayStream:false /}
+		#{/if}
+		
+		#{if !edit && isOwner}
+			#{if user.isPublisher() && listing.type != 'instant'}
+			<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&listingId=${listing.uuid}" class="btn btn-light-gray btn-sm margin-clear">
+				<i class="color-link fa fa-plus fa-1x"></i> &{'edit-event'}
+			</a>
+			#{/if}
+			<a href="/channel/${listing.uuid}?action=edit&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm margin-clear">
+				<i class="color-link fa fa-pencil fa-1x"></i> &{'edit-channel'}
+			</a>
+			<a href="/channel-delete?uuid=${listing.uuid}" class="btn btn-light-gray btn-sm margin-clear" onclick="if(confirm('delete?')){return true;} else {return false;}">
+				<i class="color-link fa fa-times fa-1x"></i> &{'delete-channel'}
+			</a>
+		#{/if}
+		#{if edit}
+			<a href="${request.params.url}" class="btn btn-light-gray btn-sm margin-clear">
+				&{'cancel'}
+			</a>		
+		#{/if}	
+	#{/else}	
+	<!-- edit buttons -->   	
+</div>

@@ -6,7 +6,6 @@
 #{/set}
 
 #{set 'moreScripts'}
-	<script src="@{'/public/javascripts/lib/jquery.Jcrop.min.js'}"></script>
 	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>
 	<script>
 		starCalendar.aspectRatio = 1;
@@ -81,7 +80,6 @@
 	<input type="hidden" id="x2" name="x2" />
 	<input type="hidden" id="y1" name="y1" />
 	<input type="hidden" id="y2" name="y2" />
-	<input type="hidden" id="imageUrlCrop" name="imageUrl" />
 	<input type="hidden" id="imageIdCrop" name="imageId" />
 	<input type="hidden" id="type" name="type" value="avatar" />
 	<input type="hidden" id="tempCrop" name="objectId" value="#{if event}${event.uuid}#{/if}#{else}${temp}#{/else}"/>
@@ -94,9 +92,6 @@
 			<h2 class="btn-margin">
 				Settings
 				<span class="">
-					#{if event && params.image && params.image.indexOf("uploads") != -1}
-						<a href="/event/reset-image?id=${event.uuid}&url=${request.url.urlEncode()}" id="delete-upload-button" class="btn btn-default btn-margin"><i class="fa fa-times"></i> Remove</a>
-					#{/if}					
 					#{if !edit}
 						<a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true"><i class="fa fa-pencil"></i> &{'edit'}</a>
 					#{/if}
@@ -108,11 +103,29 @@
 			
 			<form class="form-horizontal" role="form" method="post" action="/settings?edit=true">	
 		    
+
+			<div class="row">
+				<div class="col-md-9">
+					<div class="avatar-container">
+					  <img id="image" class="cropper avatar" src="/${user.avatarUrl}">
+					</div>
+					  <span id="upload-button" class="btn btn-default btn-short" style="position:absolute;left:25px;top:0px"><i class="fa fa-camera"></i></span>
+				</div>
+				<div class="col-md-3">
+					<div class="eg-preview clearfix" style="display:none">
+						<div class="avatar-preview preview preview-lg"></div>
+						<div class="avatar-preview preview preview-md"></div>
+						<div class="avatar-preview preview preview-sm"></div>
+						<div class="avatar-preview preview preview-xs"></div>
+					</div>
+				</div>
+			</div>
+
+		    
+		    
 			<!-- File upload -->
 			<div>
-				<span id="crop-button" class="btn btn-default " style="display:none"><i class="fa fa-camera"></i> Crop</span>
-				<img id="image" style="height:256px;" class="" src="/${user.avatarUrl}">
-				<span id="upload-button" class="btn btn-light-gray radius btn-short" style="position:relative;left:-150px"><i class="fa fa-camera"></i></span>
+				<span id="crop-button" class="btn btn-default " style="display:none"><i class="fa fa-camera"></i> &{'crop'}</span>
 				<input type="file" id="upload" name="upload"  accept="image/*" style="display:none">
 				<input type="hidden" id="temp" name="temp" value="${params.temp}"/>
 				<input type="hidden" id="imageInput" name="image" value="${params.image}"/>
@@ -128,85 +141,44 @@
 
 			#{if user.account.currentPlan() != user.account.planRequest}
 			<div class="shadow alert alert-info alert-dismissible" role="alert">
-			    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-					Change to plan ${user.account.planRequest} will be applied after 
+			    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
+					&{'change-plan-to'} ${user.account.planRequest} &{'will-be-applied-after'} 
 					${account.planRequestFrom.format("dd MMM, yyyy")}
 			</div>
 			#{/if}					
 
-
-			*{
-			<ul class="nav nav-tabs" role="tablist">
-				<li class="active"><a href="#h2tab1" role="tab" data-toggle="tab" class="">&{'account.account'}</a></li>
-				<li><a href="#h2tab2" role="tab" data-toggle="tab" class="">&{'About You'}</a></li>
-				<li><a href="#h2tab3" role="tab" data-toggle="tab" class="">&{'Paypal Account'}</a></li>
-				<li><a href="#h2tab4" role="tab" data-toggle="tab" class="">&{'Outgoing Email'}</a></li>
-				<li><a href="#h2tab4" role="tab" data-toggle="tab" class="">&{'Website embedding'}</a></li>
-			</ul>
-			}*
 
 
 			<h3>&{'account.account'}</h3>
 			<div class="separator-2"></div>
 			#{if !edit}
 			<dl class="dl-horizontal">
-				<dt>&{'Account Name'}</dt>
+				<dt>&{'account-name'}</dt>
 				<dd>${user.account.name} &nbsp;</dd>
 
-				<dt>&{'Account Plan'}</dt>
+				<dt>&{'account-plan'}</dt>
 				<dd>
 					<span class="label default-bg" style="font-size:0.8em">${user.account.currentPlan()}</span>
 				</dd>
-				<dt>&{'Account Type'}</dt>
+				<dt>&{'account-type'}</dt>
 				<dd>
 					
 					#{if user && user.account.type == "publisherReq"}
-						${user.account.type} <span class="label label-success" style="font-size:0.8em">Waiting for approvement</span>
+						${user.account.type} <span class="label label-success" style="font-size:0.8em">&{'waiting-for-approvement'}</span>
 					#{/if}
 					#{elseif user && user.account.type == "standard"}
 						<span class="label label-primary" style="font-size:0.8em">${user.account.type}</span>
-						<a href="/settings/request-publisher?url=${request.url.urlEncode()}">Become a Publisher</a>
-						<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="To become a publisher you must have filled in personal information and created at least one channel. To create new channel go to Dashboard and click 'new channel' button."></i>
+						<a href="/settings/request-publisher?url=${request.url.urlEncode()}">&{'become-a-publisher'}</a>
 					#{/elseif}
 					#{else}
 						<span class="label default-bg" style="font-size:0.8em">${user.account.type}</span>
 					#{/else}
-					<br/>
-					<br/>
-				</dd>
-				
-				
-				<dt>&{'Login'}</dt>
-				<dd>${user.login}</dd>
-
-				<dt>&{'Display Name'}</dt>
-				<dd>${user.firstName} ${user.lastName}</dd>
-				
-				<dt>&{'Password'}</dt>
-				<dd>****** <a href="/password">&{'account.changeYourPassword'}</a></dd>
-				
-				<dt>&{'Language'}</dt>
-				<dd>${user.locale} &nbsp;</dd>
-				
-				<dt>&{'Timezone'}</dt>
-				<dd>#{if user.timezone} #{if user.timezone < 0} - #{/if} #{else} + #{/else} ${user.timezone / 60}:00 hours #{/if}&nbsp;</dd>			
-				
-				<dt>&{'Email Notifications'}</dt>
-				<dd>
-					${user.emailNotification} 
-					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="Enable / Disable sending notification emails"></i>
-				</dd>	
-				
-				<dt>&{'Facebook ID'}</dt>
-				<dd>
-					${user.facebookName}
-					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="Connect with your facebook account"></i>
 				</dd>
 			</dl>
 			#{/if}
 			#{else}
 			<div class="form-group">
-				<label for="name" class="col-sm-2 control-label">&{'Account Name'}</label>
+				<label for="name" class="col-sm-2 control-label">&{'account-name'}</label>
 			    <div class="col-sm-10">
 			      <input type="text" class="form-control" id="accName" placeholder="&{'account.accountName'}" name="accName" value="${params.accName}">
 			      <div class="error">#{error 'accName' /}</div>
@@ -216,24 +188,66 @@
 				<label for="accPlan" class="col-sm-2 control-label">&{'Account Plan'}</label>
 			    <div class="col-sm-10">
 					<select class="form-control" name="accPlan" id="accPlan">
-						<option #{if params.type == "standard"}  selected='selected' #{/if} value="standard">Standard</option>
-						<option #{if params.type == "month"}  selected='selected' #{/if} value="month">Monthly Basic</option>
-						<option #{if params.type == "gold"}  selected='selected' #{/if} value="gold">Monthly Gold</option>
+						<option #{if params.type == "standard"}  selected='selected' #{/if} value="standard">&{'standard'}</option>
+						<option #{if params.type == "month"}  selected='selected' #{/if} value="month">&{'monthly-basic'}</option>
+						<option #{if params.type == "gold"}  selected='selected' #{/if} value="gold">&{'monthly-premium'}</option>
 					</select>
-					<div class="error">#{error 'locale' /}</div>
+					<div class="error">#{error 'type' /}</div>
 			    </div>
-			</div>	
+			</div>			
+			#{/else}
+
+			<br/>
+			<h3>&{'user-preferences'}</h3>
+			<div class="separator-2"></div>
+			#{if !edit}
+			<dl class="dl-horizontal">				
+				<dt>&{'display-name'}</dt>
+				<dd>
+					${user.firstName} ${user.lastName}
+				</dd>
+				
+				<dt>&{'password'}</dt>
+				<dd>
+					<a href="/password">&{'change-your-password'}</a>
+				</dd>
+				
+				<dt>&{'locale'}</dt>
+				<dd>
+					${user.locale}
+				</dd>
+				
+				<dt>&{'timezone'}</dt>
+				<dd>
+					#{if user.timezone} #{if user.timezone < 0} + #{/if} ${user.timezone / -60}:00 &{'hrs'} #{/if}
+				</dd>			
+				
+				<dt>&{'email-notifications'}</dt>
+				<dd>
+					<span class="" rel="tooltip" data-placement="right" data-original-title="&{'enable-or-disable-email-notifications'}">${user.emailNotification}</span>
+					 
+				</dd>	
+				
+				<dt>&{'facebook-id'}</dt>
+				<dd>
+					${user.facebookName}
+					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'connect-with-your-facebook-account'}"></i>
+					<a href="https://www.facebook.com/add.php?api_key=731388346951866&pages">&{'install-widgr-app-to-your-facebook-page'}</a>
+				</dd>
+			</dl>
+			#{/if}
+			#{else}
 			<div class="form-group">
-				<label for="firstName" class="col-sm-2 control-label">&{'firstName'}</label>
+				<label for="firstName" class="col-sm-2 control-label">&{'first-name'}</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="firstName" placeholder="&{'firstName'}" name="firstName" value="${flash.firstName}">
+			      <input type="text" class="form-control" id="firstName" placeholder="&{'first-name'}" name="firstName" value="${flash.firstName}">
 			      <div class="error">#{error 'firstName' /}</div>
 			    </div>
 			</div>
 			<div class="form-group">
-				<label for="lastName" class="col-sm-2 control-label">&{'lastName'}</label>
+				<label for="lastName" class="col-sm-2 control-label">&{'last-name'}</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="lastName" placeholder="&{'lastName'}" name="lastName" value="${flash.lastName}">
+			      <input type="text" class="form-control" id="lastName" placeholder="&{'last-name'}" name="lastName" value="${flash.lastName}">
 			      <div class="error">#{error 'lastName' /}</div>
 			    </div>
 			</div>
@@ -241,8 +255,8 @@
 				<label for="locale" class="col-sm-2 control-label">&{'language'}</label>
 			    <div class="col-sm-10">
 					<select class="form-control" name="locale" id="locale">
-						<option #{if flash.locale == "sk"}selected='selected'#{/if} value="sk">sk</option>
 						<option #{if flash.locale == "en"}selected='selected'#{/if} value="en">en</option>
+						<option #{if flash.locale == "de"}selected='selected'#{/if} value="de">de</option>
 					</select>
 					<div class="error">#{error 'locale' /}</div>
 			    </div>
@@ -280,20 +294,20 @@
 			    </div>
 			</div>	
 			<div class="form-group">
-			<label for="locale" class="col-sm-2 control-label">&{'Email notification'}</label>
+			<label for="locale" class="col-sm-2 control-label">&{'email-notification'}</label>
 			<div class="col-sm-10">
 				<label class="radio-inline">
-				  <input type="radio" name="emailNotification" id="inlineRadio1" value="true" #{if params.emailNotification == "null" || params.emailNotification == "true"} checked="checked" #{/if}> enabled
+				  <input type="radio" name="emailNotification" id="inlineRadio1" value="true" #{if params.emailNotification == "null" || params.emailNotification == "true"} checked="checked" #{/if}> &{'enabled'}
 				</label>
 				<label class="radio-inline">
-				  <input type="radio" name="emailNotification" id="inlineRadio2" value="false" #{if params.emailNotification == 'false'} checked="checked" #{/if}> disabled
+				  <input type="radio" name="emailNotification" id="inlineRadio2" value="false" #{if params.emailNotification == 'false'} checked="checked" #{/if}> &{'disabled'}
 				</label>
 			</div>				
 			</div>						
 			<div class="form-group">
-				<label for="facebook" class="col-sm-2 control-label">&{'Facebook ID'}</label>
+				<label for="facebook" class="col-sm-2 control-label">&{'facebook-id'}</label>
 				<div class="col-sm-10">
-					<input type="hidden" class="form-control" id="facebookId" placeholder="&{'Facebook ID'}" name="facebookId" value="${params.facebookId}">
+					<input type="hidden" class="form-control" id="facebookId" placeholder="&{'facebook-id'}" name="facebookId" value="${params.facebookId}">
 					<input type="text" class="disabled form-control" id="facebookName" name="facebookName" value="${params.facebookName}" readonly>
 				  	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
 					<script>
@@ -305,7 +319,7 @@
 					  }
 					</script>		
 					<br/>
-					<strong>Connect with your Facebook account</strong> <div class="fb-login-button" data-max-rows="1" data-scope="public_profile" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>						
+					<strong>&{'connect-with-your-facebook-account'}</strong> <div class="fb-login-button" data-max-rows="1" data-scope="public_profile" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>						
 					<div id="fb-root"></div>
 				</div>				
 			</div>				
@@ -325,33 +339,33 @@
 			#{/if}
 			#{else}
 			<div class="form-group has-feedback">
-				<label for="userAbout" class="col-sm-2 control-label">&{'account.userAbout'}</label>
+				<label for="userAbout" class="col-sm-2 control-label">&{'about'}</label>
 			    <div class="col-sm-10">
-			      <textarea class="form-control" id="userAbout" placeholder="&{'account.userAbout'}" name="userAbout" rows="10">${params.userAbout}</textarea>
+			      <textarea class="form-control" id="userAbout" placeholder="&{'about'}" name="userAbout" rows="10">${params.userAbout}</textarea>
 			      <div class="error">#{error 'userAbout' /}</div>
 			    </div>
 			    #{include 'help.html' /}
 			</div>
 			<div class="form-group has-feedback">
-				<label for="userEducation" class="col-sm-2 control-label">&{'account.userEducation'}</label>
+				<label for="userEducation" class="col-sm-2 control-label">&{'education'}</label>
 			    <div class="col-sm-10">
-			      <textarea class="form-control" id="userEducation" placeholder="&{'account.userEducation'}" name="userEducation" rows="10">${params.userEducation}</textarea>
+			      <textarea class="form-control" id="userEducation" placeholder="&{'education'}" name="userEducation" rows="10">${params.userEducation}</textarea>
 			      <div class="error">#{error 'userEducation' /}</div>
 			    </div>
   		        #{include 'help.html' /}
 			</div>
 			<div class="form-group has-feedback">
-				<label for="userExperiences" class="col-sm-2 control-label">&{'account.userExperiences'}</label>
+				<label for="userExperiences" class="col-sm-2 control-label">&{'experiences'}</label>
 			    <div class="col-sm-10">
-			      <textarea class="form-control" id="userExperiences" placeholder="&{'account.userExperiences'}" name="userExperiences" rows="10">${params.userExperiences}</textarea>
+			      <textarea class="form-control" id="userExperiences" placeholder="&{'experiences'}" name="userExperiences" rows="10">${params.userExperiences}</textarea>
 			      <div class="error">#{error 'userExperiences' /}</div>
 			    </div>
 			    #{include 'help.html' /}
 			</div>
 			<div class="form-group">
-				<label for="website" class="col-sm-2 control-label">&{'account.website'}</label>
+				<label for="website" class="col-sm-2 control-label">&{'website'}</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="website" placeholder="&{'account.website'}" name="url" value="${params.url}">
+			      <input type="text" class="form-control" id="website" placeholder="&{'website'}" name="url" value="${params.url}">
 			      <div class="error">#{error 'url' /}</div>
 			    </div>
 			</div>
@@ -393,13 +407,13 @@
 			
 	  	
 	  		<br/>
-			<h3>&{'Your Calendar'}</h3>
+			<h3>&{'your-calendar'}</h3>
 			<div class="separator-2"></div>
 			#{if !edit}
 			<dl class="dl-horizontal">
-				<dt>&{'working.hours'}</dt>
-				<dd>${user.workingHourStart} - ${user.workingHourEnd} &{'hrs'}</dd>
-				<dt>&{'hidden.days'}</dt>
+				<dt>&{'working-hours'}</dt>
+				<dd>${start} - ${end} &{'hrs'}</dd>
+				<dt>&{'hidden-days'}</dt>
 				<dd>
 					#{if user.hiddenDays != null}
  					#{if user.hiddenDays.indexOf("0") >= 0}&{'cal.sunday'}#{/if} 
@@ -411,17 +425,17 @@
  					#{if user.hiddenDays.indexOf("6") >= 0}&{'cal.saturday'}#{/if} 
  					#{/if}
 				</dd>
-				<dt>Sync with Google</dt>
+				<dt>&{'sync-with-google'}</dt>
 				<dd>
-					<a href="/google?url=${request.url.urlEncode()}">enable synchronization with Google Calendar</a>
-					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="To become a publisher you must have filled in personal infnew channel' button."></i>
+					<a href="/google?url=${request.url.urlEncode()}">&{'enable-google-calendar-sync'}</a>
+					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'enable-google-calendar-sync'}"></i>
 				</dd>
 			</dl>
 `			
 			#{/if}
 			#{else}
 			<div class="form-group">
-				<label for="" class="col-sm-2 control-label">&{'workingHourStart'}</label>
+				<label for="" class="col-sm-2 control-label">&{'start-of-working-hours'}</label>
 			    <div class="col-sm-10">
 					<select class="form-control" name="workingHourStart" id="workingHourStart">
 						<option #{if params.workingHourStart == "1"} selected='selected'#{/if} value="1">01:00 &{'hrs'}</option>
@@ -452,7 +466,7 @@
 			    </div>
 			</div>
 			<div class="form-group">
-				<label for="" class="col-sm-2 control-label">&{'workingHourEnd'}</label>
+				<label for="" class="col-sm-2 control-label">&{'end-of-working-hours'}</label>
 			    <div class="col-sm-10">
 					<select class="form-control" name="workingHourEnd" id="workingHourEnd">
 						<option #{if params.workingHourEnd == "1"} selected='selected'#{/if} value="1">01:00 &{'hrs'}</option>
@@ -483,7 +497,7 @@
 			    </div>
 			</div>
 			<div class="form-group">
-				<label for="" class="col-sm-2 control-label">&{'hiddenDays'}</label>
+				<label for="" class="col-sm-2 control-label">&{'hidden-days'}</label>
 			    <div class="col-sm-10" style="position:relative;top:7px;">
 			    	<label for="hiddenDays0">
 				    	<input type="checkbox" name="hiddenDays" value="0" id="hiddenDays0" #{if params.hiddenDays != null && params.hiddenDays.indexOf("0") >= 0}checked='checked'#{/if}> &{'cal.sunday'} &nbsp;
@@ -518,14 +532,15 @@
 
 
 			<br/>
-			<h3>&{'Paypal Account'}</h3>
+			<a id="paypal"></a>
+			<h3>&{'paypal-account'}</h3>
 			<div class="separator-2"></div>
 			#{if !edit}
 			<dl class="dl-horizontal">
-				<dt>&{'account.paypalAccount'}</dt>
+				<dt>&{'paypal-account'}</dt>
 				<dd>
 					${user.account.paypalAccount}
-					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="When you want to create paid events you need to have valid Paypal Account"></i>
+					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'paypal-info'}"></i>
 				</dd>
 				<dt>&{'account.currency'}</dt>
 				<dd>${user.account.currency} &nbsp;</dd>
@@ -533,14 +548,14 @@
 			#{/if}
 			#{else}
 			<div class="form-group">
-				<label for="paypal" class="col-sm-2 control-label">&{'account.paypalAccount'}</label>
+				<label for="paypal" class="col-sm-2 control-label">&{'paypal-account'}</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="paypal" placeholder="&{'account.paypalAccount'}" name="paypal" value="${params.paypal}">
+			      <input type="text" class="form-control" id="paypal" placeholder="&{'paypal-account'}" name="paypal" value="${params.paypal}">
 			      <div class="error">#{error 'paypal' /}</div>
 			    </div>
 			</div>
 			<div class="form-group">
-				<label for="currency" class="col-sm-2 control-label">&{'account.currency'}</label>
+				<label for="currency" class="col-sm-2 control-label">&{'currency'}</label>
 			    <div class="col-sm-10">
 					<select class="form-control" name="currency" id="currency">
 						<option #{if params.currency == "USD"}selected='selected'#{/if} value="USD">USD</option>
@@ -571,9 +586,9 @@
 			
 			
 			
-			
+			*{
 			<br/>
-			<h3>&{'Outgoing Email'}</h3>
+			<h3>&{'outgoing-email'}</h3>
 			<div class="separator-2"></div>
 			<div class="alert alert-success alert-dismissable" style="display:none;" id="email-success"></div>
 			<div class="alert alert-danger alert-dismissable" style="display:none;" id="email-danger"></div>
@@ -658,13 +673,8 @@
 			    </div>
 			</div>			
 			#{/else}
-			
+			}*
 
-
-
-			
-			
-			
 			
 			*{
 			<br/>
@@ -680,22 +690,17 @@
 			</dl>
 			}*
 
-
-
-
 			<br/>
-
 			#{if edit}
 			<div class="form-group">
 				<div class="col-sm-12">
 					<div class="pull-right">
 						<button type="submit" class="btn btn-default">&{'save'}</button>
-						<a href="/Accounts/account" class="btn btn-white">&{'cancel'}</a>
+						<a href="/Accounts/account" class="btn btn-light-gray">&{'cancel'}</a>
 					</div>
 				</div>
 			</div>
 			#{/if}
-
 		</form>
 		</div>
 	</div>

@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import play.db.jpa.Model;
+import utils.StringUtils;
 import utils.WikiUtils;
 import controllers.FileuploadController;
 
@@ -253,4 +254,34 @@ public class User extends Model
         return (this.lastOnlineTime != null && (this.lastOnlineTime.getTime() > System.currentTimeMillis() - 20000)) ? true : false;
     }
 
+    public boolean hasBlockedContact(User u)
+    {
+        final Contact blockedContact = Contact.get(this, u);
+        if (blockedContact != null && blockedContact.blocked)
+            return true;
+        return false;
+    }
+
+    public boolean paidForCurrentMonth()
+    {
+        if (!this.account.currentPlan().equals(Account.PLAN_STANDARD) && !this.paidForCurrentMonth())
+            return false;
+        return true;
+    }
+
+    public boolean hasValidPaymentAccount()
+    {
+        if (StringUtils.getStringOrNull(this.account.paypalAccount) == null)
+            return false;
+        return true;
+    }
+
+    public boolean canCreatePaidEvent()
+    {
+        if (!this.hasValidPaymentAccount())
+            return false;
+        if (this.paidForCurrentMonth())
+            return false;
+        return true;
+    }
 }

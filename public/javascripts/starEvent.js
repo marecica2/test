@@ -6,11 +6,15 @@ star.moreComments = function(params, dashboard){
     $("#spinnerComments").show();
     $("#moreResultsComments").hide();
     starServices.getComments(params, function(data){
-        $("#spinnerComments").hide();
-        $("#moreResultsComments").show();
 
         var html = star.renderComments(data, dashboard);
-        $("#comments-container").append(html);
+        setTimeout(function(){
+            $("#spinnerComments").hide();
+            $("#moreResultsComments").show();
+            $("#comments-container").append(html);
+            if(FB != undefined)
+                FB.Canvas.setSize();
+        }, 250);
     });
 }
 
@@ -24,13 +28,18 @@ star.loadComments = function(params, dashboard){
     
     $("#spinnerComments").show();
     $("#moreResultsComments").hide();
+    
     starServices.getComments(params, function(data){
         $("#comments-container").html("");
-        $("#spinnerComments").hide();
-        $("#moreResultsComments").show();
         
         var html = star.renderComments(data, dashboard);
-        $("#comments-container").append(html);
+        setTimeout(function(){
+            $("#spinnerComments").hide();
+            $("#moreResultsComments").show();
+            $("#comments-container").append(html);
+            if(FB != undefined)
+                FB.Canvas.setSize();
+        }, 250);
     });
     
     $(window).scroll(function() {
@@ -45,15 +54,24 @@ star.renderComments = function(data, dashboard){
     var html = "";
     for(var i = 0; i < data.length; i++){
         var item = data[i];
-        //console.log(item);
+        $(".commentsContainer").show();
         html += "<div class='image-box shadow-blur mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
         html += "   <div class='image-box-body'>";
         
- 
+        if(item.isDeletable != undefined && item.isDeletable){
+            html += "           <a data-href='/event/comment/delete?uuid="+item.uuid+"' style='position:absolute;right:15px;top:10px' class='btn btn-light-gray btn-short comment-delete'><i class='color-link fa fa-times'></i></a>";
+        }  
+        
+        html += "       <div class='title'>";
+        html += "           <img src='../"+item.createdByAvatarUrl+"_64x64' style='height:40px;float:left;margin-right:10px'> ";
+        html += "           <a href='/user/"+item.createdByLogin+"'>"+item.createdByName+"</a>";
+        html += "           <p><span class=''>on "+starUtils.formatDate(item.created)+"</span> ";
+        html += "           <span class='tip'>"+starUtils.formatTime(item.created)+"</span></p>";
+        html += "       </div>";
         
         if(dashboard && item.event != undefined){
             html += "           <div class='overlay-container'>";
-            html += "               <div style='width:100%;height:120px;background: url(\"/"+item.listingImage+"\"); background-size: cover;padding:10px'>";
+            html += "               <div style='width:100%;height:160px;background: url(\"/"+item.listingImage+"\"); background-size: cover;padding:10px'>";
             html += "                   <h3 class='shadow margin-clear text-shadow'>"+item.listingName+"</h3>";
             html += "                   <span class='text-shadow'>"+starUtils.formatDate(item.eventStart)+"</span>";
             html += "                   <span class='text-shadow'>"+starUtils.formatTime(item.eventStart)+"</span> - ";
@@ -69,7 +87,7 @@ star.renderComments = function(data, dashboard){
         
         else if(dashboard && item.listing != undefined){
             html += "           <div class='overlay-container'>";
-            html += "               <div style='width:100%;height:120px;background: url(\"/"+item.listingImage+"\"); background-size: cover;padding:10px'>";
+            html += "               <div style='width:100%;height:160px;background: url(\"/"+item.listingImage+"\"); background-size: cover;padding:10px'>";
             html += "                   <h3 class='shadow margin-clear text-shadow'>"+item.listingName+"</h3>";
             html += "               </div>";
             html += "               <div class='overlay'>";
@@ -80,17 +98,7 @@ star.renderComments = function(data, dashboard){
             html += "           </div>";
         }
         
-        if(item.isDeletable != undefined && item.isDeletable){
-            html += "           <a data-href='/event/comment/delete?uuid="+item.uuid+"' style='position:absolute;right:20px;top:15px' class='btn btn-light-gray btn-short comment-delete'><i class='color-link fa fa-times'></i></a>";
-        }  
-        
-        html += "       <div class='title'>";
-        html += "           <img src='../"+item.createdByAvatarUrl+"_64x64' style='height:40px;float:left;margin-right:10px'> ";
-        html += "           <a href='/user/"+item.createdByLogin+"'><strong>"+item.createdByName+"</strong></a><br/>";
-        html += "               <span class='tip'>on "+starUtils.formatDate(item.created)+"</span> ";
-        html += "               <span class='tip'>"+starUtils.formatTime(item.created)+"</span>";
-        html += "       </div>";
-        html += "       <div style='color:black'>"+item.comment+"</div>";
+        html += "       <div class='black margin-top'>"+item.comment+"</div>"; 
         
         if(item.attachments.length > 0){
             html += "           <strong>Attachments</strong>";
@@ -113,6 +121,8 @@ star.renderComments = function(data, dashboard){
         }        
         
         if(item.replies.length > 0){
+            if(item.attachments.length > 0)
+                html += "<br/>";
             html += "<div class='small'>";
             for(var j = 0; j < item.replies.length; j++){
                 var r = item.replies[j];
@@ -126,7 +136,7 @@ star.renderComments = function(data, dashboard){
         }   
 
         if(star.user){
-            html += "<a href='#' class='comment-reply pull-right margin-top'>Reply</a>";
+            html += "<a href='#' class='comment-reply pull-right'>Reply</a>";
             html += "<div style='display:none' class='comment-reply-input margin-top'>";
             html += "   <textarea class='form-control' placeholder='Write a reply'></textarea>";
             html += "   <button class='btn btn-default pull-right comment-reply-submit' data-id='"+item.uuid+"'>Submit</button>";
@@ -161,6 +171,8 @@ star.initItems = function(prefix, urlParams){
                 $(html).hide().appendTo($("#itemsList"+prefix)).fadeIn(500);
                 $("#spinner"+prefix).hide();
                 $("#moreResults"+prefix).show();
+                if(FB != undefined)
+                    FB.Canvas.setSize();
             }
             setTimeout(function(){
                 f(html);
@@ -198,6 +210,8 @@ star.loadItems = function(prefix, urlParams){
                 $(html).hide().appendTo($("#itemsList"+urlParams.prefix)).fadeIn(500);
                 $("#spinner"+urlParams.prefix).hide();
                 $("#moreResults"+urlParams.prefix).show();
+                if(FB != undefined)
+                    FB.Canvas.setSize();
            }
         setTimeout(function(){
                 f(html);
@@ -217,6 +231,8 @@ star.renderItems = function(data, prefix){
     var html = "";
     for(var i = 0; i < data.length; i++){
         var item = data[i];
+        if(!item.invisible)
+            $(".container"+prefix).show();
         if(prefix.indexOf("Listing") >= 0){
             
             html += "<div class='event-box shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
@@ -237,7 +253,7 @@ star.renderItems = function(data, prefix){
             if(item.charging == 'free'){
                 html += "<strong>Free</strong>";
             }
-            if(item.charging == 'before'){
+            if(item.charging != 'free'){
                 html += "<strong>"+item.price+"</strong> <small>"+item.currency+"</small>";
             }       
             if(item.firstFree != undefined && item.firstFree == true){
@@ -290,28 +306,28 @@ star.renderItems = function(data, prefix){
                 html += "       </div>";
                 html += "   </div>";
                 html += "   <div class='image-box-body' style='font-size:0.9em'>";
-                html += "       <span>"+item.category+"</span> &middot; <span>"+item.type+"</span> &middot; <span>"+item.privacy+"</span><br/> ";  
+                html += "           <p><span>"+item.category+"</span> &middot; <span>"+item.type+"</span> &middot; <span>"+item.privacy+"</span></p> ";  
                
                 html += "           <p>";
                 html += "           <strong>"+starUtils.formatDate(item.eventStart)+"</strong>";
                 html += "           <span>"+starUtils.formatTime(item.eventStart)+"</span> - ";
                 html += "           <span>"+starUtils.formatTime(item.eventEnd)+"</span><br/>";
-                html += "           <strong>"+(before?"Ago ":"Starts in")+"</strong> " + (days > 0 ? (days + " days ") : "") + (hours > 0 ? (hours + "h ") : "") + minutes + "m";          
+                html += "           <strong>"+(before?"Before":"Starts in")+"</strong> " + (days > 0 ? (days + " d ") : "") + (hours > 0 ? (hours + "h ") : "") + minutes + "m";          
                 html += "           <br/>";            
                 if(item.charging == 'free'){
                     html += "<strong>Free</strong>";
                 }
-
                 if(item.charging == 'before'){
                     html += "       <strong>"+item.priceTotal+"</strong> <small>"+item.currency+"</small> for "+item.chargingTime+" min";
                 }    
+                
                 if(item.state == 'customer_created'){
                     html += "       <img class='img-circle avatar22' src='/"+item.customerAvatarUrl+"_32x32'>";
                     html += "       <span class='label label-danger'>pending</span>";
                 }
-                html += "       </p>";
+                html += "           </p>";
                 
-                html += "       <p class='event-box-link'><a href='/event/"+item.uuid+"' class=''><span>"+star.utils.trimTo(item.title, 30)+"</span></a></p>";
+                html += "           <a rel='tooltip' data-placement='top' title='"+item.title+"' href='/event/"+item.uuid+"'><span>"+star.utils.trimTo(item.title, 25)+"</span></a>";
                 html += "   </div>";
                 html += "</div>";                           
             }
@@ -830,6 +846,17 @@ starServices.addCommentReply = function(data, success, error){
     $.ajax({
         type: "POST",
         url: "/comment/reply",
+        data: JSON.stringify(data),
+        success: success,
+        error: error,
+        contentType: "application/json"
+    });
+};
+
+starServices.hangoutInvite = function(data, success, error){
+    $.ajax({
+        type: "POST",
+        url: "/room/invite",
         data: JSON.stringify(data),
         success: success,
         error: error,

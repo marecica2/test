@@ -224,9 +224,6 @@ public class Listing extends Model
 
     public String getDescriptionHtml()
     {
-        //String description = this.description.replaceAll("\\*(.+?)\\*", "<strong>$1</strong>");
-        //this.description = description.replaceAll("\n", "<br/>");
-        //return description;
         return WikiUtils.parseToHtml(this.description);
     }
 

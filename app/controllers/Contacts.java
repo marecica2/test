@@ -4,14 +4,9 @@ import java.util.List;
 
 import models.Contact;
 import models.User;
-
-import org.apache.velocity.VelocityContext;
-
 import play.i18n.Messages;
 import play.mvc.With;
-import templates.VelocityTemplate;
-import email.EmailProvider;
-import email.Notification;
+import email.EmailNotificationBuilder;
 
 @With(Secure.class)
 public class Contacts extends BaseController
@@ -42,26 +37,20 @@ public class Contacts extends BaseController
         if (u != null)
         {
             validation.addError("error", "");
-            flash.error(Messages.get("%s is already registered", email));
+            flash.error(Messages.get("is-already-registered", email));
             params.put("email", email);
             params.flash();
             validation.keep();
             flash("email", email);
         } else
         {
-            flash.success(Messages.get("invitation sent to %s", email));
-
-            // baseUrl in format https://localhost:10001/
-            final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
-            final String locale = "en";
-            final EmailProvider emailProvider = new EmailProvider(user.account.smtpHost, user.account.smtpPort,
-                    user.account.smtpAccount, user.account.smtpPassword, "10000", user.account.smtpProtocol, true);
-            final VelocityContext ctx = VelocityTemplate.createInvitationTemplate(locale, email, user, null, baseUrl, null);
-            final String body = VelocityTemplate.processTemplate(ctx, VelocityTemplate.getTemplateContent(VelocityTemplate.CONTACT_INVITE_TEMPLATE));
-
-            final String from = user.login;
-            final String subject = "Widgr: " + user.getFullName() + " invited you to Widgr";
-            new Notification(emailProvider, from, subject, email, body).execute();
+            final String subject = Messages.get("invited-you-to-widgr-subject", user.getFullName());
+            new EmailNotificationBuilder()
+                    .setFrom(user)
+                    .setToEmail(email)
+                    .setSubject(subject)
+                    .sendInvitation();
+            flash.success(Messages.get("invitation-sent-to", email));
         }
         contacts();
     }

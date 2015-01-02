@@ -4,12 +4,12 @@
 #{/if}
 
 #{if usr.userEducation}
-<h3>Education</h3>
+<h3>&{'education'}</h3>
 <p class="black ">${usr.userEducationHtml().raw()}</p>
 #{/if}
 
 #{if usr.userExperiences}
-<h3>Experiences</h3>
+<h3>&{'experiences'}</h3>
 <p class="black ">${usr.userExperiencesHtml().raw()}</p>
 #{/if}
 
@@ -21,5 +21,5 @@
 </ul>
 
 #{if usr.account.url}
-<p class="black">&{'account.website'} <a href="${usr.account.url}" target="_blank">${usr.account.url}</a></p>
+<p class="black">&{'website'} <a href="${usr.account.url}" target="_blank">${usr.account.url}</a></p>
 #{/if}

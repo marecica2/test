@@ -66,6 +66,7 @@ POST 	/password								Registration.passwordPost
 GET		/public/password						Registration.passwordCustomer
 POST 	/public/password						Registration.passwordCustomerPost
 POST 	/registration/facebook					Registration.registrationFacebookPost
+GET 	/registration/activate					Registration.activate
 
 GET     /contacts								Contacts.contacts
 POST    /contacts/invite						Contacts.contactInvite
@@ -84,7 +85,6 @@ POST 	/public/feed							Public.feedSave
 GET 	/public/activities						Public.activities
 GET 	/public/facebook/registration			Public.facebookRegistration
 GET 	/wiki									Public.wiki
-GET 	/account/activate						Public.activate
 GET 	/about									Public.about
 
 GET		/remove-upload							FileuploadController.removeFile	
@@ -103,19 +103,23 @@ GET  	/rating/{uuid}/abuse         	 		Ratings.abuseForRating
 GET		/payment/{event}						PaymentController.payment
 POST	/payment/{event}						PaymentController.paymentPost
 *		/paypal/{event}    						PaymentController.processWithPaypal
+GET		/paypal/refund/{id}						PaymentController.paypalRefund
 
 POST    /event/comment                  		Comments.addComment
 GET  	/event/comment/delete              		Comments.deleteComment
 GET  	/comments			              		Comments.getComments
 POST  	/comment/reply		              		Comments.addReply
 
-GET    	/mail	        						Messages.inbox
-POST   	/mail	        						Messages.send
-GET   	/mail/{id}         						Messages.detail
+GET    	/mail	        						Notifications.inbox
+GET   	/mail/{id}         						Notifications.detail
+POST   	/mail-new        						Notifications.send
+GET   	/mail-new        						Notifications.send
 
 GET     /room			                       	Hangout.room
+GET     /instant		                       	Hangout.instantRoom
 GET     /join-room			                  	Hangout.joinRoom
 POST    /join-room			                  	Hangout.joinRoomPost
+POST    /room/invite		                  	Hangout.invite
 
 GET 	/test-email								Accounts.testEmail
 GET 	/follow									Accounts.follow
@@ -125,6 +129,7 @@ POST 	/settings								Accounts.accountPost
 GET 	/settings								Accounts.account
 GET 	/settings/smtp/reset					Accounts.resetEmail
 GET 	/settings/request-publisher				Accounts.requestPublisher
+*		/payments								Accounts.payments
 
 GET 	/admin/publishers						Admin.publishers
 GET 	/admin/users							Admin.users

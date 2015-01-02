@@ -25,7 +25,7 @@
 			<form role="form" action="#{if isPublic}/public#{/if}/login#{if isPublic}?id=${request.params.id}#{/if}" method="POST">
 			    #{authenticityToken /}
 			    
-			    <h2 class=""><i class="fa fa-sign-in"></i> &{'logIn'}</h2>
+			    <h2 class=""><i class="fa fa-sign-in"></i> &{'sign-in'}</h2>
 			    <div class="divider"></div>
 			    
 				<div class="form-group">
@@ -40,12 +40,12 @@
 				</div>
 		
 				<div class="form-group">
-					&{'login.registerQuestion'} <a href="/registration">&{'login.here'}</a>
-					&{'or'} <a href="/password-reset">&{'reset.password'}</a>
+					&{'login-register-question'} <a href="/registration">&{'login-here'}</a>
+					&{'or'} <a href="/password-reset">&{'reset-your-password'}</a>
 					<br/>
 					<br/>
 					<div class="pull-left fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
-					<button class="pull-right btn btn-default margin-clear"><i class="fa fa-sign-in"></i> &{'logIn'}</button>
+					<button class="pull-right btn btn-default margin-clear"><i class="fa fa-sign-in"></i> &{'sign-in'}</button>
 					<div style="clear:both;"></div>
 				</div>
 			</form>

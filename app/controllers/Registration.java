@@ -5,22 +5,18 @@ import java.util.Date;
 import models.Account;
 import models.Attendance;
 import models.Contact;
+import models.Message;
 import models.User;
-
-import org.apache.velocity.VelocityContext;
-
 import play.cache.Cache;
+import play.i18n.Messages;
 import play.libs.Images;
 import play.mvc.Before;
-import templates.VelocityTemplate;
 import utils.RandomUtil;
 import utils.StringUtils;
-import email.EmailProvider;
-import email.Notification;
+import email.EmailNotificationBuilder;
 
 public class Registration extends BaseController
 {
-
     @Before(only = { "password", "passwordPost" })
     static void checkAccess()
     {
@@ -53,7 +49,7 @@ public class Registration extends BaseController
         validation.required(captcha);
         final Object cap = Cache.get("captcha." + uuid);
         if (captcha != null && cap != null)
-            validation.equals(captcha, cap).message("invalid.captcha");
+            validation.equals(captcha, cap).message("invalid-captcha");
 
         if (!validation.hasErrors())
         {
@@ -63,17 +59,16 @@ public class Registration extends BaseController
                 user.password = StringUtils.getRandomPassword(8);
                 user.save();
 
-                final String from = user.login;
                 final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
-                final EmailProvider emailProvider = new EmailProvider();
-                final String title = "Widgr: Password reset";
-                final String message = "<p>Your password has been reseted.<br/></p>New password: <strong>" + user.password
-                        + "</strong> <p>It is highly recommended to change this password <a href='"
-                        + baseUrl + "password'>here</a></p>";
+                final String title = Messages.get("password-reset-subject");
+                final String message = Messages.get("password-reset-message", user.password, baseUrl + "password");
 
-                final VelocityContext ctx = VelocityTemplate.createBasicTemplate(null, baseUrl, title, message);
-                final String body = VelocityTemplate.processTemplate(ctx, VelocityTemplate.getTemplateContent(VelocityTemplate.CONTACT_INVITE_TEMPLATE));
-                new Notification(emailProvider, from, title, user.login, body).execute();
+                new EmailNotificationBuilder()
+                        .setWidgrFrom()
+                        .setTo(user)
+                        .setSubject(title)
+                        .setMessageRaw(message)
+                        .send();
             }
             // send email
             redirect("/login");
@@ -118,7 +113,7 @@ public class Registration extends BaseController
 
         final User checkUser = User.getUserByLogin(login);
         if (checkUser != null)
-            validation.addError("login", "Login already used");
+            validation.addError("login", Messages.get("login-already-used"));
 
         if (!validation.hasErrors())
         {
@@ -136,12 +131,34 @@ public class Registration extends BaseController
             if (invitation != null)
                 createInvitation(invitation, user);
 
-            // send email
-            activationEmail(user);
+            // send activation email
+            final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
+            final String title = Messages.get("account-activation-subject");
+            final String message = Messages.get("account-activation-message");
 
-            flash.success("Check out Your email for activating this account");
+            //                    "<h3>Welcome to Widgr!</h3>"
+            //                    + "You're almost there! Please click the link below to confirm your Widgr account.<br/>"
+            //                    + "<a href='" + baseUrl + "registration/activate?uuid=" + user.uuid + "'>Account activation link</a><br/>"
+            //                    + "or paste this url to the browser address bar<br/>"
+            //                    + "" + baseUrl + "registration/activate?uuid=" + user.uuid + "<br/><br/>"
+            //                    + "Here are a few things to help you get started width Widgr:"
+            //                    + "<ul>"
+            //                    + "<li><a href='" + baseUrl + "help#publisher'>How to become a Publisher</a></li>"
+            //                    + "<li><a href='" + baseUrl + "help#facebook'>How to connect your account with Facebook</a></li>"
+            //                    + "<li><a href='" + baseUrl + "help#google'>How to sync Widgr events with Google Calendar</a></li>"
+            //                    + "<li><a href='" + baseUrl + "help#paypal'>How to set up Paypal payments for Publishers</a></li>"
+            //                    + "</ul>";
+
+            new EmailNotificationBuilder()
+                    .setWidgrFrom()
+                    .setTo(user)
+                    .setSubject(title)
+                    .setMessageRaw(message)
+                    .send();
+
+            flash.success(Messages.get("check-out-your-email-for-activating-this-account.-Please-check-junk-folder-as-well"));
             flash.keep();
-            redirect("/login");
+            Secure.login();
         } else
         {
             params.flash();
@@ -206,12 +223,11 @@ public class Registration extends BaseController
 
     public static void passwordPost(String oldPassword, String password, String passwordRepeat)
     {
+        final User user = getLoggedUser();
+
         validation.required(oldPassword);
         validation.required(password);
         validation.equals(password, passwordRepeat).message("validation.passwordMatch");
-
-        final User user = getLoggedUser();
-        final Account account = user.account;
 
         if (!oldPassword.equals(user.password))
             validation.addError("oldPassword", "validation.invalidPassword");
@@ -224,8 +240,24 @@ public class Registration extends BaseController
         } else
         {
             params.flash();
-            render("Registration/password.html", user, account);
+            render("Registration/password.html", user);
         }
+    }
+
+    public static void activate(String uuid)
+    {
+        User user = User.getUserByUUID(uuid);
+        user.activated = true;
+        user.save();
+
+        final String subject = Messages.get("account.activated-subject");
+        final String body = Messages.get("account.activated-message");
+        // "h3. Welcome to Widgr!\nYour account has been succesfully activated. \nHere are a few things to help you get started.\n* [How to become a publisher|/help#publisher] \n* [How to set up Paypal Account|/help#paypal]";
+
+        Message.createNotification(user, user, subject, body);
+        flash.success(Messages.get("account-successfully-activated"));
+        flash.keep();
+        Secure.login();
     }
 
     private static void createInvitation(String invitation, User user)
@@ -257,21 +289,6 @@ public class Registration extends BaseController
             c1.following = true;
             c1.saveContact();
         }
-    }
-
-    private static void activationEmail(User user)
-    {
-        final String from = user.login;
-        final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
-        final EmailProvider emailProvider = new EmailProvider();
-        final String title = "Widgr: Account activation";
-        final String message = "<p>To activate your account click <a href='" + baseUrl + "account/activate?uuid=" + user.uuid
-                + "'>here</a> or paste this url to the browser address bar <p>"
-                + baseUrl + "account/activate?uuid=" + user.uuid + "</p>";
-
-        final VelocityContext ctx = VelocityTemplate.createBasicTemplate(null, baseUrl, title, message);
-        final String body = VelocityTemplate.processTemplate(ctx, VelocityTemplate.getTemplateContent(VelocityTemplate.CONTACT_INVITE_TEMPLATE));
-        new Notification(emailProvider, from, title, user.login, body).execute();
     }
 
     private static User createDefaultUser(String login, String password, String firstName, String lastName, String token, Integer offset)
@@ -307,13 +324,8 @@ public class Registration extends BaseController
         account.name = firstName + " " + lastName;
         account.type = Account.TYPE_STANDARD;
         account.planCurrent = Account.TYPE_STANDARD;
-        account.planRequest = Account.PLAN_TYPE_STANDARD;
+        account.planRequest = Account.PLAN_STANDARD;
         account.planRequestFrom = new Date();
         return account;
-    }
-
-    public static void passwordCustomer()
-    {
-
     }
 }

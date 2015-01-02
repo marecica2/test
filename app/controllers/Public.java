@@ -30,7 +30,7 @@ public class Public extends BaseController
 {
     public static void locale(String locale, String url)
     {
-        User user = getLoggedUserNotCache();
+        final User user = getLoggedUserNotCache();
         if (user != null)
         {
             user.locale = locale;
@@ -52,41 +52,32 @@ public class Public extends BaseController
     public static void feedSave()
     {
         final User user = getLoggedUser();
-        if (user != null)
-        {
-            final JsonObject jo = JsonUtils.getJson(request.body);
-            ChatFeed feed = new ChatFeed();
-            feed = feedFromJson(jo, feed);
-            feed.saveFeed();
-            renderJSON(feed);
-        }
+        if (user == null)
+            forbidden();
+
+        final JsonObject jo = JsonUtils.getJson(request.body);
+        ChatFeed feed = new ChatFeed();
+        feed = feedFromJson(jo, feed);
+        feed.saveFeed();
+        renderJSON(feed);
     }
 
     public static void about()
     {
-        User user = getLoggedUser();
+        final User user = getLoggedUser();
         renderTemplate("Application/about.html", user);
     }
 
     public static void activities(String id, int limit, String uuid)
     {
-        Boolean isPublic = false;
-        User user = getLoggedUser();
+        final User user = getLoggedUser();
         if (user == null)
-        {
-            isPublic = true;
-            user = User.getUserByUUID(id);
-        }
+            forbidden();
 
-        List<Activity> activities = new ArrayList<Activity>();
-        if (user != null)
-            activities = Activity.getByUser(user, limit, uuid, isPublic);
-
+        final List<Activity> activities = Activity.getByUser(user, limit, uuid);
         final List<ActivityDTO> aDto = new ArrayList<ActivityDTO>();
         for (Activity activity : activities)
-        {
             aDto.add(ActivityDTO.convert(activity));
-        }
         renderJSON(aDto);
     }
 
@@ -108,15 +99,6 @@ public class Public extends BaseController
 
         render(user, usr, userProfile, isOwner, listings, followees,
                 followers, follow, ratings, stats, contact);
-    }
-
-    private static ChatFeed feedFromJson(final JsonObject jo, ChatFeed feed)
-    {
-        feed.uuid = StringEscapeUtils.escapeHtml(jo.get("uuid").getAsString());
-        feed.comment = StringEscapeUtils.escapeHtml(jo.get("comment").getAsString());
-        feed.name = StringEscapeUtils.escapeHtml(jo.get("name").getAsString());
-        feed.created = new Date();
-        return feed;
     }
 
     public static void facebookRegistration(String accessToken)
@@ -143,11 +125,12 @@ public class Public extends BaseController
         renderTemplate("wiki.html");
     }
 
-    public static void activate(String uuid)
+    private static ChatFeed feedFromJson(final JsonObject jo, ChatFeed feed)
     {
-        User user = User.getUserByUUID(uuid);
-        user.activated = true;
-        user.save();
-        redirectTo("/login");
+        feed.uuid = StringEscapeUtils.escapeHtml(jo.get("uuid").getAsString());
+        feed.comment = StringEscapeUtils.escapeHtml(jo.get("comment").getAsString());
+        feed.name = StringEscapeUtils.escapeHtml(jo.get("name").getAsString());
+        feed.created = new Date();
+        return feed;
     }
 }

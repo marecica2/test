@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
+import models.Attendance;
 import models.Event;
 
 import org.apache.commons.collections.map.HashedMap;
@@ -23,6 +24,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 
+import play.Logger;
 import utils.DateTimeUtils;
 import utils.StringUtils;
 
@@ -35,12 +37,10 @@ public class Paypal
     private String signature = "Ahi6toXd.Z09uBAi9TXUZIR3VEUjAI810NXwhh8lXf.N.aUDqMUKfbIe";
 
     private final String setExpressCheckout = "SetExpressCheckout";
-    //private final String getExpressCheckoutDetails = "GetExpressCheckoutDetails";
     private final String doExpressCheckout = "DoExpressCheckoutPayment";
-
     private final String version = "93";
 
-    private BigDecimal paymentAmount = new BigDecimal("10");
+    private BigDecimal paymentAmount = new BigDecimal("0");
     private String paymentCurrency = "USD";
     private String returnUrl;
     private String cancelUrl;
@@ -51,7 +51,7 @@ public class Paypal
     public Paypal(Event e, String returnUrl, String cancelUrl, String providerPaypalAccount, String providerPaypalAccountMicropayment, String user, String pwd, String signature,
             String endpoint, String paymentUrl, String percentage)
     {
-        this.paymentAmount = e.price;
+        this.paymentAmount = e.getTotalPrice();
         this.paymentCurrency = e.currency;
         this.providerPaypalAccount = providerPaypalAccount;
         this.providerPaypalAccountMicropayment = providerPaypalAccountMicropayment;
@@ -68,7 +68,7 @@ public class Paypal
 
     public Paypal(Event e)
     {
-        this.paymentAmount = e.price;
+        this.paymentAmount = e.getTotalPrice();
         this.paymentCurrency = e.currency;
     }
 
@@ -121,10 +121,10 @@ public class Paypal
         sb.append("&RM=" + 2);
 
         String resp = executeRequest(sb);
-        System.err.println("-------------------");
-        System.err.println("Paypal express checkout response for event " + event.uuid);
-        System.err.println(URLDecoder.decode(resp.replaceAll("&", "\n"), "UTF-8"));
-        System.err.println("-------------------");
+        Logger.info("-------------------");
+        Logger.info("Paypal express checkout response for event " + event.uuid);
+        Logger.info(URLDecoder.decode(resp.replaceAll("&", "\n"), "UTF-8"));
+        Logger.info("-------------------");
         response.parseHttpResponse(URLDecoder.decode(resp, "UTF-8"));
         return response;
     }
@@ -158,18 +158,23 @@ public class Paypal
         return token;
     }
 
-    //    public String getExpressCheckoutDetail(String token) throws Exception
-    //    {
-    //        StringBuilder sb = new StringBuilder();
-    //        sb.append("USER=" + user);
-    //        sb.append("&PWD=" + pwd);
-    //        sb.append("&SIGNATURE=" + signature);
-    //        sb.append("&METHOD=" + URLEncoder.encode(getExpressCheckoutDetails, "UTF-8"));
-    //        sb.append("&VERSION=" + URLEncoder.encode(version, "UTF-8"));
-    //        sb.append("&TOKEN=" + token);
-    //        String resp = executeRequest(sb);
-    //        return resp;
-    //    }
+    public String refund(Attendance a) throws Exception
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("USER=" + user);
+        sb.append("&PWD=" + pwd);
+        sb.append("&SIGNATURE=" + signature);
+        sb.append("&METHOD=" + URLEncoder.encode("RefundTransaction", "UTF-8"));
+        sb.append("&VERSION=" + URLEncoder.encode(version, "UTF-8"));
+        sb.append("&PAYERID=" + URLEncoder.encode(a.paypalPayerId, "UTF-8"));
+        sb.append("&TRANSACTIONID=" + URLEncoder.encode(a.paypalTransactionId, "UTF-8"));
+        sb.append("&REFUNDTYPE=" + URLEncoder.encode("Full", "UTF-8"));
+        sb.append("&REFUNDSOURCE=" + URLEncoder.encode("instant", "UTF-8"));
+
+        String resp = executeRequest(sb);
+        Logger.info(resp);
+        return resp;
+    }
 
     private void processDetails(Event event, StringBuilder sb, DoExpressCheckoutResponse response, Boolean dual) throws UnsupportedEncodingException
     {
@@ -194,8 +199,8 @@ public class Paypal
         sb.append("&PAYMENTREQUEST_0_DESC=" + URLEncoder.encode(StringUtils.getStringNotNullMaxLen(event.listing.title, 100), "UTF-8"));
 
         //TODO important dont forget to switch it back
-        //sb.append("&PAYMENTREQUEST_0_SELLERPAYPALACCOUNTID=" + event.account.paypalAccount);
-        sb.append("&PAYMENTREQUEST_0_SELLERPAYPALACCOUNTID=" + "marek.balla@hotovo.org");
+        sb.append("&PAYMENTREQUEST_0_SELLERPAYPALACCOUNTID=" + event.user.account.paypalAccount);
+        //sb.append("&PAYMENTREQUEST_0_SELLERPAYPALACCOUNTID=" + "marek.balla@hotovo.org");
         sb.append("&PAYMENTREQUEST_0_CURRENCYCODE=" + URLEncoder.encode(paymentCurrency, "UTF-8"));
         sb.append("&PAYMENTREQUEST_0_AMT=" + URLEncoder.encode(providerPrice.toPlainString(), "UTF-8"));
         sb.append("&PAYMENTREQUEST_0_PAYMENTREQUESTID=" + URLEncoder.encode(event.id + "_provider", "UTF-8"));
@@ -358,5 +363,4 @@ public class Paypal
         }
 
     }
-
 }

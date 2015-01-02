@@ -6,7 +6,7 @@
 <div class="col-md-6">
 	<div class="" style="background:white; padding:0px; margin:30px auto;">
 		<div  class="default_bg" style="font-size:1.3em; padding:30px;">
-			<span>&{'joinEvent'} </span><br/>
+			<span>&{'join-event'} </span><br/>
 		</div>
 		<a href="/event?uuid=${e.uuid}"><img src="/${e.listing.imageUrl}" style="width:100%;"></a>
 		<div style="margin-left:20px; margin-top:-50px">
@@ -42,13 +42,13 @@
 			<div style="font-size:1.2em">
    	   	   	<table class="table">
    	   	   		<tr class="light_gray_bg">
-   	   	   			<td><strong>Unit price</strong></td>
-	   	   	   		<td>for ${e.chargingTime} minutes</td>
+   	   	   			<td><strong>&{'unit-price'}</strong></td>
+	   	   	   		<td>for ${e.chargingTime} &{'minutes'}</td>
    	   	   			<td>${e.price} ${e.currency}</td>
    	   	   		</tr>
    	   	   		<tr class="default_bg">
-   	   	   			<td><strong>Total</strong></td>
-	   	   	   		<td>for ${e.getMinutes()} minutes</td>
+   	   	   			<td><strong>&{'total'}</strong></td>
+	   	   	   		<td>for ${e.getMinutes()} &{'minutes'}</td>
    	   	   			<td>${e.getTotalPrice()} ${e.currency}</td>
    	   	   		</tr>
    	   	   	</table>
@@ -56,11 +56,10 @@
 			
 			<br/>
 			<form method="POST" action="/payment/${e.uuid}" onsubmit="return validate()" >
-	    		<input type="image" class="pull-right" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" border="0" align="top" alt="Check out with PayPal"/>
+	    		<input type="image" class="pull-right" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" border="0" align="top" alt="&{'checkout-with-paypal'}"/>
 				<input type="hidden" name="url" value="${url}">
-				<input type="radio" name="payment" value="paypal" id="paypal" checked="checked"> <label for="paypal">Pay with Paypal</label>
+				<input type="radio" name="payment" value="paypal" id="paypal" checked="checked"> <label for="paypal">&{'pay-with-paypal'}</label>
 				<div class="clearfix"></div>
-				
 			</form>
 		</div>
 	</div>

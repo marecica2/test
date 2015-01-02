@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.Account;
 import models.Comment;
 import models.Event;
 import models.FileUpload;
@@ -13,6 +14,7 @@ import models.Listing;
 import models.ListingFilter;
 import models.Rating;
 import models.User;
+import play.i18n.Messages;
 import play.mvc.Before;
 import utils.NumberUtils;
 import utils.RandomUtil;
@@ -43,6 +45,9 @@ public class Listings extends BaseController
         final String temp = RandomUtil.getUUID();
         final String commentTemp = RandomUtil.getUUID();
         final Map<String, String> errs = new HashMap<String, String>();
+
+        if (isOwner && !user.account.type.equals(Account.TYPE_PUBLISHER))
+            flash.success(Messages.get("start-helping-others"));
 
         if (edit && !isOwner && !isNew)
             forbidden();
@@ -141,7 +146,7 @@ public class Listings extends BaseController
         {
             validation.required(price);
             validation.required(currency);
-            validation.equals(charging, charging).message("validation.charging");
+            validation.equals(charging, charging).message("validation-charging");
         }
         validation.required(title);
         validation.required(description);
@@ -238,6 +243,8 @@ public class Listings extends BaseController
             forbidden();
         if (!l.user.equals(user))
             forbidden();
+        if (!user.account.type.equals(Account.TYPE_PUBLISHER))
+            forbidden();
 
         Event e = new Event();
         e.listing = l;
@@ -281,20 +288,6 @@ public class Listings extends BaseController
         redirectTo(url);
     }
 
-    public static void resetImage(String uuid, String url)
-    {
-        final User user = getLoggedUser();
-        final Listing listing = Listing.get(uuid);
-
-        // permissions check
-        if (!user.isOwner(listing))
-            forbidden();
-
-        listing.imageUrl = FileuploadController.PATH_TO_LISTING_AVATARS + "ava_" + RandomUtil.getRandomInteger(22) + ".png_thumb";
-        listing.save();
-        redirectTo(url);
-    }
-
     public static void listingsRest()
     {
         final User user = getLoggedUser();
@@ -307,7 +300,6 @@ public class Listings extends BaseController
         filterListing.category = StringUtils.getStringOrNull(request.params.get("category"));
 
         List<ListingDTO> ListingsDto = new ArrayList<ListingDTO>();
-        //List<Listing> listings = Listing.getFiltered(first, count, filterListing);
         List<Listing> listings = Listing.getSearch(first, count, filterListing);
         for (Listing l : listings)
         {

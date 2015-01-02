@@ -1,85 +1,94 @@
 <html>
-	<body>
-		<div style="max-width:1000px; background-color: ${color2}; font-family: 'Segoe UI Light','Segoe UI','Helvetica Neue Medium', Arial, sans-serif; font-size: 14px; line-height: 1.42857142857143; text-align: left;">
-
-			<!-- Logo widgr part -->			
-			<div style="margin:0px;width:100%; max-width:1000px; background-color: ${color4}">
-				<br/>
-				<div style="color:white; text-decoration:none">
-					<img style="padding-left:20px;" src="${logo}" alt="widgr">
-				</div>
-				<br/>
-			</div>
-
+	<body style="font-family: Arial, Helvetica;">
+		<div style="max-width:1000px; background-color: ${color4}; font-family: Arial, Helvetica; font-size: 13px; line-height: 1.3; text-align: left;">
 
 			<!-- Title and User part -->
-			<div style="margin:0px;width:100%; max-width:1000px;">
-				<div style="color:white;">
-					<table style="background-color: ${color0}; border-collapse: collapse; width:100%">
-						<tr>
+			<div style="margin:0px;width:100%; max-width:1000px;padding:20px; color:white; background-color: ${color4}">
+				<div style="width:100%;"><img src="${logo}" alt="widgr"></div>
+				<table style="border-collapse: collapse; width:100%">
+					<tr>
+						#if($user)
+						<td style="vertical-align:middle;">
+							<a href="${userUrl}" style="margin-right:20px"><img  style="height:128px;" src="${userImage}"></a>
+						</td>
+						<td>
+							&nbsp;
+						</td>
+						#end
+						<td style="width: 100%; vertical-align:middle; font-family: Arial, Helvetica;font-size:1.3em;">
 							#if($user)
-							<td style="vertical-align:top">
-								<a href="${userUrl}"><img  style="height:128px" src="${userImage}"></a>
-							</td>
+								${user} &nbsp;<a href="${userUrl}" style="color:white;font-size:10px;">${userUrlLabel}</a> 
 							#end
-							<td style="height:148px;padding-left:20px; width: 100%; font-family: 'Segoe UI Light','Segoe UI','Helvetica Neue Medium', Arial, sans-serif;font-size:1.5em;">
-								#if($user)
-									${user} &nbsp;&nbsp;<a href="${userUrl}" style="color:white;font-size:0.7em;">${userUrlLabel}</a> 
-									<br/>
-								#end
-								${title}
-							</td>
-						</tr>
-					</table>
-				</div>
+							<h3>${title}</h3>
+							#if($event)
+								<span style="font-family: Arial, Helvetica;font-size:14px;">${eventDate} ${eventStart} - ${eventEnd}</span>
+								<a href="${eventUrl}" style="color:white;font-size:10px;font-family: Arial, Helvetica">${userUrlLabel}</a>
+							#end					
+						</td>
+					</tr>
+				</table>
 			</div>
-			
 			
 			<!-- Event part -->
 			#if($event)
-			<div style="background-color: ${color1}">
-				<!-- Channel image part -->
-				<a style="color:white; text-decoration:none;background-color: ${color1}" href="${eventUrl}">
+			<div style="width:100%;max-width:1000px;padding:20px; padding-top:0px; background-color: ${color4}">
+				<a href="${eventUrl}">
 					<img  style="width:100%; max-width:1000px;" src="${eventImage}">
-				</a>
-				<br/>
-				<div style="margin:0px; color:white ;width:100%; max-width:1000px; padding:20px">
-					<a style="color:white; text-decoration:none" href="${eventUrl}">
-						<span style="padding-left:20px; font-family: 'Segoe UI Light','Segoe UI','Helvetica Neue Medium', Arial, sans-serif;font-size:2.0em;">${event}</span> 
-					</a>
-					&nbsp;&nbsp;<a href="${eventUrl}" style="color:white;font-size:0.9em;">${userUrlLabel}</a><br/>
-					<span style="padding-left:20px; font-family: 'Segoe UI Light','Segoe UI','Helvetica Neue Medium', Arial, sans-serif;font-size:1.3em;">${eventDate} ${eventStart} - ${eventEnd}</span>
-				</div>
+				</a>			
 			</div>
-			#end
+			#end					
 			
 			
 			<!-- Main message -->
-			<div style="margin:0px;width:100%; max-width:1000px; color: black; background-color: ${color2}">
-				<br/>
-				<div style="margin:0px;padding:20px; font-size:1.2em;">
+			<div style="margin:0px;width:100%; max-width:1000px; color: black; padding: 20px; background-color: ${color2}; font-family: Arial, Helvetica; ">
+				<div style="margin:0px;">
 					#if($notification)
 						<h3>${notificationLabel}</h3>
 						<p>${notification}</p>
 					#end
-					${message}
+					#if($event)
+						<h3>About ${event}</h3>
+						${eventDescription}
+					#end
+					
+					#if(!$existing)
+						${message}
+					#end
 				</div>
-				<br/>
 			</div>
 			
 			<!-- Second message -->
-			#if($url)
-			<div style="width:100%; max-width:1000px; background-color: ${color3}">		
-				<br/>
-				<p style="margin:0px;padding:20px">
-					<a href="${url}" style="margin:0 30px; color: white; font-size:1.3em; text-decoration: none; background-color: ${color1}; padding:15px;">${urlLabel}</a>
-					#if($url1)
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="${url1}" style="margin:0 30px; color: white; font-size:1.3em; text-decoration: none; background-color: ${color1}; padding:15px;">${urlLabel1}</a>
-					#end
-				</p>
-				<br/>
-			</div>
+			#if(!$existing)
+				#if($url)
+				<div style="width:100%; max-width:1000px; padding: 20px; background-color: ${color2}; font-family: Arial, Helvetica; ">		
+					<a href="${url}" style="margin:0 20px; color: white; font-size:1.3em; text-decoration: none; background-color: ${color1}; padding:15px;">${urlLabel}</a>
+					<br/>
+					<br/>
+				</div>
+				#end
 			#end
+			
+
+			<!-- Footer -->
+			<div style="margin:0px;width:100%; max-width:1000px; padding: 20px; color: gray; background-color: ${color3}">
+				<div style="width:100%; text-align:center"><img src="${logo}" alt="widgr">
+					<div style="font-size:1.2em;">
+						<a style="text-decoration: none; color:darkgray" href="${baseUrl}help">Help</a>&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;
+						<a style="text-decoration: none; color:darkgray" href="${baseUrl}about#contact">Contact</a>&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;	
+						<a style="text-decoration: none; color:darkgray" href="${baseUrl}privacy">Security & Privacy</a>	
+					</div>
+				</div>
+
+				<br/>
+				<h4><strong>How do I know this is not a fake email?</strong></h4>
+				<p style="font-family: Arial, Helvetica;font-size:12px">
+					Please note that email really coming from Widgr will never ask 
+					you for sensitive information like your password. An email 
+					that urgently requests you to supply sensitive personal information 
+					is usually an attempt at fraud. Remember not to click any links 
+					in suspicious looking emails.
+				</p>
+			</div>
 
 		</div>
 	</body>

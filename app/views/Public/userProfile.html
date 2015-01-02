@@ -13,9 +13,15 @@
 
 <div class="container" style="min-height:60vh">				
 	<div class="row">
-		<div class="col-md-8">
+	
+	  	<div class="col-md-4 col-md-push-8">
+	  		#{set mail:true /}
+	  		#{include 'leftPanel.html' /}
+	  	</div>
+	  	
+		<div class="col-md-8 col-md-pull-4">
 			#{if listings}
-				<h2>All channels from ${usr.firstName}</h2>
+				<h2>&{'all-channels-from'} ${usr.firstName}</h2>
 				<div class="separator-2"></div>
 				#{set items:listings /}
 				#{set forEvents:false /}
@@ -23,7 +29,7 @@
 			#{/if}			
 		
 			<div>
-				<h2 class="">About ${usr.firstName}</h2>
+				<h2 class="">&{'about'} ${usr.firstName}</h2>
 				<div class="separator-2"></div>
 				#{set usr:usr /}
 				#{include 'userAbout.html' /}
@@ -34,12 +40,6 @@
 				#{include 'ratings.html' /}			
 			</div>
 		</div>	  	
-	  	
-		
-	  	<div class="col-md-4">
-	  		#{set mail:true /}
-	  		#{include 'leftPanel.html' /}
-	  	</div>
 	  	
 	</div>
 </div>

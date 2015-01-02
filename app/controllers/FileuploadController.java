@@ -1,9 +1,12 @@
 package controllers;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+
+import javax.imageio.ImageIO;
 
 import models.FileUpload;
 import models.Listing;
@@ -47,6 +50,26 @@ public class FileuploadController extends BaseController
         int fileSize = NumberUtils.parseInt(size);
         if (fileSize < FILESIZE)
         {
+            // resize big images
+            if (contentType.contains("image"))
+            {
+
+                BufferedImage readImage = null;
+                try
+                {
+                    readImage = ImageIO.read(attachment);
+                    int h = readImage.getHeight();
+                    int w = readImage.getWidth();
+                    if (w > 1200 || h > 1200)
+                    {
+                        System.err.println("resizing image");
+                        Images.resize(attachment, attachment, 1200, 1200, true);
+                    }
+                } catch (Exception e)
+                {
+                }
+            }
+
             FileUpload fu = createFile(item, temp, attachment, contentType, size, avatar);
             JsonObject jo = new JsonObject();
             jo.addProperty("url", fu.url);
@@ -62,7 +85,7 @@ public class FileuploadController extends BaseController
         }
     }
 
-    public static void cropImage(String imageId, String imageUrl, String url, Integer x1, Integer y1, Integer x2, Integer y2, String type, String objectId)
+    public static void cropImage(String imageId, String url, Integer x1, Integer y1, Integer x2, Integer y2, String type, String objectId)
     {
         FileUpload fu = FileUpload.getByUuid(imageId);
         final String filename = fu.getUrl();
@@ -163,35 +186,6 @@ public class FileuploadController extends BaseController
         return fu;
     }
 
-    //    public static void uploadPhoto(String item, String temp, File attachment, String contentType, String size) throws IOException
-    //    {
-    //        int fileSize = NumberUtils.parseInt(size);
-    //        if (fileSize < FILESIZE && contentType.contains("image"))
-    //        {
-    //            final User user = getLoggedUserNotCache();
-    //
-    //            String filename = "/" + user.uuid;
-    //            final File destination = new File(PATH_TO_UPLOADS + filename);
-    //            FileUtils.copyFile(attachment, destination);
-    //
-    //            final String path = PATH_TO_UPLOADS + filename + "_thumb";
-    //            File destinationThumb = new File(path);
-    //            Images.resize(destination, destinationThumb, 500, 500, true);
-    //
-    //            user.avatarUrl = filename;
-    //            user.avatarUrlSmall = filename + "_thumb";
-    //            user.save();
-    //
-    //            clearUserFromCache();
-    //            renderText("{\"url\":\"" + filename + "\"}");
-    //        } else
-    //        {
-    //            response.status = 400;
-    //            renderText("{\"exception\":\"Invalid file size or content type\"}");
-    //        }
-    //
-    //    }
-
     public static void deleteFile(String uuid)
     {
         FileUpload fu = FileUpload.find("byUuid", uuid).first();
@@ -216,5 +210,4 @@ public class FileuploadController extends BaseController
             }
         }
     }
-
 }

@@ -16,6 +16,17 @@ public class Ratings extends BaseController
     public static void addRating(String uuid, String comment, String type, Integer stars, String url, String userUuid)
     {
         final User user = getLoggedUser();
+        final Listing listing = Listing.get(uuid);
+
+        if (user == null)
+            forbidden();
+
+        if (listing != null)
+        {
+            if (listing.user.hasBlockedContact(user))
+                forbidden();
+        }
+
         final Rating r = new Rating();
         r.user = user;
         if (stars == null)
@@ -34,7 +45,6 @@ public class Ratings extends BaseController
         {
             List<Rating> ratings = Rating.getByObject(r.objectUuid);
             Map<String, Object> stats = Rating.calculateStats(ratings);
-            Listing listing = Listing.get(r.objectUuid);
             listing.ratingAvg = (Long) stats.get("avgStars");
             listing.ratingStars = (Integer) stats.get("totalStars");
             listing.save();
@@ -44,6 +54,10 @@ public class Ratings extends BaseController
 
     public static void deleteRating(String uuid, String url)
     {
+        final User user = getLoggedUser();
+        if (user == null)
+            forbidden();
+
         final Rating r = Rating.getByUuid(uuid);
         r.delete();
 
@@ -62,6 +76,9 @@ public class Ratings extends BaseController
     public static void voteForRating(String uuid, String url)
     {
         final User user = getLoggedUser();
+        if (user == null)
+            forbidden();
+
         final Rating r = Rating.getByUuid(uuid);
         RatingVote rv = new RatingVote();
         rv.user = user;
@@ -74,8 +91,10 @@ public class Ratings extends BaseController
     public static void unvoteForRating(String uuid, String url)
     {
         final User user = getLoggedUser();
-        final Rating r = Rating.getByUuid(uuid);
+        if (user == null)
+            forbidden();
 
+        final Rating r = Rating.getByUuid(uuid);
         RatingVote rv = new RatingVote();
         rv.user = user;
         rv.rating = r;

@@ -65,18 +65,16 @@ public class Attendance extends Model
         return Attendance.find("byEvent", event).fetch();
     }
 
-    public static List<Attendance> getPayments(Account account, Date from, Date to)
+    public static List<Attendance> getPayments(User user, Date from, Date to)
     {
-        String query = "from Attendance where 1 = 1 and paid = :paid and isForUser = :isForUser ";
-
+        String query = "select a from Attendance as a join a.event as event where 1 = 1 and paid = :paid and isForUser = :isForUser ";
         if (from != null)
-            query += " and transactionDate >= :from ";
+            query += " and a.paypalTransactionDate >= :from ";
         if (to != null)
-            query += " and transactionDate <= :to ";
-        if (account != null)
-            query += " and account = :account ";
-
-        query += " order by transactionDate ";
+            query += " and a.paypalTransactionDate <= :to ";
+        if (user != null)
+            query += " and event.user = :user ";
+        query += " order by paypalTransactionDate ";
 
         TypedQuery<Attendance> q = Attendance.em().createQuery(query, Attendance.class);
         q.setParameter("paid", true);
@@ -86,8 +84,8 @@ public class Attendance extends Model
             q.setParameter("from", from);
         if (to != null)
             q.setParameter("to", to);
-        if (account != null)
-            q.setParameter("account", account);
+        if (user != null)
+            q.setParameter("user", user);
 
         List<Attendance> attendances = q.getResultList();
         return attendances;

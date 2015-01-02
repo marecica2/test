@@ -9,14 +9,11 @@ import models.Attendance;
 import models.Contact;
 import models.Event;
 import models.User;
+import play.i18n.Messages;
 import play.mvc.Before;
-import utils.JsonUtils;
 import utils.RandomUtil;
 import utils.StringUtils;
 import utils.UriUtils;
-
-import com.google.gson.JsonObject;
-
 import dto.AttendanceDTO;
 import dto.UserDTO;
 
@@ -51,21 +48,24 @@ public class Attendances extends BaseController
         final User user = getLoggedUser();
         List<Contact> c = Contact.getContacts(user, str.toLowerCase());
         List<UserDTO> contacts = new LinkedList<UserDTO>();
-        for (Contact contact : c)
-            contacts.add(UserDTO.convert(contact.contact));
+        if (user != null)
+        {
+            for (Contact contact : c)
+                contacts.add(UserDTO.convert(contact.contact));
+        }
         renderJSON(contacts);
     }
 
     public static void attendanceNewSave(String email, String eventId, String url)
     {
         final Event event = Event.get(eventId);
-        final User user = getLoggedUser();
+        final User user = getLoggedUserNotCache();
         final Boolean isForUser = getLoggedUser().login.equals(email) ? true : false;
         final User customer = User.getUserByLogin(email);
-        final Contact blockedContact = customer != null ? Contact.get(customer, user) : null;
+        final boolean blocked = customer != null ? customer.hasBlockedContact(user) : false;
 
-        if (blockedContact != null && blockedContact.blocked)
-            validation.addError("email", "Blocked contact");
+        if (blocked)
+            validation.addError("email", Messages.get("blocked-contact"));
 
         validation.required(email);
         validation.email(email);
@@ -169,89 +169,4 @@ public class Attendances extends BaseController
         }
         redirectTo(url);
     }
-
-    public static void attendanceRestUpdate()
-    {
-        try
-        {
-            final User user = getLoggedUser();
-            final JsonObject jo = JsonUtils.getJson(request.body);
-            final String uuid = jo.get("uuid").getAsString();
-            Attendance a = Attendance.get(uuid);
-            a.result = jo.get("result").getAsString();
-            a.save();
-
-            final Activity act = new Activity();
-            if (a.result.equals("accepted"))
-                act.type = Activity.ACTIVITY_EVENT_INVITE_ACCEPTED;
-            else
-                act.type = Activity.ACTIVITY_EVENT_INVITE_DECLINED;
-            act.user = user;
-            act.event = a.event;
-            act.eventName = a.event.listing.title;
-            act.saveActivity();
-
-            renderJSON(AttendanceDTO.convert(a));
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-            response.status = 500;
-            renderJSON("Failed to update event. Cause: " + e.getMessage());
-        }
-
-    }
-
-    public static void attendanceRestDelete()
-    {
-        try
-        {
-            final JsonObject jo = JsonUtils.getJson(request.body);
-            final String uuid = jo.get("uuid").getAsString();
-            Attendance a = Attendance.get(uuid);
-            a.delete();
-            renderJSON(AttendanceDTO.convert(a));
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-            response.status = 500;
-            renderJSON("Failed to delete event. Cause: " + e.getMessage());
-        }
-    }
-
-    //    public static void watchListAdd(String event, String url)
-    //    {
-    //        final Event e = Event.get(event);
-    //        final User user = getLoggedUser();
-    //        Attendance a = Attendance.getByCustomerEvent(user, e);
-    //
-    //        if (a == null)
-    //        {
-    //            a = new Attendance();
-    //            a.customer = user;
-    //            a.event = e;
-    //            a.created = new Date();
-    //            a.email = user.login;
-    //            a.result = Attendance.ATTENDANCE_RESULT_ACCEPTED;
-    //            a.name = user.getFullName();
-    //            a.watchlist = true;
-    //            a.uuid = RandomUtil.getUUID();
-    //        } else
-    //        {
-    //            a.watchlist = true;
-    //        }
-    //        a.save();
-    //        redirectTo(url);
-    //    }
-    //
-    //    public static void watchListRemove(String id, String url)
-    //    {
-    //        Attendance a = Attendance.get(id);
-    //        if (a != null)
-    //        {
-    //            a.watchlist = null;
-    //            a.save();
-    //        }
-    //        redirectTo(url);
-    //    }
-
 }

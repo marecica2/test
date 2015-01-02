@@ -22,7 +22,7 @@
 				
 				#{if (obj.type == 'broadcast' || obj.type == 'instant') && !isOwner && obj.started}
 				
-				<!-- 
+					<!-- 
 					<script src="//jwpsrv.com/library/JKCVFHmREeS3EA6sC0aurw.js"></script>
 					<div id="myElement">Loading the player...</div>
 					<script type="text/javascript">
@@ -36,15 +36,11 @@
 					        height: 360
 					    });
 					</script>					
-				 -->
-										
-					<!-- 
 					 -->
-					 
+
 					<div class="col-md-${cols}" style="padding:0px;">
 						<object height="500" style="background:black;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/downstream.swf">
 						    <param name='src' value='/public/images/downstream.swf'/>
-						    <param name="movie" value="https://fpdownload.adobe.com/strobe/FlashMediaPlayback.swf" />
 							<param name=FlashVars value="myServerUrl=${rmtp}&myStreamName=${obj.roomSecret}" />
 							<param name="wmode" value="transparent" />
 							<param name="allowFullScreen" value="true" />
@@ -62,7 +58,7 @@
 						 <div class="higlight" style="width:100%;text-align: center">
 						 	<div style="width: 200px;position: absolute;margin: -50px 0 0 -50px;left:45%;top: 50%;padding:20px">
 							 	<a class="anchor text-default" style="text-decoration: none;" href="/room?id=${obj.uuid}&secret=${obj.roomSecret}" target="_blank" >
-							 		<i style="font-size:4em" class="fa fa-comments"></i><span style="font-size:1.5em"> Join </span>
+							 		<i style="font-size:4em" class="fa fa-comments"></i><span style="font-size:1.5em"> &{'join'}</span>
 							 	</a>
 						 	</div>
 						 </div>	
@@ -74,7 +70,7 @@
 						 <div class="higlight" style="width:100%;text-align: center">
 						 	<div style="width: 200px;position: absolute;margin: -50px 0 0 -50px;left:45%;top: 50%;padding:20px">
 							 	<a class="anchor text-default" style="text-decoration: none;" href="//plus.google.com/hangouts/_/?gid=647254293629&gd=${obj.uuid}" target="_blank" >
-							 		<i style="font-size:4em" class="fa fa-comments"></i><span style="font-size:1.5em"> Join Hangout</span>
+							 		<i style="font-size:4em" class="fa fa-comments"></i><span style="font-size:1.5em"> &{'join-hangout'}</span>
 							 	</a>
 						 	</div>
 						 </div>	

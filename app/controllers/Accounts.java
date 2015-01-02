@@ -3,7 +3,7 @@ package controllers;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,23 +11,15 @@ import models.Account;
 import models.Attendance;
 import models.Listing;
 import models.User;
-
-import org.apache.velocity.VelocityContext;
-
-import play.Logger;
 import play.cache.Cache;
 import play.i18n.Lang;
 import play.i18n.Messages;
 import play.mvc.With;
-import templates.VelocityTemplate;
 import utils.DateTimeUtils;
 import utils.JsonUtils;
 import utils.StringUtils;
 
 import com.google.gson.JsonObject;
-
-import email.EmailProvider;
-import email.Notification;
 
 @With(controllers.Secure.class)
 public class Accounts extends BaseController
@@ -210,18 +202,13 @@ public class Accounts extends BaseController
         if (listings == null || listings.size() == 0)
         {
             validation.addError("type", "");
-            flash.error("You need at least one listing");
+            flash.error(Messages.get("you-need-at-least-one-listing"));
         }
         if (user.userAbout == null || user.userAbout.length() < 10)
         {
             validation.addError("type", "");
-            flash.error("Please fill in information about you");
+            flash.error(Messages.get("please-fill-in-information-about-you"));
         }
-        //        if (user.account.paypalAccount == null || user.account.paypalAccount.length() < 2)
-        //        {
-        //            validation.addError("type", "");
-        //            flash.error("Invalid Paypal account");
-        //        }
 
         if (!validation.hasErrors())
         {
@@ -247,68 +234,31 @@ public class Accounts extends BaseController
         renderJSON(resp);
     }
 
-    public static void resetEmail(String url)
-    {
-        User user = getLoggedUserNotCache();
-        user.account.smtpHost = "DEFAULT";
-        user.account.smtpPort = null;
-        user.account.smtpProtocol = null;
-        user.account.smtpAccount = null;
-        user.account.smtpPassword = null;
-        user.account.save();
-        redirectTo(url);
-    }
-
-    public static void testEmail()
-    {
-        try
-        {
-            final User user = getLoggedUser();
-            final String from = user.login;
-            final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
-
-            System.err.println("sending mail to " + user.login);
-            final EmailProvider emailProvider = new EmailProvider(user.account.smtpHost, user.account.smtpPort,
-                    user.account.smtpAccount, user.account.smtpPassword, "10000", user.account.smtpProtocol, true);
-            final String title = "Email Test";
-            final String message = "Email settings are setted up correctly";
-
-            final VelocityContext ctx = VelocityTemplate.createBasicTemplate(null, baseUrl, title, message);
-            final String body = VelocityTemplate.processTemplate(ctx, VelocityTemplate.getTemplateContent(VelocityTemplate.CONTACT_INVITE_TEMPLATE));
-            new Notification(emailProvider, from, "Email Test", from, body).execute();
-            renderJSON("{\"response\":\"" + Messages.get("email.test.response.ok") + "\"}");
-        } catch (Exception e)
-        {
-            Logger.error(e, "Error occured while sending notification");
-            response.status = 500;
-            renderJSON(Messages.get("email.test.response.error") + " " + e.getMessage());
-        }
-    }
-
     public static void payments()
     {
         final DateTimeUtils dt = new DateTimeUtils(DateTimeUtils.TYPE_DATE_ONLY);
         final User user = getLoggedUser();
-        final Account account = user.account;
         final String timeFrom = request.params.get("filterTimeFrom");
         final String timeTo = request.params.get("filterTimeTo");
         final Date from = dt.fromJson(timeFrom);
         final Date to = dt.fromJson(timeTo);
 
-        BigDecimal total = new BigDecimal("0.0");
-        BigDecimal provider = new BigDecimal("0.0");
-        BigDecimal fee = new BigDecimal("0.0");
+        Map<String, BigDecimal> totals = new HashMap<String, BigDecimal>();
+        Map<String, BigDecimal> providers = new HashMap<String, BigDecimal>();
+        Map<String, BigDecimal> fees = new HashMap<String, BigDecimal>();
 
-        List<Attendance> payments = Attendance.getPayments(account, from, to);
-        Map<Long, BigDecimal> mapTotal = new LinkedHashMap<Long, BigDecimal>();
+        List<Attendance> payments = Attendance.getPayments(user, from, to);
+        Map<String, Map<Long, BigDecimal>> mapTotal = new HashMap<String, Map<Long, BigDecimal>>();
         for (Attendance attendance : payments)
         {
-            if (attendance.price != null)
-                total = total.add(attendance.price);
-            if (attendance.providerPrice != null)
-                provider = provider.add(attendance.providerPrice);
-            if (attendance.fee != null)
-                fee = fee.add(attendance.fee);
+            // init
+            if (!totals.containsKey(attendance.currency))
+            {
+                mapTotal.put(attendance.currency, new HashMap<Long, BigDecimal>());
+                totals.put(attendance.currency, new BigDecimal(0));
+                providers.put(attendance.currency, new BigDecimal(0));
+                fees.put(attendance.currency, new BigDecimal(0));
+            }
 
             if (attendance.paypalTransactionDate != null)
             {
@@ -321,24 +271,18 @@ public class Accounts extends BaseController
                 cal.set(Calendar.MILLISECOND, 0);
                 Long date = cal.getTimeInMillis();
 
-                if (mapTotal.containsKey(date))
+                if (mapTotal.get(attendance.currency).containsKey(date))
                 {
-                    val = mapTotal.get(date);
+                    val = mapTotal.get(attendance.currency).get(date);
                     val = val.add(attendance.providerPrice);
-                    mapTotal.put(date, val);
+                    mapTotal.get(attendance.currency).put(date, val);
                 } else
                 {
-                    mapTotal.put(date, val);
+                    mapTotal.get(attendance.currency).put(date, val);
                 }
             }
         }
         params.flash();
-        render(user, account, payments, total, provider, fee, mapTotal);
-    }
-
-    public static void passwordReset()
-    {
-        User user = getLoggedUser();
-        render(user);
+        render(user, payments, mapTotal);
     }
 }

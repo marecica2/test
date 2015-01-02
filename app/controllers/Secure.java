@@ -80,7 +80,7 @@ public class Secure extends BaseController
         if (validation.hasErrors() || !allowed)
         {
             flash.keep("url");
-            flash.error(Messages.get("Incorrect login or password"));
+            flash.error(Messages.get("incorrect-login-or-password"));
             params.flash();
             login();
         }
@@ -101,13 +101,13 @@ public class Secure extends BaseController
         User user = User.getUserByFacebook(id);
         if (user == null)
         {
-            flash.error(Messages.get("User does not exist"));
+            flash.error(Messages.get("user-does-not-exist"));
             return;
         }
 
         if (!user.activated)
         {
-            flash.error(Messages.get("Your account is not activated"));
+            flash.error(Messages.get("your-account-is-not-activated"));
             return;
         }
 
@@ -127,9 +127,8 @@ public class Secure extends BaseController
     {
         Security.invoke("onDisconnect");
         session.clear();
-        //response.removeCookie("rememberme");
         Security.invoke("onDisconnected");
-        flash.success(Messages.get("You have been logged out"));
+        flash.success(Messages.get("you-have-been-logged-out"));
         String url = request.params.get("url");
         if (url != null)
             redirect(url);
@@ -197,10 +196,9 @@ public class Secure extends BaseController
         static boolean authenticate(String username, String password)
         {
             User user = User.getUserByLogin(username);
-
             if (user != null && !user.activated)
             {
-                flash.error(Messages.get("Your account is not activated"));
+                flash.error(Messages.get("your-account-is-not-activated"));
                 return false;
             }
 
@@ -212,7 +210,6 @@ public class Secure extends BaseController
                 return true;
             }
 
-            flash.error(Messages.get("Incorrect login or password"));
             return false;
         }
 

@@ -2,6 +2,8 @@ package utils;
 
 import java.net.URLDecoder;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringUtils
 {
@@ -51,6 +53,15 @@ public class StringUtils
             {
                 return "";
             }
+    }
+
+    public static String extract(String data, String regex)
+    {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(data);
+        if (matcher.find())
+            return matcher.group(1);
+        return null;
     }
 
     public static boolean isValidEmailAddress(String email)

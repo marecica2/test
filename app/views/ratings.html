@@ -1,6 +1,6 @@
 
 
-<section class="main-container object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="500">
+<section class="main-container object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="100">
 
 	<!-- section start -->
 	<!-- ================ -->
@@ -10,7 +10,8 @@
 			#{if ratings && ratings.size() > 0}
 			<div class="row">
 				<div class="col-md-5">
-					<h2 class="margin-top-clear">User Reviews</h2>
+					<a id="reviews"></a>
+					<h2 class="margin-top-clear">&{'user-reviews'}</h2>
 									
 					<p>
 			       		#{list items:1..5, as:'i'} 
@@ -21,40 +22,40 @@
 							    <i class="fa fa-star-o fa-2x" data-value="1"></i>
 			       			#{/else}
 						#{/list}
-						<span style="position:relative;bottom:5px">from ${stats.get("totalStars")} reviews</span>
+						<span style="position:relative;bottom:5px">&{'from'} ${stats.get("totalStars")} &{'reviews'}</span>
 					</p>
 				</div>
 				<div class="col-md-7">
 					<dl class="dl-horizontal">
-						<dt>Five Stars (${stats.get("fiveStars")})</dt>
+						<dt>&{'five-stars'} (${stats.get("fiveStars")})</dt>
 						<dd>
 							<div class="progress">
 								<div class="progress-bar progress-bar-default" role="progressbar" data-animate-width="${stats.get("fiveStarsPercent")}%" >
 								</div>
 							</div>
 						</dd>
-						<dt>Four Stars (${stats.get("fourStars")})</dt>
+						<dt>&{'four-stars'} (${stats.get("fourStars")})</dt>
 						<dd>
 							<div class="progress">
 								<div class="progress-bar progress-bar-gray" role="progressbar"  data-animate-width="${stats.get("fourStarsPercent")}%">
 								</div>
 							</div>
 						</dd>
-						<dt>Three Stars (${stats.get("threeStars")})</dt>
+						<dt>&{'three-stars'} (${stats.get("threeStars")})</dt>
 						<dd>
 							<div class="progress">
 								<div class="progress-bar progress-bar-dark" role="progressbar" data-animate-width="${stats.get("threeStarsPercent")}%">
 								</div>
 							</div>
 						</dd>
-						<dt>Two Stars (${stats.get("twoStars")})</dt>
+						<dt>&{'two-stars'} (${stats.get("twoStars")})</dt>
 						<dd>
 							<div class="progress">
 								<div class="progress-bar progress-bar-info" role="progressbar" data-animate-width="${stats.get("twoStarsPercent")}%">
 								</div>
 							</div>
 						</dd>
-						<dt>One Star (${stats.get("oneStars")})</dt>
+						<dt>&{'one-star'} (${stats.get("oneStars")})</dt>
 						<dd>
 							<div class="progress">
 								<div class="progress-bar progress-bar-danger" role="progressbar" data-animate-width="${stats.get("oneStarsPercent")}%">
@@ -75,7 +76,7 @@
 					<div class="modal-comments">
 						<div class="">
 							<form action="/rating?url=${request.url.urlEncode()}" method="post">
-								<h3><img class="img-circle" style="float:left" src="../${user.avatarUrl}_32x32">&nbsp;Write your review</h3>
+								<h3><img class="img-circle" style="float:left" src="../${user.avatarUrl}_32x32">&nbsp;&{'write-your-review'}</h3>
 								<input type="number" name="stars" data-max="4" id="stars" class="rating" data-icon-lib="fa" data-active-icon="fa-star blue" data-inactive-icon="fa-star-o" data-clearable-icon="fa-times"/>
 						      	<input type="hidden" name="type" value="${ratingType}">
 						      	<input type="hidden" name="uuid" value="${object.uuid}">
@@ -88,10 +89,10 @@
 						      	
 								<br/>
 						    	<div class="form-group">
-						    		<textarea rows="4" class="form-control" maxlength="900" placeholder="&{'dashboard.addComment'}" name="comment" id="dialog-comment-input"></textarea>
+						    		<textarea rows="4" class="form-control" maxlength="900" placeholder="&{'add-comment'}" name="comment" id="dialog-comment-input"></textarea>
 						    	</div>
 						    	
-					   	        <button class="btn btn-default btn-primary pull-right" id="dialog-comment-button" type="submit">Submit</button>
+					   	        <button class="btn btn-default btn-primary pull-right" id="dialog-comment-button" type="submit">&{'submit'}</button>
 					   	        <div class="clearfix"></div>
 							</form>
 						</div>
@@ -140,7 +141,7 @@
 								       		
 								       		#{if user && item.user != user && !item.hasVoted(user) && item.comment && item.comment.length() > 10}
 				    				       		<p>
-					    				       		Was this rating helpful?
+					    				       		&{'was-this-review-helpful'}?
 													<span class="btn-group pull-right">
 													  <a href="/rating/${item.uuid}/vote?url=${request.url.urlEncode()}" class="btn btn-light-gray btn-short">Yes</a>
 													  <a href="/rating/${item.uuid}/unvote?url=${request.url.urlEncode()}" class="btn btn-light-gray btn-short">No</a>
@@ -156,7 +157,7 @@
 					</table>	
 					#{/if}
 					#{else}
-						<h3 style="text-align:center">No reviews yet</h3>
+						<h3 style="text-align:center">&{'no-reviews-yet'}</h3>
 						<br/>
 					#{/else}
 			

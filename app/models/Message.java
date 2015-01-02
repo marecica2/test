@@ -3,10 +3,12 @@ package models;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import play.cache.Cache;
 import play.db.jpa.Model;
 import utils.RandomUtil;
 import utils.WikiUtils;
@@ -14,10 +16,10 @@ import utils.WikiUtils;
 @Entity
 public class Message extends Model
 {
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public User fromUser;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public User toUser;
 
     @Column(length = 1000)
@@ -30,14 +32,14 @@ public class Message extends Model
     public String uuid;
     public String thread;
 
-    public static List<Message> getReceivedTo(User user)
+    public static List<Message> getReceivedTo(User user, Integer from)
     {
-        return Message.find("toUser = ? order by created desc", user).fetch(500);
+        return Message.find("toUser = ? order by created desc", user).from(from).fetch(50);
     }
 
-    public static List<Message> getSentBy(User user)
+    public static List<Message> getSentBy(User user, Integer from)
     {
-        return Message.find("fromUser = ? order by created desc", user).fetch(500);
+        return Message.find("fromUser = ? order by created desc", user).from(from).fetch(50);
     }
 
     public static List<Message> getByThread(String thread)
@@ -63,4 +65,24 @@ public class Message extends Model
         return WikiUtils.parseToHtml(this.body);
     }
 
+    public static void createNotification(User user, User toUser, String subject, String body)
+    {
+        if (toUser != null && user != null)
+        {
+            toUser.refresh();
+            toUser.unreadMessages = true;
+            toUser.save();
+
+            Message m = new Message();
+            m.subject = subject;
+            m.body = body;
+            m.uuid = RandomUtil.getUUID();
+            m.fromUser = user;
+            m.toUser = toUser;
+            m.created = new Date();
+            m.save();
+
+            Cache.delete(toUser.login);
+        }
+    }
 }

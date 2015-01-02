@@ -67,12 +67,10 @@ public class Activity extends Model
         return account;
     }
 
-    public static List<Activity> getByUser(User user, int limit, String uuid, Boolean isPublic)
+    public static List<Activity> getByUser(User user, int limit, String uuid)
     {
         Date now = new Date(System.currentTimeMillis() - ACTIVITY_OLDEST_MILLIS);
         String query = "select distinct act from Activity act join act.event.attendances as att where ";
-        //if (isPublic)
-        //    query += " event.privacy == 'public' ";
         query += " act.created > ? and ( exists ( from Attendance a where a = att and a.customer = ? ) or act.user = ? or (act.customer = ? and act.forCustomer = true) ) ";
         query += " order by act.created desc ";
         return Activity.find(query, now, user, user, user).fetch(limit);

@@ -44,6 +44,8 @@
 	<script src="//cdn.firebase.com/v0/firebase.js"></script>
 	<script src="//cdn.webrtc-experiment.com/screen.js"></script>
 	 -->
+	<script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>	
+	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	 
 	<script src="//cdn.webrtc-experiment.com/getScreenId.js"></script>
 #{/set}
 
@@ -77,14 +79,76 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cancel</span></button>
-        <h3 class="modal-title" id="myModalLabel"><i class="fa fa-link"></i> Share</h3>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">&{'cancel'}</span></button>
+        <h3 class="modal-title" id="myModalLabel"><i class="fa fa-link"></i> &{'share'}</h3>
       </div>
       <div class="modal-body">
-      	<input id="share-link" type="text" class="form-control" value="${request.base + request.url}">
+	    <div class="form-group">
+	    	<label for="share-link">&{'share-via-link'}</label>
+	      	<input id="share-link" type="text" class="form-control" value="${request.base + request.url}">
+	    </div>
+	    <div class="form-group">
+	    	<label for="share-link">Send notification</label>
+		    <div class="input-group" style="width:100%">
+				<input type="text" class="form-control" autocomplete="off" placeholder="&{'contact-name-or-email'}" maxlength="50" name="email" id="dialog-invite-input" data-provide="typeahead">
+			    <span class="input-group-btn">
+			    	<button class="btn btn-default btn-short dialog-invite-button" style="margin:0px;height:40px" type="button">&{'add'}</button>
+			    </span>
+		    </div>
+	    </div>
+	    <div class="form-group invite-container">
+			
+	    </div>
+		<script>
+			    #{if user}
+			  	$("#dialog-invite-input").typeahead(
+				  	{
+				  	    minLength : 2, 
+				  	    source : function(value, process){
+							  	    $.get("/invites?str="+value, function(data){
+							  	        var list = [];
+								  	    for(var i in data){
+								  	        var item = data[i].name + " ("+data[i].login + ")";
+								  	        list.push(item);
+								  	    }
+							  	        process(list);
+							  	    });
+				  				},
+				  		updater : function(item){
+				  		    return item;
+				  		}, 
+				  		matcher : function(item){
+				  		    return true;
+				  		}
+				  	}
+			  	);
+				#{/if}
+			  	star.invites = [];
+			  	$(".dialog-invite-button").click(function(){
+			  	    if($("#dialog-invite-input").val().match(/\((.*?)\)/))
+			  	    	star.invites.push($("#dialog-invite-input").val().match(/\((.*?)\)/)[1]);
+			  		else
+			  	    	star.invites.push($("#dialog-invite-input").val());
+			  		    
+			  	  	$(".invite-container").append("<label class='invite-item'>"+$("#dialog-invite-input").val()+"</label>");
+			  		$("#dialog-invite-input").val("");
+			  	});
+			  	$(document).on("click", ".invite-share", function(){
+			  	  	var data = {};
+			  	  	data.user = star.user;
+			  	  	data.room = star.room;
+			  	  	data.invites = star.invites;
+			  	  	starServices.hangoutInvite(data, function(){
+			  	    	$(".invite-container").html("");
+			  	    	star.invites = [];
+			  	    	$(".dialog-close").click();
+			  	  	});
+			  	});
+		</script>    
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default btn-short" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default btn-short invite-share">&{'share'}</button>
+        <button type="button" class="btn btn-light-gray btn-short dialog-close" data-dismiss="modal">&{'cancel'}</button>
       </div>
     </div>
   </div>
@@ -95,12 +159,12 @@
 	<br/>
 	<div style="opacity:0.7">
 		<div class="btn-group">
-			<button type="button" id="controls-mute" class="controls btn btn-dark btn-medium" ><i class="icon-sound"></i></button>
-			<button type="button" id="controls-camera" class="controls btn btn-dark btn-medium" ><i class="icon-camera"></i></button>
-			<button type="button" id="screenShareButton" class="controls btn btn-dark btn-medium"><i class="fa fa-desktop"></i></button>
-			<button class="controls btn btn-dark btn-medium" data-toggle="modal" data-target="#myModal"><i class="fa fa-link"></i></button>
-			<a href="${request.url}" class="btn btn-dark btn-medium" ><i class="fa fa-refresh"></i></a>
-			<button type="button" id="controls-hangup" class="controls btn btn-danger btn-medium" ><i class="fa fa-phone"></i></button>
+			<button type="button" id="controls-mute" class="controls btn btn-dark btn-medium" title="&{'mute'}"><i class="icon-sound"></i></button>
+			<button type="button" id="controls-camera" class="controls btn btn-dark btn-medium" title="&{'turn-camera-off'}"><i class="icon-camera"></i></button>
+			<button type="button" id="screenShareButton" class="controls btn btn-dark btn-medium" title="&{'share-your-screen'}"><i class="fa fa-desktop"></i></button>
+			<button class="controls btn btn-dark btn-medium" data-toggle="modal" data-target="#myModal" title="&{'share'}"><i class="fa fa-link"></i></button>
+			<a href="${request.url}" class="btn btn-dark btn-medium" title="&{'refresh'}"><i class="fa fa-refresh"></i></a>
+			<button type="button" id="controls-hangup" class="controls btn btn-danger btn-medium" title="&{'hang-up'}"><i class="fa fa-phone"></i></button>
 		</div>
 	</div>
 	

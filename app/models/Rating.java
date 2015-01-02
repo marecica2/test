@@ -22,7 +22,6 @@ import play.db.jpa.Model;
 @Entity
 public class Rating extends Model
 {
-    public static final String TYPE_USER = "user";
     public static final String TYPE_LISTING = "listing";
 
     @ManyToOne

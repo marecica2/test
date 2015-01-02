@@ -15,6 +15,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
 
 import play.cache.Cache;
+import play.i18n.Messages;
 import play.mvc.Before;
 import utils.RandomUtil;
 
@@ -106,7 +107,8 @@ public class Application extends BaseController
         Map<String, Object> ratings = initRatings();
 
         if (user != null && !user.isPublisher())
-            flash.success("Help others and become a publisher. Request for publisher account <a href='/settings'>here</a>");
+            //Start helping others and become a publisher. <a href='/settings/request-publisher'>Request for publisher account here</a> or <a href='/help#publisher'>learn more</a>
+            flash.success(Messages.get("start-helping-others"));
         render(user, ratings);
     }
 
@@ -149,7 +151,7 @@ public class Application extends BaseController
         final List<Comment> comments = Comment.getByFollower(user, 0, 200);
 
         if (user != null && !user.isPublisher())
-            flash.success("Help others and become a publisher. Request for publisher account <a href='/settings'>here</a>");
+            flash.success(Messages.get("start-helping-others"));
 
         //Http.Cookie c = new Http.Cookie();
         //c.name = "timezone";
@@ -170,7 +172,7 @@ public class Application extends BaseController
         {
             if (user == null)
                 redirectToLogin(request.url);
-            flash.put("warning", "Click and drag to create time request for event.");
+            flash.put("success", Messages.get("click-and-drag-to-create-event"));
         }
 
         final List<Contact> followers = Contact.getFollowers(userDisplayed);

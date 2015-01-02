@@ -28,7 +28,6 @@ public class EmailProvider
     private final String username;
     private final String password;
     private String protocol;
-    //private final String timeout;
     private boolean tls = false;
     private final Properties props = System.getProperties();
     private Session session = null;
@@ -62,7 +61,7 @@ public class EmailProvider
         this.port = Constants.MAIL_PORT;
         this.username = Constants.MAIL_ACCOUNT;
         this.password = Constants.MAIL_PASSWORD;
-        this.protocol = Constants.MAIL_PROTOCOL_SMTPS;
+        this.protocol = Constants.MAIL_PROTOCOL_SMTP;
         this.tls = true;
         emailSettings();
         createSession();
@@ -70,17 +69,25 @@ public class EmailProvider
 
     private void emailSettings()
     {
+        //        props.put("mail.transport.protocol", protocol);
+        //        props.put("mail." + protocol + ".host", host);
+        //        props.put("mail." + protocol + ".starttls.enable", tls);
+        //        props.put("mail." + protocol + ".port", port);
+        //        props.put("mail." + protocol + ".auth", "true");
+        //        props.put("mail." + protocol + ".timeout", "10000");
+
+        this.protocol = "smtps";
         props.put("mail.transport.protocol", protocol);
-        props.put("mail." + protocol + ".host", host);
-        props.put("mail." + protocol + ".starttls.enable", tls);
-        props.put("mail." + protocol + ".port", port);
+        props.put("mail." + protocol + ".host", "mail.wid.gr");
+        props.put("mail." + protocol + ".starttls.enable", "true");
+        props.put("mail." + protocol + ".port", 587);
         props.put("mail." + protocol + ".auth", "true");
-        props.put("mail." + protocol + ".timeout", "10000");
+
+        props.put("mail." + protocol + ".socketFactory.class", "email.HotmailSSLSocketFactory");
 
         if (host.contains("live.com"))
             props.put("mail." + protocol + ".socketFactory.class", "email.HotmailSSLSocketFactory");
 
-        //
         //        if ("smtps".equals(protocol))
         //            props.put("mail." + protocol + ".ssl.enable", "true");
         //        else
@@ -121,7 +128,6 @@ public class EmailProvider
                     message.addRecipient(Message.RecipientType.CC, new InternetAddress(ccs[i]));
                 }
             }
-            //message.addRecipient(Message.RecipientType.BCC, new InternetAddress(AppConstants.fromEmail));
             message.setSubject(subject);
             message.setContent(msg, "text/html; charset=UTF-8");
 
@@ -138,7 +144,7 @@ public class EmailProvider
         }
     }
 
-    public void sendInvitation(String from, String subject, String recipient, String htmlPart) throws Exception
+    public void sendEmail(String subject, String recipient, String htmlPart) throws Exception
     {
         MimetypesFileTypeMap mimetypes = (MimetypesFileTypeMap) MimetypesFileTypeMap.getDefaultFileTypeMap();
         mimetypes.addMimeTypes("text/calendar ics ICS");
@@ -147,7 +153,7 @@ public class EmailProvider
         mailcap.addMailcap("text/calendar;; x-java-content-handler=com.sun.mail.handlers.text_plain");
 
         MimeMessage message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(from));
+        message.setFrom(new InternetAddress("info@wid.gr"));
         message.setSubject(subject);
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
 

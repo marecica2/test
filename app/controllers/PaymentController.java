@@ -15,30 +15,27 @@ import payments.Paypal.AccessToken;
 import payments.Paypal.DoExpressCheckoutResponse;
 import play.Logger;
 import play.libs.Crypto;
+import play.mvc.With;
 import utils.RandomUtil;
 
+@With(controllers.Secure.class)
 public class PaymentController extends BaseController
 {
     public static void payments(String id)
     {
-        final Boolean isPublic = true;
         final User user = User.getUserByUUID(id);
         final Account account = user != null ? user.account : null;
         final User customer = getLoggedUser();
         final User cust = customer;
         final List<Attendance> attendances = Attendance.getByCustomer(customer);
         final Boolean showAttendances = true;
-        render("Public/customerProfile.html", customer, cust, account, user, attendances, isPublic, id, showAttendances);
+        render("Public/customerProfile.html", customer, cust, account, user, attendances, id, showAttendances);
     }
 
     public static void payment(String event, String url)
     {
         final User user = getLoggedUser();
         final Event e = Event.get(event);
-        Attendance attendance = e.getInviteForCustomer(user);
-        // in case of public event and missing attendance create it for the logged customer on the fly
-        if (attendance == null)
-            attendance = createAttendanceForCustomerEvent(e, user);
 
         if (BaseController.flashErrorGet() != null)
             flash.error(BaseController.flashErrorGet());
@@ -49,6 +46,14 @@ public class PaymentController extends BaseController
 
     public static void paymentPost(String event, String url, String payment) throws Exception
     {
+        final User user = getLoggedUser();
+        final Event e = Event.get(event);
+        Attendance attendance = e.getInviteForCustomer(user);
+        // in case of public event and missing attendance create it for the logged customer on the fly
+        if (attendance == null)
+            attendance = createAttendanceForCustomerEvent(e, user);
+
+        //TODO add here other payment methods
         if (payment.equals(Attendance.ATTENDANCE_PAYMENT_PAYPAL))
             processWithPaypal(event, url, null);
     }
@@ -82,7 +87,7 @@ public class PaymentController extends BaseController
         if (transactionId != null && Crypto.decryptAES(transactionId).equals(user.uuid) && payerId != null)
         {
             attendance.paypalPayerId = payerId;
-            final DoExpressCheckoutResponse resp = pp.doExpressCheckoutDual(attendance.paypalAccessToken, attendance.paypalPayerId, e, false);
+            final DoExpressCheckoutResponse resp = pp.doExpressCheckoutDual(attendance.paypalAccessToken, attendance.paypalPayerId, e, true);
 
             if (resp.success)
             {
@@ -91,7 +96,7 @@ public class PaymentController extends BaseController
                 attendance.fee = resp.fee;
                 attendance.price = resp.price;
                 attendance.providerPrice = resp.providerPrice;
-                attendance.currency = e.user.account.currency;
+                attendance.currency = e.currency;
                 attendance.paypalAccount = e.user.account.paypalAccount;
                 attendance.paypalAccountProvider = resp.providerAccount;
                 attendance.paypalTransactionId = resp.transactionIdProvider;
@@ -101,11 +106,6 @@ public class PaymentController extends BaseController
             } else
             {
                 Logger.error(resp.errorMessage);
-
-                System.err.println("xxxx");
-                System.err.println("xxxx");
-                System.err.println("redirecting");
-                System.err.println(request.params.get("url"));
                 BaseController.flashErrorPut(resp.errorMessage);
                 redirectTo(request.params.get("url"));
             }
@@ -114,7 +114,7 @@ public class PaymentController extends BaseController
         // redirect to paypal
         if (attendance.paid == null || !attendance.paid)
         {
-            AccessToken token = pp.setExpressCheckoutDual(e, false);
+            AccessToken token = pp.setExpressCheckoutDual(e, true);
             attendance.paypalAccessToken = token.getToken();
             attendance.paypalAccessTokenValidity = token.getValidity();
             attendance.paymentMethod = "paypal";
@@ -122,6 +122,36 @@ public class PaymentController extends BaseController
             redirect(pp.getPaymentUrl(token.getToken()));
         }
 
+    }
+
+    public static void paypalRefund(String id, String url)
+    {
+        User user = getLoggedUser();
+        Attendance a = Attendance.get(id);
+        if (user == null)
+            forbidden();
+        if (!a.event.user.equals(user))
+            forbidden();
+
+        final Paypal pp = new Paypal(a.event, null, null,
+                getProperty(CONFIG_PAYPAL_PROVIDER_ACCOUNT),
+                getProperty(CONFIG_PAYPAL_PROVIDER_ACCOUNT_MICROPAYMENT),
+                getProperty(CONFIG_PAYPAL_USER),
+                getProperty(CONFIG_PAYPAL_PWD),
+                getProperty(CONFIG_PAYPAL_SIGNATURE),
+                getProperty(CONFIG_PAYPAL_ENDPOINT),
+                getProperty(CONFIG_PAYPAL_URL),
+                getProperty(CONFIG_PAYPAL_PERCENTAGE)
+                );
+
+        try
+        {
+            pp.refund(a);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        redirectTo(url);
     }
 
     private static Attendance createAttendanceForCustomerEvent(Event e, User customer)

@@ -20,23 +20,23 @@
 			<p style="width: 100%; margin:5px 0">
 				<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
 				<strong>${item.user.fullName}</strong>  &middot; 
-				${item.category}  &middot; 
-				${item.privacy}  &middot; 
-				${item.type}
+				&{item.category}  &middot; 
+				&{item.privacy}  &middot; 
+				&{item.type}
 			</p>
 			
 			
 			<span class="truncate">${item.getDescriptionHtml().trimDot(90).raw()}</span>
    			<p>
    			#{if item.charging != 'free'}
-   				from <strong>${item.price} <small>${item.currency}</small></strong>
-	   			<nobr>for 15</nobr> minutes
+   				&{'from'} <strong>${item.price} <small>${item.currency}</small></strong>
+	   			<nobr>&{'for'} 15</nobr> &{'minutes'}
    			#{/if}
    			#{else}
-   				<strong class="">Free</strong>
+   				<strong class="">&{'free'}</strong>
    			#{/else}
    			#{if item.firstFree}
-   				<span class="label default_bg">first free</span>
+   				<span class="label default_bg">&{'first-free'}</span>
    			#{/if}
    			</p>
    			
@@ -48,15 +48,15 @@
 				    <i class="fa fa-star-o" data-value="1"></i>
        			#{/else}
 			#{/list}
-            ${item.ratingStars} reviews   	
+            ${item.ratingStars} &{'reviews'}   	
            
-			#{if isOwner}
-				<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&listingId=${item.uuid}" class="btn btn-gray btn-sm btn-margin pull-right">Create event</a>
+			#{if isOwner && user && user.account.type == "publisher"}
+				<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&listingId=${item.uuid}" class="btn btn-gray btn-sm btn-margin pull-right">&{'create-event'}</a>
 			#{/if}
 			
-			#{else}
-				<a href="/user/${usr.login}/calendar?channel=${item.uuid}" class="btn btn-gray btn-sm btn-margin pull-right "><i class="fa fa-calendar"></i> Request a Time</a>
-			#{/else}            		
+			#{if !isOwner}
+				<a href="/user/${usr.login}/calendar?channel=${item.uuid}" class="btn btn-gray btn-sm btn-margin pull-right "><i class="fa fa-calendar"></i> &{'request-event'}</a>
+			#{/if}            		
    		</div>
    	</div>		
 </div>	   

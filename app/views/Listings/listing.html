@@ -21,7 +21,6 @@
 	<script src="@{'/public/javascripts/lib/bootstrap-timepicker.min.js'}" type="text/javascript"></script>
 	<script src="@{'/public/javascripts/lib/simpleWebRtc.js'}" type="text/javascript" ></script>
 	<script src="@{'/public/javascripts/lib/bootstrap-datepicker.js'}" type="text/javascript"></script>	
-	<script src="@{'/public/javascripts/lib/jquery.Jcrop.min.js'}"></script>
 	<script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>	
 	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
 	<script src="@{'/public/javascripts/upload.js'}" type="text/javascript"></script>	
@@ -80,14 +79,14 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cancel</span></button>
-        <h3 class="modal-title" id="myModalLabel"><i class="fa fa-link"></i> Share</h3>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">&{'cancel'}</span></button>
+        <h3 class="modal-title" id="myModalLabel"><i class="fa fa-link"></i> &{'share'}</h3>
       </div>
       <div class="modal-body">
       	<input id="share-link" type="text" class="form-control" value="${request.base + request.url}">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default btn-short" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default btn-short" data-dismiss="modal">&{'close'}</button>
       </div>
     </div>
   </div>
@@ -100,171 +99,27 @@
 <div class="section gray-bg" style="padding-top:15px;padding-bottom:15px">
 	<div class="container">
 	   	<div class="pull-left">
-		   	<h3 class="margin-clear">
+
+		   	<h2 class="margin-clear">
 		   		#{if listing}
-			   		<a href="/channels?category=${listing.category}" class="anchor"><i><strong>${listing.category.capAll()}</strong></i></a> 
-			   		/ <i><a class="anchor" href="/channel/${listing.uuid}">${listing.title}</a></i>
+			   		<a href="/channels?category=${listing.category}" class="anchor"><i>${listing.category.capAll()}</i></a> 
+			   		&middot; <i><a class="anchor" href="/channel/${listing.uuid}">${listing.title}</a></i>
 		   		#{/if}
 		   		#{else}
-		   			<i>Create New Channel</i>
+		   			<i>&{'create-new-channel'}</i>
 		   		#{/else}
 		   		#{if event}
-		   			/
-			   		<i style="font-size:0.7em;font-weight:bold;" class="">
+		   			<br/>
+			   		<span style="font-size:0.5em;position:relative;bottom:3px">
 				   		<span>${event.eventStart.format("dd MMM")}, </span>
 				   		<span>#{time time:event.eventStart/}</span> - 
 				   		<span>#{time time:event.eventEnd/}</span> &middot;		   		
 				   		<span>${event.getMinutes()} min</span>		   		
-			   		</i>
+			   		</span>
 		   		#{/if}
-		   		
-		   		
-				<!-- edit buttons -->
-				#{if fromEvent && event}
-					<br/>
-			   		#{if event.state == 'user_accepted'}
-						<span class="btn btn-success btn-sm">Approved</span>
-					#{/if}
-			   		#{if event.state == 'customer_created'}
-						<span class="btn btn-danger btn-sm">Waiting for approvement</span>
-					#{/if}
-					
-					#{if event.charging != null && attendance}
-						#{if !paid }
-							#{set displayStream:false /}
-							<a href="/payment/${event.uuid}?url=${request.url.urlEncode()}" class="btn btn-dark btn-sm margin-clear" rel="tooltip" data-placement="top" title="You can pay for the event before or you can wait until event will start">
-								Pay for event now
-							</a>
-						#{/if}
-						#{elseif paid && attendance.paypalTransactionDate}
-							<span class="btn btn-success btn-sm shadow margin-clear">
-								<i class="dialog-event-edit color-link fa fa-paypal fa-1x"></i> Paid on ${attendance.paypalTransactionDate.format("dd MMM, yyyy")}
-							</span>
-						#{/elseif}
-					#{/if}
-
-					#{if isOwner && (event.state == 'customer_created' || event.state == 'user_declined')}
-						<a class="btn btn-success btn-sm margin-clear" href="/event-approve?event=${event.uuid}&url=${request.url.urlEncode()}"><i class="fa fa-check"></i> &{'Approve'}</a>
-						<a href="/event-delete?uuid=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('delete?')){return true;} else {return false;}" class="btn btn-danger btn-sm margin-clear">
-							<i class="dialog-event-edit color-link fa fa-times fa-1x"></i> &{'Decline'}
-						</a>						
-				   	#{/if} 				
-					
-					#{if !edit && event.type == 'p2p'}
-						<a class="btn btn-default btn-sm btn-margin" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank">Join Video Conference</a>
-					#{/if}		
-					
-					#{if isOwner && !edit && event.type == 'broadcast'}
-						#{if event.started == null}
-							<a class="btn btn-default btn-sm btn-margin" href="/event-start?event=${event.uuid}&url=${request.url.urlEncode()}" >Start Live Broadcast</a>
-						#{/if}
-						#{else}
-							<a class="btn btn-default btn-sm btn-margin" href="/event-stop?event=${event.uuid}&url=${request.url.urlEncode()}" >Stop Live Broadcast</a>
-						#{/else}
-					#{/if}		
-					
-					#{if isOwner && !edit && event.type == 'instant'}
-							#{set displayStream:true /}
-							<a class="btn btn-default btn-sm btn-margin btn-instant-stop" data-href='/channel-stop?id=${listing.uuid}&url=${("/channel/"+listing.uuid+"").urlEncode()}' >Stop Instant Broadcast</a>
-					#{/if}							
-					
-					#{if isOwner && !edit && event.type == 'hangoutAir'}
-							
-						<span style="display:nones;">
-						<script src="https://apis.google.com/js/platform.js" ></script>
-						<span id="placeholder"></span>
-						<script>
-						  gapi.hangout.render('placeholder', {
-						    'render': 'createhangout',
-						    'hangout_type': 'onair',
-						    'initial_apps': [{'app_id' : '647254293629', 'start_data' : '${event.uuid}', 'app_type' : 'ROOM_APP', 'invites' : [{'id' : 'marecica2@gmail.com', 'invite_type' : 'EMAIL'}] }],
-						    'widget_size': 175
-						  });
-						</script>		
-						</span>
-											
-					#{/if}	
-					
-					
-					#{if isOwner && !edit && event.type == 'hangout'}
-						<a class="btn btn-default btn-sm btn-margin" href="//plus.google.com/hangouts/_/?gid=647254293629&gd=${event.uuid}" target="_blank">Start Hangout</a>
-					#{/if}											
-					#{if !isOwner && !edit && event.type == 'hangout'}
-						#{if event.hangoutUrl}
-							<a class="btn btn-default btn-sm btn-margin" href="${event.hangoutUrl}" target="_blank">Join Hangout</a>
-						#{/if}											
-						#{else}
-							<a class="btn btn-default btn-sm btn-margin" href="">Refresh</a>
-						#{/else}											
-					#{/if}											
-					
-					
-					#{if !edit && isOwner && !event.isEditable()}
-					<a href="/event?action=edit&uuid=${request.params.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm margin-clear">
-						<i class="dialog-event-edit color-link fa fa-pencil fa-1x"></i> Edit Event
-					</a>
-					#{/if}
-
-					#{if !edit && isOwner && !event.isEditable()}
-					<a href="/event-delete?uuid=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('delete?')){return true;} else {return false;}" class="btn btn-light-gray btn-sm margin-clear">
-						<i class="dialog-event-edit color-link fa fa-times fa-1x"></i> Delete Event
-					</a>
-					#{/if}
-					
-					#{if edit}
-						<a href="${request.params.url}" class="btn btn-light-gray btn-sm margin-clear">
-							Cancel
-						</a>		
-					#{/if}	
-				#{/if}	
-				
-				
-				
-				#{else}	 
-					<br/>
-					#{set displayStream:false /}
-					
-					#{if isOwner && !edit && listing.type == 'instant'}
-						#{if listing.started == null}
-							#{set displayStream:false /}
-							<a class="btn btn-default btn-sm btn-margin btn-instant-start" href="/channel-start?id=${listing.uuid}&url=${request.url.urlEncode()}" >Start Instant Broadcast</a>
-						#{/if}
-						#{else}
-							#{set displayStream:true /}
-							<a class="btn btn-default btn-sm btn-margin btn-instant-stop" data-href="/channel-stop?id=${listing.uuid}&url=${request.url.urlEncode()}" >Stop Instant Broadcast</a>
-							<a class="btn btn-default btn-sm btn-margin btn-instant-room" data-href="/create-room?id=${listing.uuid}&url=${request.url.urlEncode()}" >Go to private room</a>
-						#{/else}
-					#{/if}		
-					
-					#{if !isOwner && !edit && listing.type == 'instant' && listing.instantBroadcast != null}
-							<a class="btn btn-default btn-sm btn-margin" href="/event/${listing.instantBroadcast}" >Go to private room</a>
-					#{/if}		
-					
-					#{if !isOwner && !edit && listing.type == 'instant' && listing.started == null}
-							#{set displayStream:false /}
-					#{/if}
-					
-					#{if !edit && isOwner}
-						#{if user.isPublisher() && listing.type != 'instant'}
-						<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&listingId=${listing.uuid}" class="btn btn-light-gray btn-sm margin-clear">
-							<i class="color-link fa fa-plus fa-1x"></i> Create Event
-						</a>
-						#{/if}
-						<a href="/channel/${listing.uuid}?action=edit&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm margin-clear">
-							<i class="color-link fa fa-pencil fa-1x"></i> Edit Channel
-						</a>
-						<a href="/channel-delete?uuid=${listing.uuid}" class="btn btn-light-gray btn-sm margin-clear" onclick="if(confirm('delete?')){return true;} else {return false;}">
-							<i class="color-link fa fa-times fa-1x"></i> Delete Channel
-						</a>
-					#{/if}
-					#{if edit}
-						<a href="${request.params.url}" class="btn btn-light-gray btn-sm margin-clear">
-							Cancel
-						</a>		
-					#{/if}	
-				#{/else}	
-				<!-- edit buttons -->   	
-		   	</h3>
+		   	</h2>	
+		   	
+		   	#{include 'Listings/editButtons.html' /}
 	   	</div>
 		
 		
@@ -297,7 +152,7 @@
 				    link: '${request.base}${request.url}',
 				    picture: '${request.base}/${listing.imageUrl}',
 				    caption: 'by ${listing.user.fullName}',
-				    description: "${listing.description}",
+				    description: "${listing.description.escapeJavaScript().raw()}",
 				    message: ''
 			    });
 			});		
@@ -329,7 +184,7 @@
 		                 ',height=' + height +
 		                 ',top='    + top    +
 		                 ',left='   + left;
-			    var url = "//www.linkedin.com/shareArticle?mini=true&url=${request.url.urlEncode()}&title=${listing.title}&summary=${listing.description}&source=${request.url}";
+			    var url = "//www.linkedin.com/shareArticle?mini=true&url=${request.url.urlEncode()}&title=${listing.title}&summary=${listing.description.escapeJavaScript().raw()}&source=${request.url}";
 		    	window.open(url, 'linkedin', opts);						    
 			})
 		</script>	 
@@ -356,13 +211,19 @@
 				#{if edit}
 					<!-- background image -->
 					#{if listing}
-						<img id="image" class="shadow-inset" style="width:100%" src="/${listing.imageUrl}">	
+						<div class="avatar-container">
+						  	<img id="image" class="" style="width:100%" src="/${listing.imageUrl}">
+						</div>					
 					#{/if}
 					#{elseif request.params.imageUrl}
-						<img id="image" class="shadow-inset" style="width:100%" src="/${request.params.imageUrl}">	
+						<div class="avatar-container">
+					  		<img id="image" class="cropper" style="width:100%" src="/${request.params.imageUrl}">
+						</div>								
 					#{/elseif}
 					#{else}
-						<img id="image" class="shadow-inset" style="width:100%" src="/public/images/no_image.png">	
+						<div class="avatar-container">
+							<img id="image" class="" style="width:100%" src="/public/images/no_image.png">	
+						</div>								
 					#{/else}
 					<!-- background image -->
 				#{/if}
@@ -372,10 +233,10 @@
 						#{include 'Listings/stream.html' /}
 					#{/if}
 					#{else}
-						<div id="image"style="overflow: hidden;width:100%;height:400px;background: url(/${listing.imageUrl}); background-size: cover;text-align:center">
+						<div id="image"style="overflow: hidden;width:100%;height:400px;background: url(/${listing.imageUrl}) center; background-size: cover;text-align:center">
 							<div class="shadow-inset" style="height:130%;position:relative;top:-60px;"></div>
 							#{if listing && listing.video}
-								<a style="position:absolute;top:50%;left:43%" class="popup-iframe text-shadow" href="${listing.video}"><i class="fa fa-youtube-play fa-3x"></i><br/>Play Introduction</a>
+								<a style="position:absolute;top:50%;left:43%" class="popup-iframe text-shadow" href="${listing.video}"><i class="fa fa-youtube-play fa-3x"></i><br/>&{'play-introduction'}</a>
 							#{/if}
 						</div>		
 					#{/else}				
@@ -410,25 +271,25 @@
 					<span>
 						#{if event && fromEvent}
 							#{if item && item.charging == 'free'}
-								<strong>Free</strong>
+								<strong>&{'free'}</strong>
 							#{/if}
 							#{else}
-								<strong>Total price: ${event.getTotalPrice()} ${event.currency} for ${event.getMinutes()} min</strong>							
+								<strong>&{'total-price'}: ${event.getTotalPrice()} ${event.currency} for ${event.getMinutes()} &{'min'}</strong>							
 								#{if !fromEvent && listing.firstFree}
-									<span class="label btn-dark">First Event is free</span>
+									<span class="label btn-dark">&{'first-event-is-free'}</span>
 								#{/if}
 							#{/else}
 							
 						#{/if}
 						#{else}
 							#{if listing && listing.charging == 'free'}
-								<strong>Free</strong>
+								<strong>&{'free'}</strong>
 							#{/if}						
 							#{else}
-								<strong>From ${listing.price} ${item.currency}</strong>
-								<strong>for ${listing.chargingTime} min</strong>
+								<strong>&{'from'} ${listing.price} ${item.currency}</strong>
+								<strong>for ${listing.chargingTime} &{'min'}</strong>
 								#{if listing.firstFree}
-									<span class="label btn-dark">First Event is free</span>
+									<span class="label btn-dark">&{'first-event-is-free'}</span>
 								#{/if}
 							#{/else}	
 						#{/else}
@@ -437,10 +298,10 @@
 				</h5>
 			</div>
 			<div class="col-md-4">
-				#{if !isOwner}
+				#{if !isOwner && listing.user.account.type == "publisher"}
 				<div class="text-center">
 					<a href="/user/${usr.login}"><img style="height:61px;" src="/${usr.avatarUrl}_64x64"></a>				
-					<a href="/user/${usr.login}/calendar?channel=${listing.uuid}" class="btn btn-dark btn-lg"><i class="fa fa-calendar"></i> Request for event</a>
+					<a href="/user/${usr.login}/calendar?channel=${listing.uuid}" class="btn btn-dark btn-lg"><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
 				</div>
 				#{/if}
 			</div>
@@ -456,151 +317,8 @@
 <div class="container">		
 	<br/>
 	<div class="row">
-		<div class="col-md-8" >
-			<!-- description -->
-			<div>
-    	   	   <h2>
-					#{if listing}
-    	   	   			${listing.title}
-	 	    	   	#{/if}
-    	   	   	</h2>
-    	   	   	<div class="separator-2"></div>
-    	   	   	
-    	   	   	<strong><a href="/user/${listing.user.login}"><img class="avatar16 img-circle" src="/${listing.user.avatarUrl}_32x32"> <span>${listing.user.fullName}</span></a></strong> 
-    	   	 	&middot;
 
- 	    	   	<span>
-					#{if fromEvent && event}
-						#{if event.privacy == 'private'}
-							<span class="labels "><i class="fa fa-lock" title="${event.privacy}"></i> ${event.privacy}</span> &middot;
-						#{/if}
-						
-						#{if event.privacy == 'public'}
-							<span class="labels "><i class="fa fa-unlock" title="${event.privacy}"></i> ${event.privacy}</span> 
-						#{/if}
-						
-						<span class="labels "><i class="fa fa-comments" title="${event.type}"></i> ${event.type}</span> 
-
-					#{/if}		 	    	   	
-					#{else}
-						#{if listing.privacy == 'private'}
-							<span class="labels "><i class="fa fa-lock" title="${listing.privacy}"></i> ${listing.privacy}</span> &middot;
-						#{/if}
-						
-						#{if listing.privacy == 'public'}
-							<span class="labels "><i class="fa fa-unlock" title="${listing.privacy}"></i> ${listing.privacy}</span> &middot;
-						#{/if}
-						
-						<span class="labels "><i class="fa fa-comments" title="${listing.type}"></i> ${listing.type}</span>
-					#{/else}		    	   
-	    	   	</span>
-    	   	   	
-				<p>${listing.getDescriptionHtml().raw()}</p>
-    	   		<h4>Labels</h4>
-    	   		#{if listing && listing.tags}
-	    		    #{set tags = listing.tags.split(",") /}
-	    	    	#{list items:tags, as:'tag'}
-	    	    		<a href="/channels?search=${tag}" style="font-size:0.8em" class="label label-default">${tag}</a>
-	    	    	#{/list}
-    	    	#{/if}
-			</div>
-
-
-			<!-- comments -->
-			<div>
-				<br/>
-				<br/>
-				<br/>
-				<!-- comments -->
-				#{if fromEvent}
-					#{set objectType:"event" /}
-					#{set object:event /}
-					#{include 'comments.html' /}			
-				#{/if}
-				#{else}
-					#{set objectType:"listing" /}
-					#{set object:listing /}
-					#{include 'comments.html' /}			
-				#{/else}
-			</div>		
-			
-			
-			<!-- listing events -->
-			#{if !fromEvent}
-			<br/>
-			<br/>
-			<div>
-				<div class="pull-left" style="text-align:center;width:50%;padding-right:7px">
-					<h3>
-						Upcoming Events
-					</h3>
-					<div id="itemsListUpcoming" class="full-width"></div>
-					<div class="spinner-container1">
-						<div class="spinner-container">
-							<div id="spinnerUpcoming" class="spinner-load"></div>
-							<a id="moreResultsUpcoming" class="spinner-more"><i class=" icon-plus-circled"></i></a>
-						</div>
-					</div>
-				</div>
-				<div class="pull-left" style="text-align:center;width:50%;padding-left:7px">
-					<h3>
-						Recent Events
-					</h3>
-					<div id="itemsListPrevious" class="full-width"></div>
-					<div class="spinner-container1">
-						<div class="spinner-container">
-							<div id="spinnerPrevious" class="spinner-load"></div>
-							<a id="moreResultsPrevious" class="spinner-more"><i class=" icon-plus-circled"></i></a>
-						</div>
-					</div>
-				</div>	
-			</div>	
-			<div class="clearfix"></div>
-			#{/if}
-			
-			
-
-			<!-- user about -->
-			<div>
-				<br/>
-				<h2><a class="anchor" href="/user/${listing.user.login}"><img class="img-circle" src="/${listing.user.avatarUrl}_32x32"> About ${listing.user.firstName}</a></h2>
-				<div class="separator-2"></div>
-				#{if listing}
-					#{set usr: listing.user /}
-				#{/if}		
-				#{else}		
-					#{set usr: user /}
-				#{/else}		
-					
-				#{include 'userAbout.html' /}
-			</div>	
-						
-			<!-- listings -->
-			<div>
-				<br/>			
-				#{if listings}
-					<h2>All channels from ${listing.user.firstName}</h2>
-					<div class="separator-2"></div>
-					#{set items:listings /}
-					#{set forEvents:false /}
-					#{include 'listingsList.html' /}
-				#{/if}	
-			</div>
-			<!-- listings -->	
-
-			<!-- ratings -->
-			<div>
-				#{if listing}
-					#{set object:listing /}
-					#{set ratingType:"listing" /}
-				#{/if}
-				#{include 'ratings.html' /}				
-			</div>		
-			<!-- ratings -->
-
-		</div>
-	
-		<div class="col-md-4 side ">
+		<div class="col-md-4 col-md-push-8">
 			<a name="invitation"></a>
 			#{if comments}
 			<div style="width:100%; padding:0px">
@@ -635,22 +353,22 @@
 				
 				#{if false && event && (attendance == null || !attendance.watchlist)}
 					<a href="/watchlist/add?event=${event.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm margin-clear">
-						<i class="dialog-event-edit color-link fa fa-plus fa-1x"></i> Add to watchlist
+						<i class="dialog-event-edit color-link fa fa-plus fa-1x"></i> &{'add-to-watchlist'}
 					</a>
 				#{/if}
 				
 				#{if false && attendance != null && attendance.watchlist}
 					<a href="/watchlist/remove?id=${attendance.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm margin-clear">
-						<i class="dialog-event-edit color-link fa fa-minus fa-1x"></i> Remove from watchlist
+						<i class="dialog-event-edit color-link fa fa-minus fa-1x"></i> &{'remove-from-watchlist'}
 					</a>
 				#{/if}				
 				
 				#{if isOwner}
 	 				<form class="" action="/attendance-new-save?eventId=${event.uuid}&url=${request.url.urlEncode()}#invitation" method="post">
 					    <div class="input-group" style="width:100%">
-							<input type="text" class="form-control" autocomplete="off" placeholder="&{'dashboard.inviteAdd'}" maxlength="50" name="email" id="dialog-invite-input" data-provide="typeahead">
+							<input type="text" class="form-control" autocomplete="off" placeholder="&{'contact-name-or-email'}" maxlength="50" name="email" id="dialog-invite-input" data-provide="typeahead">
 						    <span class="input-group-btn">
-						    	<button class="btn btn-default btn-short" style="margin:0px;height:40px" id="dialog-invite-button" type="submit">&{'Add'}</button>
+						    	<button class="btn btn-default btn-short" style="margin:0px;height:40px" id="dialog-invite-button" type="submit">&{'add'}</button>
 						    </span>
 					    </div>
 						<div class="error">#{error 'email' /}</div>
@@ -699,18 +417,18 @@
 								    		<img class="avatar22 img-circle"  src="/${item.customer.avatarUrl}"> <label class="light" for="invite${item.uuid}"><a href="/user/${item.customer.login}">${item.customer.fullName}</a></label>
 										#{/elseif}
 										#{else}
-								    		<img class="avatar22 img-circle"  src=""> <label for="invite${item.uuid}">${item.email}</label>
+								    		<img class="avatar22 img-circle"  src="/public/images/avatar_32x32"> <label for="invite${item.uuid}">${item.email}</label>
 										#{/else}
 							    		#{if isOwner && (item.user == null || !item.isForUser)}<input name="invite" id="invite${item.uuid}" class="notify-checkboxes" type="checkbox" value="${item.uuid}">#{/if} 
 							    	</td>
 							    	<td style="padding:3px;text-align:center"> 
-							    		#{if item.result && item.result == 'accepted'}<span class="label default-bg">accepted</span> #{/if}
-							    		#{if item.result && item.result == 'declined'}<span class="label label-danger">declined</span> #{/if}
-							    		#{if item.result == null}<span class="label label-default">waiting</span> #{/if}
+							    		#{if item.result && item.result == 'accepted'}<span class="label default-bg">&{'accepted'}</span> #{/if}
+							    		#{if item.result && item.result == 'declined'}<span class="label label-danger">&{'declined'}</span> #{/if}
+							    		#{if item.result == null}<span class="label label-default">&{'waiting'}</span> #{/if}
 							    	</td>
 							    	<td style="padding:3px;text-align:center"> 
 							    	#{if isOwner && item.paid}
-							    		<span class="label label-default">paid</span>
+							    		<span class="label label-success">&{'paid'}</span>
 							    	#{/if}
 							    	</td>
 							    	<td style="text-align:right">
@@ -729,11 +447,13 @@
 							#{/list}							
 						</table>
 						#{if isOwner}
-							<h3>Write message</h3>
+							*{
+							<h3>&{'write-custom-message'}</h3>
 							<div class="form-group" style="margin-bottom:5px;">			    
 						    	<textarea rows="4" cols="" name="message" class="form-control" placeholder="Message" style="margin-top:5px"></textarea>
 						    </div>
-					        <button type="submit" class="pull-right btn btn-light-gray btn-short"><span class="spinner-small spinner-notify"> </span>&{'submit'}</button>
+						    }*
+					        <button type="submit" class="pull-right btn btn-light-gray btn-short"><span class="spinner-small spinner-notify"> </span>&{'notify'}</button>
 			  				<div class="clearfix"></div>
 						#{/if}
 	  				</form>					
@@ -745,6 +465,157 @@
 			#{set mail:true /}
 			#{include 'leftPanel.html' /}
 		</div>
+
+		<div class="col-md-8 col-md-pull-4" >
+			<!-- description -->
+			<div>
+    	   	   <h2>
+					#{if listing}
+    	   	   			${listing.title}
+	 	    	   	#{/if}
+
+					#{if stats}
+						<a href="#reviews" style="font-size:0.3em;text-decoration: none">
+				       		#{list items:1..5, as:'i'} 
+				       			#{if stats.get("avgStars") >= i}
+								    <i class="fa fa-star fa-2x text-default" data-value="1"></i>
+				       			#{/if}
+				       			#{else}
+								    <i class="fa fa-star-o fa-2x" data-value="1"></i>
+				       			#{/else}
+							#{/list}
+						</a>
+	    	   	   	#{/if}
+    	   	   	</h2>
+    	   	   	<div class="separator-2"></div>
+    	   	   	<strong><a href="/user/${listing.user.login}"><img class="avatar16 img-circle" src="/${listing.user.avatarUrl}_32x32"> <span>${listing.user.fullName}</span></a></strong> 
+    	   	 	&middot;
+
+ 	    	   	<span>
+					#{if fromEvent && event}
+						#{if event.privacy == 'private'}
+							<span class="labels "><i class="fa fa-lock"></i> &{event.privacy}</span> &middot;
+						#{/if}
+						
+						#{if event.privacy == 'public'}
+							<span class="labels "><i class="fa fa-unlock"></i> &{event.privacy}</span> 
+						#{/if}
+						
+						<span class="labels "><i class="fa fa-comments"></i> &{event.type}</span> 
+
+					#{/if}		 	    	   	
+					#{else}
+						#{if listing.privacy == 'private'}
+							<span class="labels "><i class="fa fa-lock"></i> &{listing.privacy}</span> &middot;
+						#{/if}
+						
+						#{if listing.privacy == 'public'}
+							<span class="labels "><i class="fa fa-unlock"></i> &{listing.privacy}</span> &middot;
+						#{/if}
+						
+						<span class="labels "><i class="fa fa-comments"></i> &{listing.type}</span>
+					#{/else}		    	   
+	    	   	</span>
+    	   	   	
+				<p>${listing.getDescriptionHtml().raw()}</p>
+    	   		#{if listing && listing.tags}
+	    		    #{set tags = listing.tags.split(",") /}
+	    	    	#{list items:tags, as:'tag'}
+	    	    		<a href="/channels?search=${tag}" style="font-size:0.8em" class="label label-default">${tag}</a>
+	    	    	#{/list}
+    	    	#{/if}
+			</div>
+
+
+			<!-- comments -->
+			<div>
+				<!-- comments -->
+				#{if fromEvent}
+					#{set objectType:"event" /}
+					#{set object:event /}
+					#{include 'comments.html' /}			
+				#{/if}
+				#{else}
+					#{set objectType:"listing" /}
+					#{set object:listing /}
+					#{include 'comments.html' /}			
+				#{/else}
+			</div>		
+			
+			
+			<!-- listing events -->
+			#{if !fromEvent}
+			<div>
+				<div class="pull-left containerUpcoming" style="display:none;margin-top:20px;text-align:center;width:50%;padding-right:7px">
+					<h3>
+						&{'upcoming-events'}
+					</h3>
+					<div id="itemsListUpcoming" class="full-width"></div>
+					<div class="spinner-container1">
+						<div class="spinner-container">
+							<div id="spinnerUpcoming" class="spinner-load"></div>
+							<a id="moreResultsUpcoming" class="spinner-more"><i class=" icon-plus-circled"></i></a>
+						</div>
+					</div>
+				</div>
+				<div class="pull-left containerPrevious" style="display:none;margin-top:20px;text-align:center;width:50%;padding-left:7px">
+					<h3>
+						&{'recent-events'}
+					</h3>
+					<div id="itemsListPrevious" class="full-width"></div>
+					<div class="spinner-container1">
+						<div class="spinner-container">
+							<div id="spinnerPrevious" class="spinner-load"></div>
+							<a id="moreResultsPrevious" class="spinner-more"><i class=" icon-plus-circled"></i></a>
+						</div>
+					</div>
+				</div>	
+			</div>	
+			<div class="clearfix"></div>
+			#{/if}
+			
+			
+
+			<!-- user about -->
+			<div>
+				<br/>
+				<h2><a class="anchor" href="/user/${listing.user.login}"><img class="img-circle" src="/${listing.user.avatarUrl}_32x32"> &{'about'} ${listing.user.firstName}</a></h2>
+				<div class="separator-2"></div>
+				#{if listing}
+					#{set usr: listing.user /}
+				#{/if}		
+				#{else}		
+					#{set usr: user /}
+				#{/else}		
+					
+				#{include 'userAbout.html' /}
+			</div>	
+						
+			<!-- listings -->
+			<div>
+				<br/>			
+				#{if listings}
+					<h2>&{'all-channels-from'} ${listing.user.firstName}</h2>
+					<div class="separator-2"></div>
+					#{set items:listings /}
+					#{set forEvents:false /}
+					#{include 'listingsList.html' /}
+				#{/if}	
+			</div>
+			<!-- listings -->	
+
+			<!-- ratings -->
+			<div>
+				#{if listing}
+					#{set object:listing /}
+					#{set ratingType:"listing" /}
+				#{/if}
+				#{include 'ratings.html' /}				
+			</div>		
+			<!-- ratings -->
+
+		</div>
+	
 	</div>	
 	<br/>
 </div>

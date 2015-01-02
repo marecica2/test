@@ -10,7 +10,7 @@
 	<div>
 		<div class="row">
 			<div class="col-md-12">
-				<h2><i class="fa fa-envelope-o"></i> Messages</h2>
+				<h2><i class="fa fa-envelope"></i> &{'notifications'}</h2>
 				<div class="separator-2"></div>
 			</div>
 		</div>
@@ -18,130 +18,41 @@
 		<div class="row">
 			<div class="col-md-2">
 				<ul class="nav nav-pills nav-stacked" role="tablist">
-					<li #{if !action} class="active" #{/if}><a href="/mail">Inbox</a></li>
-					<li #{if action && action.equals("new")} class="active" #{/if}><a href="/mail?action=new">Compose new</a></li>
-					<li #{if action && action.equals("sent")} class="active" #{/if}><a href="/mail?action=sent">Sent messages</a></li>
-				</ul>				
+					<li #{if !action} class="active" #{/if}><a href="/mail">&{'Inbox'}</a></li>
+					<li #{if action && action.equals("new")} class="active" #{/if}><a href="/mail?action=new">&{'compose-new'}</a></li>
+					<li #{if action && action.equals("sent")} class="active" #{/if}><a href="/mail?action=sent">&{'sent-messages'}</a></li>
+				</ul>		
+				<br/>		
 			</div>	
 					
  			<div class="col-md-10">
- 			
- 			
- 				#{if action && action.equals("new")}	
-				<div class="error">#{error 'email' /}</div>		
- 				<form class="" action="/mail" role="form" method="post">
- 					<input type="hidden" name="url" value="${request.url.urlEncode()}">
-					
-					<div class="form-group">
-						<label for="exampleInputEmail1">Subject</label>
-					    <input type="text" class="form-control" name="subject" id="exampleInputEmail1" placeholder="Subject" value="${request.params.subject}">
-					</div>
-
-					<label for="exampleInputEmail1" style="position:relative;top:0px">To</label>
-					<div class="form-group">
-						<input type="text" class="form-control typeahead" autocomplete="off" placeholder="&{'dashboard.inviteAdd'}" maxlength="50" name="toUser" data-provide="typeahead" value="${request.params.to}">
-					</div>
-					<!-- 
-				    <div class="input-group">
-						<input type="text" class="form-control typeahead" autocomplete="off" placeholder="&{'dashboard.inviteAdd'}" maxlength="50" name="toUser" data-provide="typeahead" value="${request.params.to}">
-					    <span class="input-group-btn">
-					    	<button class="btn btn-default btn-margin" style="height:40px" type="button">Add</button>
-					    </span>				  
-				    </div>
-					 -->
-					<script>
-					  	$(".typeahead").typeahead(
-					  	{
-					  	    minLength : 2, 
-					  	    source : function(value, process){
-								  	    $.get("/invites?str="+value, function(data){
-								  	        var list = [];
-									  	    for(var i in data)
-										  		list.push(""+data[i].login +", "+ data[i].name + ">");
-								  	        process(list);
-								  	    });
-					  				},
-					  		updater : function(item){
-					  		    return item.substring(0, item.indexOf(", "));
-					  		}, 
-					  		matcher : function(item){
-					  		    return true;
-					  		}
-					  	}
-					  	);
-					</script>
-					<div class="form-group">			    
-						<label for="exampleInputEmail1" style="position:relative;top:5px;margin-top:5px">Body</label>
-				    	<textarea rows="15" class="form-control" placeholder="Message" name="emailBody" autofocus style="margin-top:5px"></textarea>
-				    </div>
-				    
-					<div class="form-group">			    
-				        <button type="submit" class="pull-right btn btn-default popup-event-notify"><span class="spinner-small spinner-notify"> </span><i class="fa fa-envelope"></i> &{'dashboard.send'}</button>
-		  				<div class="clearfix"></div>
-				    </div>
-  				</form>	
-  				#{/if}
- 			
- 			
- 				#{if !action && received}
-				<table class="table table-hover table-striped">
-					#{list items:received, as:'item'}
-				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if}>
-				       	   	<td style="vertical-align:middle"><span>From:</span> <img class="avatar16 img-circle" src="/${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} (${item.fromUser.login})</td>
-				       	   	<td style="vertical-align:middle"><a href="/mail/${item.uuid}">${item.subject}</a></td>
-				       		<td style="vertical-align:middle">${item.body.trimDot(10)}</td>
-				       		<td style="vertical-align:middle">
-				       			#{formatDate}${item.created.getTime()}#{/formatDate}
-				       			#{formatTime}${item.created.getTime()}#{/formatTime}
-				       		</td>
-					   </tr>
-					#{/list}							
-				</table>
-				#{/if}
-
- 				#{if action && action.equals("sent")}
-				<table class="table table-hover table-striped">
-					#{list items:sent, as:'item'}
-				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if}>
-				       	   	<td style="vertical-align:middle">To: <img class="avatar16 img-circle" src="/${item.toUser.avatarUrl}_32x32"> ${item.toUser.fullName} (${item.toUser.getLogin()})</td>
-				       	   	<td style="vertical-align:middle"><a href="/mail/${item.uuid}">${item.subject}</a></td>
-				       		<td style="vertical-align:middle">${item.body.trimDot(10)}</td>
-				       		<td style="vertical-align:middle">
-				       			#{formatDate}${item.created.getTime()}#{/formatDate}
-				       			#{formatTime}${item.created.getTime()}#{/formatTime}
-				       		</td>
-					   </tr>
-					#{/list}							
-				</table>
-				#{/if}
-				
-
- 				#{if thread}
+ 
+  				#{if thread}
 				<table class="table  ">
 					#{list items:thread, as:'item'}
 				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if} #{if message.uuid == item.uuid} class="active" #{/if}>
-				       	   	<td style="vertical-align:middle"><img class="avatar16 img-circle" src="../${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} (${item.fromUser.getLogin()})</td>
-				       	   	<td style="vertical-align:middle"><a href="/mail/${item.uuid}">${item.subject}</a></td>
-				       		<td style="vertical-align:middle">${item.body.trimDot(10)}</td>
+				       	   	<td style="vertical-align:middle">
+				       	   		<img class="avatar16 img-circle" src="../${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} &middot;
+								<a href="/mail/${item.uuid}">${item.subject}</a>	
+				       		</td>
 				       		<td style="vertical-align:middle">
-				       			#{formatDate}${item.created.getTime()}#{/formatDate}
-				       			#{formatTime}${item.created.getTime()}#{/formatTime}
+				       			${item.created.format("dd MMM")},
+				   				#{time time:item.created/}
 				       		</td>
 					   </tr>
 					   
 					   #{if message.uuid == item.uuid}
 					   <tr>
 					   		<td colspan="5">
-								<dl class="dl-horizontal">
-									  <dt>Subject</dt>
+								<dl class="dl-horizontal opacity">
+									  <dt>&{'subject'}</dt>
 									  <dd>${item.subject}</dd>
-									  <dt><strong>From</strong></dt>
-									  <dd><nobr><img class="img-circle avatar16" src="/${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} (${item.fromUser.getLogin()})</nobr></dd>
+									  <dt><strong>&{'from'}</strong></dt>
+									  <dd><nobr><img class="img-circle avatar16" src="/${item.fromUser.avatarUrl}_32x32" height="16px"> <a href="/user/${item.fromUser.login}">${item.fromUser.fullName}</a></nobr></dd>
 									  <dt><strong>To</strong></dt>
-									  <dd><nobr><img class="img-circle avatar16" src="/${item.toUser.avatarUrl}_32x32" height="16px"> ${item.toUser.fullName} (${item.toUser.getLogin()})</nobr></dd>
-									  <dt><strong>Message</strong></dt>
-									  <dd>${item.getHtmlBody().raw()}</dd>
+									  <dd><nobr><img class="img-circle avatar16" src="/${item.toUser.avatarUrl}_32x32" height="16px"> <a href="/user/${item.toUser.login}">${item.toUser.fullName}</a></nobr></dd>
 								</dl>
+							   ${item.getHtmlBody().raw()}
 					   		</td>
 					   </tr>
 					   #{/if}
@@ -149,57 +60,144 @@
 					#{/list}							
 				</table>
 				
- 				<form class="" action="/mail" role="form" method="post">
+ 				<form class="" action="/mail-new" role="form" method="post">
  					<input type="hidden" name="url" value="${request.url.urlEncode()}">
  					<input type="hidden" name="thread" value="#{if message && message.thread}${message.thread}#{/if}#{else}${message.uuid}#{/else}">
 					<div class="form-group">
-						<label for="exampleInputEmail1">Write Reply</label>
-					    <input type="text" class="form-control" name="subject" id="exampleInputEmail1" placeholder="Subject" value="${message.subject}">
+						<label for="exampleInputEmail1">&{'write-reply'}</label>
+					    <input type="text" class="form-control" name="subject" id="exampleInputEmail1" placeholder="&{'subject'}" value="${message.subject}">
 					</div>
 				    <div class="form-group">
-						<input type="text" class="form-control typeahead" autocomplete="off" placeholder="&{'dashboard.inviteAdd'}" maxlength="50" name="toUser" value="${message.fromUser.login}" data-provide="typeahead">
+						<input type="text" class="form-control typeahead" autocomplete="off" placeholder="&{'contact-name-or-email'}" maxlength="50" name="toUser" value="${message.fromUser.login}" data-provide="typeahead">
 				    </div>
-					<!-- 
-				    <div class="input-group">
-						<input type="text" class="form-control typeahead" autocomplete="off" placeholder="&{'dashboard.inviteAdd'}" maxlength="50" name="toUser" value="${message.fromUser.login}" data-provide="typeahead">
-					    <span class="input-group-btn">
-					    	<button class="btn btn-default" type="button">Add</button>
-					    </span>				  
-				    </div>			
-					 -->
-					<script>
-					  	$(".typeahead").typeahead(
+					<div class="form-group has-feedback">			    
+				    	<textarea rows="7" cols="" class="form-control" placeholder="&{'message'}" name="emailBody" style="margin-top:5px"></textarea>
+				    	#{include 'help.html' /}
+				    	<div class="alert alert-danger">#{error 'emailBody' /}</div>
+				    </div>		
+					<div class="form-group">			    
+				        <button type="submit" class="pull-right btn btn-default popup-event-notify">&{'submit'}</button>
+		  				<div class="clearfix"></div>
+				    </div>				    			
+				</form>
+				#{/if}
+ 			
+ 				#{elseif action && action.equals("new")}	
+				<div class="error">#{error 'email' /}</div>		
+ 				<form action="/mail-new" role="form" method="post" class="margin-clear">
+ 					<input type="hidden" name="url" value="${request.url.urlEncode()}">
+					<div class="form-group">
+						<label for="exampleInputEmail1">&{'subject'}</label>
+					    <input type="text" class="form-control" name="subject" id="exampleInputEmail1" placeholder="&{'subject'}" value="#{if params.subject}${params.subject}#{/if}#{else}${request.params.subject}#{/else}">
+					</div>
+					<div class="alert alert-danger">#{error 'subject' /}</div>
+					
+					<label for="exampleInputEmail1">To</label>
+					<div class="form-group">
+						<input type="text" class="form-control typeahead" autocomplete="off" placeholder="&{'contact-name-or-email'}" maxlength="50" name="toUser" data-provide="typeahead" value="#{if params.toUser}${params.toUser}#{/if}#{else}${request.params.to}#{/else}">
+					</div>
+					<div class="alert alert-danger">#{error 'userTo' /}</div>
+					
+					<div class="form-group has-feedback">			    
+						<label for="exampleInputEmail1" >Body</label>
+				    	<textarea rows="15" class="form-control" placeholder="&{'message'}" name="emailBody">${params.emailBody}</textarea>
+				    	#{include 'help.html' /}
+				    </div>
+				    <div class="alert alert-danger">#{error 'body' /}</div>
+				    
+					<div class="form-group">			    
+				        <button type="submit" class="pull-right btn btn-default popup-event-notify">&{'submit'}</button>
+		  				<div class="clearfix"></div>
+				    </div>
+  				</form>	
+  				#{/elseif}
+ 			
+ 			
+ 				#{elseif !action}
+				<table class="table table-hover table-striped">
+					#{list items:received, as:'item'}
+				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if}>
+				       	   	<td style="vertical-align:middle">
+				       	   		<img class="avatar16 img-circle" src="/${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} &middot;
+								<a href="/mail/${item.uuid}">${item.subject}</a>	
+				       		</td>
+				       		<td style="vertical-align:middle">
+				       			${item.created.format("dd MMM")},
+				   				#{time time:item.created/}
+				       		</td>
+					   </tr>
+					#{/list}							
+				</table>
+				<div style="text-align:center">
+					#{if from > 0}
+						<a href="/mail?from=${from-50}" class="btn btn-gray btn-sm">&{'newer'}</a>
+					#{/if}
+					#{else}
+						<button class="btn btn-gray btn-sm" disabled="disabled">&{'newer'}</button>
+					#{/else}
+					#{if received.size() > 0}
+						<a href="/mail?action=${action}&from=${from+50}" class="btn btn-gray btn-sm">&{'older'}</a>
+					#{/if}
+					#{else}
+						<button class="btn btn-gray btn-sm" disabled="disabled">&{'older'}</button>
+					#{/else}
+				</div>				
+				#{/elseif}
+
+ 				#{elseif action && action.equals("sent")}
+				<table class="table table-hover table-striped">
+					#{list items:sent, as:'item'}
+				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if}>
+				       	   	<td style="vertical-align:middle">
+				       	   		<img class="avatar16 img-circle" src="/${item.toUser.avatarUrl}_32x32"> ${item.toUser.fullName} &middot;
+				       	   		<a href="/mail/${item.uuid}">${item.subject}</a>	
+				       		</td>
+				       		<td style="vertical-align:middle">
+				       			${item.created.format("dd MMM")},
+				   				#{time time:item.created/}
+				       		</td>
+					   </tr>
+					#{/list}							
+				</table>
+				<div style="text-align:center">
+					#{if from > 0}
+						<a href="/mail?action=${action}&from=${from-50}" class="btn btn-gray btn-sm">&{'newer'}</a>
+					#{/if}
+					#{else}
+						<button class="btn btn-gray btn-sm" disabled="disabled">&{'newer'}</button>
+					#{/else}
+					#{if sent.size() > 0}
+						<a href="/mail?action=${action}&from=${from+50}" class="btn btn-gray btn-sm">&{'older'}</a>
+					#{/if}
+					#{else}
+						<button class="btn btn-gray btn-sm" disabled="disabled">&{'older'}</button>
+					#{/else}
+				</div>
+				#{/elseif}
+				
+				<script>
+				  	$(".typeahead").typeahead(
 					  	{
 					  	    minLength : 2, 
 					  	    source : function(value, process){
 								  	    $.get("/invites?str="+value, function(data){
 								  	        var list = [];
-									  	    for(var i in data)
-										  		list.push(""+data[i].login +", "+ data[i].name + ">");
+									  	    for(var i in data){
+									  	        var item = data[i].name + " ("+data[i].login + ")";
+									  	        list.push(item);
+									  	    }
 								  	        process(list);
 								  	    });
 					  				},
 					  		updater : function(item){
-					  		    return item.substring(0, item.indexOf(", "));
+					  		    return item;
 					  		}, 
 					  		matcher : function(item){
 					  		    return true;
 					  		}
 					  	}
-					  	);
-					</script>				    		
-					<div class="form-group">			    
-				    	<textarea rows="15" cols="" class="form-control" placeholder="Message" name="emailBody" style="margin-top:5px"></textarea>
-				    	#{include 'help.html' /}	
-				    
-				    </div>		
-					<div class="form-group">			    
-				        <button type="submit" class="pull-right btn btn-default popup-event-notify"><span class="spinner-small spinner-notify"> </span><i class="fa fa-envelope"></i> &{'dashboard.send'}</button>
-		  				<div class="clearfix"></div>
-				    </div>				    			
-				</form>
-				#{/if}
-				
+				  	);
+				</script>					
 			</div>
 		</div>
 	</div>

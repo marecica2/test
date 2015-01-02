@@ -10,11 +10,11 @@
 <div style="padding:30px;min-height:100%;min-height:100vh;" class="transparent2">
 <div class="container">
 	<div class="row">
-	  	<div class="col-md-12 segoe">
-			<h2 class="segoe"><i class='fa fa-bar-chart-o fa-1.5x'></i> &{'payments.receivedPayments'}</h2>
+	  	<div class="col-md-12">
+			<h2><i class='fa fa-bar-chart-o'></i> &{'payments.receivedPayments'}</h2>
 			<hr>
 
-			<form class="form-inline" role="form" method="POST">
+			<form class="form-inline" role="form" method="GET">
 				<div class="form-group">
 					&{'payments.timeRange'}
 				</div>
@@ -38,7 +38,7 @@
 					<input class="form-control" placeholder="To" name="filterTimeTo" data-date-format="dd/mm/yyyy" id="dp2" value="${flash.filterTimeTo}">
 				</div>
 				<div class="form-group">
-					<button type="submit" class="btn btn-primary">&{'submit'}</button>
+					<button type="submit" class="btn btn-default">&{'submit'}</button>
 				</div>
 
 				<script>
@@ -69,7 +69,7 @@
 			</form>
 			
 			<br/>
-			<h3 class="segoe">&{'payments.income'}</h3>
+			<h3>&{'payments.income'}</h3>
 			<dl class="dl-horizontal">
 				<dt>&{'payments.totalSales'}</dt>
 				<dd>${total}</dd>
@@ -97,7 +97,7 @@
 
 						gridColor: "Silver",
 						tickColor: "silver",
-						valueFormatString: "DD/MMM"
+						valueFormatString: "DD. MMM hh"
 
 					},                        
 		                        toolTip:{
@@ -113,19 +113,20 @@
 						horizontalAlign: "right"
 					},
 					data: [
+					#{list items:mapTotal, as:'p'}
 					{        
 						type: "line",
 						showInLegend: true,
-						name: "USD",
-						color: "#20B2AA",
+						name: "${p.key}",
 						lineThickness: 2,
 
 						dataPoints: [
-						#{list items:mapTotal, as:'p'}
-							{ x: new Date(${p.key}), y: ${p.value} },
+						#{list items:p.value, as:'t'}
+							{ x: new Date(${t.key}), y: ${t.value} },
 						#{/list}						             
 						]
-					}
+					},
+					#{/list}						             
 					],
 		          legend:{
 		            cursor:"pointer",
@@ -147,8 +148,8 @@
 
 			
 			<br/>
-			<h3 class="segoe">&{'payments.transactions'}</h3>
-			<table class="table table-striped" style="font-size:0.8em">
+			<h3>&{'payments.transactions'}</h3>
+			<table class="table table-striped">
 				<thead>
 		        <tr>
 		          <th>&{'customer'}</th>
@@ -156,37 +157,32 @@
 		          <th>&{'payments.totalSales'}</th>
 		          <th>&{'payments.income'}</th>
 		          <th>&{'payments.fee'}</th>
-		          <th>&{'payments.transactionId'}</th>
 		          <th>&{'date'}</th>
-		          <th>&{'payments.yourPaypalAccount'}</th>
-		          <th>&{'account'}</th>
 		          <th></th>
 		        </tr>
 		      </thead>
 				#{list items:payments, as:'p'}
 				<tr>
 	    			<td>
+	    				<img class="avatar16 img-circle" src="${p.customer.avatarUrl}_32x32">
 	    				#{if p.customer}
-	    				<a href="/Accounts/contact?id=${p.customer.uuid}">${p.customer.fullName}</a>
+	    				<a href="/user/${p.customer.login}">${p.customer.fullName}</a>
 	    				#{/if}
 	    			</td>
-	    			<td><a href="/?event=${p.event.uuid}&">${p.event.title}</a></td>
+	    			<td><a href="/event/${p.event.uuid}">${p.event.listing.title.trimDot(15)}</a></td>
 	    			<td>${p.price} ${p.currency}</td>
 	    			<td>${p.providerPrice} ${p.currency}</td>
 	    			<td>${p.fee} ${p.currency}</td>
-	    			<td><nobr>${p.transactionId}</nobr></td>
 	    			<td>
-	    				#{if p.transactionDate}
-	    					${p.transactionDate.time}
+	    				#{if p.paypalTransactionDate}
+	    					${p.paypalTransactionDate.format("dd MMM yyyy")}
 	    				#{/if}
 	    			</td>
-	    			<td>${p.paypalAccount}</td>
-	    			<td>${p.account.name}</td>
 	    			<td>
-	    				<!-- 
-		    				<button type="button" class="btn btn-default">Refund</button>
-	    				 -->
+	    				${p.refunded}
+	    				<a href="/paypal/refund/${p.uuid}?url=${request.url.urlEncode()}" class="btn btn-default btn-sm margin-clear">Refund</a>
 	    			</td>
+	    			
 				</tr>
 				#{/list}
 			</table>

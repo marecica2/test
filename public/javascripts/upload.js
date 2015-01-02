@@ -4,9 +4,6 @@ $(document).ready(function(){
         $("#upload").click();
     });
     $("#upload").change(function(){
-        // on edit page set ads uuid 
-        var params = "";
-        
         var params = "";
         if(starCalendar.event != undefined){
             params = "?item="+starCalendar.event;
@@ -18,14 +15,25 @@ $(document).ready(function(){
         star.utils.uploadFiles('/fileupload'+params, this.files, function(json){
             var resp = JSON.parse(json);
             console.log(resp);
+            $(".avatar-container").addClass("eg-wrapper");
+            $(".eg-preview").show();
             $("#crop-button").show();
             $("#upload-button").hide();
             $("#image").attr("style", "");
             $("#image").attr("src", "../public/uploads/"+resp.url);
             $("#imageUrl").val("public/uploads/"+resp.url+"");
             $("#imageId").val(resp.uuid);
-            jQuery(function($) {
-                $('#image').Jcrop({aspectRatio:starCalendar.aspectRatio, setSelect: [ 0, 0, 100, 100 ], bgColor: 'black',  onChange: showCoords});
+
+            $(".avatar-container > img").cropper({
+                aspectRatio : starCalendar.aspectRatio,
+                preview: ".avatar-preview",
+                done : function(data) {
+                    $("#x1").val(Math.round(data.x));
+                    $("#y1").val(Math.round(data.y));
+                    $("#x2").val(Math.round(data.x + data.width));
+                    $("#y2").val(Math.round(data.y + data.height));
+                    $("#imageIdCrop").val($("#imageId").val());
+                }
             });
         });
     });
@@ -33,13 +41,4 @@ $(document).ready(function(){
         $("#cropForm").submit();
     });
     
-    function showCoords(c){
-       // variables can be accessed here as
-       //c.x, c.y, c.x2, c.y2, c.w, c.h
-       $("#x1").val(c.x);
-       $("#x2").val(c.x2);
-       $("#y1").val(c.y);
-       $("#y2").val(c.y2);
-       $("#imageIdCrop").val($("#imageId").val());
-    };
 });

@@ -41,6 +41,11 @@ public class BaseController extends Controller
         redirect(UriUtils.redirectStr(url));
     }
 
+    public static String getBaseUrl()
+    {
+        return getProperty(CONFIG_BASE_URL);
+    }
+
     public static boolean flashErrorPut(String msg)
     {
         Http.Cookie c = new Http.Cookie();
@@ -172,7 +177,7 @@ public class BaseController extends Controller
 
         if (e.isFree())
         {
-            Logger.info("Free event, not needed to log in");
+            Logger.info("Free event, not need to pay");
             return;
         }
 
@@ -202,6 +207,12 @@ public class BaseController extends Controller
 
         // other payment methods
         error(400, "Bad request");
+    }
+
+    public static User getAdmin()
+    {
+        User user = User.getUserByLogin(getProperty("admin.user"));
+        return user;
     }
 
 }

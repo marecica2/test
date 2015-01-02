@@ -20,11 +20,11 @@
 				<strong>${item.price}</strong> <small>${item.currency}</small>
 			#{/if}
 			#{else}
-				<strong>Free</strong>
+				<strong>&{'free'}</strong>
 			#{/else}
 			#{if item.state == 'customer_created'}
 			<img class="img-circle avatar22" src="/${item.customer.avatarUrl}_32x32">
-			<span class='label label-danger'>pending</span>
+			<span class='label label-danger'>&{'waiting'}</span>
 			#{/if}
 		</p>
 		<p class='event-box-link'><span><a href='/event/${item.uuid}' class='link-left'><span>${item.listing.title}</span></a></span></p>
