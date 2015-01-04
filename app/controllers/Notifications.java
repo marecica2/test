@@ -57,7 +57,7 @@ public class Notifications extends BaseController
         } else
         {
             String action = "new";
-            renderTemplate("Messages/inbox.html", action);
+            renderTemplate("Notifications/inbox.html", action);
         }
     }
 
@@ -103,6 +103,6 @@ public class Notifications extends BaseController
         else
             thread = Message.getByThread(id);
 
-        renderTemplate("Messages/inbox.html", user, thread, message);
+        renderTemplate("Notifications/inbox.html", user, thread, message);
     }
 }

@@ -2,7 +2,11 @@ package controllers;
 
 import java.util.Date;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
 import models.User;
+import play.Logger;
 import play.data.validation.Required;
 import play.i18n.Messages;
 import play.libs.Crypto;
@@ -10,6 +14,8 @@ import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.utils.Java;
+
+import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 
 public class Secure extends BaseController
 {
@@ -95,10 +101,38 @@ public class Secure extends BaseController
         redirectToOriginalURL();
     }
 
-    public static void authenticateFacebook(String id, String token) throws Throwable
+    private static String encode(String key, String data) throws Exception
+    {
+        Mac sha256_HMAC = Mac.getInstance("HMAC-SHA256");
+        SecretKeySpec secret_key = new SecretKeySpec(key.getBytes("UTF-8"), "HMAC-SHA256");
+        sha256_HMAC.init(secret_key);
+        String ret = Base64.encodeBase64String(sha256_HMAC.doFinal(data.getBytes("UTF-8")));
+        ret = ret.replaceAll("\\+", "-");
+        ret = ret.replaceAll("=", "");
+        ret = ret.replaceAll("/", "_");
+        return ret;
+    }
+
+    public static void authenticateFacebook(String id, String token, String signedRequest) throws Throwable
     {
         checkAuthenticity();
         User user = User.getUserByFacebook(id);
+        String[] parts = signedRequest.split("\\.");
+        final String encoded = parts[0];
+        final String expected = encode("8250fede980433de1fac794c3c205548", parts[1]);
+
+        //System.err.println("encoded " + encoded);
+        //System.err.println("expected " + expected);
+
+        if (!encoded.equals(expected))
+        {
+            Logger.error("Incorrect oauth signature");
+            return;
+        }
+
+        // final String body = StringUtils.newStringUtf8(Base64.decodeBase64(parts[1]));
+        // final JsonObject jo = new JsonParser().parse(p).getAsJsonObject();
+        // System.err.println(jo);
         if (user == null)
         {
             flash.error(Messages.get("user-does-not-exist"));

@@ -77,9 +77,8 @@ public class Hangout extends BaseController
 
         for (String login : logins)
         {
-
             final String subject = Messages.get("invitation-to-video-call-subject");
-            final String message = Messages.get("invitation-to-video-call-subject-message", userName, getBaseUrl() + "room?id=" + room);
+            final String message = Messages.get("invitation-to-video-call-message", userName, getBaseUrl() + "room?id=" + room);
             final User toUser = User.getUserByLogin(login);
             if (toUser != null)
                 Message.createNotification(user, toUser, subject, message);

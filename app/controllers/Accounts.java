@@ -285,4 +285,19 @@ public class Accounts extends BaseController
         params.flash();
         render(user, payments, mapTotal);
     }
+
+    public static void facebookClear(String url)
+    {
+        User user = getLoggedUserNotCache();
+        if (user == null)
+            forbidden();
+        user.facebookId = null;
+        user.facebookName = null;
+        user.facebookPageChannel = null;
+        user.facebookPageType = null;
+        user.facebookTab = null;
+        user.facebook = null;
+        user.save();
+        redirectTo(url);
+    }
 }

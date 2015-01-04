@@ -101,7 +101,7 @@ star.renderComments = function(data, dashboard){
         html += "       <div class='black margin-top'>"+item.comment+"</div>"; 
         
         if(item.attachments.length > 0){
-            html += "           <strong>Attachments</strong>";
+            html += "           <strong>"+i18n('attachments')+"</strong>";
             html += "           <table>";
             for(var j = 0; j < item.attachments.length; j++){
             var a = item.attachments[j];
@@ -138,8 +138,8 @@ star.renderComments = function(data, dashboard){
         if(star.user){
             html += "<a href='#' class='comment-reply pull-right'>Reply</a>";
             html += "<div style='display:none' class='comment-reply-input margin-top'>";
-            html += "   <textarea class='form-control' placeholder='Write a reply'></textarea>";
-            html += "   <button class='btn btn-default pull-right comment-reply-submit' data-id='"+item.uuid+"'>Submit</button>";
+            html += "   <textarea class='form-control' placeholder='"+i18n('write-a-reply')+"'></textarea>";
+            html += "   <button class='btn btn-default pull-right comment-reply-submit' data-id='"+item.uuid+"'>"+i18n('submit')+"</button>";
             html += "</div>";
             html += "<div class='clearfix'></div>"
         }
@@ -247,11 +247,11 @@ star.renderItems = function(data, prefix){
             html += "       </div>";
             html += "   </div>";
             html += "   <div class='image-box-body'>";
-            html += "       <small><span>"+item.category+"</span> &middot; <span>"+item.type+"</span> &middot; <span>"+item.privacy+"</span></small><br/> ";
+            html += "       <small><span>"+i18n(item.category)+"</span> &middot; <span>"+i18n(item.type)+"</span> &middot; <span>"+i18n(item.privacy)+"</span></small><br/> ";
             
             
             if(item.charging == 'free'){
-                html += "<strong>Free</strong>";
+                html += "<strong>"+i18n("free")+"</strong>";
             }
             if(item.charging != 'free'){
                 html += "<strong>"+item.price+"</strong> <small>"+item.currency+"</small>";
@@ -269,7 +269,7 @@ star.renderItems = function(data, prefix){
                 else
                     html += "<i class='fa fa-star-o' data-value='1'></i>";
             }
-            html += " " + item.ratingCount + " reviews";
+            html += " " + item.ratingCount + " "+ i18n("reviews");
             
             html += "   </p>";
             
@@ -306,25 +306,26 @@ star.renderItems = function(data, prefix){
                 html += "       </div>";
                 html += "   </div>";
                 html += "   <div class='image-box-body' style='font-size:0.9em'>";
-                html += "           <p><span>"+item.category+"</span> &middot; <span>"+item.type+"</span> &middot; <span>"+item.privacy+"</span></p> ";  
+                html += "           <p>";
+                html += "               <span>"+i18n(item.category)+"</span> &middot; <span>"+i18n(item.type)+"</span> &middot; <span>"+i18n(item.privacy)+"</span>";
+                if(item.state == 'customer_created'){
+                    html += "       <img class='img-circle avatar22' src='/"+item.customerAvatarUrl+"_32x32'>";
+                    html += "       <span class='label label-danger'>"+i18n("waiting")+"</span>";
+                }
+                html += "           <p>";
                
                 html += "           <p>";
                 html += "           <strong>"+starUtils.formatDate(item.eventStart)+"</strong>";
                 html += "           <span>"+starUtils.formatTime(item.eventStart)+"</span> - ";
                 html += "           <span>"+starUtils.formatTime(item.eventEnd)+"</span><br/>";
-                html += "           <strong>"+(before?"Before":"Starts in")+"</strong> " + (days > 0 ? (days + " d ") : "") + (hours > 0 ? (hours + "h ") : "") + minutes + "m";          
+                html += "           <strong>"+(before? i18n("before") : i18n("starts-in"))+"</strong> " + (days > 0 ? (days + i18n("days")) : "") + " " + (hours > 0 ? (hours + " " + i18n("hrs")) : "") + " " + minutes + " " + i18n("min");          
                 html += "           <br/>";            
                 if(item.charging == 'free'){
-                    html += "<strong>Free</strong>";
+                    html += "<strong>"+i18n("free")+"</strong>";
                 }
                 if(item.charging == 'before'){
-                    html += "       <strong>"+item.priceTotal+"</strong> <small>"+item.currency+"</small> for "+item.chargingTime+" min";
+                    html += "       <strong>"+item.priceTotal+"</strong> <small>"+item.currency+"</small> " + i18n("for") +item.chargingTime+" " + i18n("min");
                 }    
-                
-                if(item.state == 'customer_created'){
-                    html += "       <img class='img-circle avatar22' src='/"+item.customerAvatarUrl+"_32x32'>";
-                    html += "       <span class='label label-danger'>pending</span>";
-                }
                 html += "           </p>";
                 
                 html += "           <a rel='tooltip' data-placement='top' title='"+item.title+"' href='/event/"+item.uuid+"'><span>"+star.utils.trimTo(item.title, 25)+"</span></a>";
@@ -355,28 +356,34 @@ starEvent.editEventDialogShow = function(elm){
 starEvent.eventIcons = function(event){
     var html = "";
     if(event.type == "p2p"){
-       html += ("<i class='fa fa-comments' title='"+i18n("app.eventP2P")+"'></i> ");
+       html += ("<i class='fa fa-comments' title='"+i18n("p2p")+"'></i> ");
     }
-    if(event.type == "livecast"){
-        html += ("<i class='fa fa-globe' title='"+i18n("app.eventLivecast")+"'></i> ");
+    if(event.type == "broadcast"){
+        html += ("<i class='fa fa-globe' title='"+i18n("broadcast")+"'></i> ");
+    }
+    if(event.type == "instant"){
+        html += ("<i class='fa fa-globe' title='"+i18n("instant")+"'></i> ");
+    }
+    if(event.type == "hangout"){
+        html += ("<i class='fa fa-globe' title='"+i18n("hangout")+"'></i> ");
+    }
+    if(event.type == "hangoutAir"){
+        html += ("<i class='fa fa-globe' title='"+i18n("hangoutAir")+"'></i> ");
     }
     if(event.charging == "free"){
-        html += ("<span ><i class='fa fa-ban' title='"+i18n("app.eventFree")+"'></i></span> ");
+        html += ("<span ><i class='fa fa-ban' title='"+i18n("free")+"'></i></span> ");
     }
     if(event.charging == "before"){
-        html += ("<span ><i class='fa fa-dollar' title='"+i18n("app.eventPayBefore")+"'></i></span> ");
+        html += ("<span ><i class='fa fa-dollar' title='"+i18n("paid")+"'></i></span> ");
     }
     if(event.charging == "after"){
-        html += ("<span ><i class='fa fa-dollar' title='"+i18n("app.eventPayAfter")+"'></i></span> ");
+        html += ("<span ><i class='fa fa-dollar' title='"+i18n("paid")+"'></i></span> ");
     }
     if(event.privacy == "public"){
-        html += ("<i class='fa fa-unlock' title='"+i18n("app.eventPublic")+"'></i> ");
+        html += ("<i class='fa fa-unlock' title='"+i18n("public")+"'></i> ");
     } 
     if(event.privacy == "private"){
-        html += ("<i class='fa fa-lock' title='"+i18n("app.eventPrivate")+"'></i> ");
-    }
-    if(event.privacy == "hidden"){
-        html += ("<i class='fa fa-eye-slash' title='"+i18n("app.eventHidden")+"'></i> ");
+        html += ("<i class='fa fa-lock' title='"+i18n("private")+"'></i> ");
     }
     return html;
 };
@@ -463,10 +470,10 @@ starEvent.inviteLoad = function(event, clbck){
                 }
                 
                 if(starCalendar.login != data[i].email)
-                    html += "<a href='/public/user?id="+data[i].customer+"' title='"+data[i].email+"'>";
+                    html += "<a href='/user/"+data[i].email+"' title='"+data[i].email+"'>";
                 
                 if(starCalendar.login == data[i].email){
-                    html += i18n("app.you") + " &nbsp;";
+                    html += i18n("you") + " &nbsp;";
                 } else if(data[i].customer == null && !starCalendar.isPublic){
                     html += "" + data[i].email ;
                 } else {
@@ -490,29 +497,17 @@ starEvent.inviteLoad = function(event, clbck){
                 
                 html += "<td style='text-align:center;'>";
                 if(data[i].result == "accepted"){
-                    html += "&nbsp;<p class='label label-success'>"+i18n("app.accepted")+"</p>&nbsp;";
+                    html += "&nbsp;<p class='label label-success'>"+i18n("accepted")+"</p>&nbsp;";
                 } else if(data[i].result == "declined"){
-                    html += "&nbsp;<p class='label label-danger'>"+i18n("app.declined")+"</p>&nbsp;";
+                    html += "&nbsp;<p class='label label-danger'>"+i18n("declined")+"</p>&nbsp;";
                 } else {
-                    html += "&nbsp;<p class='label label-default'>"+i18n("app.waiting")+"</p>&nbsp;";
+                    html += "&nbsp;<p class='label label-default'>"+i18n("waiting")+"</p>&nbsp;";
                 }
                 html += "</td>";
                 html += "<td style='text-align:right;vertical-align:middle;'>";
                 
-                //html += "<nobr style='font-size:1.4em'>";
-                //if(starCalendar.login == data[i].email){
-                //    html += "<a href='#' class='color-link ' title='"+i18n("app.acceptedInvitation")+"'><i data-uuid='" + data[i].uuid + "' class='fa fa-check dialog-invite-accept fa-1x'></i></a> &nbsp; ";
-                //    html += "<a href='#' class='color-link ' title='"+i18n("app.declineInvitation")+"'><i data-uuid='" + data[i].uuid + "'  class='fa fa-times dialog-invite-decline fa-1x'></i></a> &nbsp; ";
-                //}
-                //if(starCalendar.selectedEvent.editable){
-                //    html += "<a href='#' class='color-link ' title='"+i18n("app.deleteInvitation")+"'><i data-uuid='" + data[i].uuid + "' class='fa fa-trash dialog-invite-delete fa-1x'></i></a> ";
-                //}
-                //html += "</nobr>";
-                
                 html += "</td>";
                 html += "</tr>";
-                
-                
                 $(this).html(html);
             }
         });
@@ -521,40 +516,6 @@ starEvent.inviteLoad = function(event, clbck){
             cb();
     });
 };
-
-
-
-
-starEvent.eventIcons = function(event){
-    var html = "";
-    if(event.type == "p2p"){
-       html += ("<i class='fa fa-comments' title='"+i18n("app.eventP2P")+"'></i> ");
-    }
-    if(event.type == "livecast"){
-        html += ("<i class='fa fa-globe' title='"+i18n("app.eventLivecast")+"'></i> ");
-    }
-    if(event.charging == "free"){
-        html += ("<span ><i class='fa fa-ban' title='"+i18n("app.eventFree")+"'></i></span> ");
-    }
-    if(event.charging == "before"){
-        html += ("<span ><i class='fa fa-dollar' title='"+i18n("app.eventPayBefore")+"'></i></span> ");
-    }
-    if(event.charging == "after"){
-        html += ("<span ><i class='fa fa-dollar' title='"+i18n("app.eventPayAfter")+"'></i></span> ");
-    }
-    if(event.privacy == "public"){
-        html += ("<i class='fa fa-unlock' title='"+i18n("app.eventPublic")+"'></i> ");
-    } 
-    if(event.privacy == "private"){
-        html += ("<i class='fa fa-lock' title='"+i18n("app.eventPrivate")+"'></i> ");
-    }
-    if(event.privacy == "hidden"){
-        html += ("<i class='fa fa-eye-slash' title='"+i18n("app.eventHidden")+"'></i> ");
-    }
-    return html;
-};
-
-
 
 
 starEvent.inviteDelete = function(){
@@ -624,7 +585,7 @@ starEvent.loadActivities = function(uuid){
             html += "<div style='font-size:0.8em;opacity:0.6'>";
             var url = success[i].byCustomer ? "/user/"+success[i].customerLogin : "/user/"+success[i].userLogin;
             var name = success[i].byCustomer ? success[i].customer : success[i].user;
-            html += "<a class='' href='" + url +"'>" + name + "</a>&nbsp;on ";
+            html += "<a class='' href='" + url +"'>" + name + "</a>&nbsp; " + i18n("on");
             html += starUtils.formatDateTime(success[i].created) + " " + " &nbsp; ";
             html +="</div>";
 

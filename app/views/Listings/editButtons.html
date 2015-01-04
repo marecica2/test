@@ -5,7 +5,7 @@
 			<span style="font-size:0.5em" class="btn btn-default btn-sm">&{'approved'}</span>
 		#{/if}
    		#{if event.state == 'customer_created'}
-			<span style="font-size:0.5em" class="btn btn-default btn-sm">&{'waiting-for-approvement'}</span>
+			<span class="btn btn-default btn-sm">&{'waiting-for-approvement'}</span>
 		#{/if}
 		
 		#{if event.charging != null && attendance && !event.isFree()}
@@ -16,7 +16,7 @@
 				</a>
 			#{/if}
 			#{elseif paid && attendance.paypalTransactionDate}
-				<span style="font-size:0.5em"  class="label label-success">
+				<span class="btn btn-default btn-sm">
 					Paid on ${attendance.paypalTransactionDate.format("dd MMM, yyyy")}
 				</span> &nbsp;
 			#{/elseif} 

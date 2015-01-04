@@ -7,10 +7,9 @@
 		<meta charset="utf-8">
         <title>Widgr #{get 'title' /}</title>
         
-        <!-- My meta tags -->
+        <!-- facebook meta tags -->
         <meta name="viewport" content="width=100,initial-scale=1, maximum-scale=1, minimum-scale=1"/>
 		<meta class="fb-app-id" property="fb:app_id" content="117287758301883" /> 
-		#{if user}<meta class="fb-meta-url" property="og:url" content='${request.base + "/public/calendar/" + user.uuid}' />#{/if}
 		<meta class="fb-meta-title" property="og:title" content="widgr" /> 
 		<meta class="fb-meta-description" property="og:description" content="widgr - share your knowledge" /> 
 		<meta class="fb-meta-image" property="og:image" content="${request.base}/public/images/logo.jpg" />  
@@ -106,6 +105,7 @@
 	    	    }*
 	    	});
 		</script>
+		#{i18n /}
          #{get 'moreScripts' /}       
 	</head>
 
@@ -205,7 +205,7 @@
 	
 			<!-- footer start (Add "light" class to #footer in order to enable light footer) -->
 			<!-- ================ -->
-			<footer id="footer" class="dark ${switcherFooter}">
+			<footer id="footer" class="dark">
 	
 				<!-- .footer start -->
 				<!-- ================ -->
@@ -216,17 +216,18 @@
 								<div class="footer-content">
 									<div class="logo-footer"><img id="logo-footer" src="/images/logo_purple_footer.png" style=""></div>
 									<div class="row">
-										<div class="col-sm-6">
+										<div class="col-sm-10">
 											<p>Lorem ipsum dolor sit amet, consect tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim ven.</p>
+											<i class="fa fa-envelope-o pr-10"></i> info@wid.gr
 											<ul class="social-links circle">
 												<li class="facebook"><a target="_blank" href="http://www.facebook.com/"><i class="fa fa-facebook"></i></a></li>
 												<li class="twitter"><a target="_blank" href="http://www.twitter.com/"><i class="fa fa-twitter"></i></a></li>
 												<li class="googleplus"><a target="_blank" href="http://plus.google.com/"><i class="fa fa-google-plus"></i></a></li>
-												<li class="skype"><a target="_blank" href="http://www.skype.com/"><i class="fa fa-skype"></i></a></li>
 												<li class="linkedin"><a target="_blank" href="http://www.linkedin.com/"><i class="fa fa-linkedin"></i></a></li>
 											</ul>
 										</div>
 										
+										*{
 										<div class="col-sm-4 footer-hide">
 											<ul class="list-icons">
 												<li><i class="fa fa-map-marker pr-10"></i> One infinity loop, 54100</li>
@@ -235,16 +236,18 @@
 												<li><i class="fa fa-envelope-o pr-10"></i> info@wid.gr</li>
 											</ul>
 										</div>
-										
-										<div class="col-sm-2 footer-hide">
+										}*
+							
+										<div class="col-sm-2">
 											<div class="footer-content">
 												<nav>
 													<ul class="nav nav-pills nav-stacked">
 														<li><a href="/home">&{'home'}</a></li>
-														<li><a href="/about">&{'about'}</a></li>
-														<li><a href="/about#pricing">&{'pricing'}</a></li>
-														<li><a href="/about#policy">&{'policy'}</a></li>
-														<li><a href="/about#contact">&{'contact'}</a></li>
+														<li><a href="/about">&{'about-widgr'}</a></li>
+														<li><a href="/privacy">&{'privacy'}</a></li>
+														<li><a href="/terms">&{'terms'}</a></li>
+														<li><a href="/help">&{'help'}</a></li>
+														<li><a href="/about#contact">&{'contact-us'}</a></li>
 													</ul>
 												</nav>
 											</div>

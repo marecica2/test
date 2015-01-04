@@ -12,6 +12,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
 import play.Logger;
+import play.i18n.Messages;
 import utils.DateTimeUtils;
 import controllers.Application;
 
@@ -63,26 +64,21 @@ public class VelocityTemplate
         ctx.put("user", from.getFullName());
         ctx.put("userImage", baseUrl + from.avatarUrl);
         ctx.put("userUrl", baseUrl + "user/" + from.login);
-        ctx.put("userUrlLabel", "view on Widgr");
+        ctx.put("userUrlLabel", Messages.get("view-on-widgr"));
+        ctx.put("contact", Messages.get("contact"));
+        ctx.put("help", Messages.get("help"));
+        ctx.put("security", Messages.get("security"));
 
-        ctx.put("userAbout", "<h3>About " + from.getFullName() + "</h3>" + from.userAboutHtml());
-        ctx.put("title", "Invited you to Widgr.");
-
-        ctx.put("message",
-                "<h3>What is Widgr?</h3>With Widgr you can get help anytime from "
-                        + "people with expertise across a range of topics - teachers, counselors, doctors, home repair "
-                        + "specialists, personal trainers, hobby enthusiasts, and more.<br/>You can choose who to get "
-                        + "help from based on qualifications, availability, ratings and reviews. Also, you can choose "
-                        + "to get help right away or schedule a Helpout for later.<br/>Just fill simple registration and "
-                        + "start using Widgr even today. <a href='" + baseUrl + "about'>Learn more about Widgr</a>"
-                );
-
+        ctx.put("title", Messages.get("you-have-been-invited-to-widgr", from.getFullName()));
+        ctx.put("message", Messages.get("email-what-is-widgr", baseUrl));
+        ctx.put("userAbout", "<h3>" + from.getFullName() + "</h3>" + from.userAboutHtml());
+        ctx.put("footer", Messages.get("email-footer"));
         ctx.put("url", baseUrl + "registration?email=" + email + "&token=" + from.referrerToken);
-        ctx.put("urlLabel", "Register now");
+        ctx.put("urlLabel", Messages.get("register-now"));
 
         if (event != null)
         {
-            ctx.put("title", "Invited you event " + event.listing.title);
+            ctx.put("title", Messages.get("you-have-been-invited-to-event", event.listing.title));
             ctx.put("event", event.listing.title);
             ctx.put("eventDescription", event.listing.getDescriptionHtml());
             ctx.put("eventUrl", baseUrl + "event/" + event.uuid);
@@ -112,6 +108,11 @@ public class VelocityTemplate
 
         ctx.put("title", title);
         ctx.put("message", message);
+
+        ctx.put("contact", Messages.get("contact"));
+        ctx.put("help", Messages.get("help"));
+        ctx.put("security", Messages.get("security"));
+        ctx.put("footer", Messages.get("email-footer"));
         return ctx;
     }
 }

@@ -134,20 +134,7 @@ public class Registration extends BaseController
             // send activation email
             final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
             final String title = Messages.get("account-activation-subject");
-            final String message = Messages.get("account-activation-message");
-
-            //                    "<h3>Welcome to Widgr!</h3>"
-            //                    + "You're almost there! Please click the link below to confirm your Widgr account.<br/>"
-            //                    + "<a href='" + baseUrl + "registration/activate?uuid=" + user.uuid + "'>Account activation link</a><br/>"
-            //                    + "or paste this url to the browser address bar<br/>"
-            //                    + "" + baseUrl + "registration/activate?uuid=" + user.uuid + "<br/><br/>"
-            //                    + "Here are a few things to help you get started width Widgr:"
-            //                    + "<ul>"
-            //                    + "<li><a href='" + baseUrl + "help#publisher'>How to become a Publisher</a></li>"
-            //                    + "<li><a href='" + baseUrl + "help#facebook'>How to connect your account with Facebook</a></li>"
-            //                    + "<li><a href='" + baseUrl + "help#google'>How to sync Widgr events with Google Calendar</a></li>"
-            //                    + "<li><a href='" + baseUrl + "help#paypal'>How to set up Paypal payments for Publishers</a></li>"
-            //                    + "</ul>";
+            final String message = Messages.get("account-activation-message", baseUrl, user.uuid, baseUrl, baseUrl, baseUrl, baseUrl);
 
             new EmailNotificationBuilder()
                     .setWidgrFrom()
@@ -249,10 +236,11 @@ public class Registration extends BaseController
         User user = User.getUserByUUID(uuid);
         user.activated = true;
         user.save();
+        System.err.println(user);
 
+        final String baseUrl = getBaseUrl();
         final String subject = Messages.get("account.activated-subject");
-        final String body = Messages.get("account.activated-message");
-        // "h3. Welcome to Widgr!\nYour account has been succesfully activated. \nHere are a few things to help you get started.\n* [How to become a publisher|/help#publisher] \n* [How to set up Paypal Account|/help#paypal]";
+        final String body = Messages.get("account.activated-message", baseUrl, baseUrl, baseUrl, baseUrl);
 
         Message.createNotification(user, user, subject, body);
         flash.success(Messages.get("account-successfully-activated"));

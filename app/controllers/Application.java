@@ -25,7 +25,7 @@ import com.google.gson.JsonParser;
 //@With(Secure.class)
 public class Application extends BaseController
 {
-    @Before(unless = { "home", "channels", "calendarUser", "facebook" })
+    @Before(unless = { "home", "channels", "calendarUser", "facebook", "privacy", "terms", "help" })
     static void checkAccess() throws Throwable
     {
         checkAuthorizedAccess();
@@ -99,6 +99,24 @@ public class Application extends BaseController
         user.save();
         clearUserFromCache();
         facebook();
+    }
+
+    public static void privacy()
+    {
+        final User user = getLoggedUser();
+        render(user);
+    }
+
+    public static void terms()
+    {
+        final User user = getLoggedUser();
+        render(user);
+    }
+
+    public static void help()
+    {
+        final User user = getLoggedUser();
+        render(user);
     }
 
     public static void home()

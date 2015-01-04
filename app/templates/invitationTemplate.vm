@@ -17,7 +17,7 @@
 						#end
 						<td style="width: 100%; vertical-align:middle; font-family: Arial, Helvetica;font-size:1.3em;">
 							#if($user)
-								${user} &nbsp;<a href="${userUrl}" style="color:white;font-size:10px;">${userUrlLabel}</a> 
+								<h3>${user} &nbsp;<a href="${userUrl}" style="color:white;font-size:10px;">${userUrlLabel}</a></h3>
 							#end
 							<h3>${title}</h3>
 							#if($event)
@@ -42,7 +42,7 @@
 			<!-- Main message -->
 			<div style="margin:0px;width:100%; max-width:1000px; color: black; padding: 20px; background-color: ${color2}; font-family: Arial, Helvetica; ">
 				<div style="margin:0px;">
-					#if($notification)
+					#if(!$event && $notification)
 						<h3>${notificationLabel}</h3>
 						<p>${notification}</p>
 					#end
@@ -73,21 +73,14 @@
 			<div style="margin:0px;width:100%; max-width:1000px; padding: 20px; color: gray; background-color: ${color3}">
 				<div style="width:100%; text-align:center"><img src="${logo}" alt="widgr">
 					<div style="font-size:1.2em;">
-						<a style="text-decoration: none; color:darkgray" href="${baseUrl}help">Help</a>&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;
-						<a style="text-decoration: none; color:darkgray" href="${baseUrl}about#contact">Contact</a>&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;	
-						<a style="text-decoration: none; color:darkgray" href="${baseUrl}privacy">Security & Privacy</a>	
+						<a style="text-decoration: none; color:darkgray" href="${baseUrl}help">${help}</a>&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;
+						<a style="text-decoration: none; color:darkgray" href="${baseUrl}about#contact">${contact}</a>&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;	
+						<a style="text-decoration: none; color:darkgray" href="${baseUrl}privacy">${security}</a>	
 					</div>
 				</div>
 
 				<br/>
-				<h4><strong>How do I know this is not a fake email?</strong></h4>
-				<p style="font-family: Arial, Helvetica;font-size:12px">
-					Please note that email really coming from Widgr will never ask 
-					you for sensitive information like your password. An email 
-					that urgently requests you to supply sensitive personal information 
-					is usually an attempt at fraud. Remember not to click any links 
-					in suspicious looking emails.
-				</p>
+				${footer}
 			</div>
 
 		</div>

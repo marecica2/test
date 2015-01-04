@@ -222,6 +222,9 @@ img {
 
 .tip {
 	color: silver;
+	opacity:0.6;
+	position:relative;
+	bottom:2px;
 	font-size: 0.8em
 }
 

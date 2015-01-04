@@ -29,6 +29,9 @@ public class AttendanceDTO extends Model
         {
             aDto.customer = a.customer.uuid;
             aDto.avatar = a.customer != null ? a.customer.avatarUrl : "";
+        } else if (a.isForUser == false)
+        {
+            aDto.avatar = "public/images/avatar";
         } else if (a.user != null)
         {
             aDto.customer = a.user.uuid;

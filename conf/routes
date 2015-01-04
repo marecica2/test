@@ -8,6 +8,9 @@ GET     /user/{login}/calendar/{public}    		Application.calendarUser
 GET     /channels								Application.channels
 *	    /facebook								Application.facebook
 POST    /facebook-save							Application.facebookPost
+GET     /privacy								Application.privacy
+GET     /terms									Application.terms
+GET     /help									Application.help
 
 GET		/login									Secure.login
 GET		/login/									Secure.login
@@ -130,6 +133,7 @@ GET 	/settings								Accounts.account
 GET 	/settings/smtp/reset					Accounts.resetEmail
 GET 	/settings/request-publisher				Accounts.requestPublisher
 *		/payments								Accounts.payments
+GET		/facebook/clear							Accounts.facebookClear
 
 GET 	/admin/publishers						Admin.publishers
 GET 	/admin/users							Admin.users

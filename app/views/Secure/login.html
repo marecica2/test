@@ -2,14 +2,12 @@
 #{set title:'Login' /} 
 #{set 'moreScripts'}
 	<script>
-	  star.fbClbck = function() {
-	      
+	  star.fbClbck = function(resp) {
 	      FB.api('/me', function(response) {
-	        $.post("/login/facebook?id="+response.id+"&authenticityToken="+$("input[name='authenticityToken']").val(), function(redirect){
+	        $.post("/login/facebook?id="+response.id+"&signedRequest="+resp.authResponse.signedRequest+"&authenticityToken="+$("input[name='authenticityToken']").val(), function(redirect){
 	            window.location = redirect;
 	        });
 	      });
-	  
 	  }
 	</script>
 	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>

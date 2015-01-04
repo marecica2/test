@@ -100,35 +100,6 @@ $(document).ready(function() {
             }, null);
         }
     });
-
-    
-    $(".popup-event-notify").click(function(){
-        var ok = confirm(i18n("app.confirmInvitation"));
-        if(ok){
-            console.log("Invitation send");
-            //xxxx
-            var d = {};
-            d.uuid = starCalendar.selectedEvent.uuid;
-            
-            var arr = [];
-            $(".notify-checkboxes").each(function() {
-                var val = $(this).attr("data-uuid");
-                if ($.inArray(val, arr) == -1 && $(this).prop("checked")) arr.push(val);
-            });
-            d.invites = arr;
-            console.log(arr);
-            
-            $(".spinner-notify").show();
-            starServices.inviteEvent(d, function(){
-                var popup = $("#myPopover");
-                popup.hide();
-                $('#myPopover').modal('hide');
-                $(".spinner-notify").hide();
-            }, function(data){
-                   console.log(data)
-               });
-        }
-    });
     
     if(starCalendar.defaultView == "")
         starCalendar.defaultView = "agendaWeek";
@@ -303,7 +274,7 @@ starCalendar.selectionNewEvent = function(ccc, start, end, allDay, event) {
 
     $(".event-title").html(star.utils.trimTo(i18n("New event"), 35));
     if(event != undefined){
-        $(".event-title").html(star.utils.trimTo(i18n("Add Google event"), 35));
+        $(".event-title").html(star.utils.trimTo(i18n("add-google-event"), 35));
         star.selectedEvent = event;
     } else {
         star.selectedEvent = null;
@@ -354,18 +325,6 @@ starCalendar.clickEvent = function(event, jsEvent, view) {
         if(starCalendar.listings)
             starCalendar.selectionNewEvent(starCalendar.calendar, event.start, event.end, false, event);
     }
-    
-    // reinit facebook
-    //var url = document.location.origin + "/public/calendar/"+starCalendar.userUUID+"/"+event.uuid;
-    //var url2 = document.location.origin + "/public/calendar/"+starCalendar.userUUID+"#?event="+event.uuid;
-    //$(".fb-meta-title").attr("content", event.title);
-    //$(".fb-meta-description").attr("content", event.description);
-    //$(".event-anchor-comments").attr("href", url);
-    //$(".facebook-share-link").attr("href", url2);
-    //$(".fb-meta-url").attr("content", url);
-    //if(FB != undefined){
-    //    FB.XFBML.parse();
-    //}
     
     // prevent going to the url
     return false;

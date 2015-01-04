@@ -86,6 +86,10 @@ public class Public extends BaseController
         final boolean userProfile = true;
         final User user = getLoggedUser();
         final User usr = User.getUserByLogin(userLogin);
+
+        if (usr == null)
+            notFound();
+
         final Boolean isOwner = user != null && usr != null && usr.equals(user) ? true : false;
         final Contact contact = user != null ? Contact.get(user, usr) : null;
 

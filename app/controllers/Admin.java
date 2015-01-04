@@ -48,7 +48,7 @@ public class Admin extends BaseController
                 .setWidgrFrom()
                 .setTo(user)
                 .setSubject(subject)
-                .setMessageRaw(message)
+                .setMessageWiki(message)
                 .send();
 
         user.account.type = Account.TYPE_PUBLISHER;

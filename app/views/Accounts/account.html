@@ -231,8 +231,11 @@
 				<dt>&{'facebook-id'}</dt>
 				<dd>
 					${user.facebookName}
-					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'connect-with-your-facebook-account'}"></i>
-					<a href="https://www.facebook.com/add.php?api_key=731388346951866&pages">&{'install-widgr-app-to-your-facebook-page'}</a>
+					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'connect-with-your-facebook-account'}"></i><br/>
+					#{if user.facebookId != null}
+					<a href="/facebook/clear?${request.url.urlEncode()}">&{'clear-facebook-id'}</a><br/>
+					<a target="_blank" href="https://www.facebook.com/add.php?api_key=731388346951866&pages">&{'install-widgr-app-to-your-facebook-page'}</a><br/>
+					#{/if}
 				</dd>
 			</dl>
 			#{/if}
