@@ -1,6 +1,6 @@
 package controllers;
 
-import google.LiveStreams;
+import google.GoogleCalendarClient;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -41,10 +41,10 @@ public class Events extends BaseController
         checkAuthorizedAccess();
     }
 
-    public static void events()
+    public static void events() throws Exception
     {
         final Boolean showArchived = false;
-        //final Boolean showGoogleEvents = true;
+        final Boolean googleCalSync = request.params.get("gcal") != null && request.params.get("gcal").equals("true") ? true : false;
         final DateTimeUtils dt = new DateTimeUtils(DateTimeUtils.TYPE_OTHER);
         final Date from = dt.fromJson(request.params.get("start"));
         final Date to = dt.fromJson(request.params.get("end"));
@@ -88,26 +88,16 @@ public class Events extends BaseController
             }
         }
 
-        //        if (user != null && showGoogleEvents)
-        //        {
-        //            if (user.googleCalendarId == null)
-        //            {
-        //                String id = CalendarClient.getPrimaryCalendar(user);
-        //                System.err.println(id);
-        //                User usr = getLoggedUserNotCache();
-        //                usr.googleCalendarId = id;
-        //                usr.save();
-        //                clearUserFromCache();
-        //            } else
-        //            {
-        //                List<EventDTO> eventsDtoGoogle = CalendarClient.getEvents(user, user.googleCalendarId, from, to);
-        //                for (EventDTO eDto : eventsDtoGoogle)
-        //                {
-        //                    if (!eventsDto.contains(eDto))
-        //                        eventsDto.add(eDto);
-        //                }
-        //            }
-        //        }
+        // google calendar sync
+        if (user != null && googleCalSync && user.googleCalendarId != null)
+        {
+            List<EventDTO> eventsDtoGoogle = GoogleCalendarClient.getEvents(user, from, to);
+            for (EventDTO eDto : eventsDtoGoogle)
+            {
+                if (!eventsDto.contains(eDto))
+                    eventsDto.add(eDto);
+            }
+        }
 
         for (EventDTO eventDTO : eventsDto)
             if (eventDTO.invisible)
@@ -115,30 +105,30 @@ public class Events extends BaseController
         renderJSON(eventsDto);
     }
 
-    public static void hangoutYoutubeId(String id)
-    {
-        final User user = getLoggedUser();
-        LiveStreams.getStream(user.uuid);
-        redirect("https://hangouts.google.com/onair");
-    }
-
-    public static void hangoutYoutubeIdRest(String id)
-    {
-        final User user = getLoggedUser();
-        final String youtubeId = LiveStreams.getStream(user.uuid);
-        final Event event = Event.get(id);
-        event.youtubeId = youtubeId;
-        event.save();
-        if (youtubeId != null)
-        {
-            JsonObject jo = new JsonObject();
-            jo.addProperty("youtube", youtubeId);
-            renderJSON(jo);
-        }
-        JsonObject jo = new JsonObject();
-        jo.addProperty("resp", youtubeId);
-        renderJSON(jo);
-    }
+    //    public static void hangoutYoutubeId(String id)
+    //    {
+    //        final User user = getLoggedUser();
+    //        LiveStreams.getStream(user.uuid);
+    //        redirect("https://hangouts.google.com/onair");
+    //    }
+    //
+    //    public static void hangoutYoutubeIdRest(String id)
+    //    {
+    //        final User user = getLoggedUser();
+    //        final String youtubeId = LiveStreams.getStream(user.uuid);
+    //        final Event event = Event.get(id);
+    //        event.youtubeId = youtubeId;
+    //        event.save();
+    //        if (youtubeId != null)
+    //        {
+    //            JsonObject jo = new JsonObject();
+    //            jo.addProperty("youtube", youtubeId);
+    //            renderJSON(jo);
+    //        }
+    //        JsonObject jo = new JsonObject();
+    //        jo.addProperty("resp", youtubeId);
+    //        renderJSON(jo);
+    //    }
 
     public static void event(String action,
         String newEvent,
@@ -181,7 +171,6 @@ public class Events extends BaseController
             if (!user.hasValidPaymentAccount())
             {
                 flash.success(Messages.get("setup-paypal-account-warning"));
-                //"To create paid Event you must set up your Paypal Account first <a href='/settings?edit=true#paypal'>Set up Paypal Account</a>");
             }
             if (!user.paidForCurrentMonth())
             {
@@ -326,7 +315,6 @@ public class Events extends BaseController
             validation.addError("time", "Invalid time range");
         if (!charging.equals(Event.EVENT_CHARGING_FREE) && !user.hasValidPaymentAccount())
         {
-            // "Invalid Paypal account, set the paypal account first <a href='/settings?edit=true#paypal'>Set up Paypal Account</a>");
             validation.addError("charging", Messages.get("invalid-paypal-account-warning"));
             flash.error(Messages.get("invalid-paypal-account-warning"));
         }
@@ -447,7 +435,7 @@ public class Events extends BaseController
         if (proposal)
         {
             final String subject = Messages.get("new-event-proposed-for-channel-subject", event.listing.title);
-            final String message = Messages.get("new-event-proposed-for-channel-message", event.listing.title, getBaseUrl() + "event/" + event.uuid);
+            final String message = Messages.get("new-event-proposed-for-channel-message", event.customer.getFullName(), event.listing.title, getBaseUrl() + "event/" + event.uuid);
             Message.createNotification(user, userTo, subject, message);
             new EmailNotificationBuilder()
                     .setFrom(user)
@@ -472,8 +460,27 @@ public class Events extends BaseController
             act.eventName = event.listing.title;
             act.saveActivity();
         }
+
+        // google event sync
+
         createDefaultAttendances(userTo, customer, event, true, proposal);
         renderJSON(EventDTO.convert(event, user));
+    }
+
+    public static void eventSyncGoogleRest(String uuid)
+    {
+        System.err.println("uuid " + uuid);
+        final User user = getLoggedUser();
+        final Event event = Event.get(uuid);
+        // google event sync
+        if (event.googleId == null)
+        {
+            event.googleId = event.uuid;
+            event.save();
+        }
+        if (user.syncWithGoogle())
+            GoogleCalendarClient.upsertGoogleEvent(user, event, getBaseUrl());
+        renderText("ok");
     }
 
     public static void eventUpdateRest()
@@ -520,6 +527,11 @@ public class Events extends BaseController
             forbidden();
 
         event.deleteEvent();
+
+        // google event sync
+        if (user.syncWithGoogle())
+            GoogleCalendarClient.deleteGoogleEvent(user, event);
+
         renderJSON(EventDTO.convert(event, user));
     }
 
@@ -545,9 +557,23 @@ public class Events extends BaseController
         // permissions check
         if (user == null || !user.isOwner(e))
             forbidden();
-
         e.state = Event.EVENT_STATE_USER_ACCEPTED;
         e.save();
+
+        // notification
+        final String subject = Messages.get("your-proposal-approved-subject", user.getFullName());
+        final String body = Messages.get("your-proposal-approved-message", user.getFullName(), e.listing.title, getBaseUrl() + "event/" + e.uuid);
+        if (e.customer != null)
+            Message.createNotification(user, e.customer, subject, body);
+        if (e.customer != null && e.customer.emailNotification)
+        {
+            EmailNotificationBuilder eb = new EmailNotificationBuilder();
+            eb.setTo(e.customer);
+            eb.setFrom(user)
+                    .setSubject(subject)
+                    .setMessageWiki(body)
+                    .send();
+        }
 
         final Activity act = new Activity();
         act.type = Activity.ACTIVITY_EVENT_APPROVED;
@@ -561,23 +587,29 @@ public class Events extends BaseController
 
     public static void decline(String event, String url)
     {
-        final User user = getLoggedUser();
+        final User user = getLoggedUserNotCache();
         final Event e = Event.get(event);
 
         // permissions check
         if (user == null || !user.isOwner(e))
             forbidden();
 
-        e.state = Event.EVENT_STATE_USER_ACCEPTED;
-        e.save();
+        // notification
+        final String subject = Messages.get("your-proposal-declined-subject", user.getFullName());
+        final String body = Messages.get("your-proposal-declined-message", user.getFullName(), e.listing.title, getBaseUrl() + "channel/" + e.listing.uuid);
+        if (e.customer != null)
+            Message.createNotification(user, e.customer, subject, body);
+        if (e.customer != null && e.customer.emailNotification)
+        {
+            EmailNotificationBuilder eb = new EmailNotificationBuilder();
+            eb.setTo(e.customer);
+            eb.setFrom(user)
+                    .setSubject(subject)
+                    .setMessageWiki(body)
+                    .send();
+        }
 
-        final Activity act = new Activity();
-        act.type = Activity.ACTIVITY_EVENT_APPROVED;
-        act.user = user;
-        act.event = e;
-        act.eventName = e.listing.title;
-        act.saveActivity();
-
+        e.deleteEvent();
         redirectTo(url);
     }
 

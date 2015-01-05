@@ -34,10 +34,19 @@ public class Contacts extends BaseController
     {
         User user = getLoggedUser();
         User u = User.getUserByLogin(email);
+
+        validation.email(email);
+        validation.required(email);
+        if (validation.hasErrors())
+        {
+            flash.error(Messages.get("invalid-email"));
+            contacts();
+        }
+
         if (u != null)
         {
             validation.addError("error", "");
-            flash.error(Messages.get("is-already-registered", email));
+            flash.success(Messages.get("is-already-registered", email, email));
             params.put("email", email);
             params.flash();
             validation.keep();

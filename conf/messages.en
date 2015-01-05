@@ -1,17 +1,17 @@
 
 #Accounts.java
-you-need-at-least-one-listing=To become a Publisher you need at least one channel
+you-need-at-least-one-listing=To become a Publisher You need at least one channel
 please-fill-in-information-about-you=To become a Publisher please fill in information about you
 
 #Admin.java
 publisher-request-approved-subject=Your request for publisher was approved
-publisher-request-approved-message=h3. Your request for publisher was approved\n From now all your channels are visible and you will be able to publish events.
+publisher-request-approved-message=h3. Your request for publisher was approved \nFrom now all your channels are visible and you can make full use of your account.
 publisher-request-declined-subject=Your request for publisher was declined
-publisher-request-declined-message=h3. Your request for publisher was declined\n Please review your personal information and channels.
+publisher-request-declined-message=h3. Your request for publisher was declined \nPlease complete your personal information and channels and try again. Remember you can always us what needs to be corrected in order to be later successfully approved.
 
 #Application.java
 start-helping-others=Start helping others and become Publisher. <a href='/settings/request-publisher'>Request for publisher account here</a> or <a href='/help#publisher'>learn more</a>
-click-and-drag-to-create-event=Click and drag to create event request
+click-and-drag-to-create-event=Click and drag to create a request for session
 
 #Attendances.java
 blocked-contact=This contact is blocked
@@ -23,32 +23,40 @@ blocked-contact=This contact is blocked
 #Comments.java
 
 #Contacts.java
-is-already-registered=This contact is already registered
+invalid-email=Invalid email address
+send-invitation=Send invitation
+is-already-registered=Contact %s is already registered. <a href='/user/%s'>Go to profile</a>
 invited-you-to-widgr-subject=%s invited You to Widgr
 invitation-sent-to=Invitation has been successfully sent to %s 
 view-on-widgr=View on Widgr
 
 #Events.java
-setup-paypal-account-warning=Setup paypal account warning
+setup-paypal-account-warning=To create paid session you must set up your Paypal account first. <a href='/settings?edit=true#paypal'>Set up your Paypal account here</a>
 you-have-not-paid-for-current-month=You have not paid for current month
-invalid-paypal-account-warning=Invalid paypal account warning
-new-event-proposed-for-channel-subject=New event proposed for channel %s
-new-event-proposed-for-channel-message=New event proposed for channel [%s|%s]
+invalid-paypal-account-warning=To create paid session you must set up your Paypal account first. <a href='/settings?edit=true#paypal'>Set up your Paypal account here</a>
+new-event-proposed-for-channel-subject=New session was requested for channel %s
+new-event-proposed-for-channel-message=h3. New session request \n%s requested new session [%s|%s]. Please visit the link to review and approve or decline this request.
 you-have-been-invited-subject=%s invited you to join event %s
 you-have-been-invited-message=Invited you to join event %s
+your-proposal-declined-subject=%s declined your request
+your-proposal-declined-message=h3. Your session request was declined \n%s declined your request for channel %s
+your-proposal-approved-subject=%s accepted your request
+your-proposal-approved-message=h3. Your session request was approved \n%s accepted your request [%s|%s] 
 
 #FileuploadController.java
 
 #GoogleOAuth.java
+oauth-successfull=Google Calendar authorization successfull
+oauth-error=Google Calendar authorization failed
 
 #Hangout.java
 invitation-to-video-call-subject=Invitation to video call
-invitation-to-video-call-message=h3. %s invited you to video call.\n [Click here to join this video call|%s]
+invitation-to-video-call-message=h3. %s invited you to video call. \n[Click here to join this video call|%s]
 
 #Listings.java
 
 #Notifications.java
-message-sent-successfully=Message sent successfully
+message-sent-successfully=Message has been sent
 
 #PaymentController.java
 
@@ -58,7 +66,8 @@ message-sent-successfully=Message sent successfully
 
 #Registration.java
 password-reset-subject=Your password has been reseted
-password-reset-message=<h3>Your password has been reseted</h3>New password: <strong>%s</strong><br/>It is highly recommended to <a href="%s">change it immediately</a>
+password-reset-message=h3. Your password has been reseted \nNew password: *%s* \nIt is highly recommended to [change it immediately|%s]
+password-message=Password has been reseted. Now check your email.
 login-already-used=This login is already used
 account-activation-subject=Your account has been created
 account-activation-message=<h3>Welcome to Widgr!</h3>You're almost there! Please click the link below to confirm your Widgr account.<br/><a href='%sregistration/activate?uuid=%s'>Account activation link</a><br/>Here are a few things to help you get started width Widgr:<ul><li><a href='%shelp#publisher'>How to become a Publisher</a></li><li><a href='%shelp#facebook'>How to connect your account with Facebook</a></li><li><a href='%shelp#google'>How to sync Widgr events with Google Calendar</a></li><li><a href='%shelp#paypal'>How to set up Paypal payments for Publishers</a></li></ul>
@@ -209,7 +218,7 @@ hrs=Hrs
 email-notifications=Email notifications
 enable-or-disable-email-notifications=Enable or disable email notifications
 facebook-id=Connect Facebook
-clear-facebook-id=Clear Facebook settings
+clear-facebook-id=Disconnect Facebook Account
 connect-with-your-facebook-account=Connect Widgr with your facebook account. You will be able to login to Widgr using your facebook account.
 install-widgr-app-to-your-facebook-page=Install widgr app to your facebook page
 first-name=First name
@@ -237,8 +246,12 @@ cal.wednesday=Cal.wednesday
 cal.thursday=Cal.thursday
 cal.friday=Cal.friday
 cal.saturday=Cal.saturday
-sync-with-google=Sync with google
-enable-google-calendar-sync=Enable google calendar sync
+sync-with-google=Google Calendar
+sync-with-google-cal=Sync with Google
+enable-google-calendar-sync=Connect with Google calendar
+google-calendar-sync-with=Synced with calendar: 
+google-calendar-status=connected
+disable-google-calendar-sync=Disconnect current Google calendar
 start-of-working-hours=Start of working hours
 end-of-working-hours=End of working hours
 paypal-account=Paypal account
@@ -504,7 +517,7 @@ stop-instant-broadcast=Stop instant broadcast
 start-hangout=Start hangout
 join-hangout=Join hangout
 edit-event=Edit event
-delete-selected-item=Delete selected item
+delete-selected-item=Confirm your choice
 delete-event=Delete event
 star-instant-broadcast=Star instant broadcast
 go-to-private-room=Go to private room
@@ -512,6 +525,7 @@ edit-channel=Edit channel
 delete-channel=Delete channel
 
 #listing.html
+confirm-decline=Confirm your choice
 create-new-channel=Create new channel
 play-introduction=Play introduction
 total-price=Total price
@@ -615,7 +629,7 @@ login.return=Login.return
 #userTop.html
 edit-profile=Edit profile
 last-online=Last online
-public calendar=Public calendar
+public-calendar=Public calendar
 followers=Followers
 
 #wiki.html
@@ -657,7 +671,7 @@ cal.thu=Cal.thu
 cal.fri=Cal.fri
 cal.sat=Cal.sat
 New event=New event
-add-google-event=Add google event
+add-google-event=Convert Google event to Widgr
 
 #dashboard.js
 
@@ -743,7 +757,7 @@ eventMoved=Changed time for event <a class=popup-event-edit href=/event/%s>%s</a
 eventUpdatedUsr=Updated event <a class=popup-event-edit href=/event/%s>%s</a>
 eventUpdatedCust=Updated event <a class=popup-event-edit href=/event/%s>%s</a>
 eventApproved=Approved event <a class=popup-event-edit href=/event/%s>%s</a>
-eventDeclined=Declined event <a class=popup-event-edit href=/event/%s>%s</a>
+eventDeclined=Declined event %s
 eventCommented=Added comment on event <a class=popup-event-edit href=/event/%s>%s</a>
 eventCommentedCust=Added comment on event <a class=popup-event-edit href=/event/%s>%s</a>
 eventStarted=Event <a class=popup-event-edit href=/event/%s>%s</a> just started

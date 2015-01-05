@@ -79,7 +79,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">&{'cancel'}</span></button>
-        <h3 class="modal-title" id="myModalLabel"><i class="fa fa-link"></i> &{'share'}</h3>
+        <h3 class="modal-title" id="myModalLabel"><i class="icon-users"></i><i style="position:relative;right:7px"class="fa fa-plus"></i> &{'share'}</h3>
       </div>
       <div class="modal-body">
 	    <div class="form-group">
@@ -131,6 +131,7 @@
 			  		    
 			  	  	$(".invite-container").append("<label class='invite-item'>"+$("#dialog-invite-input").val()+"</label>");
 			  		$("#dialog-invite-input").val("");
+			  		$(".invite-share").removeAttr('disabled');
 			  	});
 			  	$(document).on("click", ".invite-share", function(){
 			  	  	var data = {};
@@ -141,12 +142,13 @@
 			  	    	$(".invite-container").html("");
 			  	    	star.invites = [];
 			  	    	$(".dialog-close").click();
+				  		$(".invite-share").attr('disabled','disabled');
 			  	  	});
 			  	});
 		</script>    
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default btn-short invite-share">&{'share'}</button>
+        <button type="button" class="btn btn-default btn-short invite-share" disabled="disabled">&{'share'}</button>
         <button type="button" class="btn btn-light-gray btn-short dialog-close" data-dismiss="modal">&{'cancel'}</button>
       </div>
     </div>
@@ -161,7 +163,7 @@
 			<button type="button" id="controls-mute" class="controls btn btn-dark btn-medium" title="&{'mute'}"><i class="icon-sound"></i></button>
 			<button type="button" id="controls-camera" class="controls btn btn-dark btn-medium" title="&{'turn-camera-off'}"><i class="icon-camera"></i></button>
 			<button type="button" id="screenShareButton" class="controls btn btn-dark btn-medium" title="&{'share-your-screen'}"><i class="fa fa-desktop"></i></button>
-			<button class="controls btn btn-dark btn-medium" data-toggle="modal" data-target="#myModal" title="&{'share'}"><i class="fa fa-link"></i></button>
+			<button class="controls btn btn-dark btn-medium" data-toggle="modal" data-target="#myModal" title="&{'share'}"><i class="icon-users"></i><i style="position:absolute;right:7px"class="fa fa-plus"></i></button>
 			<a href="${request.url}" class="btn btn-dark btn-medium" title="&{'refresh'}"><i class="fa fa-refresh"></i></a>
 			<button type="button" id="controls-hangup" class="controls btn btn-danger btn-medium" title="&{'hang-up'}"><i class="fa fa-phone"></i></button>
 		</div>

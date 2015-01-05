@@ -79,6 +79,11 @@ star.utils.getCookie = function(cname) {
     return "";
 }
 
+star.utils.deleteCookie = function(cname) {
+    document.cookie = name + '=; Max-Age=0'
+    return "";
+}
+
 
 // other libs
 

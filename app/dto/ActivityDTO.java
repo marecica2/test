@@ -71,7 +71,7 @@ public class ActivityDTO extends Model
         if (Activity.ACTIVITY_EVENT_APPROVED.equals(a.type))
             aDto.message = a.getText(a.event.uuid, a.eventName);
         if (Activity.ACTIVITY_EVENT_DECLINED.equals(a.type))
-            aDto.message = a.getText(a.event.uuid, a.eventName);
+            aDto.message = a.getText(a.eventName);
         if (Activity.ACTIVITY_EVENT_COMMENTED.equals(a.type))
             aDto.message = a.getText(a.event.uuid, a.eventName);
         if (Activity.ACTIVITY_EVENT_COMMENTED_CUSTOMER.equals(a.type))

@@ -463,6 +463,10 @@ img {
 	cursor: pointer !imporant;
 }
 
+.fc-event-inner{
+	cursor: pointer !imporant;
+}
+
 @font-face {
     font-family: 'segoe_uilight';
     src: url('segoeuil-webfont.eot');

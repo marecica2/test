@@ -330,10 +330,6 @@
 			
 			
 
-			
-			
-			
-	  		<br/>				    
 			<h3>&{'About You'}</h3>
 			<div class="separator-2"></div>
 			#{if !edit}
@@ -407,15 +403,12 @@
 			#{/else}	
 			
 			
-			
-	  	
-	  		<br/>
 			<h3>&{'your-calendar'}</h3>
 			<div class="separator-2"></div>
 			#{if !edit}
 			<dl class="dl-horizontal">
 				<dt>&{'working-hours'}</dt>
-				<dd>${start} - ${end} &{'hrs'}</dd>
+				<dd>${user.workingHourStart} - ${user.workingHourEnd} &{'hrs'}</dd>
 				<dt>&{'hidden-days'}</dt>
 				<dd>
 					#{if user.hiddenDays != null}
@@ -430,8 +423,16 @@
 				</dd>
 				<dt>&{'sync-with-google'}</dt>
 				<dd>
-					<a href="/google?url=${request.url.urlEncode()}">&{'enable-google-calendar-sync'}</a>
-					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'enable-google-calendar-sync'}"></i>
+					<div>
+						#{if user.googleCalendarId}
+						<span class="">&{'google-calendar-sync-with'} ${user.googleCalendarId}</span>
+						#{/if}
+						<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'enable-google-calendar-sync'}"></i>
+					</div>
+					<div><a href="/google?url=${request.url.urlEncode()}">&{'enable-google-calendar-sync'}</a></div>
+					#{if user.googleTokenExpires}
+						<div><a href="/google/clear?url=${request.url.urlEncode()}">&{'disable-google-calendar-sync'}</a></div>
+					#{/if}
 				</dd>
 			</dl>
 `			
@@ -526,6 +527,20 @@
 			    </div>
 				<div class="error">#{error 'hiddenDays' /}</div>
 			</div>			
+			
+			<div class="form-group">
+				<label for="" class="col-sm-2 control-label">&{'google-calendar-id'}</label>
+			    <div class="col-sm-10">
+					<select class="form-control" name="googleCalendarId" id="googleCalendarId">
+						#{if calendars}
+						#{list items:calendars, as:'item'}
+							<option #{if user.googleCalendarId == item.id} selected='selected'#{/if} value="${item.id}">${item.summary} #{if item.primary}(&{'primary'})#{/if}</option>
+						#{/list}
+						#{/if}
+					</select>
+					<div class="error">#{error 'workingHourStart' /}</div>
+			    </div>
+			</div>
 			#{/else}
 					
 

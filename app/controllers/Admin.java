@@ -1,6 +1,8 @@
 package controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
 
@@ -27,7 +29,12 @@ public class Admin extends BaseController
     {
         final User user = getLoggedUser();
         final List<User> users = User.getUsers();
-        render(user, users);
+        final Map<String, User> usersMap = new HashMap<String, User>();
+        for (User user2 : users)
+        {
+            usersMap.put(user2.referrerToken, user2);
+        }
+        render(user, users, usersMap);
     }
 
     public static void refreshIndexes(String url)

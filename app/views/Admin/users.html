@@ -22,8 +22,9 @@
 				<thead>
 					<tr>
 						<th>Name</th>
-						<th>Email</th>
-						<th>Role</th>
+						<th>Account type</th>
+						<th>Account plan</th>
+						<th>Referrer</th>
 						<th>Status</th>
 						<th>Actions</th>
 					</tr>
@@ -35,10 +36,16 @@
 							<a href="/user/${item.login}">${item.fullName}</a>
 						</td>
 						<td>
-							${item.login}
+							${item.account.type}
 						</td>
 						<td>
-							${item.account.type}
+							${item.account.currentPlan()}
+						</td>
+						<td>
+							#{if item.registrationToken && usersMap.get(item.registrationToken) != null}
+								<img class="avatar16" src="/${usersMap.get(item.registrationToken).avatarUrl}_32x32">
+								<a href="/user/${usersMap.get(item.registrationToken).login}">${usersMap.get(item.registrationToken).fullName}</a>
+							#{/if}
 						</td>
 						<td>
 							#{if false}

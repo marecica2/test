@@ -1,18 +1,19 @@
 package controllers;
 
+import google.GoogleCalendarClient;
+
 import java.net.URISyntaxException;
 import java.util.Date;
-import java.util.List;
 
 import models.User;
 
 import org.apache.http.client.utils.URIBuilder;
 
+import play.i18n.Messages;
 import play.libs.WS;
 import play.libs.WS.HttpResponse;
 import utils.PostParamsBuilder;
 
-import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 
 public class GoogleOAuth extends BaseController
@@ -20,12 +21,9 @@ public class GoogleOAuth extends BaseController
     public static final String GOOGLE_OAUTH_ENDPOINT = "https://accounts.google.com/o/oauth2/auth";
     public static final String GOOGLE_OAUTH_TOKEN = "https://accounts.google.com/o/oauth2/token";
     public static final String GOOGLE_OAUTH_REFRESH_TOKEN = "https://www.googleapis.com/oauth2/v3/token";
-
     public static final String CLIENT_ID = "647254293629-rfkfigbph07td6gl9h8lnstdjtebfng4.apps.googleusercontent.com";
     public static final String CLIENT_SECRET = "kHWp9OYZETjUjXvNN4-_HfZG";
     public static final String REDIRECT_URI = "https://localhost:10001/google-oauth";
-
-    public static List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube.readonly", "https://www.googleapis.com/auth/calendar");
 
     // creates requestTokenUrl
     private static String getRequestTokenUrl(User user, String url)
@@ -38,7 +36,8 @@ public class GoogleOAuth extends BaseController
                     .addParameter("response_type", "code")
                     .addParameter("client_id", CLIENT_ID)
                     .addParameter("redirect_uri", getProperty(CONFIG_GOOGLE_OAUTH_CALLBACK))
-                    .addParameter("scope", "https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/calendar")
+                    .addParameter("scope", "https://www.googleapis.com/auth/calendar")
+                    //.addParameter("scope", "https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/calendar")
                     .addParameter("state", url)
                     .addParameter("access_type", "offline")
                     .addParameter("approval_prompt", "auto")
@@ -91,15 +90,14 @@ public class GoogleOAuth extends BaseController
     public static void authorize(String url) throws Exception
     {
         User user = getLoggedUserNotCache();
-
         // token is valid
-        if (user.googleTokenExpires != null && user.googleAccessToken != null && user.googleTokenExpires.getTime() > System.currentTimeMillis())
+        if (user.googleTokenExpires != null && user.googleAccessToken != null && user.googleRefreshToken != null && user.googleTokenExpires.getTime() > System.currentTimeMillis())
         {
             redirect(url);
         }
 
         // token is expired need to refresh
-        else if (user.googleTokenExpires != null && user.googleAccessToken != null && user.googleTokenExpires.getTime() < System.currentTimeMillis())
+        else if (user.googleTokenExpires != null && user.googleRefreshToken != null && user.googleAccessToken != null && user.googleTokenExpires.getTime() < System.currentTimeMillis())
         {
             refreshToken(user);
         }
@@ -109,6 +107,7 @@ public class GoogleOAuth extends BaseController
         {
             redirect(getRequestTokenUrl(user, url));
         }
+        user.save();
     }
 
     public static String getAccessToken()
@@ -131,6 +130,13 @@ public class GoogleOAuth extends BaseController
             redirect(getRequestTokenUrl(user, url));
         }
         return null;
+    }
+
+    public static boolean revokeToken()
+    {
+        User user = getLoggedUserNotCache();
+        WS.url("https://accounts.google.com/o/oauth2/revoke?token=" + user.googleAccessToken).get();
+        return true;
     }
 
     // oauth callback
@@ -166,6 +172,12 @@ public class GoogleOAuth extends BaseController
                 user.googleRefreshToken = refreshToken;
             user.save();
 
+            // get default calendar
+            if (user.googleCalendarId == null)
+                user.googleCalendarId = GoogleCalendarClient.getPrimaryCalendar(user);
+            user.save();
+            flash.success(Messages.get("oauth-successfull"));
+
         } catch (Exception e)
         {
             // delete invalid tokens
@@ -173,9 +185,9 @@ public class GoogleOAuth extends BaseController
             user.googleTokenExpires = null;
             user.googleRefreshToken = null;
             user.save();
+            flash.error(Messages.get("oauth-error"));
         }
 
-        flash.success("Oauth successfull");
         flash.keep();
         redirect(state);
     }

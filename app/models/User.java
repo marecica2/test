@@ -284,4 +284,11 @@ public class User extends Model
             return false;
         return true;
     }
+
+    public boolean syncWithGoogle()
+    {
+        if (this.googleTokenExpires != null && this.googleCalendarId != null && this.googleAccessToken != null)
+            return true;
+        return false;
+    }
 }

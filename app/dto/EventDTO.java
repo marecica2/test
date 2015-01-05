@@ -183,8 +183,14 @@ public class EventDTO
             return false;
 
         EventDTO other = (EventDTO) obj;
-        if (googleId != null && other.googleId != null && googleId.equals(other.googleId))
-            return true;
+
+        if (googleId != null && other.googleId != null)
+        {
+            if (googleId.equals(other.googleId))
+                return true;
+            else
+                return false;
+        }
 
         if (uuid == null)
         {
@@ -192,6 +198,7 @@ public class EventDTO
                 return false;
         } else if (!uuid.equals(other.uuid))
             return false;
+
         return true;
     }
 
@@ -207,6 +214,28 @@ public class EventDTO
         e.eventStart = dtf.parseDateTime(start).getMillis();
         e.eventEnd = dtf.parseDateTime(end).getMillis();
         e.title = event.get("summary").getAsString();
+        if (user != null)
+        {
+            e.createdByName = user.getFullName();
+            e.createdByLogin = user.login;
+            e.createdBy = user.uuid;
+            e.createdByAvatarUrl = user.avatarUrl;
+        }
+        return e;
+    }
+
+    public static EventDTO convertGoogleEvent(com.google.api.services.calendar.model.Event event, User user)
+    {
+        EventDTO e = new EventDTO();
+        e.color = "#000000";
+        e.googleId = event.getId();
+        e.eventStart = event.getStart().getDateTime().getValue();
+        e.eventEnd = event.getEnd().getDateTime().getValue();
+        e.title = event.getSummary();
+        e.description = event.getDescription();
+        e.invisible = false;
+        e.isEditable = false;
+        e.isOwner = true;
         if (user != null)
         {
             e.createdByName = user.getFullName();

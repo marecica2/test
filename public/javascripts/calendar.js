@@ -8,6 +8,7 @@ $(document).ready(function() {
     $(".event-dialog-save").click(starEvent.saveEventDialog);
     $(".event-dialog-save-notify").click(starCalendar.saveNotifyEventDialog);
     $(".event-dialog-create").click(starCalendar.popupSaveNewEvent);
+    $(".event-dialog-sync").click(starCalendar.syncGoogle);
     $(".event-dialog-propose").click(starCalendar.popupSaveNewEventPropose);
     $(document).on("click", ".dialog-invite-delete", starEvent.inviteDelete);
     $(document).on("click", ".dialog-invite-accept", starEvent.inviteAccept);
@@ -30,7 +31,8 @@ $(document).ready(function() {
         }
         if(click){
             var data = {};
-            data.type = cal; 
+            data.type = cal;
+            star.utils.deleteCookie("agenda");
             document.cookie="agenda="+cal;
         }
     });    
@@ -62,9 +64,7 @@ $(document).ready(function() {
     
     $("#popup-close").click(function(){
         starCalendar.calendar.fullCalendar('unselect');
-        var popup = $("#myPopover");
         $('#myPopover').modal('hide');
-        //popup.hide();
     });
 
     
@@ -103,6 +103,23 @@ $(document).ready(function() {
     
     if(starCalendar.defaultView == "")
         starCalendar.defaultView = "agendaWeek";
+ 
+    
+    // sync with gcal
+    var gcal = star.utils.getCookie("gcal");
+    if(gcal != undefined && gcal == "true"){
+        $("#google-checkbox").prop('checked', true);    
+        document.cookie="gcal=true";
+    } 
+    $("#google-checkbox").change(function(){
+        if($(this).is(":checked")){
+            document.cookie="gcal=true";
+            starCalendar.calendar.fullCalendar( 'refetchEvents' );
+        } else {
+            document.cookie="gcal=false";
+            starCalendar.calendar.fullCalendar( 'refetchEvents' );
+        }
+    })
     
     starCalendar.options = {
             header: {
@@ -215,11 +232,16 @@ starCalendar.decorateEvent = function(event, element, view){
 
 
     
+starCalendar.syncGoogle = function(){
+    $.get("/event-sync-google?uuid="+starCalendar.selectedEvent.uuid);
+    starCalendar.calendar.fullCalendar('refetchEvents');
+    $('#myPopover').modal('hide');
+}
+
 starCalendar.popupSaveNewEventPropose = function(){
     starCalendar.popupSaveNewEvent(true);
 }
 
-    
 // popup save is clicked
 starCalendar.popupSaveNewEvent = function(proposal){
     // save to backend
@@ -280,6 +302,7 @@ starCalendar.selectionNewEvent = function(ccc, start, end, allDay, event) {
         star.selectedEvent = null;
     }
     
+    $(".event-dialog-sync").hide();
     $(".event-time-from").html("");
     $(".event-time-to").html("");
     $("#timepicker1").val();
@@ -290,10 +313,8 @@ starCalendar.selectionNewEvent = function(ccc, start, end, allDay, event) {
     $(".popup-new-event").show();
     $(".popup-event-view").hide();
     $(".popup-event-description").html("");
-    $('#myPopover').modal('show');
     $("#popup-event-title").val("");
     $("#popup-event-title").focus();
-    $('#myPopover').modal('show');
     $(".event-dialog-propose").show();
     $(".event-dialog-create").show();
 
@@ -303,25 +324,23 @@ starCalendar.selectionNewEvent = function(ccc, start, end, allDay, event) {
         $('.timepicker1').val((now.getHours()<10?'0':'') + now.getHours()+":"+(now.getMinutes()<10?'0':'') + now.getMinutes());
         $('.timepicker2').val((later.getHours()<10?'0':'') + later.getHours()+":"+(later.getMinutes()<10?'0':'') + later.getMinutes());
     }
+
+    $('#myPopover').modal('show');
 };
 
 
 starCalendar.clickEvent = function(event, jsEvent, view) {
-    // show hide appropriate content
     starCalendar.selectedEvent = event;
-    var popup = $("#myPopover");
-    
+    console.log(event);
     // copy values to the event detail page dialog
     if(event.uuid != undefined){
         starEvent.inviteLoad(event.uuid, function(){
             starCalendar.copyValuesToDialog(event);
-            if(event.uuid.length > 0){
-                $('#myPopover').modal('show');
-            }
+            $('#myPopover').modal('show');
         });
     }
 
-    if(event.googleId != null){
+    if(event.uuid == undefined && event.googleId != null){
         if(starCalendar.listings)
             starCalendar.selectionNewEvent(starCalendar.calendar, event.start, event.end, false, event);
     }
@@ -331,7 +350,6 @@ starCalendar.clickEvent = function(event, jsEvent, view) {
 };
 
 starCalendar.copyValuesToDialog = function(event){
-    var popup = $("#myPopover");
     
     // event details in dialog
     $(".event-edit").hide();
@@ -365,7 +383,7 @@ starCalendar.copyValuesToDialog = function(event){
     if(event.state == 'customer_created' && event.isOwner){
         $(".popup-event-approvement").show();
     }
-    
+    $(".event-dialog-sync").show();
     $(".event-dialog-propose").hide();
     $(".event-dialog-create").hide();
     if(!event.editable){
@@ -402,7 +420,7 @@ starCalendar.copyValuesToDialog = function(event){
         }
     });    
     
-    $(".event-createdByName").html("<a href='/user/"+event.createdByLogin+"/calendar'><i class='fa fa-calendar'></i></a> <img class='img-circle avatar22' src='/"+event.createdByAvatarUrl+"'> <a href='/public/user?id="+event.createdBy+"'>" + event.createdByName + "</a>");
+    $(".event-createdByName").html("<img class='img-circle avatar22' src='/"+event.createdByAvatarUrl+"'> <a href='/public/user?id="+event.createdBy+"'>" + event.createdByName + "</a>");
     $(".event-title-label").val(event.title);
     $(".event-title-label").html(event.title);
     
@@ -458,10 +476,16 @@ starCalendar.getEvents = function(start, end, callback) {
         url = "start="+start.toJSON()+"&end="+end.toJSON()+"&uuid="+starCalendar.userUUID+"&user="+starCalendar.userDisplayedLogin+"&type=request";
     }
     
+    if(star.utils.getCookie("gcal") != undefined && star.utils.getCookie("gcal") == "true")
+        url += "&gcal=true";
+    else {
+        url += "&gcal=false";
+    }
     starCalendar.start = start;
     starCalendar.end = end;
     var params = {};
     params.url = url;
+    params.gcal = star.utils.getCookie("gcal");
     starServices.getItems("", params, function(data){
         var events = [];
         var d = new Date();
@@ -523,9 +547,9 @@ starCalendar.getEvents = function(start, end, callback) {
             else
                 event.editable = false;
 
-            if(ev.googleId != null){
-                event.googleId = ev.googleId;
-                event.editable = true;
+            event.googleId = ev.googleId;
+            if(ev.googleId != null && ev.uuid == null){
+                event.editable = false;
             }
 
             // update selected event 

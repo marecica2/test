@@ -6,6 +6,9 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import models.User;
+
+import org.apache.commons.codec.binary.Base64;
+
 import play.Logger;
 import play.data.validation.Required;
 import play.i18n.Messages;
@@ -14,8 +17,6 @@ import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.utils.Java;
-
-import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 
 public class Secure extends BaseController
 {
@@ -118,15 +119,15 @@ public class Secure extends BaseController
         checkAuthenticity();
         User user = User.getUserByFacebook(id);
         String[] parts = signedRequest.split("\\.");
-        final String encoded = parts[0];
-        final String expected = encode("8250fede980433de1fac794c3c205548", parts[1]);
+        final String encoded = parts[0].trim();
+        final String expected = encode("8250fede980433de1fac794c3c205548", parts[1]).trim();
 
-        //System.err.println("encoded " + encoded);
-        //System.err.println("expected " + expected);
+        //System.err.println("encoded [" + encoded + "]");
+        //System.err.println("expecte [" + expected + "]");
 
-        if (!encoded.equals(expected))
+        if (!encoded.contains(expected))
         {
-            Logger.error("Incorrect oauth signature");
+            Logger.error("Secure.authenticateFacebook: Incorrect facebook oauth signature");
             return;
         }
 

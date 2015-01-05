@@ -67,11 +67,12 @@ public class Registration extends BaseController
                         .setWidgrFrom()
                         .setTo(user)
                         .setSubject(title)
-                        .setMessageRaw(message)
+                        .setMessageWiki(message)
                         .send();
             }
             // send email
-            redirect("/login");
+            flash.success(Messages.get("password-message"));
+            Secure.login();
         } else
         {
             params.flash();

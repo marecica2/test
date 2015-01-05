@@ -1,5 +1,7 @@
 package controllers;
 
+import google.GoogleCalendarClient;
+
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,6 +21,7 @@ import utils.DateTimeUtils;
 import utils.JsonUtils;
 import utils.StringUtils;
 
+import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.gson.JsonObject;
 
 @With(controllers.Secure.class)
@@ -51,6 +54,7 @@ public class Accounts extends BaseController
         final User user = getLoggedUserNotCache();
         final Account account = user.account;
         final String baseUrl = request.getBase();
+        List<CalendarListEntry> calendars = null;
 
         if (edit)
         {
@@ -94,9 +98,12 @@ public class Accounts extends BaseController
             params.put("smtpPassword", account.smtpPassword);
             params.put("smtpProtocol", account.smtpProtocol);
 
+            if (user.googleTokenExpires != null)
+                calendars = GoogleCalendarClient.getCalendars(user);
+
             params.flash();
         }
-        render(user, baseUrl, account, edit);
+        render(user, baseUrl, account, edit, calendars);
     }
 
     public static void accountPost(
@@ -107,7 +114,7 @@ public class Accounts extends BaseController
         String paypal, String currency,
         String firstName, String lastName, String smtpHost, String smtpPort,
         String smtpAccount, String smtpPassword, String smtpProtocol,
-        String avatarUrl,
+        String avatarUrl, String googleCalendarId,
         Integer timezone, String workingHourStart, String workingHourEnd, String[] hiddenDays, String imageId, String imageUrl
         )
     {
@@ -164,6 +171,8 @@ public class Accounts extends BaseController
             user.twitter = twitter;
             user.linkedIn = linkedIn;
             user.skype = skype;
+            if (googleCalendarId != null)
+                user.googleCalendarId = googleCalendarId;
 
             if (imageUrl != null)
             {
@@ -193,6 +202,21 @@ public class Accounts extends BaseController
         render("Accounts/account.html", user, baseUrl, account, edit);
     }
 
+    public static void googleCalendarClear(String url)
+    {
+        final User user = getLoggedUserNotCache();
+
+        GoogleOAuth.revokeToken();
+
+        user.googleAccessToken = null;
+        user.googleCalendarId = null;
+        user.googleRefreshToken = null;
+        user.googleTokenExpires = null;
+        user.save();
+        clearUserFromCache();
+        redirectTo(url);
+    }
+
     public static void requestPublisher(String url)
     {
         User user = getLoggedUserNotCache();
@@ -204,7 +228,7 @@ public class Accounts extends BaseController
             validation.addError("type", "");
             flash.error(Messages.get("you-need-at-least-one-listing"));
         }
-        if (user.userAbout == null || user.userAbout.length() < 10)
+        if (user.userAbout == null || user.userAbout.length() < 5)
         {
             validation.addError("type", "");
             flash.error(Messages.get("please-fill-in-information-about-you"));

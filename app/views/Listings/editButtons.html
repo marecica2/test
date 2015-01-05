@@ -22,10 +22,10 @@
 			#{/elseif} 
 		#{/if}
 
-		#{if isOwner && (event.state == 'customer_created' || event.state == 'user_declined')}
+		#{if isOwner && (event.state == 'customer_created' )}
 			<a class="btn btn-success btn-sm margin-clear" href="/event-approve?event=${event.uuid}&url=${request.url.urlEncode()}"><i class="fa fa-check"></i> &{'approve'}</a>
-			<a href="/event-delete?uuid=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('delete?')){return true;} else {return false;}" class="btn btn-danger btn-sm margin-clear">
-				<i class="dialog-event-edit color-link fa fa-times fa-1x"></i> &{'decline'}
+			<a href="/event-decline?event=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('&{'confirm-decline'}')){return true;} else {return false;}" class="btn btn-danger btn-sm margin-clear">
+				<i class="dialog-event-edit fa fa-times fa-1x"></i> &{'decline'}
 			</a>						
 	   	#{/if} 				
 		
@@ -80,13 +80,13 @@
 		
 		#{if !edit && isOwner && !event.isEditable()}
 		<a href="/event?action=edit&uuid=${request.params.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm margin-clear">
-			<i class="dialog-event-edit color-link fa fa-pencil fa-1x"></i> &{'edit-event'}
+			<i class="dialog-event-edit fa fa-pencil fa-1x"></i> &{'edit-event'}
 		</a>
 		#{/if}
 
 		#{if !edit && isOwner && !event.isEditable()}
 		<a href="/event-delete?uuid=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('&{'delete-selected-item'}?')){return true;} else {return false;}" class="btn btn-light-gray btn-sm margin-clear">
-			<i class="dialog-event-edit color-link fa fa-times fa-1x"></i> &{'delete-event'}
+			<i class="dialog-event-edit fa fa-times fa-1x"></i> &{'delete-event'}
 		</a>
 		#{/if}
 		
@@ -125,14 +125,14 @@
 		#{if !edit && isOwner}
 			#{if user.isPublisher() && listing.type != 'instant'}
 			<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&listingId=${listing.uuid}" class="btn btn-light-gray btn-sm margin-clear">
-				<i class="color-link fa fa-plus fa-1x"></i> &{'edit-event'}
+				<i class="fa fa-plus fa-1x"></i> &{'edit-event'}
 			</a>
 			#{/if}
 			<a href="/channel/${listing.uuid}?action=edit&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm margin-clear">
-				<i class="color-link fa fa-pencil fa-1x"></i> &{'edit-channel'}
+				<i class="fa fa-pencil fa-1x"></i> &{'edit-channel'}
 			</a>
-			<a href="/channel-delete?uuid=${listing.uuid}" class="btn btn-light-gray btn-sm margin-clear" onclick="if(confirm('delete?')){return true;} else {return false;}">
-				<i class="color-link fa fa-times fa-1x"></i> &{'delete-channel'}
+			<a href="/channel-delete?uuid=${listing.uuid}" class="btn btn-light-gray btn-sm margin-clear" onclick="if(confirm('&{'delete-selected-item'}?')){return true;} else {return false;}">
+				<i class="fa fa-times fa-1x"></i> &{'delete-channel'}
 			</a>
 		#{/if}
 		#{if edit}

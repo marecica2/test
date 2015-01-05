@@ -40,6 +40,7 @@ POST    /event/invite              				Events.eventInvite
 POST    /event/save              				Events.eventSaveRest
 POST    /event/update              				Events.eventUpdateRest
 DELETE  /event/delete              				Events.eventDeleteRest
+GET 	/event-sync-google         				Events.eventSyncGoogleRest
 GET     /event-approve            				Events.approve
 GET     /event-decline            				Events.decline
 GET     /event-start            				Events.start
@@ -134,6 +135,7 @@ GET 	/settings/smtp/reset					Accounts.resetEmail
 GET 	/settings/request-publisher				Accounts.requestPublisher
 *		/payments								Accounts.payments
 GET		/facebook/clear							Accounts.facebookClear
+GET		/google/clear							Accounts.googleCalendarClear
 
 GET 	/admin/publishers						Admin.publishers
 GET 	/admin/users							Admin.users
