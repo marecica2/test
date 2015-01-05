@@ -189,8 +189,8 @@
 			    <div class="col-sm-10">
 					<select class="form-control" name="accPlan" id="accPlan">
 						<option #{if params.type == "standard"}  selected='selected' #{/if} value="standard">&{'standard'}</option>
-						<option #{if params.type == "month"}  selected='selected' #{/if} value="month">&{'monthly-basic'}</option>
-						<option #{if params.type == "gold"}  selected='selected' #{/if} value="gold">&{'monthly-premium'}</option>
+						<option #{if params.type == "premium"}  selected='selected' #{/if} value="premium">&{'monthly-basic'}</option>
+						<option #{if params.type == "pro"}  selected='selected' #{/if} value="pro">&{'monthly-premium'}</option>
 					</select>
 					<div class="error">#{error 'type' /}</div>
 			    </div>

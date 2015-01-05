@@ -14,8 +14,8 @@ public class Account extends Model
     public static final String TYPE_PUBLISHER = "publisher";
 
     public static final String PLAN_STANDARD = "standard";
-    public static final String PLAN_MONTH_BASIC = "month";
-    public static final String PLAN_MONTH_GOLD = "gold";
+    public static final String PLAN_MONTH_PREMIUM = "premium";
+    public static final String PLAN_MONTH_PRO = "pro";
 
     public String name;
     public String type;

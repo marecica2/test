@@ -97,6 +97,7 @@ public class Registration extends BaseController
         String captcha,
         String uuid,
         String invitation,
+        String accPlan,
         String token,
         Integer offset)
     {
