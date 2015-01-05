@@ -36,8 +36,8 @@ you-have-not-paid-for-current-month=You have not paid for current month
 invalid-paypal-account-warning=To create paid session you must set up your Paypal account first. <a href='/settings?edit=true#paypal'>Set up your Paypal account here</a>
 new-event-proposed-for-channel-subject=New session was requested for channel %s
 new-event-proposed-for-channel-message=h3. New session request \n%s requested new session [%s|%s]. Please visit the link to review and approve or decline this request.
-you-have-been-invited-subject=%s invited you to join event %s
-you-have-been-invited-message=Invited you to join event %s
+you-have-been-invited-subject=%s invited you to join session %s
+you-have-been-invited-message=Invited you to join session %s
 your-proposal-declined-subject=%s declined your request
 your-proposal-declined-message=h3. Your session request was declined \n%s declined your request for channel %s
 your-proposal-approved-subject=%s accepted your request
@@ -70,10 +70,10 @@ password-reset-message=h3. Your password has been reseted \nNew password: *%s* \
 password-message=Password has been reseted. Now check your email.
 login-already-used=This login is already used
 account-activation-subject=Your account has been created
-account-activation-message=<h3>Welcome to Widgr!</h3>You're almost there! Please click the link below to confirm your Widgr account.<br/><a href='%sregistration/activate?uuid=%s'>Account activation link</a><br/>Here are a few things to help you get started width Widgr:<ul><li><a href='%shelp#publisher'>How to become a Publisher</a></li><li><a href='%shelp#facebook'>How to connect your account with Facebook</a></li><li><a href='%shelp#google'>How to sync Widgr events with Google Calendar</a></li><li><a href='%shelp#paypal'>How to set up Paypal payments for Publishers</a></li></ul>
-check-out-your-email-for-activating-this-account.-Please-check-junk-folder-as-well=Check out your email for activating this account. Please check junk folder as well
-account.activated-subject=Your account has been activated
-account.activated-message=h3. Welcome to Widgr! \nYour account has been successfully activated. \nHere are a few things to help you get started width Widgr:\n* [How to become a Publisher|%shelp#publisher]\n* [How to connect your account with Facebook|%shelp#facebook]\n* [How to sync Widgr events with Google Calendar|%shelp#google]\n* [How to set up Paypal payments for Publishers|%shelp#paypal]
+account-activation-message=h3. Welcome to Widgr! \nYou're almost there! Please click the link below to confirm your Widgr account. \n[Account activation link|%sregistration/activate?uuid=%s] \nHere are a few things to help you get started width Widgr:\n* [How to use Widgr|%shelp#customer] \n* [How to become a Publisher|%shelp#publisher]\n* [How to connect your account with Facebook|%shelp#facebook]\n* [How to sync Widgr sessions with Google Calendar|%shelp#google]\n* [How to set up Paypal payments for Publishers|%shelp#paypal]
+check-out-your-email-for-activating=Registration successfull! Check out your email for activating this account. Please check junk folder as well
+account.activated-subject=Your account has been successfully activated
+account.activated-message=h3. Welcome to Widgr! \nYour account has been successfully activated. \nHere are a few things to help you get started width Widgr:\n* [How to use Widgr|%shelp#customer] \n* [How to become a Publisher|%shelp#publisher]\n* [How to connect your account with Facebook|%shelp#facebook]\n* [How to sync Widgr sessions with Google Calendar|%shelp#google]\n* [How to set up Paypal payments for Publishers|%shelp#paypal]
 account-successfully-activated=Your account has been successfully activated
 
 #Secure.java
@@ -158,8 +158,10 @@ you-have-been-logged-out=You have been signed out
 
 #VelocityTemplate.java
 you-have-been-invited-to-widgr=%s invited to you to join Widgr
-you-have-been-invited-to-event=invited you to join event %s
-email-what-is-widgr=<h3>What is Widgr?</h3>With Widgr you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.<br/>You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a Helpout for later.<br/>Just fill simple registration and start using Widgr even today. <a href='" + baseUrl + "about'>Learn more about Widgr</a>
+you-have-been-invited-to-event=invited you to join session %s
+regards-html=<br/>With regards, <br/>Your Widgr team
+regards=\nWith regards, \nYour Widgr team
+email-what-is-widgr=<h3>What is Widgr?</h3>With Widgr you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.<br/>You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later.<br/>Just fill simple registration and start using Widgr even today. <a href='%sabout'>Learn more about Widgr</a>
 email-footer=<h4><strong>How do I know this is not a fake email?</strong></h4><p style="font-family: Arial, Helvetica;font-size:12px">Please note that email really coming from Widgr will never ask you for sensitive information like your password. An email that urgently requests you to supply sensitive personal information is usually an attempt at fraud. Remember not to click any links in suspicious looking emails.</p>
 register-now=Register now
 security=Privacy & Security
@@ -229,7 +231,6 @@ enabled=Enabled
 disabled=Disabled
 About You=About You
 about=About
-education=Education
 experiences=Experiences
 website=Website
 facebook=Facebook
@@ -238,7 +239,7 @@ linkedIn=LinkedIn
 googlePlus=GooglePlus
 your-calendar=Your calendar
 working-hours=Working hours
-hidden-days=Hidden days
+hidden-days=Free days
 cal.sunday=Cal.sunday
 cal.monday=Cal.monday
 cal.tuesday=Cal.tuesday
@@ -256,28 +257,28 @@ start-of-working-hours=Start of working hours
 end-of-working-hours=End of working hours
 paypal-account=Paypal account
 paypal-info=Paypal info
-account.currency=Account.currency
+account.currency=Default currency
 currency=Currency
 outgoing-email=Outgoing email
-account.protocol=Account.protocol
-email.test.link=Email.test.link
+account.protocol=Account protocol
+email.test.link=Send test email
 save=Save
 
 #payments.html
-payments.receivedPayments=Payments.receivedPayments
-payments.timeRange=Payments.timeRange
-payments.thisMonth=Payments.thisMonth
-payments.thisYear=Payments.thisYear
-payments.allTime=Payments.allTime
+payments.receivedPayments=Received payments
+payments.timeRange=Time range
+payments.thisMonth=This month
+payments.thisYear=This year
+payments.allTime=All time
 from=From
 to=To
 submit=Submit
-payments.income=Payments.income
-payments.totalSales=Payments.totalSales
-payments.fee=Payments.fee
-payments.transactions=Payments.transactions
+payments.income=Income
+payments.totalSales=Total sales
+payments.fee=Fee
+payments.transactions=Transactions
 customer=Customer
-event=Event
+event=Session
 date=Date
 
 #activities.html
@@ -290,15 +291,15 @@ activities=Activities
 #users.html
 
 #about.html
-widgr-share-your-knowledge=widgr<small style="font-size:0.6em"> &middot; sharing your knowledge</small>
+widgr-share-your-knowledge=widgr<small style="font-size:0.6em"> &middot; share your knowledge</small>
 find-help-header=Find help across range of topics
-get-help-header=Get help from Experts
+get-help-header=Get help from Experts in one click
 get-paid-header=Become a publisher and get paid for helping others
 about-widgr=About Widgr
-about-widgr-subtext=Sharing your knowledge
+about-widgr-subtext=Share your knowledge
 about-1=<strong>Widgr</strong> is an easy and convenient way to learn skills and get help over the Internet. No matter who you are, where you are, or what time it is, you can talk to someone who can help you. 
-about-2=<strong>Widgr</strong> is a place where you can find people offering help on a wide variety of subjects. We call them Widgr publisher. These publishers can be individuals or companies. You can find the help you need by visiting the Widgr and searching or browsing all categories.
-about-3=<strong>With Widgr</strong> you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.<br/><br/> You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a Helpout for later. <br/><br/> While some Helpouts are free, you'll need to pay for some. Paying for help is easy using Google Wallet.
+about-2=Widgr is a place where you can find people offering help on a wide variety of subjects. We call them Widgr Publishers. These publishers can be individuals or companies. You can find the help you need by visiting the Widgr and searching or browsing various categories.
+about-3=With Widgr you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.<br/>You can choose who to get help from based on qualifications, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. <br/>While some sessions are free, you'll need to pay for some. Paying is easy using Paypal.
 why-choose-widgr=Features
 why-choose-widgr-text=Why choose widgr?
 widgr-feature-1=Online Video Calls
@@ -308,24 +309,26 @@ widgr-feature-4=Easy payments
 widgr-feature-5=Integration with Facebook
 widgr-feature-6=Integration with Google Calendar
 widgr-feature-1-text=Widgr sessions are conducted through live video calls. During the session, you can point your camera to show what you need help with, If you don't want the provider to see you, you can always turn off your camera. 
-widgr-feature-2-text=There are two ways to create join event -- instantly and scheduled. If a publisher's channel has a violet "Available now" icon, you are just a few clicks away from getting help instantly. Otherwise, you can see when publishers are available in their calendar and pick a time slot or send a message to request a different time.
+widgr-feature-2-text=There are two ways to create join session -- instantly and scheduled. If a publisher's channel has a purple "Available now" icon, you are just a few clicks away from getting help instantly. Otherwise, you can see when publishers are available in their calendar and pick a time slot or send a message to request a different time.
 widgr-feature-3-text=Prices are set by the publishers and can be free or charged by the session. Some publishers might offer the first session for free.
-widgr-feature-4-text=All payments are currently done through Paypal, so if you haven't already, you'll need to create a Paypal account to be able to create paid sessions. Sessions that are free don't require a Paypal account.
-widgr-feature-5-text=You can easily integrate your Widgr account with existing Facebook page, that your account will be more accesible to your facebook community.
-widgr-feature-6-text=You can easily integrate your Widgr account with existing Facebook page, that your account will be more accesible to your facebook community.
+widgr-feature-4-text=All payments are currently done through Paypal, so if you haven't already, you'll need to create a Premier or account to be able to create paid sessions. Sessions that are free don't require a Paypal account.
+widgr-feature-5-text=You can easily integrate your Widgr account with existing Facebook page, that your account will be more accesible to your Facebook community. If you own a Facebook page, you can install Widgr app to custom tab. With this option, your potential customers are just few clicks away using your services. <br/><a href="https://www.facebook.com/add.php?api_key=731388346951866&pages">Click here to add Widgr app to your Facebook page</a>
+widgr-feature-6-text=You can easily connect your Widgr account with Google Calendar. With Google calendar you can schedule and manage and be notified about your sessions on every device you use.
 pricing=Pricing
 basic=Basic
 free=Free
-fee-per-paid-event-description=Fee per paid event description
-from-event-price=From event price
-fee-per-paid-event=Fee per paid event
+fee-per-paid-event-description=Free will always remain free, however for paid sessions, there is a small fee applied. This fee is estimated and substracted from your income in the time when customer pays for your session.
+from-event-price=From session price
+fee-per-paid-event=from the price of every paid session
+security-description=Keeping secret things secret is important for us. That's why every request you will perform is encrypted with SSL.
+ssl=SSL encryption
+disk-space=Disk storage is used to store attachments for sessions
 storage=Storage
 premium=Premium
-paid-events-per-month=Paid events per month
+paid-events-per-month=Paid sessions per month
 pro=Pro
-unlimited-paid-events=Unlimited paid events
+unlimited-paid-events=Unlimited paid sessions
 unlimited-disk-space=Unlimited disk space
-you-are-on-the-right-place=You are on the right place
 fill-in-quick-registration-and-start-using-widgr=Fill in quick registration and start using widgr
 widgr-footer-description=Widgr footer description
 success=Success
@@ -343,7 +346,7 @@ compatibility=<p><strong>To get full experience</strong> make sure that you are 
 for=For
 minutes=Minutes
 free=Free
-first-event-is-free=First event is free
+first-event-is-free=First session is free
 start-time=Start time
 end-time=End time
 dashboard.guests=Dashboard.guests
@@ -358,12 +361,13 @@ search-channels=Search channels
 search-string=Search string
 category=Category
 business=Business
-electronics=Electronics
-health=Health
-art=Art
+electronics=Computers & Electronics
+education=Education
+health=Lifestyle & Health
+art=Art & Music
 sport=Sport
-household=Household
-18plus=18plus
+household=Household, Gardening, Diy
+18plus=Adult's Only
 sorting=Sorting
 sort-by-reviews=Sort by reviews
 sort-by-best-match=Sort by best match
@@ -371,8 +375,8 @@ search=Search
 
 #dashboard.html
 lates-posts=Lates posts
-upcoming-events=Upcoming events
-previous-events=Previous events
+upcoming-events=Upcoming sessions
+previous-events=Past sessions
 
 #home.html
 for-customers=For customers
@@ -385,19 +389,20 @@ offer-your-experience=Offer your expertise as a new service
 reach-your-community=Reach your community on Social networks
 get-paid-for-helping=Get paid for helping other
 integration-with-facebook=Integration with Facebook
-sync-your-events-with-calendar=Sync your events with Calendar
+sync-your-events-with-calendar=Sync your sessions with Calendar
 easy-payment-paypal=Easy and secure payment with Paypal
 dont-miss=Don't miss out!
 what-is=What is
 about=about
-find-help-message=With Helpouts you can get help anytime from people with expertise across a range of topics. Teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.
+find-help=Search
+find-help-message=With Widgr you can get help anytime from people with expertise across a range of topics. Teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.
 read-more=Read more
 get-help=Get help
-get-help-message=You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a Helpout for later.
+get-help-message=You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later.
 get-paid=Get paid
-get-paid-message=While some Helpouts are free, you'll need to pay for some. Paying for help is easy using Google Wallet.
-you-are-on-the-right-place=You are on the right place
-fill-in-quick-registration-and-start-using-widgr=Fill in quick registration and start using widgr
+get-paid-message=When you know something what might be useful for others you can become a Publisher. Widgr will provide you a simple platform which will help you to connect to your customer.
+you-are-on-the-right-place=Join Us, it's free
+fill-in-quick-registration-and-start-using-widgr=Just fill quick registration form and start using Widgr even today.
 channels-by-category=Channels by category
 view-all=View all
 
@@ -440,7 +445,7 @@ waiting=Waiting
 join-vide-conference=Join vide conference
 your-name=Your name
 join=Join
-or=Or
+or=or
 sign-in=Sign in
 
 #room.html
@@ -481,7 +486,7 @@ write-message-for=Write message for
 tips-for-first-timers=Tips for first timers
 
 #edit.html
-event-date=Event date
+event-date=Session date
 video-conference=Video conference
 live-broadcast=Live broadcast
 google-hangout=Google hangout
@@ -508,17 +513,17 @@ first-free=First free
 
 #editButtons.html
 approved=Approved
-you-can-pay-for-event-before-or-you-can-wait-until-event-starts=You can pay for event before or you can wait until event starts
-pay-for-event-now=Pay for event now
+you-can-pay-for-event-before-or-you-can-wait-until-event-starts=You can pay for session before or you can wait until session starts
+pay-for-event-now=Pay for session now
 join-video-conference=Join video conference
 start-live-broadcast=Start live broadcast
 stop-live-broadcast=Stop live broadcast
 stop-instant-broadcast=Stop instant broadcast
 start-hangout=Start hangout
 join-hangout=Join hangout
-edit-event=Edit event
+edit-event=Create new session
 delete-selected-item=Confirm your choice
-delete-event=Delete event
+delete-event=Delete session
 star-instant-broadcast=Star instant broadcast
 go-to-private-room=Go to private room
 edit-channel=Edit channel
@@ -530,7 +535,7 @@ create-new-channel=Create new channel
 play-introduction=Play introduction
 total-price=Total price
 min=Min
-request-for-event=Request for event
+request-for-event=Request for new session
 guests=Guests
 add-to-watchlist=Add to watchlist
 remove-from-watchlist=Remove from watchlist
@@ -538,7 +543,7 @@ accepted=Accepted
 declined=Declined
 write-custom-message=Write custom message
 notify=Notify
-recent-events=Recent events
+recent-events=Recent sessions
 all-channels-from=All channels from
 
 #stream.html
@@ -546,8 +551,8 @@ send=Send
 
 #listingsList.html
 reviews=Reviews
-create-event=Create event
-request-event=Request event
+create-event=Create new session
+request-event=Request for new session
 
 #main.html
 select-page-to-display=Select page to display
@@ -575,7 +580,7 @@ newer=Newer
 older=Older
 
 #payment.html
-join-event=Join event
+join-event=Join session
 paypalError=PaypalError
 unit-price=Unit price
 total=Total
@@ -612,10 +617,14 @@ captcha=Captcha
 registration=Registration
 register-with-facebook=Register with facebook
 registration.login=Registration.login
+registration-login=Your login as email address
+validation.login=Not valid email address
+validation.required=This field is required
+validation.passwordMatch=Password does not match
 
 #login.html
-login-register-question=Login register question
-login-here=Login here
+login-register-question=Don't have an account?
+login-here=Register here
 reset-your-password=Reset your password
 
 #logout.html
@@ -635,7 +644,7 @@ followers=Followers
 #wiki.html
 
 #calendar.js
-app.confirmDeleteEvent=App.confirmDeleteEvent
+app.confirmDeleteEvent=Please confirm
 cal.today=Cal.today
 cal.month=Cal.month
 cal.week=Cal.week
@@ -670,7 +679,7 @@ cal.wed=Cal.wed
 cal.thu=Cal.thu
 cal.fri=Cal.fri
 cal.sat=Cal.sat
-New event=New event
+New event=New session
 add-google-event=Convert Google event to Widgr
 
 #dashboard.js
@@ -730,14 +739,14 @@ write-a-reply=Write a reply
 before=Before
 starts-in=Starts in
 days=days
-p2p=pee
+p2p=Video call
 broadcast=Broadcast
-instant=Instant
+instant=Instant broadcast
 hangout=Hangout
-hangoutAir=HangoutAir
+hangoutAir=Hangout on Air
 app.admin=admin
 you=You
-on=On
+on=on
 
 #suggest.js
 
@@ -746,21 +755,21 @@ on=On
 #utils.js
 
 # Activity list
-invitationCreated=Invited <a class=popup-event-edit href=/user/%s>%s</a> to event <a class=popup-event-edit href=/event/%s>%s</a>
-invitationAccepted=Accepted invitation for event <a class=popup-event-edit href=/event/%s>%s</a>
-invitationDeclined=Declined invitation for event <a class=popup-event-edit href=/event/%s>%s</a>
-eventDeleted=Cancelled event <a class=popup-event-edit href=/event/%s>%s</a>
-eventDeletedCust=Cancelled event <a class=popup-event-edit data-event=%s href=#>%s</a>
-eventCreatedUsr=Created event <a class=popup-event-edit href=/event/%s>%s</a>
-eventCreatedCust=Proposed new event for listing <a class=popup-event-edit href=/event/%s>%s</a>
-eventMoved=Changed time for event <a class=popup-event-edit href=/event/%s>%s</a>
-eventUpdatedUsr=Updated event <a class=popup-event-edit href=/event/%s>%s</a>
-eventUpdatedCust=Updated event <a class=popup-event-edit href=/event/%s>%s</a>
-eventApproved=Approved event <a class=popup-event-edit href=/event/%s>%s</a>
-eventDeclined=Declined event %s
-eventCommented=Added comment on event <a class=popup-event-edit href=/event/%s>%s</a>
-eventCommentedCust=Added comment on event <a class=popup-event-edit href=/event/%s>%s</a>
-eventStarted=Event <a class=popup-event-edit href=/event/%s>%s</a> just started
+invitationCreated=Invited <a class=popup-event-edit href=/user/%s>%s</a> to session <a class=popup-event-edit href=/event/%s>%s</a>
+invitationAccepted=Accepted invitation for session <a class=popup-event-edit href=/event/%s>%s</a>
+invitationDeclined=Declined invitation for session <a class=popup-event-edit href=/event/%s>%s</a>
+eventDeleted=Cancelled session <a class=popup-event-edit href=/event/%s>%s</a>
+eventDeletedCust=Cancelled session <a class=popup-event-edit data-event=%s href=#>%s</a>
+eventCreatedUsr=Created session <a class=popup-event-edit href=/event/%s>%s</a>
+eventCreatedCust=Requested new session for channel <a class=popup-event-edit href=/event/%s>%s</a>
+eventMoved=Changed time for session <a class=popup-event-edit href=/event/%s>%s</a>
+eventUpdatedUsr=Updated session <a class=popup-event-edit href=/event/%s>%s</a>
+eventUpdatedCust=Updated session <a class=popup-event-edit href=/event/%s>%s</a>
+eventApproved=Approved session <a class=popup-event-edit href=/event/%s>%s</a>
+eventDeclined=Declined session %s
+eventCommented=Added comment on session <a class=popup-event-edit href=/event/%s>%s</a>
+eventCommentedCust=Added comment on session <a class=popup-event-edit href=/event/%s>%s</a>
+eventStarted=Session <a class=popup-event-edit href=/event/%s>%s</a> just started
 
 cal.sun=Sun
 cal.mon=Mon

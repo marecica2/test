@@ -48,9 +48,8 @@ public class Admin extends BaseController
         final User user = User.getUserByUUID(uuid);
         final String subject = Messages.get("publisher-request-approved-subject");
         final String message = Messages.get("publisher-request-approved-message");
-        //"h3. Your request for publisher account was approved \nFrom now your account is fully functional and you can start to create events for your channel"
 
-        Message.createNotification(getAdmin(), user, subject, message);
+        Message.createAdminNotification(user, subject, message);
         new EmailNotificationBuilder()
                 .setWidgrFrom()
                 .setTo(user)
@@ -69,9 +68,8 @@ public class Admin extends BaseController
         final User user = User.getUserByUUID(uuid);
         final String subject = Messages.get("publisher-request-declined-subject");
         final String message = Messages.get("publisher-request-declined-message");
-        //"h3. Your request for publisher account was declined \nTry again";
 
-        Message.createNotification(getAdmin(), user, subject, message);
+        Message.createAdminNotification(user, subject, message);
         new EmailNotificationBuilder()
                 .setWidgrFrom()
                 .setTo(user)

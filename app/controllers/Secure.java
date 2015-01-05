@@ -104,8 +104,8 @@ public class Secure extends BaseController
 
     private static String encode(String key, String data) throws Exception
     {
-        Mac sha256_HMAC = Mac.getInstance("HMAC-SHA256");
-        SecretKeySpec secret_key = new SecretKeySpec(key.getBytes("UTF-8"), "HMAC-SHA256");
+        Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+        SecretKeySpec secret_key = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
         sha256_HMAC.init(secret_key);
         String ret = Base64.encodeBase64String(sha256_HMAC.doFinal(data.getBytes("UTF-8")));
         ret = ret.replaceAll("\\+", "-");
@@ -122,8 +122,8 @@ public class Secure extends BaseController
         final String encoded = parts[0].trim();
         final String expected = encode("8250fede980433de1fac794c3c205548", parts[1]).trim();
 
-        //System.err.println("encoded [" + encoded + "]");
-        //System.err.println("expecte [" + expected + "]");
+        System.err.println("encoded [" + encoded + "]");
+        System.err.println("expecte [" + expected + "]");
 
         if (!encoded.contains(expected))
         {

@@ -69,6 +69,7 @@ public class VelocityTemplate
         ctx.put("help", Messages.get("help"));
         ctx.put("security", Messages.get("security"));
 
+        ctx.put("regards", Messages.get("regards-html"));
         ctx.put("title", Messages.get("you-have-been-invited-to-widgr", from.getFullName()));
         ctx.put("message", Messages.get("email-what-is-widgr", baseUrl));
         ctx.put("userAbout", "<h3>" + from.getFullName() + "</h3>" + from.userAboutHtml());
@@ -109,6 +110,7 @@ public class VelocityTemplate
         ctx.put("title", title);
         ctx.put("message", message);
 
+        ctx.put("regards", Messages.get("regards-html"));
         ctx.put("contact", Messages.get("contact"));
         ctx.put("help", Messages.get("help"));
         ctx.put("security", Messages.get("security"));

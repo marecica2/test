@@ -54,6 +54,8 @@
 					#if(!$existing)
 						${message}
 					#end
+					
+					${regards}
 				</div>
 			</div>
 			
@@ -68,7 +70,6 @@
 				#end
 			#end
 			
-
 			<!-- Footer -->
 			<div style="margin:0px;width:100%; max-width:1000px; padding: 20px; color: gray; background-color: ${color3}">
 				<div style="width:100%; text-align:center"><img src="${logo}" alt="widgr">

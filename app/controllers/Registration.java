@@ -135,16 +135,16 @@ public class Registration extends BaseController
             // send activation email
             final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
             final String title = Messages.get("account-activation-subject");
-            final String message = Messages.get("account-activation-message", baseUrl, user.uuid, baseUrl, baseUrl, baseUrl, baseUrl);
+            final String message = Messages.get("account-activation-message", baseUrl, user.uuid, baseUrl, baseUrl, baseUrl, baseUrl, baseUrl);
 
             new EmailNotificationBuilder()
                     .setWidgrFrom()
                     .setTo(user)
                     .setSubject(title)
-                    .setMessageRaw(message)
+                    .setMessageWiki(message)
                     .send();
 
-            flash.success(Messages.get("check-out-your-email-for-activating-this-account.-Please-check-junk-folder-as-well"));
+            flash.success(Messages.get("check-out-your-email-for-activating"));
             flash.keep();
             Secure.login();
         } else
@@ -241,9 +241,9 @@ public class Registration extends BaseController
 
         final String baseUrl = getBaseUrl();
         final String subject = Messages.get("account.activated-subject");
-        final String body = Messages.get("account.activated-message", baseUrl, baseUrl, baseUrl, baseUrl);
+        final String body = Messages.get("account.activated-message", baseUrl, baseUrl, baseUrl, baseUrl, baseUrl);
 
-        Message.createNotification(user, user, subject, body);
+        Message.createAdminNotification(user, subject, body);
         flash.success(Messages.get("account-successfully-activated"));
         flash.keep();
         Secure.login();

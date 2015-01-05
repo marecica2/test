@@ -10,8 +10,10 @@ import javax.persistence.ManyToOne;
 
 import play.cache.Cache;
 import play.db.jpa.Model;
+import play.i18n.Messages;
 import utils.RandomUtil;
 import utils.WikiUtils;
+import controllers.BaseController;
 
 @Entity
 public class Message extends Model
@@ -65,6 +67,13 @@ public class Message extends Model
         return WikiUtils.parseToHtml(this.body);
     }
 
+    public static void createAdminNotification(User toUser, String subject, String body)
+    {
+        User user = BaseController.getAdmin();
+        body = body + Messages.getMessage(toUser.locale, "regards");
+        createNotification(user, toUser, subject, body);
+    }
+
     public static void createNotification(User user, User toUser, String subject, String body)
     {
         if (toUser != null && user != null)
@@ -75,11 +84,11 @@ public class Message extends Model
 
             Message m = new Message();
             m.subject = subject;
-            m.body = body;
             m.uuid = RandomUtil.getUUID();
             m.fromUser = user;
             m.toUser = toUser;
             m.created = new Date();
+            m.body = body;
             m.save();
 
             Cache.delete(toUser.login);
