@@ -12,7 +12,7 @@ star.moreComments = function(params, dashboard){
             $("#spinnerComments").hide();
             $("#moreResultsComments").show();
             $("#comments-container").append(html);
-            if(FB != undefined)
+            if(typeof(FB) !== "undefined")
                 FB.Canvas.setSize();
         }, 250);
     });
@@ -37,7 +37,7 @@ star.loadComments = function(params, dashboard){
             $("#spinnerComments").hide();
             $("#moreResultsComments").show();
             $("#comments-container").append(html);
-            if(FB != undefined)
+            if(typeof(FB) !== "undefined")
                 FB.Canvas.setSize();
         }, 250);
     });
@@ -171,7 +171,7 @@ star.initItems = function(prefix, urlParams){
                 $(html).hide().appendTo($("#itemsList"+prefix)).fadeIn(500);
                 $("#spinner"+prefix).hide();
                 $("#moreResults"+prefix).show();
-                if(FB != undefined)
+                if(typeof(FB) !== "undefined")
                     FB.Canvas.setSize();
             }
             setTimeout(function(){
@@ -210,7 +210,7 @@ star.loadItems = function(prefix, urlParams){
                 $(html).hide().appendTo($("#itemsList"+urlParams.prefix)).fadeIn(500);
                 $("#spinner"+urlParams.prefix).hide();
                 $("#moreResults"+urlParams.prefix).show();
-                if(FB != undefined)
+                if(typeof(FB) !== "undefined")
                     FB.Canvas.setSize();
            }
         setTimeout(function(){
@@ -234,7 +234,6 @@ star.renderItems = function(data, prefix){
         if(!item.invisible)
             $(".container"+prefix).show();
         if(prefix.indexOf("Listing") >= 0){
-            
             html += "<div class='event-box shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
             html += "   <div class='overlay-container'>";
             html += "       <mark style='position:absolute;bottom:0px;padding:5px' class='title'><img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/"+item.createdByAvatarUrl+"_32x32'>"+item.createdByName+" </mark>";
@@ -247,22 +246,21 @@ star.renderItems = function(data, prefix){
             html += "       </div>";
             html += "   </div>";
             html += "   <div class='image-box-body'>";
-            html += "       <small><span>"+i18n(item.category)+"</span> &middot; <span>"+i18n(item.type)+"</span> &middot; <span>"+i18n(item.privacy)+"</span></small><br/> ";
+            html += "       <div style='height:45px;'><small>"+i18n(item.category)+" &middot; "+i18n(item.type)+"</small></div> ";
             
             
             if(item.charging == 'free'){
                 html += "<strong>"+i18n("free")+"</strong>";
             }
             if(item.charging != 'free'){
-                html += "<strong>"+item.price+"</strong> <small>"+item.currency+"</small>";
+                html += "<strong>"+item.price+"</strong>&nbsp;<small>"+item.currency+"</small>";
             }       
             if(item.firstFree != undefined && item.firstFree == true){
                 html += " <small class='label default-bg'>First free</small>";
             }       
             
-            
             html += "   <p class='event-box-links'><span><a href='/channel/"+item.uuid+"' class='link-left'><span>"+star.utils.trimTo(item.title, 30)+"</span></a></span></p>";
-            html += "   <p class='event-box-link'>";            
+            html += "   <div class='event-box-link' style='position:fixed;bottom:15px'>";            
             for(var j = 0; j < 5; j++){
                 if(j < item.ratingAvg)
                     html += "<i class='fa fa-star' data-value='1'></i>";
@@ -271,7 +269,7 @@ star.renderItems = function(data, prefix){
             }
             html += " " + item.ratingCount + " "+ i18n("reviews");
             
-            html += "   </p>";
+            html += "   </div>";
             
             html += "   </div>";
             html += "</div>"; 
@@ -306,29 +304,29 @@ star.renderItems = function(data, prefix){
                 html += "       </div>";
                 html += "   </div>";
                 html += "   <div class='image-box-body' style='font-size:0.9em'>";
-                html += "           <p>";
-                html += "               <span>"+i18n(item.category)+"</span> &middot; <span>"+i18n(item.type)+"</span> &middot; <span>"+i18n(item.privacy)+"</span>";
+                html += "           <div style='height:45px;'>";
+                html += "               <span>"+i18n(item.category)+"</span> &middot; <span>"+i18n(item.type)+"</span>";
                 if(item.state == 'customer_created'){
                     html += "       <img class='img-circle avatar22' src='/"+item.customerAvatarUrl+"_32x32'>";
                     html += "       <span class='label label-danger'>"+i18n("waiting")+"</span>";
                 }
-                html += "           <p>";
+                html += "           </div>";
                
                 html += "           <p>";
                 html += "           <strong>"+starUtils.formatDate(item.eventStart)+"</strong>";
                 html += "           <span>"+starUtils.formatTime(item.eventStart)+"</span> - ";
                 html += "           <span>"+starUtils.formatTime(item.eventEnd)+"</span><br/>";
-                html += "           <strong>"+(before? i18n("before") : i18n("starts-in"))+"</strong> " + (days > 0 ? (days + i18n("days")) : "") + " " + (hours > 0 ? (hours + " " + i18n("hrs")) : "") + " " + minutes + " " + i18n("min");          
+                html += "           <strong>"+(before? i18n("before") : i18n("starts-in"))+"</strong> " + (days > 0 ? (days + " " + i18n("days")) : "") + " " + (hours > 0 ? (hours + " " + i18n("hrs")) : "") + " " + minutes + " " + i18n("min");          
                 html += "           <br/>";            
                 if(item.charging == 'free'){
                     html += "<strong>"+i18n("free")+"</strong>";
                 }
                 if(item.charging == 'before'){
-                    html += "       <strong>"+item.priceTotal+"</strong> <small>"+item.currency+"</small> " + i18n("for") +item.chargingTime+" " + i18n("min");
+                    html += "       <strong>"+item.priceTotal+"</strong> <small>"+item.currency+"</small> " + i18n("for") + " " +item.chargingTime+" " + i18n("min");
                 }    
                 html += "           </p>";
                 
-                html += "           <a rel='tooltip' data-placement='top' title='"+item.title+"' href='/event/"+item.uuid+"'><span>"+star.utils.trimTo(item.title, 25)+"</span></a>";
+                html += "           <a style='position:fixed;bottom:15px' data-placement='top' title='"+item.title+"' href='/event/"+item.uuid+"'><span>"+star.utils.trimTo(item.title, 30)+"</span></a>";
                 html += "   </div>";
                 html += "</div>";                           
             }

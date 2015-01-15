@@ -14,19 +14,21 @@ public class Notifications extends BaseController
 {
     public static void send(String toUser, String subject, String emailBody, String url, String thread)
     {
-        final User userFrom = getLoggedUser();
+        final User userFrom = getLoggedUserNotCache();
+        final User user = userFrom;
         String email = StringUtils.extract(toUser, "\\((.+?)\\)");
         if (email == null)
             email = toUser;
 
         validation.required("userTo", email);
         validation.required("subject", subject);
-        validation.required("emailBody", emailBody);
         validation.email("userTo", email).message("invalid-user-name");
+
+        System.err.println(emailBody);
+        validation.required("emailBody", emailBody);
 
         if (!validation.hasErrors())
         {
-            System.err.println(email);
             final User userTo = User.getUserByLogin(email);
             userTo.unreadMessages = true;
             userTo.save();
@@ -50,14 +52,13 @@ public class Notifications extends BaseController
         params.put("toUser", toUser);
         params.put("emailBody", emailBody);
         params.flash();
-        validation.keep();
         if (thread != null)
         {
             detail(thread);
         } else
         {
             String action = "new";
-            renderTemplate("Notifications/inbox.html", action);
+            renderTemplate("Notifications/inbox.html", action, user);
         }
     }
 

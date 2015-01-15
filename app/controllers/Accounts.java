@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.Account;
+import models.AccountPlan;
 import models.Attendance;
 import models.Listing;
 import models.User;
@@ -59,7 +60,11 @@ public class Accounts extends BaseController
         if (edit)
         {
             // account
-            params.put("type", account.currentPlan());
+            if (account.currentPlan() != null)
+                params.put("type", account.currentPlan().type);
+            else
+                params.put("type", Account.PLAN_STANDARD);
+
             params.put("accName", account.name);
             params.put("firstName", user.firstName);
             params.put("lastName", user.lastName);
@@ -103,7 +108,17 @@ public class Accounts extends BaseController
 
             params.flash();
         }
-        render(user, baseUrl, account, edit, calendars);
+
+        // displaying recurring payments information
+        AccountPlan planLast = AccountPlan.getLast(user.account);
+        AccountPlan plan = AccountPlan.getCurrentPlan(account);
+        if (plan == null)
+        {
+            plan = new AccountPlan();
+            plan.type = Account.PLAN_STANDARD;
+        }
+
+        render(user, baseUrl, account, edit, calendars, plan, planLast);
     }
 
     public static void accountPost(
@@ -128,24 +143,7 @@ public class Accounts extends BaseController
 
         if (!validation.hasErrors())
         {
-
-            if (account.planRequestFrom == null || (account.planRequestFrom.getTime() < System.currentTimeMillis()))
-            {
-                account.planCurrent = account.planRequest;
-                account.planRequest = accPlan;
-
-                Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.MONTH, 1);
-                calendar.set(Calendar.DATE, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
-                calendar.set(Calendar.HOUR_OF_DAY, 0);
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
-                Date nextMonthFirstDay = calendar.getTime();
-                account.planRequestFrom = nextMonthFirstDay;
-            }
             account.name = accName;
-            account.requestTime = new Date();
             account.url = url;
             account.smtpHost = smtpHost;
             account.smtpPort = smtpPort;
@@ -236,9 +234,9 @@ public class Accounts extends BaseController
 
         if (!validation.hasErrors())
         {
+            flash.success(Messages.get("your-publisher-request-was-submited"));
             Account account = Account.get(user.account.key);
             account.type = Account.TYPE_PUBLISHER_REQUEST;
-            account.requestTime = new Date();
             account.save();
             user.save();
         }
@@ -275,34 +273,37 @@ public class Accounts extends BaseController
         Map<String, Map<Long, BigDecimal>> mapTotal = new HashMap<String, Map<Long, BigDecimal>>();
         for (Attendance attendance : payments)
         {
-            // init
-            if (!totals.containsKey(attendance.currency))
+            if (attendance.refunded == null || !attendance.refunded)
             {
-                mapTotal.put(attendance.currency, new HashMap<Long, BigDecimal>());
-                totals.put(attendance.currency, new BigDecimal(0));
-                providers.put(attendance.currency, new BigDecimal(0));
-                fees.put(attendance.currency, new BigDecimal(0));
-            }
-
-            if (attendance.paypalTransactionDate != null)
-            {
-                BigDecimal val = attendance.providerPrice;
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(attendance.paypalTransactionDate);
-                cal.set(Calendar.HOUR, 1);
-                cal.set(Calendar.MINUTE, 1);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                Long date = cal.getTimeInMillis();
-
-                if (mapTotal.get(attendance.currency).containsKey(date))
+                // init
+                if (!totals.containsKey(attendance.currency))
                 {
-                    val = mapTotal.get(attendance.currency).get(date);
-                    val = val.add(attendance.providerPrice);
-                    mapTotal.get(attendance.currency).put(date, val);
-                } else
+                    mapTotal.put(attendance.currency, new HashMap<Long, BigDecimal>());
+                    totals.put(attendance.currency, new BigDecimal(0));
+                    providers.put(attendance.currency, new BigDecimal(0));
+                    fees.put(attendance.currency, new BigDecimal(0));
+                }
+
+                if (attendance.paid)
                 {
-                    mapTotal.get(attendance.currency).put(date, val);
+                    BigDecimal val = attendance.providerPrice;
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(attendance.paypalTransactionDate);
+                    cal.set(Calendar.HOUR, 12);
+                    cal.set(Calendar.MINUTE, 0);
+                    cal.set(Calendar.SECOND, 0);
+                    cal.set(Calendar.MILLISECOND, 0);
+                    Long date = cal.getTimeInMillis();
+
+                    if (mapTotal.get(attendance.currency).containsKey(date))
+                    {
+                        val = mapTotal.get(attendance.currency).get(date);
+                        val = val.add(attendance.providerPrice);
+                        mapTotal.get(attendance.currency).put(date, val);
+                    } else
+                    {
+                        mapTotal.get(attendance.currency).put(date, val);
+                    }
                 }
             }
         }

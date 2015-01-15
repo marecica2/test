@@ -228,6 +228,13 @@ public class User extends Model
         return false;
     }
 
+    public Boolean isStandard()
+    {
+        if (this.account.type != null && this.account.type.equals(Account.TYPE_STANDARD))
+            return true;
+        return false;
+    }
+
     public Boolean isAdmin()
     {
         if (this.role.equals(ROLE_SUPERADMIN))
@@ -264,9 +271,16 @@ public class User extends Model
 
     public boolean paidForCurrentMonth()
     {
-        if (!this.account.currentPlan().equals(Account.PLAN_STANDARD) && !this.paidForCurrentMonth())
-            return false;
-        return true;
+        final AccountPlan currentPlan = this.account.currentPlan();
+        if (currentPlan == null)
+            return true;
+        if (currentPlan != null && currentPlan.type.equals(Account.PLAN_STANDARD))
+            return true;
+        if (currentPlan != null && !currentPlan.type.equals(Account.PLAN_MONTH_PREMIUM) && currentPlan.profile != null)
+            return true;
+        if (currentPlan != null && !currentPlan.type.equals(Account.PLAN_MONTH_PRO) && currentPlan.profile != null)
+            return true;
+        return false;
     }
 
     public boolean hasValidPaymentAccount()
@@ -278,8 +292,6 @@ public class User extends Model
 
     public boolean canCreatePaidEvent()
     {
-        if (!this.hasValidPaymentAccount())
-            return false;
         if (this.paidForCurrentMonth())
             return false;
         return true;

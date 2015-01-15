@@ -139,11 +139,12 @@ public class Listing extends Model
             System.err.println("query string " + filter.search);
             query += " AND document @@ to_tsquery('english', :search) ";
         }
-
-        if (filter.category != null && filter.category.equals("match"))
-            query += " ORDER BY ts_rank(document, to_tsquery('english', :search)) DESC ";
-        else
-            query += " ORDER BY (ratingStars * ratingAvg) desc ";
+        if (filter.sort != null && filter.sort.equals("match"))
+        {
+            query += " ORDER BY ts_rank(document, to_tsquery('english', :search)) DESC, ";
+            query += " (ratingStars * ratingAvg) DESC NULLS LAST ";
+        } else
+            query += " ORDER BY (ratingStars * ratingAvg) DESC NULLS LAST ";
 
         Query q = Listing.em().createNativeQuery(query);
         if (filter.search != null)

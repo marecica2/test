@@ -3,6 +3,7 @@ package controllers;
 import java.util.Date;
 
 import models.Account;
+import models.AccountPlan;
 import models.Attendance;
 import models.Contact;
 import models.Message;
@@ -120,7 +121,6 @@ public class Registration extends BaseController
         if (!validation.hasErrors())
         {
             Account account = createDefaultAccount(firstName, lastName);
-            account.save();
 
             User user = createDefaultUser(login, password, firstName, lastName, token, offset);
             user = user.save(account);
@@ -178,7 +178,6 @@ public class Registration extends BaseController
         if (!validation.hasErrors())
         {
             final Account account = createDefaultAccount(firstName, lastName);
-            account.save();
 
             final String password = RandomUtil.getRandomString(10);
             User user = createDefaultUser(login, password, firstName, lastName, token, offset);
@@ -299,10 +298,6 @@ public class Registration extends BaseController
         user.workingHourStart = "8";
         user.workingHourEnd = "16";
         user.emailNotification = true;
-        user.stylesheet = "purple";
-        user.pattern = "pattern-4";
-        user.layout = "wide";
-        user.footer = "dark";
         return user;
     }
 
@@ -313,9 +308,13 @@ public class Registration extends BaseController
         account.smtpHost = "DEFAULT";
         account.name = firstName + " " + lastName;
         account.type = Account.TYPE_STANDARD;
-        account.planCurrent = Account.TYPE_STANDARD;
-        account.planRequest = Account.PLAN_STANDARD;
-        account.planRequestFrom = new Date();
+        account.save();
+
+        AccountPlan plan = new AccountPlan();
+        plan.type = Account.TYPE_STANDARD;
+        plan.validFrom = new Date();
+        plan.account = account;
+        plan.save();
         return account;
     }
 }

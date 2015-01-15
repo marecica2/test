@@ -37,8 +37,7 @@ public class NumberUtils
             return i;
         } catch (Exception e)
         {
-            return new BigDecimal("0");
+            return null;
         }
     }
-
 }

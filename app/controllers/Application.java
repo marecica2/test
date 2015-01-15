@@ -124,8 +124,7 @@ public class Application extends BaseController
         final User user = getLoggedUser();
         Map<String, Object> ratings = initRatings();
 
-        if (user != null && !user.isPublisher())
-            //Start helping others and become a publisher. <a href='/settings/request-publisher'>Request for publisher account here</a> or <a href='/help#publisher'>learn more</a>
+        if (user != null && user.isStandard())
             flash.success(Messages.get("start-helping-others"));
         render(user, ratings);
     }
@@ -168,7 +167,7 @@ public class Application extends BaseController
 
         final List<Comment> comments = Comment.getByFollower(user, 0, 200);
 
-        if (user != null && !user.isPublisher())
+        if (user != null && user.isStandard())
             flash.success(Messages.get("start-helping-others"));
 
         //Http.Cookie c = new Http.Cookie();

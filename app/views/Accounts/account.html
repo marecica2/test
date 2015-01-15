@@ -1,5 +1,7 @@
 #{extends 'main.html' /} 
-#{set switcher: true /}
+#{set 'title'}
+	&{'settings'}
+#{/set}
 
 #{set 'moreStyles'}
 	<link rel="stylesheet" href="@{'/public/css/jquery.Jcrop.min.css'}" type="text/css" />
@@ -12,7 +14,6 @@
 	</script>
 
 #{/set}
-
 
 #{set 'moreHtml'}
 	*{
@@ -89,8 +90,38 @@
 <div class="container">
 	<div class="row">
 	  	<div class="col-md-12">
+	  	
+			#{if plan && planLast != null && planLast.id != plan.id}
+				<div class="shadow alert alert-info alert-dismissible" role="alert">
+					Account Plan &{planLast.type} will be valid from ${planLast.validFrom.format("dd MMM yyyy")}. 
+				</div>
+			#{/if}	
+
+			#{if plan && planLast != null && planLast.id != plan.id && planLast.type != "standard" && planLast.profile == null}
+				<div class="shadow alert alert-info alert-dismissible" role="alert">
+					Your subscription for plan &{planLast.type} is not activated yet. To activate your subscription please proceed with Paypal
+					<img style="cursor:pointer" class="paypal-subscription pull-right" src="//www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" border="0" data-id="${planLast.id}" align="top" alt="&{'checkout-with-paypal'}"/>
+				</div>
+			#{/if}	
+			
+			#{if plan != null && !plan.isStandard() && plan.paid == null}
+				<div class="shadow alert alert-info alert-dismissible" role="alert">
+					Your subscription for plan &{plan.type} is not activated yet. To activate your subscription please proceed with Paypal
+					<img style="cursor:pointer" class="paypal-subscription pull-right" src="//www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" border="0" data-id="${plan.id}" align="top" alt="&{'checkout-with-paypal'}"/>
+				</div>					
+			#{/if}			
+			<script>
+				$(".paypal-subscription").click(function(){
+				    var id = $(this).attr("data-id");
+				    $('<form>', {
+				        "method": 'post',
+				        "action": '/settings/subscription?id='+id
+				    }).appendTo(document.body).submit();
+				});
+			</script>	  	
+	  	
 			<h2 class="btn-margin">
-				Settings
+				&{'settings'}
 				<span class="">
 					#{if !edit}
 						<a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true"><i class="fa fa-pencil"></i> &{'edit'}</a>
@@ -100,7 +131,6 @@
 					#{/else}
 				</span>
 			</h2>
-			
 			<form class="form-horizontal" role="form" method="post" action="/settings?edit=true">	
 		    
 
@@ -120,8 +150,6 @@
 					</div>
 				</div>
 			</div>
-
-		    
 		    
 			<!-- File upload -->
 			<div>
@@ -137,18 +165,6 @@
 			</div>
 			<!-- Fileupload -->		
 			
-			
-
-			#{if user.account.currentPlan() != user.account.planRequest}
-			<div class="shadow alert alert-info alert-dismissible" role="alert">
-			    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
-					&{'change-plan-to'} ${user.account.planRequest} &{'will-be-applied-after'} 
-					${account.planRequestFrom.format("dd MMM, yyyy")}
-			</div>
-			#{/if}					
-
-
-
 			<h3>&{'account.account'}</h3>
 			<div class="separator-2"></div>
 			#{if !edit}
@@ -156,27 +172,70 @@
 				<dt>&{'account-name'}</dt>
 				<dd>${user.account.name} &nbsp;</dd>
 
-				<dt>&{'account-plan'}</dt>
-				<dd>
-					<span class="label default-bg" style="font-size:0.8em">${user.account.currentPlan()}</span>
-				</dd>
 				<dt>&{'account-type'}</dt>
 				<dd>
-					
 					#{if user && user.account.type == "publisherReq"}
-						${user.account.type} <span class="label label-success" style="font-size:0.8em">&{'waiting-for-approvement'}</span>
+						<span class="label label-default">&{user.account.type}</span>
+						<span class="label label-success">&{'waiting-for-approvement'}</span>
 					#{/if}
 					#{elseif user && user.account.type == "standard"}
-						<span class="label label-primary" style="font-size:0.8em">${user.account.type}</span>
+						<span class="label label-default">&{user.account.type}</span>
 						<a href="/settings/request-publisher?url=${request.url.urlEncode()}">&{'become-a-publisher'}</a>
 					#{/elseif}
 					#{else}
-						<span class="label default-bg" style="font-size:0.8em">${user.account.type}</span>
+						<span class="label default-bg">&{user.account.type}</span>
 					#{/else}
+				</dd>
+
+				<dt>&{'account-plan'}</dt>
+				<dd>
+					#{if plan}
+						<p>
+							<span class="label default-bg">
+								&{plan.type} 
+								#{if !plan.isStandard()}
+								, Price: ${plan.price}$ per month
+								#{/if}
+							</span>
+							#{if plan && plan.validTo != null}&nbsp;
+								<span class="label label-default">
+									Valid to ${plan.validTo.format("dd MMM yyyy")}
+								</span>
+							#{/if}
+						</p>
+						
+						<p>
+							#{if plan.type == "standard" || plan == null}
+								#{if planLast == null || (plan && planLast && planLast.id == plan.id)}
+									<a href="/settings/paypal/upgrade?type=premium">Upgrade to plan Monthly Premium</a> &middot;
+									<a href="/settings/paypal/upgrade?type=pro">Upgrade to plan Monthly Pro</a> &middot;
+								#{/if}
+							#{/if}
+							#{if plan.type == "premium"}
+								#{if plan && planLast && planLast.id == plan.id && plan.profile != null}
+									<a href="/settings/paypal/upgrade?type=pro">Upgrade to plan Monthly Pro</a> &middot;
+								#{/if}
+								#{if plan && plan.canceled == null}
+									<a href="/settings/paypal/cancel">Cancel subscription</a> &middot;
+								#{/if}
+							#{/if}
+							#{if plan.type == "pro"}
+								#{if plan && plan.canceled == null}
+									<a href="/settings/paypal/cancel">Cancel subscription</a> &middot;
+								#{/if}
+							#{/if}
+							
+							#{if plan.profile != null && false}
+								<a href="/settings/paypal/payments">View subscription detail</a> &middot;
+							#{/if}
+							<a href="/about#pricing">Learn more about pricing</a>
+						</p>
+					#{/if}
 				</dd>
 			</dl>
 			#{/if}
 			#{else}
+			
 			<div class="form-group">
 				<label for="name" class="col-sm-2 control-label">&{'account-name'}</label>
 			    <div class="col-sm-10">
@@ -184,20 +243,8 @@
 			      <div class="error">#{error 'accName' /}</div>
 			    </div>
 			</div>
-			<div class="form-group">
-				<label for="accPlan" class="col-sm-2 control-label">&{'Account Plan'}</label>
-			    <div class="col-sm-10">
-					<select class="form-control" name="accPlan" id="accPlan">
-						<option #{if params.type == "standard"}  selected='selected' #{/if} value="standard">&{'standard'}</option>
-						<option #{if params.type == "premium"}  selected='selected' #{/if} value="premium">&{'monthly-basic'}</option>
-						<option #{if params.type == "pro"}  selected='selected' #{/if} value="pro">&{'monthly-premium'}</option>
-					</select>
-					<div class="error">#{error 'type' /}</div>
-			    </div>
-			</div>			
 			#{/else}
 
-			<br/>
 			<h3>&{'user-preferences'}</h3>
 			<div class="separator-2"></div>
 			#{if !edit}
@@ -225,7 +272,6 @@
 				<dt>&{'email-notifications'}</dt>
 				<dd>
 					<span class="" rel="tooltip" data-placement="right" data-original-title="&{'enable-or-disable-email-notifications'}">${user.emailNotification}</span>
-					 
 				</dd>	
 				
 				<dt>&{'facebook-id'}</dt>
@@ -329,80 +375,9 @@
 			#{/else}			
 			
 			
-
-			<h3>&{'About You'}</h3>
-			<div class="separator-2"></div>
-			#{if !edit}
-				#{set usr:user /}
-				#{include 'userAbout.html' /}
-			#{/if}
-			#{else}
-			<div class="form-group has-feedback">
-				<label for="userAbout" class="col-sm-2 control-label">&{'about'}</label>
-			    <div class="col-sm-10">
-			      <textarea class="form-control" id="userAbout" placeholder="&{'about'}" name="userAbout" rows="10">${params.userAbout}</textarea>
-			      <div class="error">#{error 'userAbout' /}</div>
-			    </div>
-			    #{include 'help.html' /}
-			</div>
-			<div class="form-group has-feedback">
-				<label for="userEducation" class="col-sm-2 control-label">&{'education'}</label>
-			    <div class="col-sm-10">
-			      <textarea class="form-control" id="userEducation" placeholder="&{'education'}" name="userEducation" rows="10">${params.userEducation}</textarea>
-			      <div class="error">#{error 'userEducation' /}</div>
-			    </div>
-  		        #{include 'help.html' /}
-			</div>
-			<div class="form-group has-feedback">
-				<label for="userExperiences" class="col-sm-2 control-label">&{'experiences'}</label>
-			    <div class="col-sm-10">
-			      <textarea class="form-control" id="userExperiences" placeholder="&{'experiences'}" name="userExperiences" rows="10">${params.userExperiences}</textarea>
-			      <div class="error">#{error 'userExperiences' /}</div>
-			    </div>
-			    #{include 'help.html' /}
-			</div>
-			<div class="form-group">
-				<label for="website" class="col-sm-2 control-label">&{'website'}</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="website" placeholder="&{'website'}" name="url" value="${params.url}">
-			      <div class="error">#{error 'url' /}</div>
-			    </div>
-			</div>
-
-			<div class="form-group">
-				<label for="facebook" class="col-sm-2 control-label"> &{'facebook'}</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="facebook" placeholder="&{'facebook'}" name="facebook" value="${params.facebook}">
-			      <div class="error">#{error 'facebook' /}</div>
-			    </div>
-			</div>				
-
-			<div class="form-group">
-				<label for="twitter" class="col-sm-2 control-label"> &{'twitter'}</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="twitter" placeholder="&{'twitter'}" name="twitter" value="${params.twitter}">
-			      <div class="error">#{error 'twitter' /}</div>
-			    </div>
-			</div>				
-
-			<div class="form-group">
-				<label for="linkedIn" class="col-sm-2 control-label"> &{'linkedIn'}</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="linkedIn" placeholder="&{'linkedIn'}" name="linkedIn" value="${params.linkedIn}">
-			      <div class="error">#{error 'linkedIn' /}</div>
-			    </div>
-			</div>				
-
-			<div class="form-group">
-				<label for="googlePlus" class="col-sm-2 control-label"> &{'googlePlus'}</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="googlePlus" placeholder="&{'googlePlus'}" name="googlePlus" value="${params.googlePlus}">
-			      <div class="error">#{error 'googlePlus' /}</div>
-			    </div>
-			</div>				
-			#{/else}	
 			
-			
+
+
 			<h3>&{'your-calendar'}</h3>
 			<div class="separator-2"></div>
 			#{if !edit}
@@ -548,7 +523,7 @@
 
 
 
-
+			#{if user.account.type == "publisher"}
 			<br/>
 			<a id="paypal"></a>
 			<h3>&{'paypal-account'}</h3>
@@ -595,12 +570,84 @@
 			    </div>
 			</div>			
 			#{/else}
+			#{/if}
+			
+
+
 			
 			
-			
-			
-			
-			
+			<br/>
+			<h3>&{'About You'}</h3>
+			<div class="separator-2"></div>
+			#{if !edit}
+				#{set usr:user /}
+				#{include 'userAbout.html' /}
+			#{/if}
+			#{else}
+			<div class="form-group has-feedback">
+				<label for="userAbout" class="col-sm-2 control-label">&{'about'}</label>
+			    <div class="col-sm-10">
+			      <textarea class="form-control" id="userAbout" placeholder="&{'about'}" name="userAbout" rows="10">${params.userAbout}</textarea>
+			      <div class="error">#{error 'userAbout' /}</div>
+			    </div>
+			    #{include 'help.html' /}
+			</div>
+			<div class="form-group has-feedback">
+				<label for="userEducation" class="col-sm-2 control-label">&{'education'}</label>
+			    <div class="col-sm-10">
+			      <textarea class="form-control" id="userEducation" placeholder="&{'education'}" name="userEducation" rows="10">${params.userEducation}</textarea>
+			      <div class="error">#{error 'userEducation' /}</div>
+			    </div>
+  		        #{include 'help.html' /}
+			</div>
+			<div class="form-group has-feedback">
+				<label for="userExperiences" class="col-sm-2 control-label">&{'experiences'}</label>
+			    <div class="col-sm-10">
+			      <textarea class="form-control" id="userExperiences" placeholder="&{'experiences'}" name="userExperiences" rows="10">${params.userExperiences}</textarea>
+			      <div class="error">#{error 'userExperiences' /}</div>
+			    </div>
+			    #{include 'help.html' /}
+			</div>
+			<div class="form-group">
+				<label for="website" class="col-sm-2 control-label">&{'website'}</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="website" placeholder="&{'website'}" name="url" value="${params.url}">
+			      <div class="error">#{error 'url' /}</div>
+			    </div>
+			</div>
+
+			<div class="form-group">
+				<label for="facebook" class="col-sm-2 control-label"> &{'facebook'}</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="facebook" placeholder="&{'facebook'}" name="facebook" value="${params.facebook}">
+			      <div class="error">#{error 'facebook' /}</div>
+			    </div>
+			</div>				
+
+			<div class="form-group">
+				<label for="twitter" class="col-sm-2 control-label"> &{'twitter'}</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="twitter" placeholder="&{'twitter'}" name="twitter" value="${params.twitter}">
+			      <div class="error">#{error 'twitter' /}</div>
+			    </div>
+			</div>				
+
+			<div class="form-group">
+				<label for="linkedIn" class="col-sm-2 control-label"> &{'linkedIn'}</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="linkedIn" placeholder="&{'linkedIn'}" name="linkedIn" value="${params.linkedIn}">
+			      <div class="error">#{error 'linkedIn' /}</div>
+			    </div>
+			</div>				
+
+			<div class="form-group">
+				<label for="googlePlus" class="col-sm-2 control-label"> &{'googlePlus'}</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="googlePlus" placeholder="&{'googlePlus'}" name="googlePlus" value="${params.googlePlus}">
+			      <div class="error">#{error 'googlePlus' /}</div>
+			    </div>
+			</div>				
+			#{/else}	
 			
 			
 			

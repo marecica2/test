@@ -1,13 +1,14 @@
 
 #Accounts.java
-you-need-at-least-one-listing=To become a Publisher You need at least one channel
+you-need-at-least-one-listing=To become a Publisher You need at least one channel. <a href="/channel/new?action=edit&new=true">Click here to create one</a>
 please-fill-in-information-about-you=To become a Publisher please fill in information about you
-
+please-fill-in-information-about-you=To become a Publisher please fill in information about you
+your-publisher-request-was-submited=Your publisher request was submited. Please give us some time to validate your request. After completing validation you will be notified by email.
 #Admin.java
 publisher-request-approved-subject=Your request for publisher was approved
 publisher-request-approved-message=h3. Your request for publisher was approved \nFrom now all your channels are visible and you can make full use of your account.
 publisher-request-declined-subject=Your request for publisher was declined
-publisher-request-declined-message=h3. Your request for publisher was declined \nPlease complete your personal information and channels and try again. Remember you can always us what needs to be corrected in order to be later successfully approved.
+publisher-request-declined-message=h3. Your request for publisher was declined \nPlease complete your personal information and channels and try again. Remember you can always ask us what needs to be corrected in order to be later successfully approved. [Ask a question|%s]
 
 #Application.java
 start-helping-others=Start helping others and become Publisher. <a href='/settings/request-publisher'>Request for publisher account here</a> or <a href='/help#publisher'>learn more</a>
@@ -29,15 +30,17 @@ is-already-registered=Contact %s is already registered. <a href='/user/%s'>Go to
 invited-you-to-widgr-subject=%s invited You to Widgr
 invitation-sent-to=Invitation has been successfully sent to %s 
 view-on-widgr=View on Widgr
-
+c
 #Events.java
+invalid-price=Invalid price
+invalid-time-range=Invalid time range
 setup-paypal-account-warning=To create paid session you must set up your Paypal account first. <a href='/settings?edit=true#paypal'>Set up your Paypal account here</a>
-you-have-not-paid-for-current-month=You have not paid for current month
+you-have-not-paid-for-current-month=You can't create paid sessions. Your subscription is not activated. <a href='/settings'>Activate your subscription first</a>
 invalid-paypal-account-warning=To create paid session you must set up your Paypal account first. <a href='/settings?edit=true#paypal'>Set up your Paypal account here</a>
 new-event-proposed-for-channel-subject=New session was requested for channel %s
 new-event-proposed-for-channel-message=h3. New session request \n%s requested new session [%s|%s]. Please visit the link to review and approve or decline this request.
-you-have-been-invited-subject=%s invited you to join session %s
-you-have-been-invited-message=Invited you to join session %s
+you-have-been-invited-subject=%s invited you to session %s
+you-have-been-invited-message=h3. Invitation to session \n%s invited you to session [%s|%s]
 your-proposal-declined-subject=%s declined your request
 your-proposal-declined-message=h3. Your session request was declined \n%s declined your request for channel %s
 your-proposal-approved-subject=%s accepted your request
@@ -160,7 +163,7 @@ you-have-been-logged-out=You have been signed out
 you-have-been-invited-to-widgr=%s invited to you to join Widgr
 you-have-been-invited-to-event=invited you to join session %s
 regards-html=<br/>With regards, <br/>Your Widgr team
-regards=\nWith regards, \nYour Widgr team
+regards=\n\nWith regards, \nYour Widgr team
 email-what-is-widgr=<h3>What is Widgr?</h3>With Widgr you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.<br/>You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later.<br/>Just fill simple registration and start using Widgr even today. <a href='%sabout'>Learn more about Widgr</a>
 email-footer=<h4><strong>How do I know this is not a fake email?</strong></h4><p style="font-family: Arial, Helvetica;font-size:12px">Please note that email really coming from Widgr will never ask you for sensitive information like your password. An email that urgently requests you to supply sensitive personal information is usually an attempt at fraud. Remember not to click any links in suspicious looking emails.</p>
 register-now=Register now
@@ -193,6 +196,9 @@ contact=Contact
 #WikiUtils.java
 
 #account.html
+standard=Standard
+publisher=Publisher
+publisherReq=Standard
 edit=Edit
 cancel=Cancel
 crop=Crop
@@ -208,8 +214,8 @@ become-a-publisher=Become a publisher
 account.accountName=Account.accountName
 Account Plan=Account Plan
 standard=Standard
-monthly-basic=Premium
-monthly-premium=Pro
+premium=Monthly Premium
+pro=Monthly Pro
 user-preferences=User preferences
 display-name=Display name
 password=Password
@@ -276,7 +282,7 @@ submit=Submit
 payments.income=Income
 payments.totalSales=Total sales
 payments.fee=Fee
-payments.transactions=Transactions
+payments.transactions=Transaction history
 customer=Customer
 event=Session
 date=Date
@@ -291,6 +297,8 @@ activities=Activities
 #users.html
 
 #about.html
+pricing-for-customers=Pricing for basic Users
+pricing-for-publishers=Pricing for Widgr Publishers
 widgr-share-your-knowledge=widgr<small style="font-size:0.6em"> &middot; share your knowledge</small>
 find-help-header=Find help across range of topics
 get-help-header=Get help from Experts in one click
@@ -324,9 +332,7 @@ security-description=Keeping secret things secret is important for us. That's wh
 ssl=SSL encryption
 disk-space=Disk storage is used to store attachments for sessions
 storage=Storage
-premium=Premium
 paid-events-per-month=Paid sessions per month
-pro=Pro
 unlimited-paid-events=Unlimited paid sessions
 unlimited-disk-space=Unlimited disk space
 fill-in-quick-registration-and-start-using-widgr=Fill in quick registration and start using widgr
@@ -393,7 +399,6 @@ sync-your-events-with-calendar=Sync your sessions with Calendar
 easy-payment-paypal=Easy and secure payment with Paypal
 dont-miss=Don't miss out!
 what-is=What is
-about=about
 find-help=Search
 find-help-message=With Widgr you can get help anytime from people with expertise across a range of topics. Teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.
 read-more=Read more
@@ -521,21 +526,29 @@ stop-live-broadcast=Stop live broadcast
 stop-instant-broadcast=Stop instant broadcast
 start-hangout=Start hangout
 join-hangout=Join hangout
-edit-event=Create new session
+edit-event=Edit
+add-event=New Session
 delete-selected-item=Confirm your choice
-delete-event=Delete session
-star-instant-broadcast=Star instant broadcast
+delete-event=Delete
+star-instant-broadcast=Start instant broadcast
 go-to-private-room=Go to private room
 edit-channel=Edit channel
 delete-channel=Delete channel
 
 #listing.html
+paid-on=Paid on
+refundation=Refundation
+request-refund=Request refund
+refund-reason=Reason of refundation
+refund-requested=Refund requested
+reason-required=You must enter reason of refundation request
+write-reason=Write reason why you are requesting refundation
 confirm-decline=Confirm your choice
 create-new-channel=Create new channel
 play-introduction=Play introduction
 total-price=Total price
 min=Min
-request-for-event=Request for new session
+request-for-event=Schedule session
 guests=Guests
 add-to-watchlist=Add to watchlist
 remove-from-watchlist=Remove from watchlist
@@ -552,7 +565,7 @@ send=Send
 #listingsList.html
 reviews=Reviews
 create-event=Create new session
-request-event=Request for new session
+request-event=Schedule session
 
 #main.html
 select-page-to-display=Select page to display
@@ -570,6 +583,7 @@ about-widgr=About Widgr
 contact-us=Contact us
 
 #inbox.html
+invalid-user-name=Invalid user name
 Inbox=Inbox
 compose-new=Compose new
 sent-messages=Sent messages
@@ -580,12 +594,12 @@ newer=Newer
 older=Older
 
 #payment.html
-join-event=Join session
-paypalError=PaypalError
+join-event=Session &bdquo;%s&rdquo; is charged
+paypal-error=Paypal checkout failed. Please try again.
 unit-price=Unit price
 total=Total
-checkout-with-paypal=Checkout with paypal
-pay-with-paypal=Pay with paypal
+checkout-with-paypal=Checkout with Paypal
+pay-with-paypal=Checkout with Paypal
 
 #userProfile.html
 

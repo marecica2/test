@@ -1,5 +1,6 @@
 package controllers;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,6 +46,7 @@ public class Listings extends BaseController
         final String temp = RandomUtil.getUUID();
         final String commentTemp = RandomUtil.getUUID();
         final Map<String, String> errs = new HashMap<String, String>();
+        final String baseUrl = getBaseUrl().substring(0, getBaseUrl().length() - 1);
 
         if (isOwner && !user.account.type.equals(Account.TYPE_PUBLISHER))
             flash.success(Messages.get("start-helping-others"));
@@ -72,7 +74,7 @@ public class Listings extends BaseController
             params.put("charging", listing.charging);
             params.put("type", listing.type);
             params.put("privacy", listing.privacy);
-            params.put("price", listing.price.toString());
+            params.put("price", listing.price != null ? listing.price.toString() : null);
             params.put("chargingTime", listing.chargingTime + "");
             params.put("color", listing.color);
             params.put("image", listing.imageUrl);
@@ -100,7 +102,7 @@ public class Listings extends BaseController
             final Map<String, Object> stats = listing != null ? Rating.calculateStats(ratings) : null;
 
             render(user, isOwner, edit, listing, url, errs, type,
-                    temp, commentTemp, comments, ratings, stats, fromEvent, listings, rmtp, socketIo, room, name);
+                    temp, commentTemp, comments, ratings, stats, fromEvent, listings, rmtp, socketIo, room, name, baseUrl);
         }
     }
 
@@ -147,6 +149,15 @@ public class Listings extends BaseController
             validation.required(price);
             validation.required(currency);
             validation.equals(charging, charging).message("validation-charging");
+
+            if (charging != null && !charging.equals(Event.EVENT_CHARGING_FREE))
+            {
+                if (NumberUtils.parseDecimal(price) == null)
+                    validation.addError("price", Messages.get("invalid-price"));
+                if (NumberUtils.parseDecimal(price) != null && NumberUtils.parseDecimal(price).compareTo(new BigDecimal("0")) <= 0)
+                    validation.addError("price", Messages.get("invalid-price"));
+            }
+
         }
         validation.required(title);
         validation.required(description);

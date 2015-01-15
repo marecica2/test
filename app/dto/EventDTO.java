@@ -94,7 +94,8 @@ public class EventDTO
         e.currency = event.currency;
         if (event.price != null)
             e.price = event.price.toString();
-        e.priceTotal = event.getTotalPrice().toString();
+        if (event.getTotalPrice() != null)
+            e.priceTotal = event.getTotalPrice().toString();
         e.charging = event.charging;
         e.uuid = event.uuid;
         e.archived = event.archived;

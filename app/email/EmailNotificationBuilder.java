@@ -92,7 +92,7 @@ public class EmailNotificationBuilder
         {
             final VelocityContext ctx = VelocityTemplate.createBasicTemplate(null, baseUrl, subject, message);
             final String body = VelocityTemplate.generateTemplate(ctx, VelocityTemplate.getTemplate(VelocityTemplate.DEFAULT_TEMPLATE));
-            new Notification(ep, "Widgr - " + subject, recipient, body).execute();
+            new EmailNotification(ep, "Widgr - " + subject, recipient, body).execute();
         }
     }
 
@@ -112,7 +112,7 @@ public class EmailNotificationBuilder
                 ctx.put("notificationLabel", from.firstName + ":");
             }
             final String body = VelocityTemplate.generateTemplate(ctx, VelocityTemplate.getTemplate(VelocityTemplate.DEFAULT_TEMPLATE));
-            new Notification(ep, "Widgr - " + subject, recipient, body).execute();
+            new EmailNotification(ep, "Widgr - " + subject, recipient, body).execute();
         }
     }
 

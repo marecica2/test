@@ -1,0 +1,21 @@
+#{extends 'main.html' /} 
+#{set title:'Payments' /} 
+
+<div style="padding:30px;min-height:100%;min-height:100vh;" class="transparent2">
+	<div class="container">
+		<div class="row">
+		  	<div class="col-md-12">
+				<h2><i class='fa fa-bar-chart-o'></i> &{'payments.receivedPayments'}</h2>
+				<div class="separator-2"></div>
+				<dl>
+				#{list items:respMap.keySet(), as:'item'}
+					<dt>${item}</dt> 
+					<dd>${respMap.get(item)}</dd>				
+				#{/list}
+				</dl>
+			</div>
+		</div>
+	</div>
+</div>
+
+

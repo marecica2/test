@@ -41,7 +41,7 @@ public class GoogleOAuth extends BaseController
                     .addParameter("state", url)
                     .addParameter("access_type", "offline")
                     .addParameter("approval_prompt", "auto")
-                    .addParameter("login_hint", user.login).build().toString();
+                    .build().toString();
             return redirecUrl.toString();
         } catch (URISyntaxException e)
         {

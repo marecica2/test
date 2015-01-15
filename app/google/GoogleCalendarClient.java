@@ -136,8 +136,10 @@ public class GoogleCalendarClient
             update.setEnd(new EventDateTime().setDateTime(new DateTime(event.eventEnd.getTime())));
             update.setSummary(event.listing.title);
 
-            update.setDescription(event.listing.description + "\n<a href=\"" + baseUrl + "event/" + event.uuid + "\">go to event</a>");
-            //update.set("location", baseUrl + "event/" + event.uuid);
+            update.setDescription(event.listing.description + "\n" + baseUrl + "event/" + event.uuid);
+            update.set("link", baseUrl + "event/" + event.uuid);
+            update.set("url", baseUrl + "event/" + event.uuid);
+            update.set("location", baseUrl + "event/" + event.uuid);
             update.set("source.url", baseUrl + "event/" + event.uuid);
             update.set("source.title", baseUrl + "event/" + event.uuid);
             GoogleCalendarClient.updateEvent(user, existing.getId(), update);

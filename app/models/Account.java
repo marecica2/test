@@ -1,6 +1,6 @@
 package models;
 
-import java.util.Date;
+import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 
@@ -17,17 +17,16 @@ public class Account extends Model
     public static final String PLAN_MONTH_PREMIUM = "premium";
     public static final String PLAN_MONTH_PRO = "pro";
 
+    public static final BigDecimal PRICE_PLAN_PREMIUM = new BigDecimal("10");
+    public static final BigDecimal PRICE_PLAN_PRO = new BigDecimal("25");
+    public static final String PRICE_PLAN_CURRENCY = "USD";
+
     public String name;
     public String type;
-    public Date requestTime;
     public String key;
     public String url;
     public String currency;
     public String paypalAccount;
-
-    public String planCurrent;
-    public String planRequest;
-    public Date planRequestFrom;
 
     public String smtpHost;
     public String smtpPort;
@@ -69,17 +68,19 @@ public class Account extends Model
         return true;
     }
 
-    public String currentPlan()
+    public AccountPlan currentPlan()
     {
-        if (this.planRequestFrom == null || this.planRequestFrom.getTime() < System.currentTimeMillis())
-            return this.planRequest;
-        return this.planCurrent;
+        AccountPlan plan = AccountPlan.getCurrentPlan(this);
+        return plan;
     }
 
-    public Boolean newPlanApplied()
+    public BigDecimal getPlanPrice()
     {
-        if (this.planRequestFrom == null || (this.planRequestFrom.getTime() < System.currentTimeMillis()))
-            return true;
-        return false;
+        final AccountPlan currentPlan = this.currentPlan();
+        if (currentPlan != null && currentPlan.type.equals(PLAN_MONTH_PREMIUM))
+            return PRICE_PLAN_PREMIUM;
+        if (currentPlan != null && currentPlan.type.equals(PLAN_MONTH_PRO))
+            return PRICE_PLAN_PRO;
+        return null;
     }
 }

@@ -107,7 +107,14 @@ GET  	/rating/{uuid}/abuse         	 		Ratings.abuseForRating
 GET		/payment/{event}						PaymentController.payment
 POST	/payment/{event}						PaymentController.paymentPost
 *		/paypal/{event}    						PaymentController.processWithPaypal
+*		/paypal/adaptive/{event}    			PaymentController.processWithPaypalAdaptiveResponse
 GET		/paypal/refund/{id}						PaymentController.paypalRefund
+POST	/paypal/refund/request/{id}				PaymentController.paypalRefundRequest
+POST	/settings/subscription					PaymentController.subscription
+GET		/settings/subscription/response			PaymentController.subscriptionResponse
+GET		/settings/paypal/payments				PaymentController.paypalPayments
+GET		/settings/paypal/cancel					PaymentController.paypalCancelRecurring
+GET		/settings/paypal/upgrade				PaymentController.paypalUpgradeRecurring
 
 POST    /event/comment                  		Comments.addComment
 GET  	/event/comment/delete              		Comments.deleteComment
@@ -136,6 +143,7 @@ GET 	/settings/request-publisher				Accounts.requestPublisher
 *		/payments								Accounts.payments
 GET		/facebook/clear							Accounts.facebookClear
 GET		/google/clear							Accounts.googleCalendarClear
+
 
 GET 	/admin/publishers						Admin.publishers
 GET 	/admin/users							Admin.users

@@ -295,10 +295,11 @@ public class Event extends Model
         if (this.chargingTime != null)
         {
             final BigDecimal divisor = new BigDecimal(this.chargingTime.toString(), MathContext.DECIMAL32);
-            final BigDecimal unitPrice = this.price.divide(divisor, 32, RoundingMode.CEILING);
+            final BigDecimal unitPrice = this.price != null ? this.price.divide(divisor, 32, RoundingMode.CEILING) : null;
             final BigDecimal multiplicand = new BigDecimal(this.getMinutes().toString(), MathContext.DECIMAL32);
-            BigDecimal totalPrice = unitPrice.multiply(multiplicand);
-            totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_HALF_DOWN);
+            BigDecimal totalPrice = unitPrice != null ? unitPrice.multiply(multiplicand) : null;
+            if (totalPrice != null)
+                totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_HALF_DOWN);
             return totalPrice;
         }
         return null;
@@ -370,10 +371,11 @@ public class Event extends Model
 
     public Boolean isEditable(User user)
     {
-        if (this.isOwner(user) && !this.isLocked())
-            return true;
-        if (user != null && this.hasInviteForCustomer(user) && this.state.equals(EVENT_STATE_CUSTOMER_CREATED))
-            return true;
-        return false;
+        return true;
+        //        if (this.isOwner(user) && !this.isLocked())
+        //            return true;
+        //        if (user != null && this.hasInviteForCustomer(user) && this.state.equals(EVENT_STATE_CUSTOMER_CREATED))
+        //            return true;
+        //        return false;
     }
 }

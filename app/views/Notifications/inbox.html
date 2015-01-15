@@ -1,5 +1,7 @@
 #{extends 'main.html' /} 
-#{set title:'notifications' /} 
+#{set 'title'}
+	&{'notifications'}
+#{/set}
 
 #{set 'moreScripts'}
 	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
@@ -59,7 +61,16 @@
 					#{/list}							
 				</table>
 				
- 				<form class="" action="/mail-new" role="form" method="post">
+				<button type="button" class="reply-button btn btn-default pull-right ">&{'write-reply'}</button>
+				<script>
+					$(".reply-button").click(function(){
+					    $(this).hide();
+					    $(".reply-form").removeClass("hidden");
+					});
+				</script>
+
+				<div class="clearfix"></div>
+ 				<form action="/mail-new" role="form" method="post" class="reply-form hidden">
  					<input type="hidden" name="url" value="${request.url.urlEncode()}">
  					<input type="hidden" name="thread" value="#{if message && message.thread}${message.thread}#{/if}#{else}${message.uuid}#{/else}">
 					<div class="form-group">
@@ -102,7 +113,7 @@
 				    	<textarea rows="15" class="form-control" placeholder="&{'message'}" name="emailBody">${params.emailBody}</textarea>
 				    	#{include 'help.html' /}
 				    </div>
-				    <div class="alert alert-danger">#{error 'body' /}</div>
+				    <div class="alert alert-danger">#{error 'emailBody' /}</div>
 				    
 					<div class="form-group">			    
 				        <button type="submit" class="pull-right btn btn-default popup-event-notify">&{'submit'}</button>

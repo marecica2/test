@@ -1,4 +1,8 @@
 #{extends 'main.html' /} 
+#{set 'title'}
+&{'checkout'} - ${e.listing.title}
+#{/set}
+
 
 <div class="container" style="min-height:70vh;">
 <div class="row">
@@ -6,21 +10,11 @@
 <div class="col-md-6">
 	<div class="" style="background:white; padding:0px; margin:30px auto;">
 		<div  class="default_bg" style="font-size:1.3em; padding:30px;">
-			<span>&{'join-event'} </span><br/>
+			<span>&{'join-event', e.listing.title} </span><br/>
 		</div>
 		<a href="/event?uuid=${e.uuid}"><img src="/${e.listing.imageUrl}" style="width:100%;"></a>
 		<div style="margin-left:20px; margin-top:-50px">
-			<table>
-				<tr>
-					<td>
-						<img src="/${e.user.avatarUrl}" class="img-circle" style="border:4px solid white;width:100px;margin-right:20px;">
-					</td>
-					<td>
-						<a href="/event?uuid=${e.uuid}" style="text-decoration: none"><span class="segoe-bold-h2" style="color:white;font-weight: bold">${e.listing.title.trimDot(50)}</span></a><br/>
-						<a href="/user/${e.user.login}" class="segoe-bold black" style="font-size:1.2em">${e.user.fullName}</a>
-					</td>
-				</tr>
-			</table>
+			<img src="/${e.user.avatarUrl}" class="img-circle" style="border:4px solid white;width:100px;margin-right:20px;">
 		</div>
 
 		<div style="padding:20px">
@@ -32,12 +26,13 @@
 			#{/if}
 			
    	   	   	<p class="segoe" style="font-size:1.3em">
+   	   	   		<a href="/user/${e.user.login}" class="segoe-bold black" style="font-size:1.2em">${e.user.fullName}</a>&nbsp;
 		   		<span>${e.eventStart.format("dd MMM, yyyy")}</span>
 		   		<span>#{time time:e.eventStart/}</span> - 
 		   		<span>#{time time:e.eventEnd/}</span>
    	   	   	</p>
 
-			<p>${e.listing.getDescriptionHtml().raw()}</p>
+			<p>${e.listing.getDescriptionHtml().trimDot(200).raw()}</p>
 			
 			<div style="font-size:1.2em">
    	   	   	<table class="table">

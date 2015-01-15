@@ -67,7 +67,8 @@ public class Admin extends BaseController
     {
         final User user = User.getUserByUUID(uuid);
         final String subject = Messages.get("publisher-request-declined-subject");
-        final String message = Messages.get("publisher-request-declined-message");
+        String email = getBaseUrl() + "mail?action=new&to=" + getAdmin().login;
+        final String message = Messages.get("publisher-request-declined-message", email);
 
         Message.createAdminNotification(user, subject, message);
         new EmailNotificationBuilder()

@@ -145,7 +145,7 @@ $(document).ready(function() {
             selectHelper: true,
             axisFormat: 'HH:mm',
             hiddenDays: starCalendar.hiddenDays,
-            height: starCalendar.defaultView == "month" ? 700 : 2000 ,
+            height: starCalendar.defaultView == "month" ? 700 : ((starCalendar.endHour - starCalendar.startHour) * 105) ,
             minTime: starCalendar.startHour,
             maxTime: starCalendar.endHour,
             defaultView: starCalendar.defaultView == undefined ? "agendaWeek" : starCalendar.defaultView,
@@ -175,14 +175,7 @@ $(document).ready(function() {
                     starCalendar.decorateEvent(event, element, view);
             },
             eventAfterAllRender: function(view){
-                var lineElement = $(".fc-agenda-axis:contains('"+starCalendar.h+":00')");
-                if(starCalendar.h < 10)
-                    lineElement = $(".fc-agenda-axis:contains('0"+starCalendar.h+":00')");
-                    
-                if(starCalendar.mhalf)
-                    lineElement = lineElement.parent().next().find(">:first-child");
-                //lineElement.css("borderTop", "1px solid red");
-                //lineElement.next().css("borderTop", "1px solid red");           
+                starCalendar.drawLine(view);
             }
     };
     
@@ -208,6 +201,40 @@ $(document).ready(function() {
 //
 // event handlers
 //
+starCalendar.drawLine = function(view){
+    var parentDiv = $(".fc-agenda-slots:visible").parent();
+    var timeline = parentDiv.children(".timeline");
+    if (timeline.length == 0) { //if timeline isn't there, add it
+        timeline = $("<hr>").addClass("timeline");
+        parentDiv.prepend(timeline);
+    }
+
+    var curTime = new Date();
+
+    var curCalView = $("#calendar-div").fullCalendar('getView');
+    if (curCalView.visStart < curTime && curCalView.visEnd > curTime) {
+        timeline.show();
+    } else {
+        timeline.hide();
+        return;
+    }
+
+    var curSeconds = (curTime.getHours() * 60 * 60) + (curTime.getMinutes() * 60) + curTime.getSeconds();
+    var percentOfDay = curSeconds / 86400; //24 * 60 * 60 = 86400, # of seconds in a day
+    var topLoc = Math.floor(parentDiv.height() * percentOfDay);
+
+    timeline.css("top", topLoc + "px");
+
+    if (curCalView.name == "agendaWeek") { //week view, don't want the timeline to go the whole way across
+        var dayCol = $(".fc-today:visible");
+        var left = dayCol.position().left + 1;
+        var width = dayCol.width()-2;
+        timeline.css({
+            left: left + "px",
+            width: width + "px"
+        });
+    }    
+};
 
 starCalendar.dialogColorPick = function(hex) {
     $("#event-color").val(hex);

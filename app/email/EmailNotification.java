@@ -2,7 +2,7 @@ package email;
 
 import play.Logger;
 
-public class Notification implements Runnable
+public class EmailNotification implements Runnable
 {
 
     private final EmailProvider emailProvider;
@@ -10,7 +10,7 @@ public class Notification implements Runnable
     private final String subject;
     private final String htmlPart;
 
-    public Notification(EmailProvider ep, String subject, String email, String htmlPart)
+    public EmailNotification(EmailProvider ep, String subject, String email, String htmlPart)
     {
         super();
         this.htmlPart = htmlPart;

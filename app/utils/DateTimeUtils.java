@@ -28,7 +28,6 @@ public class DateTimeUtils
 
     public DateTimeUtils(String type)
     {
-        // "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         defaultDateFormat = new SimpleDateFormat(type);
     }
 

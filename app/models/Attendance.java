@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -49,6 +50,9 @@ public class Attendance extends Model
     public BigDecimal providerPrice;
     public String currency;
     public Boolean refunded;
+    public Boolean refundRequested;
+    @Column(length = 500)
+    public String refundReason;
     public String paymentMethod;
 
     public String paypalAccessToken;
@@ -59,6 +63,7 @@ public class Attendance extends Model
     public String paypalTransactionIdProvider;
     public String paypalAccount;
     public String paypalAccountProvider;
+    public String paypalAdaptivePayKey;
 
     public static List<Attendance> getByEvent(Event event)
     {
@@ -74,7 +79,7 @@ public class Attendance extends Model
             query += " and a.paypalTransactionDate <= :to ";
         if (user != null)
             query += " and event.user = :user ";
-        query += " order by paypalTransactionDate ";
+        query += " order by paypalTransactionDate desc";
 
         TypedQuery<Attendance> q = Attendance.em().createQuery(query, Attendance.class);
         q.setParameter("paid", true);

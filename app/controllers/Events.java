@@ -105,42 +105,18 @@ public class Events extends BaseController
         renderJSON(eventsDto);
     }
 
-    //    public static void hangoutYoutubeId(String id)
-    //    {
-    //        final User user = getLoggedUser();
-    //        LiveStreams.getStream(user.uuid);
-    //        redirect("https://hangouts.google.com/onair");
-    //    }
-    //
-    //    public static void hangoutYoutubeIdRest(String id)
-    //    {
-    //        final User user = getLoggedUser();
-    //        final String youtubeId = LiveStreams.getStream(user.uuid);
-    //        final Event event = Event.get(id);
-    //        event.youtubeId = youtubeId;
-    //        event.save();
-    //        if (youtubeId != null)
-    //        {
-    //            JsonObject jo = new JsonObject();
-    //            jo.addProperty("youtube", youtubeId);
-    //            renderJSON(jo);
-    //        }
-    //        JsonObject jo = new JsonObject();
-    //        jo.addProperty("resp", youtubeId);
-    //        renderJSON(jo);
-    //    }
-
     public static void event(String action,
         String newEvent,
         String uuid,
         String url,
         String type,
         String listingId
-        ) throws Throwable
+        )
     {
         final User user = getLoggedUser();
         final Boolean edit = action != null && action.equals("edit") ? true : false;
         final Boolean isNew = newEvent != null ? true : false;
+        final String baseUrl = getBaseUrl().substring(0, getBaseUrl().length() - 1);
 
         final Event event = !isNew ? Event.get(uuid) : null;
         final Boolean isOwner = event != null ? event.isOwner(user) : false;
@@ -169,13 +145,9 @@ public class Events extends BaseController
         if (edit || isNew)
         {
             if (!user.hasValidPaymentAccount())
-            {
                 flash.success(Messages.get("setup-paypal-account-warning"));
-            }
             if (!user.paidForCurrentMonth())
-            {
                 flash.success(Messages.get("you-have-not-paid-for-current-month"));
-            }
         }
 
         final Listing listing = event != null ? event.listing : Listing.get(listingId);
@@ -253,7 +225,7 @@ public class Events extends BaseController
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
         Map<String, String> errs = new HashMap<String, String>();
         render("Listings/listing.html", user, isOwner, edit, event, attendance, paid, url, errs, name, room, rmtp,
-                socketIo, type, files, temp, commentTemp, comments, ratings, stats, listing, fromEvent);
+                socketIo, type, files, temp, commentTemp, comments, ratings, stats, listing, fromEvent, baseUrl);
     }
 
     public static void eventPost(
@@ -311,8 +283,15 @@ public class Events extends BaseController
         eventEn = eventEn != null ? new Date(eventEn.getTime() + ((Integer.parseInt(offset) * 1000 * 60))) : null;
         validation.required(eventEn);
         validation.required(eventSt);
+        if (charging != null && !charging.equals(Event.EVENT_CHARGING_FREE))
+        {
+            if (NumberUtils.parseDecimal(price) == null)
+                validation.addError("price", Messages.get("invalid-price"));
+            if (NumberUtils.parseDecimal(price) != null && NumberUtils.parseDecimal(price).compareTo(new BigDecimal("0")) <= 0)
+                validation.addError("price", Messages.get("invalid-price"));
+        }
         if (eventSt == null || eventEn == null || eventSt.compareTo(eventEn) > 0)
-            validation.addError("time", "Invalid time range");
+            validation.addError("time", Messages.get("invalid-time-range"));
         if (!charging.equals(Event.EVENT_CHARGING_FREE) && !user.hasValidPaymentAccount())
         {
             validation.addError("charging", Messages.get("invalid-paypal-account-warning"));
@@ -347,7 +326,7 @@ public class Events extends BaseController
             event.privacy = privacy;
             event.type = type;
             event.currency = currency;
-            event.price = new BigDecimal(price);
+            event.price = NumberUtils.parseDecimal(price);
             event.charging = charging;
             event.chargingTime = chargingTime;
             event.chatEnabled = chatEnabled != null ? true : false;
@@ -678,7 +657,7 @@ public class Events extends BaseController
             {
                 final Attendance attendance = Attendance.get(invite[i]);
                 final String subject = Messages.get("you-have-been-invited-subject", user.getFullName(), attendance.event.listing.title);
-                final String body = Messages.get("you-have-been-invited-message", user.getFullName(), event.listing.title, event.uuid);
+                final String body = Messages.get("you-have-been-invited-message", user.getFullName(), event.listing.title, getBaseUrl() + "event/" + event.uuid);
 
                 if (attendance.customer != null)
                 {

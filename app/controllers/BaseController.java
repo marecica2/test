@@ -27,14 +27,22 @@ public class BaseController extends Controller
 
     public static final String CONFIG_GOOGLE_OAUTH_CALLBACK = "star.google.oauth.callback";
 
-    public static final String CONFIG_PAYPAL_PROVIDER_ACCOUNT = "star.configuration.paypal.provider.account";
-    public static final String CONFIG_PAYPAL_PROVIDER_ACCOUNT_MICROPAYMENT = "star.configuration.paypal.provider.account.micropayment";
-    public static final String CONFIG_PAYPAL_ENDPOINT = "star.configuration.paypal.endpoint";
-    public static final String CONFIG_PAYPAL_URL = "star.configuration.paypal.payment.url";
-    public static final String CONFIG_PAYPAL_USER = "star.configuration.paypal.user";
-    public static final String CONFIG_PAYPAL_PWD = "star.configuration.paypal.pwd";
-    public static final String CONFIG_PAYPAL_SIGNATURE = "star.configuration.paypal.signature";
-    public static final String CONFIG_PAYPAL_PERCENTAGE = "star.configuration.paypal.percentage";
+    public static String CONFIG_PAYPAL_PROVIDER_ACCOUNT = "star.configuration.paypal.provider.account";
+    public static String CONFIG_PAYPAL_PROVIDER_ACCOUNT_MICROPAYMENT = "star.configuration.paypal.provider.account.micropayment";
+    public static String CONFIG_PAYPAL_ENDPOINT = "star.configuration.paypal.endpoint";
+    public static String CONFIG_PAYPAL_URL = "star.configuration.paypal.payment.url";
+
+    public static String CONFIG_PAYPAL_USER = "star.configuration.paypal.user";
+    public static String CONFIG_PAYPAL_PWD = "star.configuration.paypal.pwd";
+    public static String CONFIG_PAYPAL_SIGNATURE = "star.configuration.paypal.signature";
+    public static String CONFIG_PAYPAL_PERCENTAGE = "star.configuration.paypal.percentage";
+
+    public static String CONFIG_PAYPAL_ADAPTIVE_ENDPOINT = "star.configuration.paypal.adaptive.endpoint";
+    public static String CONFIG_PAYPAL_ADAPTIVE_APPID = "star.configuration.paypal.adaptive.app";
+    public static String CONFIG_PAYPAL_ADAPTIVE_URL = "star.configuration.paypal.adaptive.url";
+    public static String CONFIG_PAYPAL_ADAPTIVE_OPTIONS_URL = "star.configuration.paypal.adaptive.options.url";
+    public static String CONFIG_PAYPAL_ADAPTIVE_DETAILS_URL = "star.configuration.paypal.adaptive.details.url";
+    public static String CONFIG_PAYPAL_ADAPTIVE_REFUND_URL = "star.configuration.paypal.adaptive.refund.url";
 
     public static void redirectTo(String url)
     {
@@ -164,7 +172,7 @@ public class BaseController extends Controller
         }
     }
 
-    protected static void checkPayment(Event e, String url) throws Throwable
+    protected static void checkPayment(Event e, String url)
     {
         final User user = getLoggedUser();
         Attendance attendance = e.getInviteForCustomer(user);
