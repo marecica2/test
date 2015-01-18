@@ -26,6 +26,9 @@ border-bottom: 0px solid #f3f3f3;
  padding: 5px 0; 
 }
 
+.margin-clear-bottom {
+	margin-bottom:0px;
+}
 
 
 
@@ -103,6 +106,12 @@ img {
 
 
 /* various */
+.btn-social {
+	min-width: 45px !important;	
+	height:45px;
+	margin-left:-1px;
+}
+
 .timeline {
     position: absolute;
     border: none;
@@ -305,14 +314,41 @@ img {
 }
 
 .blink {
-  animation: blink 1s steps(5, start) infinite;
-  -webkit-animation: blink 1s steps(5, start) infinite;
+  animation: blink 2s steps(5, start) infinite;
+  -webkit-animation: blink 2s steps(5, start) infinite;
 }
 @keyframes blink {
   to { visibility: hidden; }
 }
 @-webkit-keyframes blink {
   to { visibility: hidden; }
+}
+
+@keyframes flickerAnimation {
+  0%   { background:#5cb85c; }
+  50% { background:#333333; }
+  100% { background:#5cb85c; }
+}
+@-o-keyframes flickerAnimation{
+  0%   { background:#5cb85c; }
+  50% { background:#333333; }
+  100% { background:#5cb85c; }
+}
+@-moz-keyframes flickerAnimation{
+  0%   { background:#5cb85c; }
+  50% { background:#333333; }
+  100% { background:#5cb85c; }
+}
+@-webkit-keyframes flickerAnimation{
+  0%   { background:#5cb85c; }
+  50% { background:#333333; }
+  100% { background:#5cb85c; }
+}
+.animate-flicker {
+   -webkit-animation: flickerAnimation 3s infinite;
+   -moz-animation: flickerAnimation 3s infinite;
+   -o-animation: flickerAnimation 3s infinite;
+    animation: flickerAnimation 3s infinite;
 }
 
 .error {
@@ -453,12 +489,23 @@ img {
 
 
 @media screen and (min-width: 767px) {
+	.listing-image {
+		min-height:500px;
+	}
 	.shadow-inset {
 		-webkit-box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 1);
 		-moz-box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 1);
 		box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 1);
+	}	
+}
+
+@media screen and (max-width: 767px) {
+	.listing-image {
+		min-height:200px;
 	}
 }
+
+
 
 .colorHover:hover{
 	border:1px solid gray;

@@ -97,7 +97,8 @@
 	    	$(document).ready(function(){
 	    	    // if running in iframe
 		    	if(window.self !== window.top){
-		    	    $("#footer").hide();
+		    	    $(".logo-header").hide();
+		    	    $(".logo-menu").show();
 		    	    $("#facebook-tab-manager").show();
 		    	    //$("header").hide();
 		    	    $("body").css("background", "white");
@@ -133,7 +134,8 @@
 			#{include 'header.html' /}
 
 			<!-- facebook header -->
-			#{if user && isOwner}	
+			#{if session.facebookTab && user}
+			<span class="hidden">${session.remove('facebookTab')}</span>
 			<div class="section clearfix" id="facebook-tab-manager" style="display:none">
 				<div class="container">
 					<div class="row">

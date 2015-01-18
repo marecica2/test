@@ -7,10 +7,12 @@ GET     /user/{login}/calendar		      		Application.calendarUser
 GET     /user/{login}/calendar/{public}    		Application.calendarUser
 GET     /channels								Application.channels
 *	    /facebook								Application.facebook
+*	    /facebook/edit							Application.facebook
 POST    /facebook-save							Application.facebookPost
 GET     /privacy								Application.privacy
 GET     /terms									Application.terms
 GET     /help									Application.help
+GET 	/about									Application.about
 
 GET		/login									Secure.login
 GET		/login/									Secure.login
@@ -30,6 +32,8 @@ GET     /channels/tags							Listings.tagsRest
 GET     /channel-start            				Listings.start
 GET     /channel-stop            				Listings.stop
 GET     /create-room            				Listings.privateRoom
+GET     /available-start          				Listings.availableStart
+GET     /available-stop          				Listings.availableStop
 
 GET     /event      		       				Events.event
 GET     /event/{uuid} 		       				Events.event
@@ -89,7 +93,6 @@ POST 	/public/feed							Public.feedSave
 GET 	/public/activities						Public.activities
 GET 	/public/facebook/registration			Public.facebookRegistration
 GET 	/wiki									Public.wiki
-GET 	/about									Public.about
 
 GET		/remove-upload							FileuploadController.removeFile	
 POST    /fileupload								FileuploadController.uploadFile

@@ -228,6 +228,36 @@ public class Listings extends BaseController
         redirectTo("/");
     }
 
+    public static void availableStart(String id, String url)
+    {
+        final User user = getLoggedUser();
+        final Listing l = Listing.get(id);
+
+        if (user == null)
+            forbidden();
+        if (!l.user.equals(user))
+            forbidden();
+
+        l.availableNow = new Date();
+        l.save();
+        redirectTo(url);
+    }
+
+    public static void availableStop(String id, String url)
+    {
+        final User user = getLoggedUser();
+        final Listing l = Listing.get(id);
+
+        if (user == null)
+            forbidden();
+        if (!l.user.equals(user))
+            forbidden();
+
+        l.availableNow = null;
+        l.save();
+        redirectTo(url);
+    }
+
     public static void start(String id, String url)
     {
         final User user = getLoggedUser();

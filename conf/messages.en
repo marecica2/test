@@ -447,7 +447,7 @@ remove=Remove
 waiting=Waiting
 
 #joinRoom.html
-join-vide-conference=Join vide conference
+join-vide-conference=Join video call
 your-name=Your name
 join=Join
 or=or
@@ -475,7 +475,7 @@ channels=Channels
 pricing=Pricing
 features=Features
 contact-us=Contact us
-start-instant-chat=Start instant chat
+start-instant-chat=Start video call
 sign-out=Sign out
 profile=Profile
 notifications=Notifications
@@ -536,6 +536,8 @@ edit-channel=Edit channel
 delete-channel=Delete channel
 
 #listing.html
+check-me-as-available=Activate Available now
+uncheck-me-as-available=Deactivate Available now
 paid-on=Paid on
 refundation=Refundation
 request-refund=Request refund
@@ -761,6 +763,7 @@ hangoutAir=Hangout on Air
 app.admin=admin
 you=You
 on=on
+reply=Write reply
 
 #suggest.js
 

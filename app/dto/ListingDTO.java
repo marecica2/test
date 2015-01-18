@@ -37,19 +37,11 @@ public class ListingDTO
 
     public String charging;
 
-    public boolean isEditable;
-
-    public boolean isOwner;
-
-    public boolean isInvited;
-
-    public boolean notifyInvited;
+    public boolean commentsEnabled;
 
     public long eventStart;
 
     public long eventEnd;
-
-    public Boolean createdByUser;
 
     public String state;
 
@@ -59,15 +51,11 @@ public class ListingDTO
 
     public Integer ratingCount;
 
-    public Boolean firstFree;
+    public boolean firstFree;
 
     public static ListingDTO convert(Listing listing, User user)
     {
         ListingDTO l = new ListingDTO();
-        if (user == null)
-            l.isOwner = false;
-        else
-            l.isOwner = user.isOwner(listing);
         l.color = listing.color;
         l.description = listing.description;
         l.title = listing.title;
@@ -83,10 +71,15 @@ public class ListingDTO
         l.type = listing.type;
         l.privacy = listing.privacy;
         l.uuid = listing.uuid;
-        l.firstFree = listing.firstFree;
-        l.isInvited = l.isOwner ? false : true;
+        if (listing.firstFree != null && listing.firstFree)
+            l.firstFree = listing.firstFree;
+        else
+            l.firstFree = false;
+        if (listing.commentsEnabled != null && listing.commentsEnabled)
+            l.commentsEnabled = true;
+        else
+            l.commentsEnabled = false;
         l.createdBy = listing.user != null ? listing.user.uuid : null;
-        l.createdByUser = false;
         l.createdByName = listing.user != null ? listing.user.getFullName() : null;
         l.createdByLogin = listing.user != null ? listing.user.login : null;
         l.createdByAvatarUrl = listing.user != null ? listing.user.avatarUrl : null;

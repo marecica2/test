@@ -60,6 +60,7 @@ public class VelocityTemplate
         ctx.put("existing", to != null ? true : false);
         ctx.put("baseUrl", baseUrl);
         ctx.put("logo", baseUrl + "public/images/logo_purple_footer.png");
+        ctx.put("logo_footer", baseUrl + "public/images/logo_purple_footer.png");
 
         ctx.put("user", from.getFullName());
         ctx.put("userImage", baseUrl + from.avatarUrl);
@@ -105,7 +106,8 @@ public class VelocityTemplate
         ctx.put("color3", "#F0F0F0");
         ctx.put("color4", "#363636");
         ctx.put("baseUrl", baseUrl);
-        ctx.put("logo", baseUrl + "public/images/logo_purple_footer.png");
+        ctx.put("logo", baseUrl + "public/images/logo_purple.png");
+        ctx.put("logo_footer", baseUrl + "public/images/logo_purple_footer.png");
 
         ctx.put("title", title);
         ctx.put("message", message);

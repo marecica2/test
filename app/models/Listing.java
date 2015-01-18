@@ -91,6 +91,8 @@ public class Listing extends Model
 
     public Date started;
 
+    public Date availableNow;
+
     public Date ended;
 
     public String instantBroadcast;
@@ -119,9 +121,9 @@ public class Listing extends Model
     {
 
         String query = "";
-        query += " SELECT uuid, title,firstname, lastname, avatarUrl, "
+        query += " SELECT uuid, title, firstname, lastname, avatarUrl, "
                 + "category, privacy, charging, price, currency, imageUrl, "
-                + "tags, type, ratingStars, ratingAvg, login ";
+                + "tags, type, ratingStars, ratingAvg, login, firstFree ";
         query += " FROM search_index ";
         query += " WHERE 1 = 1 ";
 
@@ -136,10 +138,9 @@ public class Listing extends Model
             filter.search = filter.search.replaceAll("\\s+", " ");
             filter.search = filter.search.replaceAll("(\\b[^\\s]+\\b)", "$1:*");
             filter.search = filter.search.replaceAll("\\s+", " | ");
-            System.err.println("query string " + filter.search);
             query += " AND document @@ to_tsquery('english', :search) ";
         }
-        if (filter.sort != null && filter.sort.equals("match"))
+        if (filter.search != null && filter.sort != null && filter.sort.equals("match"))
         {
             query += " ORDER BY ts_rank(document, to_tsquery('english', :search)) DESC, ";
             query += " (ratingStars * ratingAvg) DESC NULLS LAST ";
@@ -177,6 +178,7 @@ public class Listing extends Model
             l.ratingStars = (Integer) item[13];
             l.ratingAvg = item[14] != null ? new Long(item[14].toString()) : null;
             u.login = (String) item[15];
+            l.firstFree = (Boolean) item[16];
             l.user = u;
             listings.add(l);
         }
@@ -233,6 +235,13 @@ public class Listing extends Model
         if (ratingAvg == null)
             return 0L;
         return ratingAvg;
+    }
+
+    public boolean isAvailable()
+    {
+        if (this.availableNow != null)
+            return true;
+        return false;
     }
 
 }

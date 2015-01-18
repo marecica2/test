@@ -20,6 +20,12 @@
 	#{else}
 		starCalendar.temp = "${temp}";
 	#{/else}	
+	#{if listing && listing.commentsEnabled}
+		starCalendar.comments = true;
+	#{/if}
+	#{if event && event.commentsEnabled}
+		starCalendar.comments = true;
+	#{/if}
 	</script>	
 	<script src="@{'/public/javascripts/lib/bootstrap-timepicker.min.js'}" type="text/javascript"></script>
 	<script src="@{'/public/javascripts/lib/simpleWebRtc.js'}" type="text/javascript" ></script>
@@ -96,7 +102,7 @@
 </div>
 
 <!-- Refund Modal -->
-#{if fromEvent}
+#{if fromEvent && !edit && attendance}
 <div class="modal" id="refundModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <form method="POST" action="/paypal/refund/request/${attendance.uuid}?url=${request.url.urlEncode()}">
 	  <div class="modal-dialog">
@@ -121,6 +127,7 @@
 
 #{set displayChat:true /}
 #{set displayStream:true /}
+#{set displayBackground:true /}
 
 <!-- Listing title controls -->
 <div class="section gray-bg" style="padding-top:15px;padding-bottom:15px">
@@ -129,6 +136,7 @@
 
 		   	<h2 class="margin-clear">
 		   		#{if listing}
+				   	<img class="avatar32 img-circle" src="/${listing.user.avatarUrl}_32x32">
 			   		<a href="/channels?category=${listing.category}" class="anchor"><i>${listing.category.capAll()}</i></a> 
 			   		&middot; <i><a class="anchor" href="/channel/${listing.uuid}">${listing.title}</a></i>
 		   		#{/if}
@@ -146,13 +154,12 @@
 		   		#{/if}
 		   	</h2>	
 		   	
-		   	#{include 'Listings/editButtons.html' /}
 	   	</div>
 		
-		
+
 		<!-- social -->
 	   	<div class="pull-right">
-			<ul class="social-links colored clearfix" style="margin:10px">
+			<ul class="social-links colored clearfix" style="margin:0px; margin-top:5px">
 				<li class="dribbble"><a href="" data-toggle="modal" data-target="#myModal" ><i class="fa fa-link"></i></a></li>
 				<li class="facebook">
 					<a id="fb-share" href="#"><i class="fa fa-facebook"></i></a>
@@ -168,6 +175,10 @@
 				</li>
 			</ul>
 	   	</div>
+
+		#{include 'Listings/editButtons.html' /}
+
+
 	   	#{if listing}
 		<script>
 			$("#fb-share").click(function(e){
@@ -256,18 +267,15 @@
 				#{/if}
 	
 				#{else}
-					#{if displayStream}
-						#{include 'Listings/stream.html' /}
-					#{/if}
-					#{else}
-						<div id="image"style="overflow: hidden;width:100%;height:400px;background: url(/${listing.imageUrl}) center; background-size: cover;text-align:center">
-							<div class="shadow-inset" style="height:130%;position:relative;top:-60px;"></div>
-							#{if listing && listing.video}
-								<a style="position:absolute;top:50%;left:43%" class="popup-iframe text-shadow" href="${listing.video}"><i class="fa fa-youtube-play fa-3x"></i><br/>&{'play-introduction'}</a>
-							#{/if}
-						</div>		
-					#{/else}				
-				#{/else}				
+					<div id="image" class="listing-image" style="position:relative; overflow:hidden; width:100%; background: url(/${listing.imageUrl}) #954db3 center; background-size: cover;text-align:center">
+						<div class="shadow-inset" style="height:110%; width:100%; top:-5%; position:absolute;">
+						</div>
+						#{if displayStream}
+							#{include 'Listings/stream.html' /}
+						#{/if}			
+					</div>		
+					
+				#{/else}	
 			</div>
 		</div>
 	</div>
@@ -287,7 +295,7 @@
 
 <!-- parallax -->
 #{if !edit}
-<div class="section parallax default-translucent-bg parallax-bg-2" style="">
+<div class="section parallax default-translucent-bg parallax-bg-4" style="">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-8">
@@ -325,12 +333,21 @@
 				</h5>
 			</div>
 			<div class="col-md-4">
-				#{if !isOwner && listing.user.account.type == "publisher"}
 				<div class="text-center">
-					<a href="/user/${usr.login}"><img style="height:61px;" src="/${usr.avatarUrl}_64x64"></a>				
-					<a href="/user/${usr.login}/calendar?channel=${listing.uuid}" class="btn btn-dark btn-lg"><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
+					<a href="/user/${usr.login}"><img style="height:57px;" src="/${usr.avatarUrl}_64x64"></a>	
+					#{if isOwner && !listing.isAvailable()}
+						<a class="btn btn-dark btn-lg btn-short" href="/available-start?id=${listing.uuid}&url=${request.url.urlEncode()}">&{'check-me-as-available'}</a>
+					#{/if}
+					#{if isOwner && listing.isAvailable()}
+						<a class="btn btn-danger btn-lg btn-short" href="/available-stop?id=${listing.uuid}&url=${request.url.urlEncode()}">&{'uncheck-me-as-available'}</a>
+					#{/if}					
+					#{if !isOwner && listing.user.account.type == "publisher"}
+						<a href="/user/${usr.login}/calendar?channel=${listing.uuid}" class="btn btn-dark btn-lg"><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
+						#{if !isOwner && listing.isAvailable()}
+							<a href="/user/${usr.login}/calendar?channel=${listing.uuid}" class="btn btn-success btn-lg btn-short blink" style="border-width:0px;"><i class="fa fa-play"></i> Join</a>
+						#{/if}			
+					#{/if}
 				</div>
-				#{/if}
 			</div>
 		</div>
 	</div>
@@ -354,7 +371,7 @@
 						#{if file.isImage()}
 							<span style="float:left;" title="${file.name}">
 							<span class="overlay-container">
-								<img src="/public/uploads/${file.url}" style="height:62px" alt="${file.name}">
+								<img src="/public/uploads/${file.url}_thumb" style="height:62px" alt="${file.name}">
 								<a href="/public/uploads/${file.url}" class="overlay small popup-img">
 									<i class="fa fa-search-plus"></i>
 								</a>
@@ -458,6 +475,7 @@
 							    		<span class="label label-success">&{'paid'}</span>
 							    	#{/if}
 							    	</td>
+							    	#{if event.isEditable()}
 							    	<td style="text-align:right">
 							    		#{if user && item.email == user.login}
 							    		<a class="" href="/attendance-new-edit?type=accepted&uuid=${item.uuid}&url=${request.url.urlEncode()}#invitation">
@@ -470,6 +488,7 @@
 							    		</a>
 							    		#{/if}
 							    	</td>
+							    	#{/if}
 							    </tr>
 							#{/list}							
 						</table>
@@ -503,6 +522,7 @@
 
 					#{if stats}
 						<a href="#reviews" style="font-size:0.3em;text-decoration: none">
+							<nobr>
 				       		#{list items:1..5, as:'i'} 
 				       			#{if stats.get("avgStars") >= i}
 								    <i class="fa fa-star fa-2x text-default" data-value="1"></i>
@@ -511,6 +531,7 @@
 								    <i class="fa fa-star-o fa-2x" data-value="1"></i>
 				       			#{/else}
 							#{/list}
+							</nobr>
 						</a>
 	    	   	   	#{/if}
     	   	   	</h2>
@@ -551,6 +572,8 @@
 	    	    		<a href="/channels?search=${tag}" style="font-size:0.8em" class="label label-default">${tag}</a>
 	    	    	#{/list}
     	    	#{/if}
+    	    	<br/>
+    	    	<br/>
 			</div>
 
 
@@ -605,7 +628,6 @@
 
 			<!-- user about -->
 			<div>
-				<br/>
 				<h2><a class="anchor" href="/user/${listing.user.login}"><img class="img-circle" src="/${listing.user.avatarUrl}_32x32"> &{'about'} ${listing.user.firstName}</a></h2>
 				<div class="separator-2"></div>
 				#{if listing}
@@ -620,7 +642,6 @@
 						
 			<!-- listings -->
 			<div>
-				<br/>			
 				#{if listings}
 					<h2>&{'all-channels-from'} ${listing.user.firstName}</h2>
 					<div class="separator-2"></div>

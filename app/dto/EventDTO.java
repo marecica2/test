@@ -50,6 +50,8 @@ public class EventDTO
 
     public boolean isEditable;
 
+    public boolean commentsEnabled;
+
     public boolean firstFree;
 
     public boolean isOwner;
@@ -96,6 +98,10 @@ public class EventDTO
             e.price = event.price.toString();
         if (event.getTotalPrice() != null)
             e.priceTotal = event.getTotalPrice().toString();
+        if (event.commentsEnabled != null && event.commentsEnabled)
+            e.commentsEnabled = true;
+        else
+            e.commentsEnabled = false;
         e.charging = event.charging;
         e.uuid = event.uuid;
         e.archived = event.archived;

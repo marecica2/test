@@ -14,6 +14,7 @@ SELECT listing.uuid,
        listing.imageUrl,
        listing.tags,
        listing.type,
+       listing.firstFree,
        listing.ratingStars,
        listing.ratingAvg,
        account.type as account,
@@ -50,7 +51,6 @@ DROP TABLE IF EXISTS fileupload CASCADE;
 DROP TABLE IF EXISTS comment CASCADE;
 DROP TABLE IF EXISTS message CASCADE;
 DROP TABLE IF EXISTS event CASCADE;
-DROP TABLE IF EXISTS listing CASCADE;
 DROP TABLE IF EXISTS chat_feed CASCADE;
 DROP TABLE IF EXISTS attendance CASCADE;
 

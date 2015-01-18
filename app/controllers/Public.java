@@ -58,12 +58,6 @@ public class Public extends BaseController
         renderJSON(feed);
     }
 
-    public static void about()
-    {
-        final User user = getLoggedUser();
-        renderTemplate("Application/about.html", user);
-    }
-
     public static void activities(String id, int limit, String uuid)
     {
         final User user = getLoggedUser();
@@ -100,25 +94,6 @@ public class Public extends BaseController
         render(user, usr, userProfile, isOwner, listings, followees,
                 followers, follow, ratings, stats, contact);
     }
-
-    //    public static void facebookRegistration(String accessToken)
-    //    {
-    //        String appId = "117287758301883";
-    //        String appSecret = "38ee75a4ea99046b7705101e7485f456";
-    //        Facebook facebook = new FacebookFactory().getInstance();
-    //        facebook.setOAuthAppId(appId, appSecret);
-    //        facebook.setOAuthPermissions("email");
-    //        facebook.setOAuthAccessToken(new AccessToken(accessToken));
-    //
-    //        try
-    //        {
-    //            renderJSON(facebook.getMe());
-    //        } catch (FacebookException e)
-    //        {
-    //            renderJSON("{\"error\":\"" + e.getMessage() + "\"}");
-    //            e.printStackTrace();
-    //        }
-    //    }
 
     public static void wiki()
     {

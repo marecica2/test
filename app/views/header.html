@@ -8,15 +8,15 @@
 				<div class="header-left clearfix">
 
 					<!-- logo -->
-					<div class="logo">
-						<a href="/home">
-							<img id="logo" src="/images/logo_purple.png" style="height:40px;margin-top:5px" alt="widgr">
-						</a>
-					</div>
-
-					<!-- name-and-slogan -->
-					<div class="site-slogan">
-						&{'share-your-knowledge'}
+					<div class="logo-header">
+						<div class="logo">
+							<a href="/home"><img id="logo" src="/images/logo_purple.png" style="height:40px;margin-top:5px" alt="widgr"></a>
+						</div>
+	
+						<!-- name-and-slogan -->
+						<div class="site-slogan">
+							&{'share-your-knowledge'}
+						</div>
 					</div>
 
 				</div>
@@ -49,31 +49,41 @@
 								<!-- Collect the nav links, forms, and other content for toggling -->
 								<div class="collapse navbar-collapse" id="navbar-collapse-1">
 									<ul class="nav navbar-nav navbar-right">
+									
+										<li class="logo-menu pull-left" style="display:none">
+											<a href="/home"><img style="position:relative;bottom:2px;height:22px;" src="/public/images/logo_purple.png"></a>
+										</li>
+										
+										<li>
+											<a href="/instant" target="_blank" rel="tooltip" data-placement="bottom" style="position:relative;font-size:1.5em" data-original-title="&{'start-instant-chat'}"><i class="fa fa-video-camera fa-flip-horizontal"></i></a>
+										</li>
+										
 								 	  	#{if user && user.unreadMessages}
 								  	  		<li>
 								  	  			<a href="/mail" class="object-non-visible animated object-visible wobble" data-animation-effect="wobble" data-effect-delay="6000" ><i style="font-size:1.3em" class="text-default fa fa-envelope title="&{'received-new-message'}"></i></a>
 								  	  		</li>
 									  	#{/if}
 									  	
-									  	
 									 	#{if user}
 									      <li #{if request.url.indexOf("dashboard")>=0}class="active" #{/if}><a href="/dashboard">&{'dashboard'}</a></li>
-									      <li #{if request.url.indexOf("calendar")>=0}class="active" #{/if}><a href="/user/${user.login}/calendar"><i class="fa fa-calendar"></i> &{'calendar'}</a></li>
+									      <li #{if request.url.indexOf("calendar")>=0}class="active" #{/if}><a href="/user/${user.login}/calendar">&{'calendar'}</a></li>
 										#{/if}
 										
 								 	  	#{if user == null}
 					  	   				<li #{if request.url.indexOf("home")>=0}class="active"#{/if}><a href="/home" id="public-btn-logout"><i class="fa fa-home"></i> &{'home'}</a></li>
 									  	#{/if}
-   								  	   	<li #{if request.url.indexOf("channels")>=0}class="active"#{/if}><a href="/channels" id="public-btn-logout"><i class="fa fa-search"></i> &{'channels'}</a></li>
+   								  	   	<li #{if request.url.indexOf("channels")>=0}class="active"#{/if}><a href="/channels" id="public-btn-logout">&{'search'}</a></li>
+									   	
+									   	#{if user == null}
 									   	<li class='dropdown #{if request.url.indexOf("about")>=0} active #{/if}'>
 									    	<a class="dropdown-toggle" data-toggle="dropdown" href="/about" >&{'about'}</a>
 									        <ul class="dropdown-menu">
 									      		<li><a href="/about#pricing">&{'pricing'}</a></li>
 									      		<li><a href="/about#features">&{'features'}</a></li>
 									      		<li><a href="/about#contact">&{'contact-us'}</a></li>
-									      		<li><a href="/instant" target="_blank">&{'start-instant-chat'}</a></li>
 									        </ul>
 									    </li>   
+									  	#{/if}
 									    
 								    	<li class="dropdown" style="">
 									    	<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="" ><span><img src='/public/images/flags/#{if request.cookies.get("PLAY_LANG") != null}${request.cookies.get("PLAY_LANG").value}#{/if}#{else}${lang}#{/else}.gif'></span></a>
@@ -92,18 +102,9 @@
 										#{/if} 	
 										
 									  	#{if user}
-							  				#{if user.isAdmin()}
-									      <li class="dropdown">
-									        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
-									        <ul class="dropdown-menu">
-									          	<li><a href="/admin/users"><i class="icon-users"></i> Users</a></li>
-									          	<li><a href="/admin/publishers"><i class="icon-users"></i> Publisher Requests</a></li>
-									        </ul>
-									      </li>	
-									      #{/if}									  	
 									      <li class="dropdown">
 									        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-									        	<img class="img-circle inline" title="${user.fullName}" style="height:24px;" src="/${user.avatarUrl}_64x64">
+									        	<img class="img-circle inline" title="${user.fullName}" style="position:relative;bottom:2px;height:24px;" src="/${user.avatarUrl}_64x64">
 									        </a>
 									        <ul class="dropdown-menu">
 									          	<li><a href="/user/${user.login}"><i class="icon-user"></i> &{'profile'}</a></li>
@@ -111,6 +112,14 @@
 									          	<li><a href="/mail"><i class="fa fa-envelope-o"></i> &{'notifications'}</a></li>
 									          	<li><a href="/payments"><i class="fa fa-bar-chart-o"></i> &{'received-payments'}</a></li>
 									          	<li><a href="/settings"><i class=" icon-tools"></i> &{'settings'}</a></li>
+
+						  						#{if user.isAdmin()}
+						  						<li class="divider"></li>
+									          	<li><a href="/admin/users"><i class="fa fa-cog"></i> Users</a></li>
+									          	<li><a href="/admin/publishers"><i class="fa fa-cog"></i> Publisher Requests</a></li>
+						  						<li class="divider"></li>
+									      		#{/if}										          	
+									          	
 									      	  	<li> 
 									      		<a href="/logout?url=${request.url.urlEncode()}" id="public-btn-logout" title="&{'sign-out'}">
 									      			<i class="black fa fa-power-off fa-1x"></i> &{'sign-out'}

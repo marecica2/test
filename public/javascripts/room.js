@@ -56,9 +56,8 @@ $(document).ready(function(){
         window.location = $(this).attr("data-href");        
     });
 
-    // stop instant broadcast
+    // start instant broadcast
     $(".btn-instant-start").click(function(){
-        
         var data = {};
         data.id = socket.socket.sessionid;
         socket_message_broadcast("instant-room-start-broadcast", data);

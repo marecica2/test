@@ -63,7 +63,7 @@ star.renderComments = function(data, dashboard){
         }  
         
         html += "       <div class='title'>";
-        html += "           <img src='../"+item.createdByAvatarUrl+"_64x64' style='height:40px;float:left;margin-right:10px'> ";
+        html += "           <img src='../"+item.createdByAvatarUrl+"_64x64' class='img-circle' style='height:40px;float:left;margin-right:10px'> ";
         html += "           <a href='/user/"+item.createdByLogin+"'>"+item.createdByName+"</a>";
         html += "           <p><span class=''>on "+starUtils.formatDate(item.created)+"</span> ";
         html += "           <span class='tip'>"+starUtils.formatTime(item.created)+"</span></p>";
@@ -115,9 +115,6 @@ star.renderComments = function(data, dashboard){
             html += "               </tr>";
             }
             html += "           </table>";
-            if(dashboard){
-                html += "<br/>";
-            }
         }        
         
         if(item.replies.length > 0){
@@ -135,8 +132,8 @@ star.renderComments = function(data, dashboard){
             html += "</div>";
         }   
 
-        if(star.user){
-            html += "<a href='#' class='comment-reply pull-right'>Reply</a>";
+        if(star.user && starCalendar.comments){
+            html += "<a href='#' class='comment-reply pull-right'>"+i18n("write-a-reply")+"</a>";
             html += "<div style='display:none' class='comment-reply-input margin-top'>";
             html += "   <textarea class='form-control' placeholder='"+i18n('write-a-reply')+"'></textarea>";
             html += "   <button class='btn btn-default pull-right comment-reply-submit' data-id='"+item.uuid+"'>"+i18n('submit')+"</button>";
@@ -231,6 +228,7 @@ star.renderItems = function(data, prefix){
     var html = "";
     for(var i = 0; i < data.length; i++){
         var item = data[i];
+        console.log(item);
         if(!item.invisible)
             $(".container"+prefix).show();
         if(prefix.indexOf("Listing") >= 0){
@@ -253,13 +251,13 @@ star.renderItems = function(data, prefix){
                 html += "<strong>"+i18n("free")+"</strong>";
             }
             if(item.charging != 'free'){
-                html += "<strong>"+item.price+"</strong>&nbsp;<small>"+item.currency+"</small>";
-            }       
-            if(item.firstFree != undefined && item.firstFree == true){
-                html += " <small class='label default-bg'>First free</small>";
+                html += i18n("from")+"&nbsp;<strong>"+item.price+"</strong>&nbsp;"+item.currency+"&nbsp;";
+                if(item.firstFree != undefined && item.firstFree == true){
+                    html += " <small class='label default-bg'>First free</small>";
+                }       
             }       
             
-            html += "   <p class='event-box-links'><span><a href='/channel/"+item.uuid+"' class='link-left'><span>"+star.utils.trimTo(item.title, 30)+"</span></a></span></p>";
+            html += "   <p class='event-box-links'><span><a href='/channel/"+item.uuid+"' class='link-left'><span>"+star.utils.trimTo(item.title, 40)+"</span></a></span></p>";
             html += "   <div class='event-box-link' style='position:fixed;bottom:15px'>";            
             for(var j = 0; j < 5; j++){
                 if(j < item.ratingAvg)

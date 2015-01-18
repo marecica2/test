@@ -667,6 +667,9 @@ tbody {
 .parallax-bg-3 {
 	background: url("../images/parallax-bg-3.jpg") 50% 0px no-repeat;
 }
+.parallax-bg-4 {
+	background: url("../images/parallax-bg-4.jpg") 50% 0px no-repeat;
+}
 
 /* Custom Grid
 ---------------------------------- */

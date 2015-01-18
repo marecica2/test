@@ -50,27 +50,31 @@ public class FileuploadController extends BaseController
         int fileSize = NumberUtils.parseInt(size);
         if (fileSize < FILESIZE)
         {
-            // resize big images
-            if (contentType.contains("image"))
-            {
-
-                BufferedImage readImage = null;
-                try
-                {
-                    readImage = ImageIO.read(attachment);
-                    int h = readImage.getHeight();
-                    int w = readImage.getWidth();
-                    if (w > 1200 || h > 1200)
-                    {
-                        System.err.println("resizing image");
-                        Images.resize(attachment, attachment, 1200, 1200, true);
-                    }
-                } catch (Exception e)
-                {
-                }
-            }
-
             FileUpload fu = createFile(item, temp, attachment, contentType, size, avatar);
+
+            // resize big images
+            //            if (contentType.contains("image"))
+            //            {
+            //                try
+            //                {
+            //                    BufferedImage readImage = ImageIO.read(attachment);
+            //                    int h = readImage.getHeight();
+            //                    int w = readImage.getWidth();
+            //                    System.err.println(w);
+            //                    System.err.println(h);
+            //                    if (w > 1200 || h > 1200)
+            //                    {
+            //                        System.err.println("resizing to 1200");
+            //                        Images.resize(attachment, attachment, 1200, 1200, true);
+            //                    }
+            //                    File thumbnail = new File(PATH_TO_UPLOADS_FILESYSTEM + fu.getUrl() + "_128x128");
+            //                    Images.resize(attachment, thumbnail, 128, 128, true);
+            //                } catch (Exception e)
+            //                {
+            //                    Logger.error(e, "FileUploadcontroller.uploadFile Exception");
+            //                }
+            //            }
+
             JsonObject jo = new JsonObject();
             jo.addProperty("url", fu.url);
             jo.addProperty("uuid", fu.uuid);
@@ -138,6 +142,7 @@ public class FileuploadController extends BaseController
     private static FileUpload createFile(String item, String temp, File attachment, String contentType, String size, String avatar) throws IOException
     {
         final String uuid = RandomUtil.getUUID();
+        long fileSize = attachment.length();
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(System.currentTimeMillis());
@@ -154,20 +159,32 @@ public class FileuploadController extends BaseController
         final File destination = new File(PATH_TO_UPLOADS_FILESYSTEM + filename);
         FileUtils.copyFile(attachment, destination);
 
-        if (avatar != null)
+        if (contentType.indexOf("image") != -1)
         {
-            File destinationMax = new File(PATH_TO_UPLOADS_FILESYSTEM + filename + "");
-            Images.resize(destination, destinationMax, 1000, 1000, true);
-        } else if (contentType.indexOf("image") != -1)
-        {
+            BufferedImage readImage = ImageIO.read(attachment);
+            int h = readImage.getHeight();
+            int w = readImage.getWidth();
+            if (w > 1200 || h > 1200)
+            {
+                //System.err.println("resizing big image " + h + " px x " + w + " px");
+                readImage = null;
+
+                // resize big images
+                File destinationMax = new File(PATH_TO_UPLOADS_FILESYSTEM + filename + "_bck");
+                Images.resize(destination, destinationMax, 1200, 1200, true);
+                destination.delete();
+                destinationMax.renameTo(new File(PATH_TO_UPLOADS_FILESYSTEM + filename));
+                fileSize = destinationMax.length();
+            }
+
             File destinationThumb = new File(PATH_TO_UPLOADS_FILESYSTEM + filename + "_thumb");
-            Images.resize(destination, destinationThumb, 300, 300, true);
+            Images.resize(destination, destinationThumb, 200, 200, true);
         }
 
         FileUpload fu = new FileUpload();
         fu.url = filenamePath;
         fu.name = attachment.getName();
-        fu.size = attachment.length();
+        fu.size = fileSize;
         fu.contentType = contentType;
         fu.uuid = uuid;
         fu.created = new Date();

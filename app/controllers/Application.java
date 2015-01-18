@@ -25,10 +25,16 @@ import com.google.gson.JsonParser;
 //@With(Secure.class)
 public class Application extends BaseController
 {
-    @Before(unless = { "home", "channels", "calendarUser", "facebook", "privacy", "terms", "help" })
+    @Before(only = { "dashboard" })
     static void checkAccess() throws Throwable
     {
         checkAuthorizedAccess();
+    }
+
+    public static void about()
+    {
+        final User user = getLoggedUser();
+        renderTemplate("Application/about.html", user);
     }
 
     public static void facebook() throws IOException
@@ -50,16 +56,10 @@ public class Application extends BaseController
                 pageId = jo.get("page").getAsJsonObject().get("id").getAsString();
             if (jo.get("page") != null && jo.get("page").getAsJsonObject().get("admin") != null)
                 admin = jo.get("page").getAsJsonObject().get("admin").getAsBoolean();
-            if (admin != null && admin)
-            {
-                session.put("pageId", pageId);
-                session.put("admin", admin);
-            }
 
             // if owner opens tab
-            if (user != null && userId != null && userId.equals(user.facebookId))
+            if (user != null && userId != null && userId.equals(user.facebookId) && admin != null && admin)
             {
-                System.err.println("is Admin");
                 final User usr = getLoggedUserNotCache();
                 usr.facebookTab = pageId;
                 usr.save();
@@ -75,9 +75,6 @@ public class Application extends BaseController
             pageId = session.get("pageId");
 
         User displayedUser = pageId != null ? User.getUserByFacebookPage(pageId) : null;
-        List<Listing> listings = null;
-        if (displayedUser != null && admin)
-            listings = Listing.getForUser(displayedUser);
 
         if (displayedUser != null && displayedUser.facebookPageType != null)
         {

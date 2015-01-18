@@ -448,7 +448,6 @@ public class Events extends BaseController
 
     public static void eventSyncGoogleRest(String uuid)
     {
-        System.err.println("uuid " + uuid);
         final User user = getLoggedUser();
         final Event event = Event.get(uuid);
         // google event sync
@@ -553,6 +552,10 @@ public class Events extends BaseController
                     .setMessageWiki(body)
                     .send();
         }
+
+        Attendance attendance = e.getInviteForCustomer(user);
+        attendance.result = Attendance.ATTENDANCE_RESULT_ACCEPTED;
+        attendance.save();
 
         final Activity act = new Activity();
         act.type = Activity.ACTIVITY_EVENT_APPROVED;

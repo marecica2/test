@@ -4,12 +4,15 @@
 
 			<!-- Title and User part -->
 			<div style="margin:0px;width:100%; max-width:1000px;padding:20px; color:white; background-color: ${color4}">
-				<div style="width:100%;"><img src="${logo}" alt="widgr"></div>
+				<div style="width:100%; text-align:center">
+					<img src="${logo_footer}" alt="widgr">
+				</div>				
+				
 				<table style="border-collapse: collapse; width:100%">
 					<tr>
 						#if($user)
 						<td style="vertical-align:middle;">
-							<a href="${userUrl}" style="margin-right:20px"><img  style="height:128px;" src="${userImage}"></a>
+							<a href="${userUrl}" style="margin-right:20px"><img  style="height:100px;" src="${userImage}"></a>
 						</td>
 						<td>
 							&nbsp;
@@ -19,7 +22,7 @@
 							#if($user)
 								<h3>${user} &nbsp;<a href="${userUrl}" style="color:white;font-size:10px;">${userUrlLabel}</a></h3>
 							#end
-							<h3>${title}</h3>
+							<h4 style="margin-top:0px;">${title}</h4>
 							#if($event)
 								<span style="font-family: Arial, Helvetica;font-size:14px;">${eventDate} ${eventStart} - ${eventEnd}</span>
 								<a href="${eventUrl}" style="color:white;font-size:10px;font-family: Arial, Helvetica">${userUrlLabel}</a>

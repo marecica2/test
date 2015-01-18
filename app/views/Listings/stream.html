@@ -3,12 +3,19 @@
 		<div class="col-md-12">
 		
 			#{set obj:(event != null ? event: listing) /}
+			#{set displayIntroduction:true /}
 			#{set cols: obj.chatEnabled?8:12 /} 
 			<div class="row">
 			
+				
+				#{if fromEvent && obj.type == 'p2p'}
+					#{set displayIntroduction:false /}	
+				#{/if}
+							
+			
 				#{if (obj.type == 'broadcast' || obj.type == 'instant') && isOwner && obj.started}
 					<div class="col-md-${cols}" style="padding:0px;">
-						 <object class="" style="background:black;width:100%;min-height:500px;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/upstream.swf">
+						 <object class="" style="height:500px; background:black; width:100%;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/upstream.swf">
 						    <param name='src' value='/public/images/upstream.swf'/>
 							<param name="movie" value="/public/images/upstream.swf" />
 							<param name=FlashVars value="myServerUrl=${rmtp}&myStreamName=${obj.roomSecret}" />
@@ -18,28 +25,13 @@
 							<param name="allowFullScreen" value="true" />
 						 </object>	
 					</div>
+					#{set displayIntroduction:false /}
 				#{/if}
 				
-				#{if (obj.type == 'broadcast' || obj.type == 'instant') && !isOwner && obj.started}
 				
-					<!-- 
-					<script src="//jwpsrv.com/library/JKCVFHmREeS3EA6sC0aurw.js"></script>
-					<div id="myElement">Loading the player...</div>
-					<script type="text/javascript">
-						console.log("${rmtp}&myStreamName=${obj.uuid}");
-					    jwplayer("myElement").setup({
-					        file: "${rmtp}&myStreamName=${obj.uuid}",
-					        rtmp: {
-					            subscribe: true
-					        },
-					        width: 640,
-					        height: 360
-					    });
-					</script>					
-					 -->
-
+				#{if (obj.type == 'broadcast' || obj.type == 'instant') && !isOwner && obj.started}
 					<div class="col-md-${cols}" style="padding:0px;">
-						<object height="500" style="background:black;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/downstream.swf">
+						<object height="500" style="height:500px; background:black;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/downstream.swf">
 						    <param name='src' value='/public/images/downstream.swf'/>
 							<param name=FlashVars value="myServerUrl=${rmtp}&myStreamName=${obj.roomSecret}" />
 							<param name="wmode" value="transparent" />
@@ -49,64 +41,65 @@
 							<param name="menu" value="false" />
 						</object>		
 					</div>
+					#{set displayIntroduction:false /}
 				#{/if}
 				
-
-				
-				#{if obj.type == 'p2p'}
-					<div class="col-md-${cols}" style="padding:0px;#{if obj.chatEnabled}height:500px;#{/if}#{else}height:200px#{/else}">
-						 <div class="higlight" style="width:100%;text-align: center">
-						 	<div style="width: 200px;position: absolute;margin: -50px 0 0 -50px;left:45%;top: 50%;padding:20px">
-							 	<a class="anchor text-default" style="text-decoration: none;" href="/room?id=${obj.uuid}&secret=${obj.roomSecret}" target="_blank" >
-							 		<i style="font-size:4em" class="fa fa-comments"></i><span style="font-size:1.5em"> &{'join'}</span>
-							 	</a>
-						 	</div>
-						 </div>	
-					</div>		
-				#{/if}
 
 				#{if obj.type == 'hangout'}
 					<div class="col-md-${cols}" style="padding:0px;#{if obj.chatEnabled}height:500px;#{/if}#{else}height:200px#{/else}">
 						 <div class="higlight" style="width:100%;text-align: center">
 						 	<div style="width: 200px;position: absolute;margin: -50px 0 0 -50px;left:45%;top: 50%;padding:20px">
 							 	<a class="anchor text-default" style="text-decoration: none;" href="//plus.google.com/hangouts/_/?gid=647254293629&gd=${obj.uuid}" target="_blank" >
-							 		<i style="font-size:4em" class="fa fa-comments"></i><span style="font-size:1.5em"> &{'join-hangout'}</span>
+							 		<i style="font-size:4em" class="fa fa-comments"></i><br/><span style="font-size:1.5em"> &{'join-hangout'}</span>
 							 	</a>
 						 	</div>
 						 </div>	
-					</div>		
+					</div>	
+					#{set displayIntroduction:false /}	
 				#{/if}
 
 
 				#{if obj.type == 'hangoutAir'}
-					<div class="col-md-${cols}" style="padding:0px;height:500px;">
+					<div class="col-md-${cols}" style="padding:0px;">
 						<iframe width="100%" height="500px" src="https://www.youtube.com/embed/${obj.youtubeId}" frameborder="0" allowfullscreen></iframe>
 					</div>		
+					#{set displayIntroduction:false /}
 				#{/if}
 				
 				
+				#{if displayIntroduction && listing && listing.video}
+					<div class="col-md-${cols}" style="padding:0px;height:500px">
+						<a style="position:absolute;top:45%;left:50%;text-decoration:none;" class="popup-iframe text-shadow" href="${listing.video}"><i class="fa fa-youtube-play fa-3x"></i><br/><span style="font-size:1.6em">&{'play-introduction'}</span></a>
+					</div>
+				#{/if}
+				
+				
+				<!-- chat -->
 				#{if obj.chatEnabled}
-					<div class="col-md-4" style="padding:10px;height:500px;">
+					<div class="col-md-4" style="height:500px; background: rgba(0, 0, 0, 0.5)">
 						<div style="height:100%">
-							<div id="content" class="form-control" style="opacity: 0.7;height:410px;color:white;font-size:0.8em;background: black;overflow-y: scroll;"></div>
-							<div class="controls">
-								#{if user}
-								<form onsubmit="return false;">
-									<div class="input-group">
-										<input id="chat-text" class="form-control"> <input id="chat-name" type="hidden" value="${name}"> 
-										<span class="input-group-btn">
-											<button id="chat-send" class="btn btn-gray btn-short" style="margin:0px;height:40px">
-												&{'send'}
-											</button>
-										</span>
-										<div class="clearfix"></div>
-									</div>
-								</form>
-								#{/if}
-							</div>
+							
+							<div style="text-align:left; padding:15px;"><h5>Chat box</h5></div>
+							<div id="content" class="form-control" style="height:350px; overflow-y: auto; text-align:left; color:white; border:0px; background: rgba(0, 0, 0, 0)"></div>
+							
+							#{if user}
+							<form onsubmit="return false;" style="margin-top:15px;">
+								<div class="input-group">
+									<input id="chat-text" class="form-control" style="color:white; background: rgba(33, 33, 33, 0.8)"> <input id="chat-name" type="hidden" value="${name}"> 
+									<span class="input-group-btn">
+										<button id="chat-send" class="btn btn-dark btn-short" style="margin:0px;height:40px">
+											&{'send'}
+										</button>
+									</span>
+									<div class="clearfix"></div>
+								</div>
+							</form>
+							#{/if}
+							
 						</div>
 					</div>
 				#{/if}
+				
 				
 			</div>
 		</div>

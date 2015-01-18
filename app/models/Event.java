@@ -354,16 +354,15 @@ public class Event extends Model
 
     private boolean isLocked()
     {
-        // TODO fix the return type later
-        if (this.isEnded())
-            return false;
+        //if (this.isEnded())
+        //    return true;
 
         final List<Attendance> list = this.attendances;
         for (Attendance attendance : list)
         {
             if (attendance.paid != null && attendance.paid)
             {
-                return false;
+                return true;
             }
         }
         return false;
@@ -371,11 +370,11 @@ public class Event extends Model
 
     public Boolean isEditable(User user)
     {
-        return true;
-        //        if (this.isOwner(user) && !this.isLocked())
-        //            return true;
-        //        if (user != null && this.hasInviteForCustomer(user) && this.state.equals(EVENT_STATE_CUSTOMER_CREATED))
-        //            return true;
-        //        return false;
+        if (this.isOwner(user) && !this.isLocked())
+            return true;
+
+        if (user != null && this.hasInviteForCustomer(user) && this.state.equals(EVENT_STATE_CUSTOMER_CREATED))
+            return true;
+        return false;
     }
 }
