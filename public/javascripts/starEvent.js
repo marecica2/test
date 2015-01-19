@@ -228,7 +228,6 @@ star.renderItems = function(data, prefix){
     var html = "";
     for(var i = 0; i < data.length; i++){
         var item = data[i];
-        console.log(item);
         if(!item.invisible)
             $(".container"+prefix).show();
         if(prefix.indexOf("Listing") >= 0){
@@ -278,6 +277,8 @@ star.renderItems = function(data, prefix){
             var distance = end - now;
             var before = distance > 0 ? false : true;
             var days = Math.abs(Math.floor(distance / _day));
+            if(before)
+                days = days - 1;
             var hours = Math.abs(Math.floor( (distance % _day ) / _hour ));
             var minutes = Math.abs(Math.floor( (distance % _hour) / _minute ));
             var seconds = Math.abs(Math.floor( (distance % _minute) / _second ));

@@ -1,107 +1,167 @@
-<div class="container">	
-	<div class="row">
-		<div class="col-md-12">
-		
-			#{set obj:(event != null ? event: listing) /}
-			#{set displayIntroduction:true /}
-			#{set cols: obj.chatEnabled?8:12 /} 
-			<div class="row">
+#{set displayBackground:true /}
+#{set displayChat:true /}
+
+#{if fromEvent}
+	#{if obj.type == 'p2p'}
+		#{set displayBackground:true /}		
+	#{/if}
+
+	#{if obj.type == 'broadcast'}
+		#{if obj.started}
+			#{set displayBackground:false /}
+		#{/if}
+	#{/if}
+
+	#{if obj.type == 'instant'}
+		#{if obj.started}
+			#{set displayBackground:false /}
+		#{/if}
+	#{/if}
+
+	#{if obj.type == 'hangout'}
+		#{set displayBackground:true /}
+	#{/if}
+
+	#{if obj.type == 'hangoutAir'}
+		#{if obj.started}
+			#{set displayChat:true /}
+			#{set displayBackground:false /}
+		#{/if}
+	#{/if}
+#{/if}
+
+#{else}
+	#{if obj.type == 'p2p'}
+		#{set displayChat:false /}
+	#{/if}
+	
+	#{if obj.type == 'broadcast'}
+		#{set displayChat:false /}
+	#{/if}
+	
+	#{if obj.type == 'instant'}
+		#{set displayChat:false /}
+		#{if obj.started}
+			#{set displayChat:true /}
+			#{set displayBackground:false /}
+		#{/if}	
+	#{/if}
+	
+	#{if obj.type == 'hangout'}
+		#{set displayChat:false /}
+	#{/if}
+	
+	#{if obj.type == 'hangoutAir'}
+		#{set displayChat:false /}
+		#{set displayBackground:true /}
+	#{/if}
+#{/else}
+
+
+#{if !obj.chatEnabled}
+	#{set displayChat:false /}
+#{/if}
+#{set cols: obj.chatEnabled?8:12 /} 
+
+
+<div id="image" class="listing-image" style="position:relative; overflow:hidden; width:100%; background: #{if displayBackground}url(/${listing.imageUrl}) #{/if} black center; background-size: cover;text-align:center">
+	<div class="shadow-inset" style="height:110%; width:100%; top:-5%; position:absolute;">
+	</div>
+	
+
+	<div class="container">	
+		<div class="row">
+			<div class="col-md-12">
 			
-				
-				#{if fromEvent && obj.type == 'p2p'}
-					#{set displayIntroduction:false /}	
-				#{/if}
-							
-			
-				#{if (obj.type == 'broadcast' || obj.type == 'instant') && isOwner && obj.started}
-					<div class="col-md-${cols}" style="padding:0px;">
-						 <object class="" style="height:500px; background:black; width:100%;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/upstream.swf">
-						    <param name='src' value='/public/images/upstream.swf'/>
-							<param name="movie" value="/public/images/upstream.swf" />
-							<param name=FlashVars value="myServerUrl=${rmtp}&myStreamName=${obj.roomSecret}" />
-							<param name="wmode" value="transparent" />
-							<param name="quality" value="high" />
-							<param name="menu" value="false" />
-							<param name="allowFullScreen" value="true" />
-						 </object>	
-					</div>
-					#{set displayIntroduction:false /}
-				#{/if}
-				
-				
-				#{if (obj.type == 'broadcast' || obj.type == 'instant') && !isOwner && obj.started}
-					<div class="col-md-${cols}" style="padding:0px;">
-						<object height="500" style="height:500px; background:black;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/downstream.swf">
-						    <param name='src' value='/public/images/downstream.swf'/>
-							<param name=FlashVars value="myServerUrl=${rmtp}&myStreamName=${obj.roomSecret}" />
-							<param name="wmode" value="transparent" />
-							<param name="allowFullScreen" value="true" />
-							<param name="allowscriptaccess" value="always" />
-							<param name="quality" value="high" />
-							<param name="menu" value="false" />
-						</object>		
-					</div>
-					#{set displayIntroduction:false /}
-				#{/if}
-				
-
-				#{if obj.type == 'hangout'}
-					<div class="col-md-${cols}" style="padding:0px;#{if obj.chatEnabled}height:500px;#{/if}#{else}height:200px#{/else}">
-						 <div class="higlight" style="width:100%;text-align: center">
-						 	<div style="width: 200px;position: absolute;margin: -50px 0 0 -50px;left:45%;top: 50%;padding:20px">
-							 	<a class="anchor text-default" style="text-decoration: none;" href="//plus.google.com/hangouts/_/?gid=647254293629&gd=${obj.uuid}" target="_blank" >
-							 		<i style="font-size:4em" class="fa fa-comments"></i><br/><span style="font-size:1.5em"> &{'join-hangout'}</span>
-							 	</a>
-						 	</div>
-						 </div>	
-					</div>	
-					#{set displayIntroduction:false /}	
-				#{/if}
-
-
-				#{if obj.type == 'hangoutAir'}
-					<div class="col-md-${cols}" style="padding:0px;">
-						<iframe width="100%" height="500px" src="https://www.youtube.com/embed/${obj.youtubeId}" frameborder="0" allowfullscreen></iframe>
-					</div>		
-					#{set displayIntroduction:false /}
-				#{/if}
-				
-				
-				#{if displayIntroduction && listing && listing.video}
-					<div class="col-md-${cols}" style="padding:0px;height:500px">
-						<a style="position:absolute;top:45%;left:50%;text-decoration:none;" class="popup-iframe text-shadow" href="${listing.video}"><i class="fa fa-youtube-play fa-3x"></i><br/><span style="font-size:1.6em">&{'play-introduction'}</span></a>
-					</div>
-				#{/if}
-				
-				
-				<!-- chat -->
-				#{if obj.chatEnabled}
-					<div class="col-md-4" style="height:500px; background: rgba(0, 0, 0, 0.5)">
-						<div style="height:100%">
-							
-							<div style="text-align:left; padding:15px;"><h5>Chat box</h5></div>
-							<div id="content" class="form-control" style="height:350px; overflow-y: auto; text-align:left; color:white; border:0px; background: rgba(0, 0, 0, 0)"></div>
-							
-							#{if user}
-							<form onsubmit="return false;" style="margin-top:15px;">
-								<div class="input-group">
-									<input id="chat-text" class="form-control" style="color:white; background: rgba(33, 33, 33, 0.8)"> <input id="chat-name" type="hidden" value="${name}"> 
-									<span class="input-group-btn">
-										<button id="chat-send" class="btn btn-dark btn-short" style="margin:0px;height:40px">
-											&{'send'}
-										</button>
-									</span>
-									<div class="clearfix"></div>
-								</div>
-							</form>
-							#{/if}
-							
+				<div class="row">
+					#{if (obj.type == 'broadcast' || obj.type == 'instant') && isOwner && obj.started}
+						<div class="col-md-${cols}" style="padding:0px;">
+							 <object class="" style="height:500px; background:black; width:100%;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/upstream.swf">
+							    <param name='src' value='/public/images/upstream.swf'/>
+								<param name="movie" value="/public/images/upstream.swf" />
+								<param name=FlashVars value="myServerUrl=${rmtp}&myStreamName=${obj.roomSecret}" />
+								<param name="wmode" value="transparent" />
+								<param name="quality" value="high" />
+								<param name="menu" value="false" />
+								<param name="allowFullScreen" value="true" />
+							 </object>	
 						</div>
-					</div>
-				#{/if}
-				
-				
+					#{/if}
+					
+					
+					#{if (obj.type == 'broadcast' || obj.type == 'instant') && !isOwner && obj.started}
+						<div class="col-md-${cols}" style="padding:0px;">
+							<object height="500" style="height:500px; background:black;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/downstream.swf">
+							    <param name='src' value='/public/images/downstream.swf'/>
+								<param name=FlashVars value="myServerUrl=${rmtp}&myStreamName=${obj.roomSecret}" />
+								<param name="wmode" value="transparent" />
+								<param name="allowFullScreen" value="true" />
+								<param name="allowscriptaccess" value="always" />
+								<param name="quality" value="high" />
+								<param name="menu" value="false" />
+							</object>		
+						</div>
+					#{/if}
+					
+	
+	
+					#{if obj.type == 'hangoutAir' && fromEvent}
+						<div class="col-md-${cols}" style="padding:0px;">
+							<iframe width="100%" height="500px" src="https://www.youtube.com/embed/${obj.youtubeId}" frameborder="0" allowfullscreen></iframe>
+						</div>		
+					#{/if}
+	
+	
+					*{
+					<!-- 
+					#{if obj.type == 'p2p' && !displayIntroduction}
+						<div class="col-md-${cols}" style="padding-top:50px;padding-bottom:50px; text-align: center; opacity:0.7; #{if displayChat}height:500px;#{/if}#{else}height:200px#{/else}">
+						 	<a class="anchor text-default" style="text-decoration: none;" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank" >
+						 		<i style="font-size:4em" class="fa fa-comments"></i><br/><span style="font-size:1.5em"> &{'join'}</span>
+						 	</a>
+						</div>	
+					#{/if}
+					
+					
+					#{if displayIntroduction && listing && listing.video}
+						<div class="col-md-${cols}" style="padding-top:50px;padding-bottom:50px; text-align: center; opacity:0.7">
+							<a style="text-decoration:none;" class="popup-iframe text-shadow" href="${listing.video}"><i class="fa fa-youtube-play fa-3x"></i><br/><span style="font-size:1.6em">&{'play-introduction'}</span></a>
+						</div>
+					#{/if}				
+					 -->
+					}*
+					
+					<!-- chat box-->
+					#{if displayChat}
+						<div class="col-md-${12-cols}" style="height:500px; background: rgba(0, 0, 0, 0.0)">
+							<div style="height:100%">
+								<div style="text-align:left;font-size:1.3em;padding-top:10px;padding-bottom:10px;">
+									<span class="label default-bg">Chat box</span>
+								</div>
+								
+								<div id="content" class="text-shadow" style="height:385px; overflow-y: auto; text-align:left; color:white; "></div>
+								
+								#{if user}
+								<form onsubmit="return false;" style="margin-top:15px;">
+									<div class="input-group">
+										<input id="chat-text" class="form-control" style="color:white; background: rgba(33, 33, 33, 0.6)" placeholder="&{'enter-your-message'}"> 
+										<input id="chat-name" type="hidden" value="${name}"> 
+										<span class="input-group-btn">
+											<button id="chat-send" class="btn btn-dark btn-short" style="margin:0px;height:40px">
+												&{'send'}
+											</button>
+										</span>
+										<div class="clearfix"></div>
+									</div>
+								</form>
+								#{/if}
+							</div>
+						</div>
+					#{/if}
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
+
+	
+</div>	

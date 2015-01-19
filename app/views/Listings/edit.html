@@ -90,9 +90,11 @@
 			  <label class="btn btn-light-gray #{if params.type == "p2p"} active #{/if}" >
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "p2p"} checked="checked" #{/if} value="p2p"> &{'video-conference'}
 			  </label>
+			  *{
 			  <label class="btn btn-light-gray #{if params.type == "broadcast"} active #{/if}" >
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "broadcast"} checked="checked" #{/if} value="broadcast"> &{'live-broadcast'}
 			  </label>
+			  }*
 			  <label class="btn btn-light-gray #{if params.type == "hangout"} active #{/if}" >
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangout"} checked="checked" #{/if} value="hangout"><i class="fa fa-google-plus"></i> &{'google-hangout'}
 			  </label>
@@ -305,12 +307,14 @@
 			  <label class="btn btn-light-gray #{if params.type == "p2p"} active #{/if}" >
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "p2p"} checked="checked" #{/if} value="p2p"> &{'video-conference'}
 			  </label>
-			  <label class="btn btn-light-gray #{if params.type == "livecast"} active #{/if}" >
-			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "livecast"} checked="checked" #{/if} value="livecast"> &{'live-broadcast'}
+			  *{
+			  <label class="btn btn-light-gray #{if params.type == "broadcast"} active #{/if}" >
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "broadcast"} checked="checked" #{/if} value="broadcast"> &{'live-broadcast'}
 			  </label>
 			  <label class="btn btn-light-gray #{if params.type == "instant"} active #{/if}" >
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "instant"} checked="checked" #{/if} value="instant"> &{'instant-broadcast'}
 			  </label>
+			  }*
 			  <label class="btn btn-light-gray #{if params.type == "hangout"} active #{/if}" >
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangout"} checked="checked" #{/if} value="hangout"> &{'google-hangout'}
 			  </label>

@@ -141,4 +141,55 @@ public class Attendance extends Model
         return "Attendance [event=" + event + ", user=" + user + ", result=" + result + ", created=" + created + "]";
     }
 
+    public static void createDefaultAttendances(User user, User customer, Event event, Boolean create, Boolean proposal)
+    {
+        if (create)
+        {
+            if (!proposal)
+            {
+                // create attendance on the background for user creator
+                Attendance a = new Attendance();
+                a.user = user;
+                a.result = Attendance.ATTENDANCE_RESULT_ACCEPTED;
+                a.name = user.getFullName();
+                a.email = user.login;
+                a.event = event;
+                a.customer = user;
+                a.isForUser = true;
+                a.saveAttendance();
+
+                final Activity act = new Activity();
+                act.type = Activity.ACTIVITY_EVENT_CREATED_BY_USER;
+                act.user = user;
+                act.event = event;
+                act.eventName = event.listing.title;
+                act.saveActivity();
+            }
+
+            // create attendance on the background for customer creator
+            if (proposal)
+            {
+                // create attendance for user
+                Attendance a = new Attendance();
+                a.user = user;
+                a.name = user.getFullName();
+                a.email = user.login;
+                a.event = event;
+                a.customer = user;
+                a.isForUser = true;
+                a.saveAttendance();
+
+                // create attendance for customer
+                Attendance a1 = new Attendance();
+                a1.email = customer.login;
+                a1.name = customer.getFullName();
+                a1.customer = customer;
+                a1.event = event;
+                a1.result = Attendance.ATTENDANCE_RESULT_ACCEPTED;
+                a1.isForUser = false;
+                a1.saveAttendance();
+            }
+        }
+    }
+
 }

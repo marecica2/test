@@ -125,9 +125,6 @@
 </div>
 #{/if}
 
-#{set displayChat:true /}
-#{set displayStream:true /}
-#{set displayBackground:true /}
 
 <!-- Listing title controls -->
 <div class="section gray-bg" style="padding-top:15px;padding-bottom:15px">
@@ -160,6 +157,11 @@
 		<!-- social -->
 	   	<div class="pull-right">
 			<ul class="social-links colored clearfix" style="margin:0px; margin-top:5px">
+				#{if listing && listing.video}
+				<li class="vimeo">
+					<a class="popup-iframe" href="${listing.video}" title="&{'play-introduction'}"><i class="fa fa-youtube-play"></i></a>
+				</li>
+				#{/if}					
 				<li class="dribbble"><a href="" data-toggle="modal" data-target="#myModal" ><i class="fa fa-link"></i></a></li>
 				<li class="facebook">
 					<a id="fb-share" href="#"><i class="fa fa-facebook"></i></a>
@@ -175,9 +177,6 @@
 				</li>
 			</ul>
 	   	</div>
-
-		#{include 'Listings/editButtons.html' /}
-
 
 	   	#{if listing}
 		<script>
@@ -227,10 +226,10 @@
 			})
 		</script>	 
 		#{/if}  	
+		
+		#{include 'Listings/editButtons.html' /}
 	   	<div class="clearfix"></div>
 	   	
-	   	
-		
 	</div>
 </div>
 <!-- listing title controls -->
@@ -247,7 +246,7 @@
 			<div class="col-md-12 " style="padding:0px;">
 
 				#{if edit}
-					<!-- background image -->
+					<!-- edit background image -->
 					#{if listing}
 						<div class="avatar-container">
 						  	<img id="image" class="" style="width:100%" src="/${listing.imageUrl}">
@@ -263,18 +262,10 @@
 							<img id="image" class="" style="width:100%" src="/public/images/no_image.png">	
 						</div>								
 					#{/else}
-					<!-- background image -->
 				#{/if}
 	
 				#{else}
-					<div id="image" class="listing-image" style="position:relative; overflow:hidden; width:100%; background: url(/${listing.imageUrl}) #954db3 center; background-size: cover;text-align:center">
-						<div class="shadow-inset" style="height:110%; width:100%; top:-5%; position:absolute;">
-						</div>
-						#{if displayStream}
-							#{include 'Listings/stream.html' /}
-						#{/if}			
-					</div>		
-					
+					#{include 'Listings/stream.html' /}
 				#{/else}	
 			</div>
 		</div>
@@ -314,8 +305,8 @@
 									<span class="label btn-dark">&{'first-event-is-free'}</span>
 								#{/if}
 							#{/else}
-							
 						#{/if}
+						
 						#{else}
 							#{if listing && listing.charging == 'free'}
 								<strong>&{'free'}</strong>
@@ -335,17 +326,19 @@
 			<div class="col-md-4">
 				<div class="text-center">
 					<a href="/user/${usr.login}"><img style="height:57px;" src="/${usr.avatarUrl}_64x64"></a>	
-					#{if isOwner && !listing.isAvailable()}
+					#{if isOwner && !listing.isAvailable() && listing.type == 'p2p'}
 						<a class="btn btn-dark btn-lg btn-short" href="/available-start?id=${listing.uuid}&url=${request.url.urlEncode()}">&{'check-me-as-available'}</a>
 					#{/if}
+					
 					#{if isOwner && listing.isAvailable()}
-						<a class="btn btn-danger btn-lg btn-short" href="/available-stop?id=${listing.uuid}&url=${request.url.urlEncode()}">&{'uncheck-me-as-available'}</a>
-					#{/if}					
+						<a class="btn btn-success btn-lg btn-short" href="/available-stop?id=${listing.uuid}&url=${request.url.urlEncode()}">&{'uncheck-me-as-available'}</a>
+					#{/if}		
+								
 					#{if !isOwner && listing.user.account.type == "publisher"}
-						<a href="/user/${usr.login}/calendar?channel=${listing.uuid}" class="btn btn-dark btn-lg"><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
-						#{if !isOwner && listing.isAvailable()}
-							<a href="/user/${usr.login}/calendar?channel=${listing.uuid}" class="btn btn-success btn-lg btn-short blink" style="border-width:0px;"><i class="fa fa-play"></i> Join</a>
+						#{if !isOwner && listing.isAvailable() && listing.type == 'p2p'}
+							<a href="" data-href="/instant-room?id=${listing.uuid}" class="btn btn-success btn-lg btn-short blink no-schedule-start" style="border-width:0px;"><i class="fa fa-play"></i> &{'request-for-event-instant'}</a>
 						#{/if}			
+						<a href="/user/${usr.login}/calendar?channel=${listing.uuid}" class="btn btn-dark btn-lg"><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
 					#{/if}
 				</div>
 			</div>
@@ -475,7 +468,7 @@
 							    		<span class="label label-success">&{'paid'}</span>
 							    	#{/if}
 							    	</td>
-							    	#{if event.isEditable()}
+							    	#{if event.isEditable(user)}
 							    	<td style="text-align:right">
 							    		#{if user && item.email == user.login}
 							    		<a class="" href="/attendance-new-edit?type=accepted&uuid=${item.uuid}&url=${request.url.urlEncode()}#invitation">
@@ -670,8 +663,9 @@
 #{/if}
 
 
-#{if !edit && globalObject && (globalObject.chatEnabled || globalObject.type == "instant")}
+#{if !edit && globalObject && (globalObject.type == "instant" || globalObject.availableNow != null || globalObject.chatEnabled)}
 <script>
+	console.log("sockets activated");
     star.user = '${name}';
     star.room = '${room}';
     star.userInRoom = false;

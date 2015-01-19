@@ -174,7 +174,7 @@ public class Paypal
     public Map<String, String> setAdaptiveCheckout(Event event, Boolean dual) throws Exception
     {
         final BigDecimal price = paymentAmount;
-        final BigDecimal fee = dual ? price.multiply(new BigDecimal(percentage)).round(new MathContext(2)) : new BigDecimal(0);
+        final BigDecimal fee = true ? price.multiply(new BigDecimal(percentage)).round(new MathContext(2)) : new BigDecimal(0);
         final BigDecimal providerPrice = price.subtract(fee);
         String paypalAccount = providerPaypalAccount;
         if (providerPrice.compareTo(new BigDecimal("3")) < 0)
@@ -190,15 +190,21 @@ public class Paypal
 
         // provider payment
         sb.append("&currencyCode=" + UriUtils.urlEncode(paymentCurrency));
+        sb.append("&feesPayer=" + UriUtils.urlEncode("PRIMARYRECEIVER"));
+        sb.append("&memo=" + UriUtils.urlEncode("Example"));
         sb.append("&receiverList.receiver(0).email=" + event.user.account.paypalAccount);
-        sb.append("&receiverList.receiver(0).amount=" + UriUtils.urlEncode(providerPrice.toPlainString()));
+        sb.append("&receiverList.receiver(0).amount=" + UriUtils.urlEncode(price.toPlainString()));
+        sb.append("&receiverList.receiver(0).primary=" + UriUtils.urlEncode("true"));
 
         // our payment
-        if (dual)
+        if (true)
         {
             sb.append("&receiverList.receiver(1).email=" + paypalAccount);
             sb.append("&receiverList.receiver(1).amount=" + UriUtils.urlEncode(fee.toPlainString()));
+            sb.append("&receiverList.receiver(1).primary=" + UriUtils.urlEncode("false"));
         }
+        System.err.println(event.user.account.paypalAccount);
+        System.err.println(paypalAccount);
 
         String resp = adaptiveExecuteRequest(headers, sb, BaseController.getProperty(BaseController.CONFIG_PAYPAL_ADAPTIVE_ENDPOINT));
 

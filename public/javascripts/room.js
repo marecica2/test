@@ -38,12 +38,21 @@ $(document).ready(function(){
     // stop instant broadcast
     $(".btn-instant-stop").click(function(){
         send_chat(' stopped broadcasting', star.user);
-       
         var data = {};
         data.id = socket.socket.sessionid;
         socket_message_broadcast("instant-room-stop-broadcast", data);
         window.location = $(this).attr("data-href");
           
+    });
+
+    // start instat room
+    $(".no-schedule-start").click(function(e){
+        e.preventDefault();
+        
+        var data = {};
+        data.id = socket.socket.sessionid;
+        socket_message_broadcast("no-schedule-start", data);
+        window.location = $(this).attr("data-href");
     });
 
     // go to private room
@@ -73,6 +82,9 @@ socket.on('socket_message', function(data) {
     if(data.event == "instant-room-stop-broadcast"){
         window.location.reload();
     } 
+    if(data.event == "no-schedule-start"){
+        window.location.reload();
+    } 
     if(data.event == "instant-room-start-broadcast"){
         setTimeout(function(){ window.location.reload();
         }, 5000);
@@ -87,7 +99,7 @@ if(webrtc != null){
     webrtc.on('readyToCall', function () {
         
          //automatically create user_joined event
-         socket.emit('user_joined', {"user" : star.user, "room" : star.room, "usr" : star.usr, "peer" : webrtc.connection.socket.sessionid});
+         socket.emit('user_joined', {"user" : star.user, "room" : star.room, "usr" : star.usr, "peer" : webrtc.connection.socket.sessionid, "avatar" : star.avatar});
         
          // automatic join to room
          var room = star.room
@@ -97,19 +109,32 @@ if(webrtc != null){
              $(".peer-controls").hide();
          });
 
-         // muting unmuting
+         // camera on off
          $("#controls-camera").click(function(){
              if(!star.cameraoOff){
                  star.cameraoOff = true;
                  webrtc.pauseVideo();
                  $(this).removeClass("btn-dark");
                  $(this).addClass("btn-danger");
+                 $(".peer-label-camera[data-id='"+getPeerId()+"']").show();
+                 $(".videoContainer", "#video-element-"+getPeerId()).hide();
+                 $("#"+getPeerId()+"_video_small").show();
              } else {
                  star.cameraoOff = false;
                  webrtc.resumeVideo();
                  $(this).removeClass("btn-danger");
                  $(this).addClass("btn-dark");
+                 $(".peer-label-camera[data-id='"+getPeerId()+"']").hide();
+                 if(star.maximizedId != getPeerId())
+                     $(".videoContainer", "#video-element-"+getPeerId()).show();
+                 if(star.maximizedId != getPeerId())
+                     $("#"+getPeerId()+"_video_small").hide();
              }
+             
+             var data = {};
+             data.id = getPeerId();
+             data.cameraoOff = star.cameraoOff;
+             socket_message_broadcast("camera-broadcast", data);
          });
 
          // muting unmuting
@@ -268,14 +293,6 @@ if(webrtc != null){
          });         
              
          
-         $("#controls-switchauto").click(function() {
-             star.switchAuto = !star.switchAuto;
-             if(star.switchAuto)
-                 $(this).addClass("btn-success");
-             else
-                 $(this).removeClass("btn-success");
-         });
-         
          
          $("#controls-hangup").click(function() {
              $(".controls").hide();
@@ -409,9 +426,10 @@ if(webrtc != null){
             if(volume > treshold && star.switchAuto){
                 var id = getPeerId();
                 
-                if(star.maximizedId == null || id != star.maximizedId || star.switchAuto){
-                    maximizeMimize(id, true);
-                }
+//                if(id != star.maximizedId && star.switchAuto){
+//                    maximizeMimize(id, true);
+//                }
+                
                 var data = {};
                 data.id = getPeerId();
                 data.volume = volume;
@@ -446,6 +464,7 @@ function usersRender(data) {
                     html += "<div style='position:absolute;top:5px;left:5px;z-index:9999;'>";
                     html += "   <div style='display:none' class='peer-label-screenshare peer-control-lbl btn-success' data-id='"+peerId+"'><i class='fa fa-desktop'></i></div>"
                     html += "   <div style='display:none' class='peer-label-muted peer-control-lbl btn-danger' data-id='"+peerId+"'><i class='icon-mute'></i></div>"
+                    html += "   <div style='display:none' class='peer-label-camera peer-control-lbl btn-danger' data-id='"+peerId+"'><i class='fa fa-eye-slash'></i></div>"
                     html += "</div>";
                     
                     // peer controls
@@ -461,7 +480,10 @@ function usersRender(data) {
 
                     // peer avatar
                     html += "<div id='"+ peerId +"_video_small' class='peer-avatar'>";
-                    html += "   <div class='peer-avatar-label'>" + (row[usr].usr != undefined ? row[usr].usr.name : row[usr].user) + "</div>";
+                    html += "   <div class='peer-avatar-label'>" + (row[usr].usr != undefined ? row[usr].usr.name : row[usr].user);
+                    if(row[usr].avatar != undefined && row[usr].avatar != null)
+                        html += "       <br/><img src='"+row[usr].avatar+"_32x32' class='img-circle'>";
+                    html += "   </div>";
                     html += "</div>";
     
                     html += "</div>";
@@ -607,7 +629,7 @@ socket.on('socket_message', function(data) {
             }
             
             // update maximized screen
-            if(star.switchAuto){
+            if(star.switchAuto && data.data.id != getPeerId()){
                 if(star.maximizedId == null || data.data.id != star.maximizedId){
                     maximizeMimize(data.data.id, false);
                 }
@@ -643,6 +665,23 @@ socket.on('socket_message', function(data) {
             $(".peer-label-muted[data-id='"+data.data.id+"']").show();
         } else {
             $(".peer-label-muted[data-id='"+data.data.id+"']").hide();
+        }
+    }
+
+    if(data.event == "camera-broadcast"){
+        if(data.data.cameraoOff){
+            $(".peer-label-camera[data-id='"+data.data.id+"']").show();
+            if(star.maximizedId != data.data.id)
+                $(".videoContainer", "#video-element-"+data.data.id).hide();
+            if(star.maximizedId != data.data.id)
+                $("#"+data.data.id+"_video_small").show();
+            
+        } else {
+            $(".peer-label-camera[data-id='"+data.data.id+"']").hide();
+            if(star.maximizedId != data.data.id)
+                $(".videoContainer", "#video-element-"+data.data.id).show();
+            if(star.maximizedId != data.data.id)
+                $("#"+data.data.id+"_video_small").hide();
         }
     }
 

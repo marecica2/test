@@ -119,6 +119,7 @@ public class Events extends BaseController
         final String baseUrl = getBaseUrl().substring(0, getBaseUrl().length() - 1);
 
         final Event event = !isNew ? Event.get(uuid) : null;
+        final List<Listing> listings = event != null ? Listing.getForUser(event.listing.user) : null;
         final Boolean isOwner = event != null ? event.isOwner(user) : false;
         final Attendance attendance = user != null && event != null ? event.getInviteForCustomer(user) : null;
         final Boolean paid = (user != null && attendance != null && attendance.paid != null && attendance.paid) || isOwner ? true : false;
@@ -220,12 +221,14 @@ public class Events extends BaseController
         params.flash();
 
         final String name = user != null ? user.getFullName() : null;
-        final String room = event != null ? event.uuid : null;
+        String room = event != null ? event.uuid : null;
+        if (event != null && event.privateRoom != null && event.privateRoom)
+            room = event.roomSecret;
         final String rmtp = getProperty(CONFIG_RMTP_PATH);
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
         Map<String, String> errs = new HashMap<String, String>();
         render("Listings/listing.html", user, isOwner, edit, event, attendance, paid, url, errs, name, room, rmtp,
-                socketIo, type, files, temp, commentTemp, comments, ratings, stats, listing, fromEvent, baseUrl);
+                socketIo, type, files, temp, commentTemp, comments, listings, ratings, stats, listing, fromEvent, baseUrl);
     }
 
     public static void eventPost(
@@ -344,7 +347,7 @@ public class Events extends BaseController
                     fileUpload.save();
                 }
             }
-            createDefaultAttendances(user, null, event, create, false);
+            Attendance.createDefaultAttendances(user, null, event, create, false);
             redirect("/event/" + event.uuid);
         }
         params.flash();
@@ -442,7 +445,7 @@ public class Events extends BaseController
 
         // google event sync
 
-        createDefaultAttendances(userTo, customer, event, true, proposal);
+        Attendance.createDefaultAttendances(userTo, customer, event, true, proposal);
         renderJSON(EventDTO.convert(event, user));
     }
 
@@ -507,7 +510,7 @@ public class Events extends BaseController
         event.deleteEvent();
 
         // google event sync
-        if (user.syncWithGoogle())
+        if (user.syncWithGoogle() && event.googleId != null)
             GoogleCalendarClient.deleteGoogleEvent(user, event);
 
         renderJSON(EventDTO.convert(event, user));
@@ -684,57 +687,6 @@ public class Events extends BaseController
             }
         }
         redirectTo(url);
-    }
-
-    private static void createDefaultAttendances(User user, User customer, Event event, Boolean create, Boolean proposal)
-    {
-        if (create)
-        {
-            if (!proposal)
-            {
-                // create attendance on the background for user creator
-                Attendance a = new Attendance();
-                a.user = user;
-                a.result = Attendance.ATTENDANCE_RESULT_ACCEPTED;
-                a.name = user.getFullName();
-                a.email = user.login;
-                a.event = event;
-                a.customer = user;
-                a.isForUser = true;
-                a.saveAttendance();
-
-                final Activity act = new Activity();
-                act.type = Activity.ACTIVITY_EVENT_CREATED_BY_USER;
-                act.user = user;
-                act.event = event;
-                act.eventName = event.listing.title;
-                act.saveActivity();
-            }
-
-            // create attendance on the background for customer creator
-            if (proposal)
-            {
-                // create attendance for user
-                Attendance a = new Attendance();
-                a.user = user;
-                a.name = user.getFullName();
-                a.email = user.login;
-                a.event = event;
-                a.customer = user;
-                a.isForUser = true;
-                a.saveAttendance();
-
-                // create attendance for customer
-                Attendance a1 = new Attendance();
-                a1.email = customer.login;
-                a1.name = customer.getFullName();
-                a1.customer = customer;
-                a1.event = event;
-                a1.result = Attendance.ATTENDANCE_RESULT_ACCEPTED;
-                a1.isForUser = false;
-                a1.saveAttendance();
-            }
-        }
     }
 
     private static Event eventFromJson(DateTimeUtils time, final JsonObject jo, Event event)

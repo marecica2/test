@@ -110,6 +110,8 @@ public class Event extends Model
     @JoinColumn(name = "customer_id")
     public User customer;
 
+    public Boolean privateRoom;
+
     public Event saveEvent()
     {
         this.created = new Date();
@@ -354,6 +356,8 @@ public class Event extends Model
 
     private boolean isLocked()
     {
+        // TODO fix this 
+
         //if (this.isEnded())
         //    return true;
 
@@ -362,7 +366,7 @@ public class Event extends Model
         {
             if (attendance.paid != null && attendance.paid)
             {
-                return true;
+                return false;
             }
         }
         return false;
@@ -370,9 +374,9 @@ public class Event extends Model
 
     public Boolean isEditable(User user)
     {
+        // TODO fix this 
         if (this.isOwner(user) && !this.isLocked())
             return true;
-
         if (user != null && this.hasInviteForCustomer(user) && this.state.equals(EVENT_STATE_CUSTOMER_CREATED))
             return true;
         return false;

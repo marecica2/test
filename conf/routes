@@ -32,6 +32,7 @@ GET     /channels/tags							Listings.tagsRest
 GET     /channel-start            				Listings.start
 GET     /channel-stop            				Listings.stop
 GET     /create-room            				Listings.privateRoom
+GET     /instant-room            				Listings.instantRoom
 GET     /available-start          				Listings.availableStart
 GET     /available-stop          				Listings.availableStop
 

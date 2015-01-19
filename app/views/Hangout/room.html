@@ -72,6 +72,13 @@
 	</div>
 </div>
 
+<div class="logo" style="position:fixed;top:20px;left:20px;opacity: 0.7;"><img style="height:40px" src="/public/images/logo_purple_footer.png"></div>
+
+#{if user}
+<div class="logo" style="position:fixed;top:20px;right:40px; z-index: 100">
+	<a href="/user/${user.login}"><img class="img-circle" src="${user.avatarUrl}_32x32"></a>
+</div>
+#{/if}
 
 <!-- Share Modal -->
 <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -161,7 +168,7 @@
 	<div style="opacity:0.7">
 		<div class="btn-group">
 			<button type="button" id="controls-mute" class="controls btn btn-dark btn-medium" title="&{'mute'}"><i class="icon-sound"></i></button>
-			<button type="button" id="controls-camera" class="controls btn btn-dark btn-medium" title="&{'turn-camera-off'}"><i class="icon-camera"></i></button>
+			<button type="button" id="controls-camera" class="controls btn btn-dark btn-medium" title="&{'turn-camera-off'}"><i class="fa fa-eye-slash"></i></button>
 			<button type="button" id="screenShareButton" class="controls btn btn-dark btn-medium" title="&{'share-your-screen'}"><i class="fa fa-desktop"></i></button>
 			<button class="controls btn btn-dark btn-medium" data-toggle="modal" data-target="#myModal" title="&{'share'}"><i class="icon-user-add"></i></button>
 			<a href="${request.url}" class="btn btn-dark btn-medium" title="&{'refresh'}"><i class="fa fa-refresh"></i></a>
@@ -183,6 +190,9 @@
 <script>
     star.user = '${name}';
     star.room = '${room}';
+    #{if user}
+    	star.avatar = '${user.avatarUrl}';
+    #{/if}
     star.userInRoom = true;
     star.server_host = '${socketIo}';
     star.livestream = true;

@@ -541,7 +541,6 @@ starCalendar.getEvents = function(start, end, callback) {
             if(ev.state == "customer_created"){
                 color = "rgba(255,0,0,0.4)";
             }
-            console.log(data[i]);
             
             event = {};
             event.isInvite = ev.isInvite;

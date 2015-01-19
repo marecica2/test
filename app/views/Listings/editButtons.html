@@ -1,10 +1,15 @@
+<!-- Init to default -->
+#{set obj:(event != null ? event: listing) /}
+
+
 <!-- edit buttons -->
-<div class="pull-right" style="margin-top:5px;margin-right:3px;">	
+<div class="pull-right" style="margin-right:2px">	
 	#{if fromEvent && event}
 	
    		#{if event.state == 'customer_created'}
 			<span class="btn btn-default  btn-social margin-clear">&{'waiting-for-approvement'}</span>
 		#{/if}
+		
 		
 		#{if event.charging != null && attendance && !event.isFree()}
 			#{if !paid }
@@ -23,6 +28,7 @@
 			#{/if}
 		#{/if}
 
+
 		#{if isOwner && (event.state == 'customer_created' )}
 			<a class="btn btn-default  btn-social margin-clear" href="/event-approve?event=${event.uuid}&url=${request.url.urlEncode()}"><i class="fa fa-check"></i> &{'approve'}</a>
 			<a class="btn btn-default  btn-social margin-clear" href="/event-decline?event=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('&{'confirm-decline'}')){return true;} else {return false;}">
@@ -32,7 +38,7 @@
 		
 		
 		#{if !edit && event.type == 'p2p'}
-			<a class="btn btn-default  btn-social margin-clear" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank">&{'join-video-conference'}</a>
+			<a class="btn btn-default  btn-social margin-clear" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank"><i class="fa fa-play"></i> &{'join-video-call'}</a>
 		#{/if}		
 		
 		
@@ -47,8 +53,7 @@
 		
 		
 		#{if isOwner && !edit && event.type == 'instant'}
-				#{set displayStream:true /}
-				<a class="btn btn-default btn-social margin-clear btn-instant-stop"  data-href='/channel-stop?id=${listing.uuid}&url=${("/channel/"+listing.uuid+"").urlEncode()}' >&{'stop-instant-broadcast'}</a>
+			<a class="btn btn-default btn-social margin-clear btn-instant-stop"  data-href='/channel-stop?id=${listing.uuid}&url=${("/channel/"+listing.uuid+"").urlEncode()}' >&{'stop-instant-broadcast'}</a>
 		#{/if}							
 
 
@@ -105,37 +110,24 @@
 	#{/if}	
 	
 	
-	
 	#{else}	 
-		#{set displayStream:true /}
-		
-
 		#{if isOwner && !edit && listing.type == 'instant'}
 			#{if listing.started == null}
-				#{set displayStream:false /}
 				<a class="btn btn-default btn-social margin-clear btn-instant-start" href="/channel-start?id=${listing.uuid}&url=${request.url.urlEncode()}" title="&{'star-instant-broadcast'}"><i class="fa fa-play"></i></a>
 			#{/if}
 			#{else}
-				#{set displayStream:true /}
-					<a class="btn btn-default btn-social margin-clear btn-instant-stop" data-href="/channel-stop?id=${listing.uuid}&url=${request.url.urlEncode()}" title="&{'stop-instant-broadcast'}"><i class="fa fa-stop"></i></a>
-					<a class="btn btn-default btn-social margin-clear btn-instant-room" data-href="/create-room?id=${listing.uuid}&url=${request.url.urlEncode()}" title="&{'go-to-private-room'}"><i class="icon-key"></i></a>
+				<a class="btn btn-default btn-social margin-clear btn-instant-stop" data-href="/channel-stop?id=${listing.uuid}&url=${request.url.urlEncode()}" title="&{'stop-instant-broadcast'}"><i class="fa fa-stop"></i></a>
+				<a class="btn btn-default btn-social margin-clear btn-instant-room" data-href="/create-room?id=${listing.uuid}&url=${request.url.urlEncode()}" title="&{'go-to-private-room'}"><i class="icon-key"></i></a>
 			#{/else}
 		#{/if}		
 
 
-		#{if !isOwner && !edit && listing.type == 'instant' && listing.started != null && listing.started }
-				#{set displayStream:true /}
-		#{/if}	
-
-		
 		#{if !isOwner && !edit && listing.type == 'instant' && listing.instantBroadcast != null}
-			#{set displayStream:true /}
 			<a class="btn btn-default  btn-social margin-clear" href="/event/${listing.instantBroadcast}" >&{'go-to-private-room'}</a>
 		#{/if}		
 		
 		
 		#{if !isOwner && !edit && listing.type == 'instant' && listing.started == null}
-			#{set displayStream:false /}
 		#{/if}
 
 		
@@ -153,10 +145,10 @@
 			</a>
 		#{/if}
 		
+		
 		#{if edit}
 			<a href="${request.params.url}" class="btn btn-default  btn-social margin-clear">&{'cancel'}</a>		
 		#{/if}	
-		
 	#{/else}	
 	<!-- edit buttons -->   	
 </div>

@@ -41,10 +41,12 @@ new-event-proposed-for-channel-subject=New session was requested for channel %s
 new-event-proposed-for-channel-message=h3. New session request \n%s requested new session [%s|%s]. Please visit the link to review and approve or decline this request.
 you-have-been-invited-subject=%s invited you to session %s
 you-have-been-invited-message=h3. Invitation to session \n%s invited you to session [%s|%s]
-your-proposal-declined-subject=%s declined your request
-your-proposal-declined-message=h3. Your session request was declined \n%s declined your request for channel %s
-your-proposal-approved-subject=%s accepted your request
+your-proposal-declined-subject=%s declined your session request
+your-proposal-declined-message=h3. Your session session request was declined \n%s declined your request for channel %s
+your-proposal-approved-subject=%s accepted your session request
 your-proposal-approved-message=h3. Your session request was approved \n%s accepted your request [%s|%s] 
+new-event-request-subject=New instant session request for %s
+new-event-request-message=h3. New session request \n%s requested new instant [session|%s] for channel %s
 
 #FileuploadController.java
 
@@ -520,7 +522,7 @@ first-free=First free
 approved=Approved
 you-can-pay-for-event-before-or-you-can-wait-until-event-starts=You can pay for session before or you can wait until session starts
 pay-for-event-now=Pay for session now
-join-video-conference=Join video conference
+join-video-call=Join video call
 start-live-broadcast=Start live broadcast
 stop-live-broadcast=Stop live broadcast
 stop-instant-broadcast=Stop instant broadcast
@@ -550,7 +552,8 @@ create-new-channel=Create new channel
 play-introduction=Play introduction
 total-price=Total price
 min=Min
-request-for-event=Schedule session
+request-for-event=Schedule session later
+request-for-event-instant=Take session now
 guests=Guests
 add-to-watchlist=Add to watchlist
 remove-from-watchlist=Remove from watchlist
@@ -560,13 +563,15 @@ write-custom-message=Write custom message
 notify=Notify
 recent-events=Recent sessions
 all-channels-from=All channels from
+enter-your-message=Your message
 
 #stream.html
 send=Send
 
 #listingsList.html
+available-activated=Available Now
 reviews=Reviews
-create-event=Create new session
+create-event=New session
 request-event=Schedule session
 
 #main.html
@@ -750,6 +755,7 @@ add-google-event=Convert Google event to Widgr
 unmute=Unmute
 
 #starEvent.js
+new-message=New Notification
 attachments=Attachments
 write-a-reply=Write a reply
 before=Before

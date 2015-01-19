@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Map;
 
 import models.Account;
+import models.Attendance;
 import models.Comment;
 import models.Event;
 import models.FileUpload;
 import models.Listing;
 import models.ListingFilter;
+import models.Message;
 import models.Rating;
 import models.User;
 import play.i18n.Messages;
@@ -21,6 +23,7 @@ import utils.NumberUtils;
 import utils.RandomUtil;
 import utils.StringUtils;
 import dto.ListingDTO;
+import email.EmailNotificationBuilder;
 
 public class Listings extends BaseController
 {
@@ -289,6 +292,7 @@ public class Listings extends BaseController
 
         Event e = new Event();
         e.listing = l;
+        e.privateRoom = true;
         e.listing_uuid = l.uuid;
         e.uuid = RandomUtil.getUUID();
         e.roomSecret = RandomUtil.getUUID();
@@ -317,6 +321,69 @@ public class Listings extends BaseController
         l.save();
 
         redirectTo("/event/" + e.uuid);
+    }
+
+    public static void instantRoom(String id)
+    {
+        final User user = getLoggedUserNotCache();
+        final Listing l = Listing.get(id);
+
+        if (l == null)
+            forbidden();
+        if (user == null)
+            forbidden();
+        if (l.user.hasBlockedContact(user))
+            forbidden();
+
+        Event e = new Event();
+        e.customer = user;
+        e.listing = l;
+        e.privateRoom = true;
+        e.listing_uuid = l.uuid;
+        e.uuid = RandomUtil.getUUID();
+        e.roomSecret = RandomUtil.getUUID();
+        e.eventStart = new Date();
+        e.eventEnd = new Date(e.eventStart.getTime() + (1000 * 60 * l.chargingTime));
+
+        e.charging = l.charging;
+        e.price = l.price;
+        e.currency = l.currency;
+        e.chargingTime = l.chargingTime;
+        e.started = new Date();
+
+        e.createdByUser = true;
+        e.state = Event.EVENT_STATE_USER_CREATED;
+        e.chatEnabled = true;
+        e.commentsEnabled = false;
+        e.privacy = Event.EVENT_VISIBILITY_PRIVATE;
+        e.type = l.type;
+        e.created = new Date();
+        e.user = l.user;
+        e.save();
+
+        l.started = new Date();
+        l.ended = null;
+        l.instantBroadcast = e.uuid;
+        l.save();
+
+        Attendance.createDefaultAttendances(l.user, user, e, true, true);
+
+        // notification
+        final String subject = Messages.get("new-event-request-subject", e.listing.title);
+        final String body = Messages.get("new-event-request-message", user.getFullName(), getBaseUrl() + "event/" + e.uuid, e.listing.title);
+        if (e.customer != null)
+            Message.createNotification(user, e.user, subject, body);
+        if (e.customer != null && e.customer.emailNotification)
+        {
+            EmailNotificationBuilder eb = new EmailNotificationBuilder();
+            eb.setTo(e.user);
+            eb.setFrom(user)
+                    .setSubject(subject)
+                    .setMessageWiki(body)
+                    .send();
+        }
+
+        redirectTo("/room?id=" + e.uuid);
     }
 
     public static void stop(String id, String url)
