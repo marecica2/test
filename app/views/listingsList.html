@@ -17,7 +17,7 @@
    		
    		<div class="listing-item-right">
 			<h4 class="margin-clear">${item.title.trimDot(90)}
-			#{if isOwner && user && item.availableNow != null}
+			#{if user && item.availableNow != null && item.user.uuid == user.uuid}
 				<small class="label label-success pull-right" style="font-size:0.6em">&{'available-activated'}</small>
 			#{/if}			
 			</h4>
@@ -62,6 +62,11 @@
 			#{if !isOwner}
 				<a href="/user/${usr.login}/calendar?channel=${item.uuid}" class="btn btn-gray btn-sm btn-margin pull-right "><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
 			#{/if}            		
+
+			#{if !isOwner && item.isAvailable() && item.type == 'p2p'}
+				<a href="/channel/${item.uuid}" class="btn btn-success btn-sm btn-margin pull-right"><i class="fa fa-play"></i> &{'request-for-event-instant'}</a>
+			#{/if}	
+			<div class="clearfix"></div>			
    		</div>
    	</div>		
 </div>	   

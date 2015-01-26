@@ -13,10 +13,22 @@
 <div class="container">
 	<div class="row">
 	  	<div class="col-md-12">
-			<h2><i class='fa fa-bar-chart-o'></i> &{'payments.receivedPayments'}</h2>
-			<hr>
+			<h2> 
+				#{if senderUser}
+					<img class="img-circle avatar32" src="${senderUser.avatarUrl}_32x32"> ${senderUser.fullName} - &{'payments.receivedPayments'}
+				#{/if}
+				#{elseif request.params.sent}
+					<i class='fa fa-bar-chart-o'></i> &{'payments.sentPayments'}
+				#{/elseif}
+				#{else}
+					<i class='fa fa-bar-chart-o'></i> &{'payments.receivedPayments'}
+				#{/else}
+			</h2>
 
-			<form class="form-inline" role="form" method="GET">
+			<form class="form-inline" method="GET">
+				<input type="hidden" name="transaction" value="${request.params.transaction}">
+				<input type="hidden" name="sender" value="${request.params.sender}">
+				<input type="hidden" name="sent" value="${request.params.sent}">
 				<div class="form-group">
 					&{'payments.timeRange'}
 				</div>
@@ -71,19 +83,17 @@
 			</form>
 			
 			<br/>
-			<h3>&{'payments.income'}</h3>
-			<dl class="dl-horizontal">
-				<dt>&{'payments.totalSales'}</dt>
-				<dd>${total}</dd>
-				<dt>&{'payments.income'}</dt>
-				<dd>${provider}</dd>
-				<dt>&{'payments.fee'}</dt>
-				<dd>${fee}</dd>
-			</dl>
+			
+			#{if request.params.sent}
+				<h3>&{'payments.totalExpenses'}</h3>
+			#{/if}
+			#{else}
+				<h3>&{'payments.totalSales'}</h3>
+			#{/else}
 			
 			
 			<br/>
-			<div id="chartContainer" style="height: 300px; width: 100%;">
+			<div id="chartContainer" style="height: 300px; width: 90%;">
 			</div>			
 			<script>
 			
@@ -151,14 +161,17 @@
 			
 			<br/>
 			<h3>&{'payments.transactions'}</h3>
-			<table class="table table-striped table-condensed">
+			<table class="table table-striped table-condensed" style="font-size:0.9em;width:90%">
 				<thead>
 		        <tr>
-		          <th>&{'customer'}</th>
+		          #{if request.params.sent}
+			          <th>&{'publisher'}</th>
+		          #{/if}
+		          #{else}
+			          <th>&{'customer'}</th>
+		          #{/else}
 		          <th>&{'event'}</th>
-		          <th>&{'payments.totalSales'}</th>
-		          <th>&{'payments.income'}</th>
-		          <th>&{'payments.fee'}</th>
+		          <th>&{'price'}</th>
 		          <th>&{'date'}</th>
 		          <th>&{'refundation'}</th>
 		        </tr>
@@ -166,15 +179,24 @@
 				#{list items:payments, as:'p'}
 				<tr>
 	    			<td>
-	    				<img class="avatar16 img-circle" src="${p.customer.avatarUrl}_32x32">
-	    				#{if p.customer}
-	    				<a href="/user/${p.customer.login}">${p.customer.fullName}</a>
-	    				#{/if}
+				          #{if request.params.sent}
+		    				<img class="avatar16 img-circle" src="${p.event.user.avatarUrl}_32x32">
+		    				<a href="/user/${p.event.user.login}">${p.event.user.fullName}</a>
+				          #{/if}
+				          #{else}
+		    				<img class="avatar16 img-circle" src="${p.customer.avatarUrl}_32x32">
+		    				<a href="/user/${p.customer.login}">${p.customer.fullName}</a>
+		    				<strong><a href="/payments?sender=${p.customer.login}">&{'filter'}</a></strong>
+				          #{/else}	    			
 	    			</td>
-	    			<td><a href="/event/${p.event.uuid}">${p.event.listing.title.trimDot(15)}</a></td>
+	    			<td>
+	    				<a href="/event/${p.event.uuid}">
+	    					${p.event.listing.title.trimDot(25)} , 
+	    					${p.event.eventStart.format("dd MMM yyyy")}
+	    					#{time time:p.event.eventStart/}	    					
+	    				</a>
+	    			</td>
 	    			<td>${p.price} ${p.currency}</td>
-	    			<td>${p.providerPrice} ${p.currency}</td>
-	    			<td>${p.fee} ${p.currency}</td>
 	    			<td>
 	    				#{if p.paypalTransactionDate}
 	    					${p.paypalTransactionDate.format("dd MMM yyyy")}
@@ -187,8 +209,11 @@
 		    				<span class="label label-danger" rel="tooltip" data-placement="top" data-original-title="${p.refundReason}">
 		    					&{'refund-reason'}
 		    				</span>&nbsp;
-	    					<a href="/paypal/refund/${p.uuid}?url=${request.url.urlEncode()}" class="btn btn-default btn-sm margin-clear">Refund</a>
+	    					<a href="/paypal/refund/${p.uuid}?url=${request.url.urlEncode()}" class="btn btn-default btn-sm margin-clear"  onclick="if(confirm('&{'confirm-decline'}')){return true;} else {return false;}">Refund</a>
 	    				#{/if}
+	    				#{if request.params.sent && p.refundRequested == null}
+	    					<a href="/event/${p.event.uuid}">&{'request-refund'}</a>&nbsp;
+	    				#{/if}	  	    				
 	    				#{if p.refunded}
 	    					<span class="label label-default">&{'refunded'}</span>
 	    				#{/if}

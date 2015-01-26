@@ -26,6 +26,7 @@ public class CommentDTO
     public String listingName;
     public String listingImage;
     public boolean isDeletable;
+    public Boolean commentsEnabled;
     public List<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
     public List<CommentReplyDTO> replies = new ArrayList<CommentReplyDTO>();
 
@@ -41,6 +42,7 @@ public class CommentDTO
         c.createdByAvatarUrl = com.user.getAvatarUrl();
         c.objectType = com.objectType;
         c.isDeletable = com.canDelete(user);
+
         if (com.event != null)
         {
             c.event = com.event.uuid;
@@ -48,12 +50,14 @@ public class CommentDTO
             c.eventEnd = com.event.eventEnd.getTime();
             c.listingName = com.event.listing.title;
             c.listingImage = com.event.listing.imageUrl;
+            c.commentsEnabled = com.event.commentsEnabled;
         }
         if (com.listing != null)
         {
             c.listing = com.listing.uuid;
             c.listingName = com.listing.title;
             c.listingImage = com.listing.imageUrl;
+            c.commentsEnabled = com.listing.commentsEnabled;
         }
 
         for (FileUpload fu : com.files)

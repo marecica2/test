@@ -63,6 +63,27 @@ public class Rating extends Model
         return ratings;
     }
 
+    public static List<Rating> getByObjectUser(String uuid, User user)
+    {
+        Query query = JPA.em().createQuery(
+                "select r,  COALESCE(sum(vote.vote),0) as sumVotes from Rating r "
+                        + "left outer join r.voteList as vote where r.objectUuid = ? and r.user = ? "
+                        + "group by r order by r.created desc");
+        query.setParameter(1, uuid);
+        query.setParameter(2, user);
+
+        List<Object[]> result = query.getResultList();
+
+        List<Rating> ratings = new ArrayList<Rating>();
+        for (Object[] objects : result)
+        {
+            final Rating rating = (Rating) objects[0];
+            rating.votes = (Long) objects[1];
+            ratings.add(rating);
+        }
+        return ratings;
+    }
+
     public static List<Rating> getByUser(String uuid)
     {
         return Rating.find("userUuid = ? order by created desc", uuid).fetch();
@@ -141,4 +162,5 @@ public class Rating extends Model
         }
         return false;
     }
+
 }

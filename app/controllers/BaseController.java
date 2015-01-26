@@ -54,6 +54,12 @@ public class BaseController extends Controller
         return getProperty(CONFIG_BASE_URL);
     }
 
+    public static String getBaseUrlWithoutSlash()
+    {
+        final String url = getProperty(CONFIG_BASE_URL);
+        return url.substring(0, url.length() - 1);
+    }
+
     public static boolean flashErrorPut(String msg)
     {
         Http.Cookie c = new Http.Cookie();
@@ -217,7 +223,7 @@ public class BaseController extends Controller
         error(400, "Bad request");
     }
 
-    public static User getAdmin()
+    public static User getAdminUser()
     {
         User user = User.getUserByLogin(getProperty("admin.user"));
         return user;

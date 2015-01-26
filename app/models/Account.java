@@ -68,6 +68,15 @@ public class Account extends Model
         return true;
     }
 
+    public String formatUrl(String url)
+    {
+        if (url != null && url.contains("http://"))
+            return url;
+        if (url != null && !url.contains("http://"))
+            return "http://" + url;
+        return url;
+    }
+
     public AccountPlan currentPlan()
     {
         AccountPlan plan = AccountPlan.getCurrentPlan(this);

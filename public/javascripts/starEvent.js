@@ -56,26 +56,10 @@ star.renderComments = function(data, dashboard){
         var item = data[i];
         $(".commentsContainer").show();
         html += "<div class='image-box shadow-blur mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
-        html += "   <div class='image-box-body'>";
-        
-        if(item.isDeletable != undefined && item.isDeletable){
-            html += "           <a data-href='/event/comment/delete?uuid="+item.uuid+"' style='position:absolute;right:15px;top:10px' class='btn btn-light-gray btn-short comment-delete'><i class='color-link fa fa-times'></i></a>";
-        }  
-        
-        html += "       <div class='title'>";
-        html += "           <img src='../"+item.createdByAvatarUrl+"_64x64' class='img-circle' style='height:40px;float:left;margin-right:10px'> ";
-        html += "           <a href='/user/"+item.createdByLogin+"'>"+item.createdByName+"</a>";
-        html += "           <p><span class=''>on "+starUtils.formatDate(item.created)+"</span> ";
-        html += "           <span class='tip'>"+starUtils.formatTime(item.created)+"</span></p>";
-        html += "       </div>";
-        
+
         if(dashboard && item.event != undefined){
             html += "           <div class='overlay-container'>";
-            html += "               <div style='width:100%;height:160px;background: url(\"/"+item.listingImage+"\"); background-size: cover;padding:10px'>";
-            html += "                   <h3 class='shadow margin-clear text-shadow'>"+item.listingName+"</h3>";
-            html += "                   <span class='text-shadow'>"+starUtils.formatDate(item.eventStart)+"</span>";
-            html += "                   <span class='text-shadow'>"+starUtils.formatTime(item.eventStart)+"</span> - ";
-            html += "                   <span class='text-shadow'>"+starUtils.formatTime(item.eventEnd)+"</span>";
+            html += "               <div style='width:100%;height:200px;background: url(\"/"+item.listingImage+"\"); background-size: cover;padding:10px'>";
             html += "               </div>";
             html += "               <div class='overlay'>";
             html += "                   <div class='overlay-links'>";
@@ -87,8 +71,7 @@ star.renderComments = function(data, dashboard){
         
         else if(dashboard && item.listing != undefined){
             html += "           <div class='overlay-container'>";
-            html += "               <div style='width:100%;height:160px;background: url(\"/"+item.listingImage+"\"); background-size: cover;padding:10px'>";
-            html += "                   <h3 class='shadow margin-clear text-shadow'>"+item.listingName+"</h3>";
+            html += "               <div style='width:100%;height:200px;background: url(\"/"+item.listingImage+"\"); background-size: cover;padding:10px'>";
             html += "               </div>";
             html += "               <div class='overlay'>";
             html += "                   <div class='overlay-links'>";
@@ -98,7 +81,34 @@ star.renderComments = function(data, dashboard){
             html += "           </div>";
         }
         
-        html += "       <div class='black margin-top'>"+item.comment+"</div>"; 
+        html += "   <div class='image-box-body'>";
+        
+        if(item.isDeletable != undefined && item.isDeletable){
+            html += "           <a data-href='/event/comment/delete?uuid="+item.uuid+"' style='position:absolute;right:15px;cursor:pointer' class='comment-delete'><i class='fa fa-times'></i></a>";
+        }  
+        
+        var hr = false;
+        if(dashboard && item.listingName != undefined){
+            html += "                   <h3 class='shadow margin-top-clear '>"+item.listingName+"</h3>";
+            hr = true;
+        }
+        if(dashboard && item.event != undefined){
+            html += "       <span class=''>"+starUtils.formatDate(item.eventStart)+"</span>";
+            html += "       <span class=''>"+starUtils.formatTime(item.eventStart)+"</span> - ";
+            html += "       <span class=''>"+starUtils.formatTime(item.eventEnd)+"</span>";
+            hr = true;
+        }         
+        
+        if(hr)
+            html += "       <hr>";
+        
+        html += "       <div class='title'>";
+        html += "           <img src='../"+item.createdByAvatarUrl+"_64x64' class='img-circle' style='height:40px;float:left;margin-right:10px'> ";
+        html += "           <span><a href='/user/"+item.createdByLogin+"'>"+item.createdByName+"</a></span>";
+        html += "           <p><span class=''>on "+starUtils.formatDate(item.created)+"</span>, ";
+        html += "           <span style='opacity:0.6'>"+starUtils.formatTime(item.created)+"</span></p>";
+        html += "       </div>";
+        html += "       <div class='black'>"+item.comment+"</div>"; 
         
         if(item.attachments.length > 0){
             html += "           <strong>"+i18n('attachments')+"</strong>";
@@ -132,8 +142,8 @@ star.renderComments = function(data, dashboard){
             html += "</div>";
         }   
 
-        if(star.user && starCalendar.comments){
-            html += "<a href='#' class='comment-reply pull-right'>"+i18n("write-a-reply")+"</a>";
+        if(star.user && starCalendar.comments && item.commentsEnabled){
+            html += "<a href='#' class='comment-reply link pull-right'>"+i18n("write-a-reply")+"</a>";
             html += "<div style='display:none' class='comment-reply-input margin-top'>";
             html += "   <textarea class='form-control' placeholder='"+i18n('write-a-reply')+"'></textarea>";
             html += "   <button class='btn btn-default pull-right comment-reply-submit' data-id='"+item.uuid+"'>"+i18n('submit')+"</button>";
@@ -234,7 +244,7 @@ star.renderItems = function(data, prefix){
             html += "<div class='event-box shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
             html += "   <div class='overlay-container'>";
             html += "       <mark style='position:absolute;bottom:0px;padding:5px' class='title'><img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/"+item.createdByAvatarUrl+"_32x32'>"+item.createdByName+" </mark>";
-            html += "       <img src='/"+item.imageUrl+"_128x128' alt=''>";
+            html += "       <img src='/"+item.imageUrl+"_128x128' style='width:100%' alt=''>";
             html += "       <div class='overlay'>";
             html += "           <div class='overlay-links'>";
             html += "               <a href='/channel/"+item.uuid+"'><i class='fa fa-link'></i></a>";
@@ -767,7 +777,6 @@ starServices.getActivities = function(params, success, error){
     });
 };
 
-
 starServices.addComment = function(data, success, error){
     $.ajax({
         type: "POST",
@@ -777,7 +786,7 @@ starServices.addComment = function(data, success, error){
         error: error,
         contentType: "application/json"
     });
-};
+   };
 
 starServices.getComments = function(params, success, error){
     $.ajax({

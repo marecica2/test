@@ -250,7 +250,8 @@ starCalendar.decorateEvent = function(event, element, view){
         if(text.length >= length)
             text = text.substring(0, length) + "...";
         var html = starEvent.eventIcons(event);
-        html = "<img class='img-circle avatar22' src='/"+event.createdByAvatarUrl+"'> " + html;
+        if(event.createdByAvatarUrl != undefined)
+            html = "<img class='img-circle avatar22' src='/"+event.createdByAvatarUrl+"'> " + html;
         el.html(html + text);
     }
 };
@@ -358,7 +359,6 @@ starCalendar.selectionNewEvent = function(ccc, start, end, allDay, event) {
 
 starCalendar.clickEvent = function(event, jsEvent, view) {
     starCalendar.selectedEvent = event;
-    console.log(event);
     // copy values to the event detail page dialog
     if(event.uuid != undefined){
         starEvent.inviteLoad(event.uuid, function(){
@@ -546,7 +546,7 @@ starCalendar.getEvents = function(start, end, callback) {
             event.isInvite = ev.isInvite;
             event.user = ev.user;
             event.invisible = ev.invisible;
-            event.title = ev.title;
+            event.title = ev.title != undefined? ev.title : "";
             event.description = ev.description;
             event.start = s;
             event.end = e;

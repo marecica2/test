@@ -374,6 +374,9 @@ public class Events extends BaseController
 
         if (proposal)
         {
+            if (!userTo.isPublisher())
+                forbidden();
+
             if (userTo.hasBlockedContact(customer))
                 forbidden();
         }
@@ -416,8 +419,10 @@ public class Events extends BaseController
 
         if (proposal)
         {
-            final String subject = Messages.get("new-event-proposed-for-channel-subject", event.listing.title);
-            final String message = Messages.get("new-event-proposed-for-channel-message", event.customer.getFullName(), event.listing.title, getBaseUrl() + "event/" + event.uuid);
+            final String locale = userTo == null ? "en" : userTo.locale;
+            final String subject = Messages.getMessage(locale, "new-event-proposed-for-channel-subject", event.listing.title);
+            final String message = Messages.getMessage(locale, "new-event-proposed-for-channel-message", event.customer.getFullName(), event.listing.title, getBaseUrl() + "event/"
+                    + event.uuid);
             Message.createNotification(user, userTo, subject, message);
             new EmailNotificationBuilder()
                     .setFrom(user)
@@ -542,8 +547,8 @@ public class Events extends BaseController
         e.save();
 
         // notification
-        final String subject = Messages.get("your-proposal-approved-subject", user.getFullName());
-        final String body = Messages.get("your-proposal-approved-message", user.getFullName(), e.listing.title, getBaseUrl() + "event/" + e.uuid);
+        final String subject = Messages.getMessage(e.customer.locale, "your-proposal-approved-subject", user.getFullName());
+        final String body = Messages.getMessage(e.customer.locale, "your-proposal-approved-message", user.getFullName(), e.listing.title, getBaseUrl() + "event/" + e.uuid);
         if (e.customer != null)
             Message.createNotification(user, e.customer, subject, body);
         if (e.customer != null && e.customer.emailNotification)
@@ -580,8 +585,8 @@ public class Events extends BaseController
             forbidden();
 
         // notification
-        final String subject = Messages.get("your-proposal-declined-subject", user.getFullName());
-        final String body = Messages.get("your-proposal-declined-message", user.getFullName(), e.listing.title, getBaseUrl() + "channel/" + e.listing.uuid);
+        final String subject = Messages.getMessage(e.customer.locale, "your-proposal-declined-subject", user.getFullName());
+        final String body = Messages.getMessage(e.customer.locale, "your-proposal-declined-message", user.getFullName(), e.listing.title, getBaseUrl() + "channel/" + e.listing.uuid);
         if (e.customer != null)
             Message.createNotification(user, e.customer, subject, body);
         if (e.customer != null && e.customer.emailNotification)
@@ -662,8 +667,9 @@ public class Events extends BaseController
             for (int i = 0; i < invite.length; i++)
             {
                 final Attendance attendance = Attendance.get(invite[i]);
-                final String subject = Messages.get("you-have-been-invited-subject", user.getFullName(), attendance.event.listing.title);
-                final String body = Messages.get("you-have-been-invited-message", user.getFullName(), event.listing.title, getBaseUrl() + "event/" + event.uuid);
+                final String locale = attendance.customer == null ? "en" : attendance.customer.locale;
+                final String subject = Messages.getMessage(locale, "you-have-been-invited-subject", user.getFullName(), attendance.event.listing.title);
+                final String body = Messages.getMessage(locale, "you-have-been-invited-message", user.getFullName(), event.listing.title, getBaseUrl() + "event/" + event.uuid);
 
                 if (attendance.customer != null)
                 {

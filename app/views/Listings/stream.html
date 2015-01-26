@@ -133,13 +133,15 @@
 					
 					<!-- chat box-->
 					#{if displayChat}
-						<div class="col-md-${12-cols}" style="height:500px; background: rgba(0, 0, 0, 0.0)">
+						<div class="col-md-${12-cols} col-md-offset-${cols} shadow-outset" style="height:500px; max-height:500px; background: rgba(0, 0, 0, 0.5)">
 							<div style="height:100%">
 								<div style="text-align:left;font-size:1.3em;padding-top:10px;padding-bottom:10px;">
 									<span class="label default-bg">Chat box</span>
+									<span class="chat-avatars">
+									</span>
 								</div>
 								
-								<div id="content" class="text-shadow" style="height:385px; overflow-y: auto; text-align:left; color:white; "></div>
+								<div id="content" class="text-shadow" style="height:385px; overflow-y: auto; overflow-x:hidden; text-align:left; color:white; "></div>
 								
 								#{if user}
 								<form onsubmit="return false;" style="margin-top:15px;">
@@ -158,6 +160,7 @@
 							</div>
 						</div>
 					#{/if}
+					
 				</div>
 			</div>
 		</div>

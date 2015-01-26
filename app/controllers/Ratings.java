@@ -15,6 +15,8 @@ public class Ratings extends BaseController
 {
     public static void addRating(String uuid, String comment, String type, Integer stars, String url, String userUuid)
     {
+        System.err.println("rating add");
+
         final User user = getLoggedUser();
         final Listing listing = Listing.get(uuid);
 

@@ -24,6 +24,22 @@ import dto.ChatFeedDTO;
 
 public class Public extends BaseController
 {
+    public static void checkConnection()
+    {
+        final User user = getLoggedUserNotCache();
+        if (user == null)
+            forbidden();
+
+        user.lastOnlineTime = new Date();
+        user.save();
+
+        JsonObject resp = new JsonObject();
+        resp.addProperty("logged", "true");
+        if (user.unreadMessages != null && user.unreadMessages)
+            resp.addProperty("email", "true");
+        renderJSON(resp.toString());
+    }
+
     public static void locale(String locale, String url)
     {
         final User user = getLoggedUserNotCache();

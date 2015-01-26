@@ -58,12 +58,12 @@ public class Attendances extends BaseController
 
     public static void attendanceNewSave(String email, String eventId, String url)
     {
+        email = StringUtils.extractReturnDefault(email, "\\((.+?)\\)");
         final Event event = Event.get(eventId);
         final User user = getLoggedUserNotCache();
         final Boolean isForUser = getLoggedUser().login.equals(email) ? true : false;
         final User customer = User.getUserByLogin(email);
         final boolean blocked = customer != null ? customer.hasBlockedContact(user) : false;
-
         if (blocked)
             validation.addError("email", Messages.get("blocked-contact"));
 

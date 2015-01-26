@@ -5,6 +5,7 @@ import java.util.List;
 
 import models.Event;
 import models.Message;
+import models.Rating;
 import models.User;
 import play.i18n.Messages;
 import utils.JsonUtils;
@@ -31,9 +32,20 @@ public class Hangout extends BaseController
 
     public static void room(String id, String transactionId, String tempName) throws Throwable
     {
-        final User user = getLoggedUser();
+        final User user = getLoggedUserNotCache();
         final Event event = Event.get(id);
         final Event e = event;
+
+        if (user != null && event != null && !user.isOwner(event))
+        {
+            List<Rating> ratings = Rating.getByObjectUser(event.uuid, user);
+            if (ratings.size() == 0 || (ratings.size() > 0 && ratings.get(0).created.getTime() < (System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 0)))
+            {
+                final String subject = Messages.getMessage(user.locale, "please-rating-subject");
+                final String message = Messages.getMessage(user.locale, "please-rating-message", event.listing.title, getBaseUrl() + "event/" + event.uuid + "#ratings");
+                Message.createAdminNotification(user, subject, message);
+            }
+        }
 
         if (user == null && tempName == null)
             joinRoom(id);
@@ -43,8 +55,9 @@ public class Hangout extends BaseController
 
         final String name = user != null ? user.getFullName() : tempName;
         final String room = id;
+        final String baseUrl = getBaseUrl().substring(0, getBaseUrl().length() - 1);
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
-        render(user, name, room, socketIo);
+        render(user, name, room, socketIo, baseUrl);
     }
 
     public static void joinRoom(String id)
@@ -77,9 +90,10 @@ public class Hangout extends BaseController
 
         for (String login : logins)
         {
-            final String subject = Messages.get("invitation-to-video-call-subject");
-            final String message = Messages.get("invitation-to-video-call-message", userName, getBaseUrl() + "room?id=" + room);
             final User toUser = User.getUserByLogin(login);
+            final String locale = toUser == null ? "en" : toUser.locale;
+            final String subject = Messages.getMessage(locale, "invitation-to-video-call-subject");
+            final String message = Messages.getMessage(locale, "invitation-to-video-call-message", userName, getBaseUrl() + "room?id=" + room);
             if (toUser != null)
                 Message.createNotification(user, toUser, subject, message);
 

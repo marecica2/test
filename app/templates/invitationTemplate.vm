@@ -12,7 +12,7 @@
 					<tr>
 						#if($user)
 						<td style="vertical-align:middle;">
-							<a href="${userUrl}" style="margin-right:20px"><img  style="height:100px;" src="${userImage}"></a>
+							<a href="${userUrl}" style="margin-right:20px"><img  style="max-height:100px; height:100px;width:100px;" height="100px" width="100px" src="${userImage}"></a>
 						</td>
 						<td>
 							&nbsp;
@@ -49,13 +49,18 @@
 						<h3>${notificationLabel}</h3>
 						<p>${notification}</p>
 					#end
+					
+					#if($message)
+						${message}
+					#end
+					
 					#if($event)
 						<h3>About ${event}</h3>
 						${eventDescription}
 					#end
 					
 					#if(!$existing)
-						${message}
+						${whatIsWidgr}
 					#end
 					
 					${regards}

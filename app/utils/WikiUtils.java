@@ -31,6 +31,7 @@ public class WikiUtils
             htmlContent = htmlContent.replaceAll("\\[(.+?)\\|(.+?)\\]", "<a href=\"$2\">$1</a>");
             htmlContent = htmlContent.replaceAll("\\>mailto:(.+?)\\</", ">$1</");
             htmlContent = htmlContent.replaceAll("\\{.+?\\}", "");
+            htmlContent = htmlContent.replaceAll("&amp;", "&");
             return htmlContent;
         } catch (Exception e)
         {

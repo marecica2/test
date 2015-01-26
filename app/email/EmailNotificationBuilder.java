@@ -85,12 +85,12 @@ public class EmailNotificationBuilder
     {
         final EmailProvider ep = new EmailProvider();
         final String baseUrl = BaseController.getProperty(BaseController.CONFIG_BASE_URL);
-        final String att = attendance != null ? this.attendance.uuid : null;
         final String recipient = this.to != null ? to.login : toEmail;
+        final String locale = this.to != null ? to.locale : "en";
 
         if (to == null || to.emailNotification)
         {
-            final VelocityContext ctx = VelocityTemplate.createBasicTemplate(null, baseUrl, subject, message);
+            final VelocityContext ctx = VelocityTemplate.createBasicTemplate(this.to, locale, baseUrl, subject, message);
             final String body = VelocityTemplate.generateTemplate(ctx, VelocityTemplate.getTemplate(VelocityTemplate.DEFAULT_TEMPLATE));
             new EmailNotification(ep, "Widgr - " + subject, recipient, body).execute();
         }
@@ -102,10 +102,11 @@ public class EmailNotificationBuilder
         final String baseUrl = BaseController.getProperty(BaseController.CONFIG_BASE_URL);
         final String att = attendance != null ? this.attendance.uuid : null;
         final String recipient = this.to != null ? to.login : toEmail;
+        final String locale = this.to != null ? to.locale : "en";
 
         if (to == null || to.emailNotification)
         {
-            final VelocityContext ctx = VelocityTemplate.createInvitationTemplate("en", recipient, from, to, event, baseUrl, att);
+            final VelocityContext ctx = VelocityTemplate.createInvitationTemplate(locale, recipient, from, to, event, baseUrl, att);
             if (message != null && message.length() > 0)
             {
                 ctx.put("notification", message);

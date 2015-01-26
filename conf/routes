@@ -13,6 +13,7 @@ GET     /privacy								Application.privacy
 GET     /terms									Application.terms
 GET     /help									Application.help
 GET 	/about									Application.about
+POST 	/contact-us								Application.contactUs
 
 GET		/login									Secure.login
 GET		/login/									Secure.login
@@ -94,6 +95,7 @@ POST 	/public/feed							Public.feedSave
 GET 	/public/activities						Public.activities
 GET 	/public/facebook/registration			Public.facebookRegistration
 GET 	/wiki									Public.wiki
+GET     /check-connection	                  	Public.checkconnection
 
 GET		/remove-upload							FileuploadController.removeFile	
 POST    /fileupload								FileuploadController.uploadFile
@@ -129,6 +131,7 @@ GET    	/mail	        						Notifications.inbox
 GET   	/mail/{id}         						Notifications.detail
 POST   	/mail-new        						Notifications.send
 GET   	/mail-new        						Notifications.send
+GET   	/mail-delete        					Notifications.delete
 
 GET     /room			                       	Hangout.room
 GET     /instant		                       	Hangout.instantRoom
@@ -139,7 +142,8 @@ POST    /room/invite		                  	Hangout.invite
 GET 	/test-email								Accounts.testEmail
 GET 	/follow									Accounts.follow
 GET 	/unfollow								Accounts.unfollow
-GET     /check-connection	                  	Accounts.checkconnection
+GET 	/settings/publisherinfo					Accounts.publisherInfoDismiss
+POST 	/settings/facebook/add					Accounts.addFacebook
 POST 	/settings								Accounts.accountPost
 GET 	/settings								Accounts.account
 GET 	/settings/smtp/reset					Accounts.resetEmail

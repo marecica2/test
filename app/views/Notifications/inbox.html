@@ -20,9 +20,9 @@
 			<div class="col-md-2">
 				<ul class="nav nav-pills nav-stacked" role="tablist">
 					<li #{if !action} class="active" #{/if}><a href="/mail">&{'Inbox'}</a></li>
-					<li #{if action && action.equals("new")} class="active" #{/if}><a href="/mail?action=new">&{'compose-new'}</a></li>
 					<li #{if action && action.equals("sent")} class="active" #{/if}><a href="/mail?action=sent">&{'sent-messages'}</a></li>
 				</ul>		
+				<a href="/mail?action=new" class="btn btn-default btn-block"><i class="fa fa-envelope-o"></i> &{'compose-new'}</a>
 				<br/>		
 			</div>	
 					
@@ -32,14 +32,19 @@
 				<table class="table  ">
 					#{list items:thread, as:'item'}
 				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if} #{if message.uuid == item.uuid} class="active" #{/if}>
-				       	   	<td style="vertical-align:middle">
+				       	   	<td style="vertical-align:middle; width:100%;">
 				       	   		<img class="avatar16 img-circle" src="../${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} &middot;
-								<a href="/mail/${item.uuid}">${item.subject}</a>	
+								<a href="/mail/${item.uuid}">${item.subject.trimDot(60)}</a>	
 				       		</td>
-				       		<td style="vertical-align:middle">
+				       		<td style="vertical-align:middle; width:180px;">
+				       			<nobr>
 				       			${item.created.format("dd MMM")},
 				   				#{time time:item.created/}
+				       			</nobr>
 				       		</td>
+				       		<td style="vertical-align:middle">
+								<a href="/mail-delete?uuid=${item.uuid}&url=${request.url.urlEncode()}" class=""><i class="fa fa-times"></i></a>
+				       		</td>				       		
 					   </tr>
 					   
 					   #{if message.uuid == item.uuid}
@@ -127,13 +132,24 @@
 				<table class="table table-hover table-striped">
 					#{list items:received, as:'item'}
 				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if}>
-				       	   	<td style="vertical-align:middle">
-				       	   		<img class="avatar16 img-circle" src="/${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} &middot;
-								<a href="/mail/${item.uuid}">${item.subject}</a>	
+				       	   	<td style="vertical-align:middle; width:100%">
+				       	   		#{if item.isMessage}
+				       	   			From: <img class="avatar16 img-circle" src="/${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} 
+								#{/if}
+								#{else}
+									<img class="avatar16 img-circle" src="/public/images/favicon.png" height="16px"> System Notification
+								#{/else}
+								&middot;
+								<a href="/mail/${item.uuid}">${item.subject.trimDot(60)}</a>
 				       		</td>
-				       		<td style="vertical-align:middle">
+				       		<td style="vertical-align:middle;width:180px">
+				       			<nobr>
 				       			${item.created.format("dd MMM")},
 				   				#{time time:item.created/}
+				       			</nobr>
+				       		</td>
+				       		<td style="vertical-align:middle">
+								<a href="/mail-delete?uuid=${item.uuid}&url=${request.url.urlEncode()}" class=""><i class="fa fa-times"></i></a>
 				       		</td>
 					   </tr>
 					#{/list}							
@@ -158,14 +174,25 @@
 				<table class="table table-hover table-striped">
 					#{list items:sent, as:'item'}
 				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if}>
-				       	   	<td style="vertical-align:middle">
-				       	   		<img class="avatar16 img-circle" src="/${item.toUser.avatarUrl}_32x32"> ${item.toUser.fullName} &middot;
-				       	   		<a href="/mail/${item.uuid}">${item.subject}</a>	
+				       	   	<td style="vertical-align:middle; width:100%">
+				       	   		#{if item.isMessage}
+				       	   			To: <img class="avatar16 img-circle" src="/${item.toUser.avatarUrl}_32x32"> ${item.toUser.fullName} 
+								#{/if}
+								#{else}
+									<img class="avatar16 img-circle" src="/public/images/favicon.png" height="16px"> System Notification
+								#{/else}
+								&middot;
+								<a href="/mail/${item.uuid}">${item.subject.trimDot(60)}</a>
 				       		</td>
-				       		<td style="vertical-align:middle">
+				       		<td style="vertical-align:middle; width:180px">
+				       			<nobr>
 				       			${item.created.format("dd MMM")},
 				   				#{time time:item.created/}
+				       			</nobr>
 				       		</td>
+				       		<td style="vertical-align:middle">
+								<a href="/mail-delete?uuid=${item.uuid}&url=${request.url.urlEncode()}" class=""><i class="fa fa-times"></i></a>
+				       		</td>				       		
 					   </tr>
 					#{/list}							
 				</table>

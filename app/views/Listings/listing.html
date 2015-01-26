@@ -92,6 +92,7 @@
         <h3 class="modal-title" id="myModalLabel"><i class="fa fa-link"></i> &{'share'}</h3>
       </div>
       <div class="modal-body">
+		<label for="">&{'share-via-link'}</label>
       	<input type="text" class="form-control share-link" value="${baseUrl + request.url}" onclick="javascript:$(this).select();">
       </div>
       <div class="modal-footer">
@@ -129,11 +130,12 @@
 <!-- Listing title controls -->
 <div class="section gray-bg" style="padding-top:15px;padding-bottom:15px">
 	<div class="container">
-	   	<div class="pull-left">
+		<div class="row">
+	   	<div class="col-md-5">
 
-		   	<h2 class="margin-clear">
+		   	<h2 class="margin-clear" style="font-size:1.4em">
 		   		#{if listing}
-				   	<img class="avatar32 img-circle" src="/${listing.user.avatarUrl}_32x32">
+				   	<a href="/user/${listing.user.login}"><img class="avatar32 img-circle" src="/${listing.user.avatarUrl}_32x32"></a>
 			   		<a href="/channels?category=${listing.category}" class="anchor"><i>${listing.category.capAll()}</i></a> 
 			   		&middot; <i><a class="anchor" href="/channel/${listing.uuid}">${listing.title}</a></i>
 		   		#{/if}
@@ -142,93 +144,97 @@
 		   		#{/else}
 		   		#{if event}
 		   			<br/>
-			   		<span style="font-size:0.5em;position:relative;bottom:3px">
+			   		<i style="font-size:0.7em;font-weight:bold; position:relative;bottom:3px">
 				   		<span>${event.eventStart.format("dd MMM")}, </span>
 				   		<span>#{time time:event.eventStart/}</span> - 
 				   		<span>#{time time:event.eventEnd/}</span> &middot;		   		
 				   		<span>${event.getMinutes()} min</span>		   		
-			   		</span>
+			   		</i>
 		   		#{/if}
 		   	</h2>	
 		   	
 	   	</div>
 		
-
-		<!-- social -->
-	   	<div class="pull-right">
-			<ul class="social-links colored clearfix" style="margin:0px; margin-top:5px">
-				#{if listing && listing.video}
-				<li class="vimeo">
-					<a class="popup-iframe" href="${listing.video}" title="&{'play-introduction'}"><i class="fa fa-youtube-play"></i></a>
-				</li>
-				#{/if}					
-				<li class="dribbble"><a href="" data-toggle="modal" data-target="#myModal" ><i class="fa fa-link"></i></a></li>
-				<li class="facebook">
-					<a id="fb-share" href="#"><i class="fa fa-facebook"></i></a>
-				<li class="twitter">
-					<a id="twitter-share-button" href="#"><i class="fa fa-twitter"></i></a>
-				</li>
-				<li class="linkedin">
-					<a id="linkedin-share-button" href="#" ><i class="fa fa-linkedin"></i></a>
-				</li>
-				<li class="googleplus">
-					<a href="https://plus.google.com/share?url=${(request.base+request.url).urlEncode()}" onclick="javascript:window.open(this.href,
-					  '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"><i class="fa fa-google-plus"></i></a>					
-				</li>
-			</ul>
-	   	</div>
-
-	   	#{if listing}
-		<script>
-			$("#fb-share").click(function(e){
-			    e.preventDefault();
-			    FB.ui(
-			    {
-				    method: 'feed',
-				    name: '${listing.title}',
-				    link: '${request.base}${request.url}',
-				    picture: '${request.base}/${listing.imageUrl}',
-				    caption: 'by ${listing.user.fullName}',
-				    description: "${listing.description.escapeJavaScript().raw()}",
-				    message: ''
-			    });
-			});		
-			$("#twitter-share-button").click(function(e){
-			    e.preventDefault();
-			    var width  = 400,
-		        height = 400,
-		        left   = ($(window).width()  - width)  / 2,
-		        top    = ($(window).height() - height) / 2,
-		        url    = this.href,
-		        opts   = 'status=1' +
-		                 ',width='  + width  +
-		                 ',height=' + height +
-		                 ',top='    + top    +
-		                 ',left='   + left;
-			    var url = "https://twitter.com/share?text=${listing.title}";
-		    	window.open(url, 'twitter', opts);						    
-			})	
-			
-			$("#linkedin-share-button").click(function(e){
-			    e.preventDefault();
-			    var width  = 400,
-		        height = 400,
-		        left   = ($(window).width()  - width)  / 2,
-		        top    = ($(window).height() - height) / 2,
-		        url    = this.href,
-		        opts   = 'status=1' +
-		                 ',width='  + width  +
-		                 ',height=' + height +
-		                 ',top='    + top    +
-		                 ',left='   + left;
-			    var url = "//www.linkedin.com/shareArticle?mini=true&url=${request.url.urlEncode()}&title=${listing.title}&summary=${listing.description.escapeJavaScript().raw()}&source=${request.url}";
-		    	window.open(url, 'linkedin', opts);						    
-			})
-		</script>	 
-		#{/if}  	
+		<div class="col-md-7">
 		
-		#{include 'Listings/editButtons.html' /}
-	   	<div class="clearfix"></div>
+			#{include 'Listings/editButtons.html' /}
+		
+			<!-- social -->
+		   	<div class="social-pull-right">
+				<ul class="social-links colored clearfix" style="margin:0px; margin-top:5px">
+					#{if listing && listing.video}
+					<li class="vimeo">
+						<a class="popup-iframe" href="${listing.video}" title="&{'play-introduction'}"><i class="fa fa-youtube-play"></i></a>
+					</li>
+					#{/if}					
+					<li class="dribbble"><a href="" data-toggle="modal" data-target="#myModal" ><i class="fa fa-link"></i></a></li>
+					<li class="facebook">
+						<a id="fb-share" href="#"><i class="fa fa-facebook"></i></a>
+					<li class="twitter">
+						<a id="twitter-share-button" href="#"><i class="fa fa-twitter"></i></a>
+					</li>
+					<li class="linkedin">
+						<a id="linkedin-share-button" href="#" ><i class="fa fa-linkedin"></i></a>
+					</li>
+					<li class="googleplus">
+						<a href="https://plus.google.com/share?url=${(request.base+request.url).urlEncode()}" onclick="javascript:window.open(this.href,
+						  '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"><i class="fa fa-google-plus"></i></a>					
+					</li>
+				</ul>
+		   	</div>
+		   	#{if listing}
+			<script>
+				$("#fb-share").click(function(e){
+				    e.preventDefault();
+				    FB.ui(
+				    {
+					    method: 'feed',
+					    name: '${listing.title}',
+					    link: '${request.base}${request.url}',
+					    picture: '${request.base}/${listing.imageUrl}',
+					    caption: 'by ${listing.user.fullName}',
+					    description: "${listing.description.escapeJavaScript().raw()}",
+					    message: ''
+				    });
+				});		
+				$("#twitter-share-button").click(function(e){
+				    e.preventDefault();
+				    var width  = 400,
+			        height = 400,
+			        left   = ($(window).width()  - width)  / 2,
+			        top    = ($(window).height() - height) / 2,
+			        url    = this.href,
+			        opts   = 'status=1' +
+			                 ',width='  + width  +
+			                 ',height=' + height +
+			                 ',top='    + top    +
+			                 ',left='   + left;
+				    var url = "https://twitter.com/share?text=${listing.title}";
+			    	window.open(url, 'twitter', opts);						    
+				})	
+				
+				$("#linkedin-share-button").click(function(e){
+				    e.preventDefault();
+				    var width  = 400,
+			        height = 400,
+			        left   = ($(window).width()  - width)  / 2,
+			        top    = ($(window).height() - height) / 2,
+			        url    = this.href,
+			        opts   = 'status=1' +
+			                 ',width='  + width  +
+			                 ',height=' + height +
+			                 ',top='    + top    +
+			                 ',left='   + left;
+				    var url = "//www.linkedin.com/shareArticle?mini=true&url=${request.url.urlEncode()}&title=${listing.title}&summary=${listing.description.escapeJavaScript().raw()}&source=${request.url}";
+			    	window.open(url, 'linkedin', opts);						    
+				})
+			</script>	 
+			#{/if}  	
+		
+
+		</div>
+		</div>
+		
 	   	
 	</div>
 </div>
@@ -336,7 +342,7 @@
 								
 					#{if !isOwner && listing.user.account.type == "publisher"}
 						#{if !isOwner && listing.isAvailable() && listing.type == 'p2p'}
-							<a href="" data-href="/instant-room?id=${listing.uuid}" class="btn btn-success btn-lg btn-short blink no-schedule-start" style="border-width:0px;"><i class="fa fa-play"></i> &{'request-for-event-instant'}</a>
+							<a href="/instant-room?id=${listing.uuid}" class="btn btn-success btn-lg btn-short blink no-schedule-start" style="border-width:0px;"><i class="fa fa-play"></i> &{'request-for-event-instant'}</a>
 						#{/if}			
 						<a href="/user/${usr.login}/calendar?channel=${listing.uuid}" class="btn btn-dark btn-lg"><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
 					#{/if}
@@ -403,7 +409,7 @@
 				#{if isOwner}
 	 				<form class="" action="/attendance-new-save?eventId=${event.uuid}&url=${request.url.urlEncode()}#invitation" method="post">
 					    <div class="input-group" style="width:100%">
-							<input type="text" class="form-control" autocomplete="off" placeholder="&{'contact-name-or-email'}" maxlength="50" name="email" id="dialog-invite-input" data-provide="typeahead">
+							<input type="text" class="form-control" autocomplete="off" placeholder="&{'contact-name-or-email'}" style="font-size:0.9em" maxlength="100" name="email" id="dialog-invite-input" data-provide="typeahead">
 						    <span class="input-group-btn">
 						    	<button class="btn btn-default btn-short" style="margin:0px;height:40px" id="dialog-invite-button" type="submit">&{'add'}</button>
 						    </span>
@@ -419,23 +425,25 @@
 						        });
 						    				      
 							  	$("#dialog-invite-input").typeahead(
-							  	{
-							  	    minLength : 2, 
-							  	    source : function(value, process){
-										  	    $.get("/invites?str="+value, function(data){
-										  	        var list = [];
-											  	    for(var i in data)
-												  		list.push(data[i].login +", "+ data[i].name);
-										  	        process(list);
-										  	    });
-							  				},
-							  		updater : function(item){
-							  		    return item.substring(0, item.indexOf(", "));
-							  		}, 
-							  		matcher : function(item){
-							  		    return true;
-							  		}
-							  	}
+								  	{
+								  	    minLength : 2, 
+								  	    source : function(value, process){
+											  	    $.get("/invites?str="+value, function(data){
+											  	        var list = [];
+												  	    for(var i in data){
+												  	        var item = data[i].name + " ("+data[i].login + ")";
+												  	        list.push(item);
+												  	    }
+											  	        process(list);
+											  	    });
+								  				},
+								  		updater : function(item){
+								  		    return item;
+								  		}, 
+								  		matcher : function(item){
+								  		    return true;
+								  		}
+								  	}
 							  	);
 						</script>
 	  				</form>
@@ -468,7 +476,7 @@
 							    		<span class="label label-success">&{'paid'}</span>
 							    	#{/if}
 							    	</td>
-							    	#{if event.isEditable(user)}
+							    	#{if !event.isLocked()}
 							    	<td style="text-align:right">
 							    		#{if user && item.email == user.login}
 							    		<a class="" href="/attendance-new-edit?type=accepted&uuid=${item.uuid}&url=${request.url.urlEncode()}#invitation">
@@ -492,7 +500,7 @@
 						    	<textarea rows="4" cols="" name="message" class="form-control" placeholder="Message" style="margin-top:5px"></textarea>
 						    </div>
 						    }*
-					        <button type="submit" class="pull-right btn btn-light-gray btn-short"><span class="spinner-small spinner-notify"> </span>&{'notify'}</button>
+					        <button type="submit" class="pull-right btn btn-light-gray btn-short"><span class="spinner-small spinner-notify"> </span>&{'send-invitation'}</button>
 			  				<div class="clearfix"></div>
 						#{/if}
 	  				</form>					
@@ -570,22 +578,6 @@
 			</div>
 
 
-			<!-- comments -->
-			<div>
-				<!-- comments -->
-				#{if fromEvent}
-					#{set objectType:"event" /}
-					#{set object:event /}
-					#{include 'comments.html' /}			
-				#{/if}
-				#{else}
-					#{set objectType:"listing" /}
-					#{set object:listing /}
-					#{include 'comments.html' /}			
-				#{/else}
-			</div>		
-			
-			
 			<!-- listing events -->
 			#{if !fromEvent}
 			<div>
@@ -618,6 +610,21 @@
 			#{/if}
 			
 			
+			<!-- comments -->
+			<div>
+				<!-- comments -->
+				#{if fromEvent}
+					#{set objectType:"event" /}
+					#{set object:event /}
+					#{include 'comments.html' /}			
+				#{/if}
+				#{else}
+					#{set objectType:"listing" /}
+					#{set object:listing /}
+					#{include 'comments.html' /}			
+				#{/else}
+			</div>		
+						
 
 			<!-- user about -->
 			<div>
@@ -635,7 +642,7 @@
 						
 			<!-- listings -->
 			<div>
-				#{if listings}
+				#{if listings && listing.user.isPublisher()}
 					<h2>&{'all-channels-from'} ${listing.user.firstName}</h2>
 					<div class="separator-2"></div>
 					#{set items:listings /}
@@ -668,6 +675,9 @@
 	console.log("sockets activated");
     star.user = '${name}';
     star.room = '${room}';
+    #{if user}
+		star.avatar = '${user.avatarUrl}';
+	#{/if}    
     star.userInRoom = false;
     star.server_host = '${socketIo}';
     star.livestream = true;

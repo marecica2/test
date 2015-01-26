@@ -16,7 +16,7 @@
 
 	<!-- slideshow start -->
 	<!-- ================ -->
-	<div class="slideshow">
+	<div class="slideshow about-header">
 		
 		<!-- slider revolution start -->
 		<!-- ================ -->
@@ -96,56 +96,30 @@
 
 
 
-<!-- main-container start -->
-<!-- ================ -->
-<section class="main-container object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="300">
-
-	<!-- section start -->
-	<!-- ================ -->
-	<div class="clearfix">
+<div class="banner" style="margin-top: 0px;">
+	<div class=" section light-translucent-bg" style="background-image:url('images/page-about-banner-1.jpg');">
 		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<br>
-					<h1 class="text-center space-top" id="about">&{'about-widgr'}</h1>
-					<div class="separator"></div>
-					<br>
-					<div class="row">
-						<div class="col-md-12" style="font-size:1.2em">
-							<p>
-								&{'about-1'}
-							</p>
-							<p>
-								&{'about-2'}
-							</p>
-							<p>
-								&{'about-3'}
-							</p>
-						</div>
-
-						*{
-						<!-- sidebar start -->
-						<aside class="sidebar col-md-6">
-							<div class="side vertical-divider-left">
-								<div class="block clearfix">
-									<h3 class="title margin-top-clear">Intro</h3>
-									<div class="embed-responsive embed-responsive-16by9">
-										<iframe class="embed-responsive-item" src="//player.vimeo.com/video/29198414?byline=0&amp;portrait=0"></iframe>
-									</div>
-								</div>
-							</div>
-						</aside>
-						<!-- sidebar end -->
-						}*
-					</div>
-					<br>
-				</div>
-			</div>
+			<div class="space-top"></div>
+			<h1 class="text-center space-top" id="about">&{'about-widgr'}</h1>
+			<div class="separator"></div>
+			<br/>
+			<p class="lead">
+				&{'about-1'}
+			</p>
+			<div class="separator-2"></div>
+			<p class="lead">
+				&{'about-2'}
+			</p>
+			<div class="separator-2"></div>
+			<p class="lead">
+				&{'about-3'}
+			</p>		
 		</div>
 	</div>
-	<!-- section end -->
-</section>
-<!-- main-container end -->
+</div>
+
+
+
 
 <a id="features"></a>
 
@@ -448,44 +422,51 @@
 									<li><i class="fa fa-envelope-o pr-10"></i> info@wid.gr</li>
 								</ul>
 							</div>
-							<div class="col-md-6">
-								<ul class="social-links colored">
-									<li class="facebook"><a target="_blank" href="http://www.facebook.com"><i class="fa fa-facebook"></i></a></li>
-									<li class="twitter"><a target="_blank" href="http://www.twitter.com"><i class="fa fa-twitter"></i></a></li>
-									<li class="googleplus"><a target="_blank" href="http://plus.google.com"><i class="fa fa-google-plus"></i></a></li>
-									<li class="skype"><a target="_blank" href="http://www.skype.com"><i class="fa fa-skype"></i></a></li>
-									<li class="linkedin"><a target="_blank" href="http://www.linkedin.com"><i class="fa fa-linkedin"></i></a></li>
-								</ul>
-							</div>
 						</div>
 					</div>
 				</div>
 				<div class="col-sm-6">
-					<div class="footer-content object-non-visible" data-animation-effect="fadeInRightSmall" data-effect-delay="300">
+					<div class="object-non-visible" data-animation-effect="fadeInRightSmall" data-effect-delay="300">
 						<h2>Contact Us</h2>
-						<div class="alert alert-success hidden" id="contactSuccess2">
-							<strong>&{'success'}!</strong> &{'contact-sent-message-success'}
-						</div>
-						<div class="alert alert-error hidden" id="contactError2">
-							<strong>&{'error'}!</strong> &{'contact-sent-message-error'}
-						</div>
-						<form role="form" id="footer-form">
+						<form action="/contact-us" method="POST">
+							
+							#{if user == null}							
+							<div class="alert alert-danger">#{error 'name' /}</div>
 							<div class="form-group has-feedback">
 								<label class="sr-only" for="name">&{'name'}</label>
-								<input type="text" class="form-control" id="name" placeholder="&{'name'}" name="name">
+								<input type="text" class="form-control" id="email" placeholder="&{'name'}" value="${params.name}" name="name">
 								<i class="fa fa-user form-control-feedback"></i>
 							</div>
+
+							<div class="alert alert-danger">#{error 'email' /}</div>
 							<div class="form-group has-feedback">
 								<label class="sr-only" for="email">&{'email-address'}</label>
-								<input type="email" class="form-control" id="email" placeholder="&{'email-address'}" name="email">
+								<input type="email" class="form-control" id="email" placeholder="&{'email-address'}" value="${params.email}" name="email">
 								<i class="fa fa-envelope form-control-feedback"></i>
 							</div>
+							#{/if}
+							<div class="alert alert-danger">#{error 'subject' /}</div>
 							<div class="form-group has-feedback">
-								<label class="sr-only" for="message">&{'message'}</label>
-								<textarea class="form-control" rows="4" id="message" placeholder="&{'message'}" name="message"></textarea>
+								<label class="sr-only" for="name">&{'subject'}</label>
+								<input type="text" class="form-control" id="name" placeholder="&{'subject'}" value="${params.subject}" name="subject">
 								<i class="fa fa-pencil form-control-feedback"></i>
 							</div>
-							<input type="submit" value="&{'send'}" class="btn btn-default">
+
+							<div class="alert alert-danger">#{error 'message' /}</div>
+							<div class="form-group has-feedback">
+								<label class="sr-only" for="message">&{'message'}</label>
+								<textarea class="form-control" rows="4" id="message" placeholder="&{'message'}" value="${params.message}" name="message">${params.message}</textarea>
+								<i class="fa fa-pencil form-control-feedback"></i>
+							</div>
+
+							<div class="alert alert-danger">#{error 'captcha' /}</div>
+							<div class="form-group has-feedback">
+								<input type="hidden" value="${params.uuid}" name="uuid" />
+								<input type="text" placeholder="&{'captcha'}" class="form-control" style="display:inline !important;width:20%" name="captcha"/>
+								<img src="/captcha?uuid=${params.uuid}">							
+								<input type="submit" value="&{'send'}" class="btn btn-default pull-right">
+								<div class="clearfix"></div>
+							</div>
 						</form>
 					</div>
 				</div>

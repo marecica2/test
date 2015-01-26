@@ -18,18 +18,20 @@
 		</div>
 
 		<div style="padding:20px">
-			#{if flash.paypalError}	
+			#{if flash.PayPalError}	
 			<div class="alert alert-danger alert-dismissable">
 			  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-			  <small><strong>&{'paypalError'}</strong> ${flash.paypalError}</small>
+			  <small><strong>&{'PayPalError'}</strong> ${flash.PayPalError}</small>
 			</div>
 			#{/if}
 			
    	   	   	<p class="segoe" style="font-size:1.3em">
-   	   	   		<a href="/user/${e.user.login}" class="segoe-bold black" style="font-size:1.2em">${e.user.fullName}</a>&nbsp;
+   	   	   		<a href="/user/${e.user.login}" class="segoe-bold black" style="font-size:1.0em">${e.user.fullName}</a>&nbsp;
+   	   	   		<span style="font-size:0.8em">
 		   		<span>${e.eventStart.format("dd MMM, yyyy")}</span>
 		   		<span>#{time time:e.eventStart/}</span> - 
 		   		<span>#{time time:e.eventEnd/}</span>
+		   		</span>
    	   	   	</p>
 
 			<p>${e.listing.getDescriptionHtml().trimDot(200).raw()}</p>
@@ -47,15 +49,23 @@
    	   	   			<td>${e.getTotalPrice()} ${e.currency}</td>
    	   	   		</tr>
    	   	   	</table>
-   	   	   	</div>
 			
 			<br/>
 			<form method="POST" action="/payment/${e.uuid}" onsubmit="return validate()" >
-	    		<input type="image" class="pull-right" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" border="0" align="top" alt="&{'checkout-with-paypal'}"/>
+	    		<input type="image" class="pull-right" name="submit" src="https://www.PayPal.com/en_US/i/btn/btn_xpressCheckout.gif" border="0" align="top" alt="&{'checkout-with-PayPal'}"/>
 				<input type="hidden" name="url" value="${url}">
-				<input type="radio" name="payment" value="paypal" id="paypal" checked="checked"> <label for="paypal">&{'pay-with-paypal'}</label>
+				<input type="radio" name="payment" value="paypal" id="paypal" checked="checked"> <label for="paypal">&{'pay-with-PayPal'}</label>
+				<small style="font-size:0.7em"><br/>&{'you-will-be-redirected-to-PayPal'}</small>
 				<div class="clearfix"></div>
 			</form>
+
+   	   	   	<p style="font-size:0.7em">
+   	   	   		<strong>&{'important'}!</strong>
+   	   	   		&{'PayPal-payment-message'}
+   	   	   		<br/>
+   	   	   		&{'PayPal-payment-refund'}
+			</p>
+   	   	   	</div>
 		</div>
 	</div>
 

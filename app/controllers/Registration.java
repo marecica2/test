@@ -9,6 +9,7 @@ import models.Contact;
 import models.Message;
 import models.User;
 import play.cache.Cache;
+import play.i18n.Lang;
 import play.i18n.Messages;
 import play.libs.Images;
 import play.mvc.Before;
@@ -28,7 +29,7 @@ public class Registration extends BaseController
     {
         Images.Captcha captcha = Images.captcha();
         String code = captcha.getText(5);
-        String expiration = "5mn";
+        String expiration = "3mn";
         if (exp != null)
             expiration = exp + "s";
         Cache.set("captcha." + uuid, code, expiration);
@@ -102,10 +103,12 @@ public class Registration extends BaseController
         String token,
         Integer offset)
     {
-        validation.required(firstName);
-        validation.required(lastName);
-        validation.email(login).message("validation.login");
         validation.required(login);
+        validation.required(firstName);
+        validation.match("firstName", firstName, "[A-Za-z]+").message("bad-characters");
+        validation.required(lastName);
+        validation.match("lastName", lastName, "[A-Za-z]+").message("bad-characters");
+        validation.email(login).message("validation.login");
         validation.required(password);
         validation.equals(password, passwordRepeat).message("validation.passwordMatch");
         validation.required(captcha);
@@ -114,13 +117,19 @@ public class Registration extends BaseController
         if (captcha != null && cap != null)
             validation.equals(captcha, cap).message("invalid.captcha");
 
+        if (password.length() < 6)
+            validation.addError("password", Messages.get("password-min-length"));
+
+        if (!accPlan.equals(Account.PLAN_STANDARD) && !accPlan.equals(Account.PLAN_MONTH_PREMIUM) && !accPlan.equals(Account.PLAN_MONTH_PRO))
+            validation.addError("accPlan", Messages.get("invalid-value"));
+
         final User checkUser = User.getUserByLogin(login);
         if (checkUser != null)
             validation.addError("login", Messages.get("login-already-used"));
 
         if (!validation.hasErrors())
         {
-            Account account = createDefaultAccount(firstName, lastName);
+            Account account = createDefaultAccount(firstName, lastName, accPlan);
 
             User user = createDefaultUser(login, password, firstName, lastName, token, offset);
             user = user.save(account);
@@ -173,11 +182,11 @@ public class Registration extends BaseController
 
         final User checkUser = User.getUserByLogin(login);
         if (checkUser != null)
-            validation.addError("login", "Login already used");
+            validation.addError("login", Messages.get("login-already-used"));
 
         if (!validation.hasErrors())
         {
-            final Account account = createDefaultAccount(firstName, lastName);
+            final Account account = createDefaultAccount(firstName, lastName, Account.TYPE_STANDARD);
 
             final String password = RandomUtil.getRandomString(10);
             User user = createDefaultUser(login, password, firstName, lastName, token, offset);
@@ -237,13 +246,19 @@ public class Registration extends BaseController
         User user = User.getUserByUUID(uuid);
         user.activated = true;
         user.save();
-        System.err.println(user);
 
         final String baseUrl = getBaseUrl();
-        final String subject = Messages.get("account.activated-subject");
-        final String body = Messages.get("account.activated-message", baseUrl, baseUrl, baseUrl, baseUrl, baseUrl);
+        final String subject = Messages.getMessage(user.locale, "account.activated-subject");
+        final String body = Messages.getMessage(user.locale, "account.activated-message", baseUrl, baseUrl, baseUrl, baseUrl, baseUrl);
 
         Message.createAdminNotification(user, subject, body);
+        new EmailNotificationBuilder()
+                .setWidgrFrom()
+                .setTo(user)
+                .setSubject(subject)
+                .setMessageWiki(subject)
+                .send();
+
         flash.success(Messages.get("account-successfully-activated"));
         flash.keep();
         Secure.login();
@@ -289,6 +304,7 @@ public class Registration extends BaseController
         user.password = password;
         user.registrationToken = token;
         user.timezone = offset;
+        user.locale = Lang.get();
 
         user.uuid = RandomUtil.getUUID();
         user.referrerToken = RandomUtil.getUUID();
@@ -301,7 +317,7 @@ public class Registration extends BaseController
         return user;
     }
 
-    private static Account createDefaultAccount(String firstName, String lastName)
+    private static Account createDefaultAccount(String firstName, String lastName, String planType)
     {
         Account account = new Account();
         account.key = RandomUtil.getUUID();
@@ -311,7 +327,7 @@ public class Registration extends BaseController
         account.save();
 
         AccountPlan plan = new AccountPlan();
-        plan.type = Account.TYPE_STANDARD;
+        plan.type = planType;
         plan.validFrom = new Date();
         plan.account = account;
         plan.save();

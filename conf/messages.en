@@ -11,7 +11,7 @@ publisher-request-declined-subject=Your request for publisher was declined
 publisher-request-declined-message=h3. Your request for publisher was declined \nPlease complete your personal information and channels and try again. Remember you can always ask us what needs to be corrected in order to be later successfully approved. [Ask a question|%s]
 
 #Application.java
-start-helping-others=Start helping others and become Publisher. <a href='/settings/request-publisher'>Request for publisher account here</a> or <a href='/help#publisher'>learn more</a>
+start-helping-others=Start helping others and become Publisher. <a href='/settings/request-publisher'>Request for publisher account here</a> or <a href='/settings/publisherinfo'>dismiss</a>.
 click-and-drag-to-create-event=Click and drag to create a request for session
 
 #Attendances.java
@@ -34,9 +34,9 @@ c
 #Events.java
 invalid-price=Invalid price
 invalid-time-range=Invalid time range
-setup-paypal-account-warning=To create paid session you must set up your Paypal account first. <a href='/settings?edit=true#paypal'>Set up your Paypal account here</a>
+setup-PayPal-account-warning=To create paid session you must set up your PayPal account first. <a href='/settings?edit=true#PayPal'>Set up your PayPal account here</a>
 you-have-not-paid-for-current-month=You can't create paid sessions. Your subscription is not activated. <a href='/settings'>Activate your subscription first</a>
-invalid-paypal-account-warning=To create paid session you must set up your Paypal account first. <a href='/settings?edit=true#paypal'>Set up your Paypal account here</a>
+invalid-PayPal-account-warning=To create paid session you must set up your PayPal account first. <a href='/settings?edit=true#PayPal'>Set up your PayPal account here</a>
 new-event-proposed-for-channel-subject=New session was requested for channel %s
 new-event-proposed-for-channel-message=h3. New session request \n%s requested new session [%s|%s]. Please visit the link to review and approve or decline this request.
 you-have-been-invited-subject=%s invited you to session %s
@@ -55,30 +55,40 @@ oauth-successfull=Google Calendar authorization successfull
 oauth-error=Google Calendar authorization failed
 
 #Hangout.java
+please-rating-subject=Please leave a rating
+please-rating-message=Please leave a rating \nPlease help others to decide with giving rating for the session [%s|%s]
 invitation-to-video-call-subject=Invitation to video call
 invitation-to-video-call-message=h3. %s invited you to video call. \n[Click here to join this video call|%s]
 
 #Listings.java
 
 #Notifications.java
+message-sent-error=Message has not been sent, please correct input first
 message-sent-successfully=Message has been sent
 
 #PaymentController.java
+event-payment-completed-subject=New payment received for session %s
+event-payment-completed-message=h3. New payment received for session %s \n %s sended you a payment for %s. [Click here to open session details|%s]
+event-refund-request-subject=Refund request from %s
+event-refund-request-message=h3. Refundation request \n%s requested refundation for session [%s|%s]. You can issue refund through [Received payments page|%s] \nh4. Refundation message from customer \n%s
 
 #Public.java
 
 #Ratings.java
 
 #Registration.java
+invalid-value=Invalid value
+bad-characters=Invalid characters in input
+password-min-length=Password must have at least 6 characters
 password-reset-subject=Your password has been reseted
 password-reset-message=h3. Your password has been reseted \nNew password: *%s* \nIt is highly recommended to [change it immediately|%s]
 password-message=Password has been reseted. Now check your email.
 login-already-used=This login is already used
 account-activation-subject=Your account has been created
-account-activation-message=h3. Welcome to Widgr! \nYou're almost there! Please click the link below to confirm your Widgr account. \n[Account activation link|%sregistration/activate?uuid=%s] \nHere are a few things to help you get started width Widgr:\n* [How to use Widgr|%shelp#customer] \n* [How to become a Publisher|%shelp#publisher]\n* [How to connect your account with Facebook|%shelp#facebook]\n* [How to sync Widgr sessions with Google Calendar|%shelp#google]\n* [How to set up Paypal payments for Publishers|%shelp#paypal]
-check-out-your-email-for-activating=Registration successfull! Check out your email for activating this account. Please check junk folder as well
-account.activated-subject=Your account has been successfully activated
-account.activated-message=h3. Welcome to Widgr! \nYour account has been successfully activated. \nHere are a few things to help you get started width Widgr:\n* [How to use Widgr|%shelp#customer] \n* [How to become a Publisher|%shelp#publisher]\n* [How to connect your account with Facebook|%shelp#facebook]\n* [How to sync Widgr sessions with Google Calendar|%shelp#google]\n* [How to set up Paypal payments for Publishers|%shelp#paypal]
+account-activation-message=h3. Welcome to Widgr! \nYou're almost there! Please click the link below to confirm your Widgr account. \n[Account activation link|%sregistration/activate?uuid=%s] \nHere are a few things to help you get started width Widgr:\n* [How to use Widgr|%shelp#customer] \n* [How to become a Publisher|%shelp#publisher]\n* [How to connect your account with Facebook|%shelp#facebook]\n* [How to sync Widgr sessions with Google Calendar|%shelp#google]\n* [How to set up PayPal payments for Publishers|%shelp#PayPal]
+check-out-your-email-for-activating=Registration successfull! Check out your email for activating this account. <strong>Please check junk folder as well</strong>
+account.activated-subject=Your account has been successfully activated. You can now sign in.
+account.activated-message=h3. Welcome to Widgr! \nYour account has been successfully activated. \nHere are a few things to help you get started width Widgr:\n* [How to use Widgr|%shelp#customer] \n* [How to become a Publisher|%shelp#publisher]\n* [How to connect your account with Facebook|%shelp#facebook]\n* [How to sync Widgr sessions with Google Calendar|%shelp#google]\n* [How to set up PayPal payments for Publishers|%shelp#PayPal]
 account-successfully-activated=Your account has been successfully activated
 
 #Secure.java
@@ -155,7 +165,7 @@ you-have-been-logged-out=You have been signed out
 
 #User.java
 
-#Paypal.java
+#PayPal.java
 
 #CustomTags.java
 
@@ -198,6 +208,16 @@ contact=Contact
 #WikiUtils.java
 
 #account.html
+login-already-used=Login already used
+true=Enabled
+false=Disabled
+learn-more=Learn more
+learn-more-about-pricing=Learn more about pricing
+cancel-subscription=Cancel subscription
+upgrade-to-plan=Upgrade to plan
+per-month=per month
+account-will-be-valid=Account Plan %s will be valid from
+your-subscription-not-activated=Your subscription for plan %s is not activated yet. To activate your subscription please proceed with PayPal
 standard=Standard
 publisher=Publisher
 publisherReq=Standard
@@ -263,8 +283,8 @@ google-calendar-status=connected
 disable-google-calendar-sync=Disconnect current Google calendar
 start-of-working-hours=Start of working hours
 end-of-working-hours=End of working hours
-paypal-account=Paypal account
-paypal-info=To be able to create paid sessions you need to provide valid Premier or Business Paypal account for accepting money.
+PayPal-account=PayPal account
+PayPal-info=To be able to create paid sessions you need to provide valid Premier or Business PayPal account for accepting money.
 account.currency=Default currency
 currency=Currency
 outgoing-email=Outgoing email
@@ -274,6 +294,8 @@ save=Save
 
 #payments.html
 payments.receivedPayments=Received payments
+payments.sentPayments=Sent payments
+payments-receivedPayments-for-this-user=Payments from 
 payments.timeRange=Time range
 payments.thisMonth=This month
 payments.thisYear=This year
@@ -283,6 +305,7 @@ to=To
 submit=Submit
 payments.income=Income
 payments.totalSales=Total sales
+payments.totalExpenses=Total expenses
 payments.fee=Fee
 payments.transactions=Transaction history
 customer=Customer
@@ -307,9 +330,9 @@ get-help-header=Get help from Experts in one click
 get-paid-header=Become a publisher and get paid for helping others
 about-widgr=About Widgr
 about-widgr-subtext=Share your knowledge
-about-1=<strong>Widgr</strong> is an easy and convenient way to learn skills and get help over the Internet. No matter who you are, where you are, or what time it is, you can talk to someone who can help you. 
+about-1=<strong>Widgr</strong> is an easy and comfortable way to learn skills and get help from experts over the Internet. No matter who you are, where you are, or what time it is, you can talk to someone who can help you. 
 about-2=Widgr is a place where you can find people offering help on a wide variety of subjects. We call them Widgr Publishers. These publishers can be individuals or companies. You can find the help you need by visiting the Widgr and searching or browsing various categories.
-about-3=With Widgr you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.<br/>You can choose who to get help from based on qualifications, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. <br/>While some sessions are free, you'll need to pay for some. Paying is easy using Paypal.
+about-3=With Widgr you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.<br/>You can choose who to get help from based on qualifications, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. <br/>While some sessions are free, you'll need to pay for some. Paying is easy using PayPal.
 why-choose-widgr=Features
 why-choose-widgr-text=Why choose widgr?
 widgr-feature-1=Online Video Calls
@@ -321,7 +344,7 @@ widgr-feature-6=Integration with Google Calendar
 widgr-feature-1-text=Widgr sessions are conducted through live video calls. During the session, you can point your camera to show what you need help with, If you don't want the provider to see you, you can always turn off your camera. 
 widgr-feature-2-text=There are two ways to create join session -- instantly and scheduled. If a publisher's channel has a purple "Available now" icon, you are just a few clicks away from getting help instantly. Otherwise, you can see when publishers are available in their calendar and pick a time slot or send a message to request a different time.
 widgr-feature-3-text=Prices are set by the publishers and can be free or charged by the session. Some publishers might offer the first session for free.
-widgr-feature-4-text=All payments are currently done through Paypal, so if you haven't already, you'll need to create a Premier or account to be able to create paid sessions. Sessions that are free don't require a Paypal account.
+widgr-feature-4-text=All payments are currently done through PayPal, so if you haven't already, you'll need to create a Premier or account to be able to create paid sessions. Sessions that are free don't require a PayPal account.
 widgr-feature-5-text=You can easily integrate your Widgr account with existing Facebook page, that your account will be more accesible to your Facebook community. If you own a Facebook page, you can install Widgr app to custom tab. With this option, your potential customers are just few clicks away using your services. <br/><a href="https://www.facebook.com/add.php?api_key=731388346951866&pages">Click here to add Widgr app to your Facebook page</a>
 widgr-feature-6-text=You can easily connect your Widgr account with Google Calendar. With Google calendar you can schedule and manage and be notified about your sessions on every device you use.
 pricing=Pricing
@@ -387,10 +410,10 @@ upcoming-events=Upcoming sessions
 previous-events=Past sessions
 
 #home.html
-for-customers=For customers
-for-publishers=For publishers
-find-everything-on-one-place=Find everything on one place
-get-help-from-experts=Get help from experts
+for-customers=<strong>widgr</strong> for Customers
+for-publishers=<strong>widgr</strong> for Publishers
+find-everything-on-one-place=Get help from experts
+get-help-from-experts=Find everything on one place
 easy-use=Easy to use
 and-much-more=And much more
 offer-your-experience=Offer your expertise as a new service
@@ -398,23 +421,24 @@ reach-your-community=Reach your community on Social networks
 get-paid-for-helping=Get paid for helping other
 integration-with-facebook=Integration with Facebook
 sync-your-events-with-calendar=Sync your sessions with Calendar
-easy-payment-paypal=Easy and secure payment with Paypal
+easy-payment-PayPal=Easy and secure payment with PayPal
 dont-miss=Don't miss out!
 what-is=What is
+good-for=good for
 find-help=Search
-find-help-message=With Widgr you can get help anytime from people with expertise across a range of topics. Teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.
+find-help-message=With Widgr you can get help anytime from people with expertise across a range of topics. Teachers, computer experts, home repair specialists, personal trainers, hobby enthusiasts, and more. <p>No matter who you are, no matter where you are and no matter what time it is, with Widgr you are just few click away from getting help.</p>
 read-more=Read more
 get-help=Get help
-get-help-message=You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later.
+get-help-message=You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. <p>While some Publishers offer free sessions, some may be charged. For those just simply use your PayPal to pay securely and fast. Keep in mind that you have always your money back guaranteed.</p> 
 get-paid=Get paid
-get-paid-message=When you know something what might be useful for others you can become a Publisher. Widgr will provide you a simple platform which will help you to connect to your customer.
+get-paid-message=When you know something what might be useful for others you can become a Publisher. Widgr will provide you a simple platform which will help you to connect to your customers. <p>All you need is just PayPal account for receiving payments, and you are ready to start new Business</p>
 you-are-on-the-right-place=Join Us, it's free
 fill-in-quick-registration-and-start-using-widgr=Just fill quick registration form and start using Widgr even today.
 channels-by-category=Channels by category
 view-all=View all
 
 #comments.html
-share-whats-new=Share whats new
+share-whats-new=Share what's new
 text=Text
 
 file
@@ -428,7 +452,7 @@ invite=Invite
 name=Name
 status=Status
 actions=Actions
-write-a-message=Write a message
+write-a-message=Write message
 blocked=Blocked
 following=Following
 unblock=Unblock
@@ -456,15 +480,20 @@ or=or
 sign-in=Sign in
 
 #room.html
-share=Share
-share-via-link=Share via link
+extension-needs-to-be-installed=Add extension to Chrome
+extension-needs-to-be-installed-message=To use screensharing feature you need to install an extension to your browser. <a target="_blank" href="https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk">Click here to proceed to the Chrome app store</a>
+share=Share with others
+share-with-more=Share this video call with others
+share-via-link=Share via link <small style='font-weight:normal'>Copy & paste to share with others</small>
+send-notification=Add contact name or email
 contact-name-or-email=Contact name or email
 add=Add
 mute=Mute
+turn-mute=Mute your microphone
 turn-camera-off=Turn camera off
-share-your-screen=Share your screen
-refresh=Refresh
-hang-up=Hang up
+share-your-screen=Start sharing your screen (Chrome only)
+refresh=Reload call
+hang-up=End&nbsp;call
 
 #header.html
 share-your-knowledge=Share your knowledge
@@ -477,11 +506,12 @@ channels=Channels
 pricing=Pricing
 features=Features
 contact-us=Contact us
-start-instant-chat=Start video call
+start-instant-chat=Instant&nbsp;video&nbsp;call
 sign-out=Sign out
 profile=Profile
 notifications=Notifications
 received-payments=Received payments
+sent-payments=Sent payments
 settings=Settings
 
 #help.html
@@ -601,12 +631,16 @@ newer=Newer
 older=Older
 
 #payment.html
-join-event=Session &bdquo;%s&rdquo; is charged
-paypal-error=Paypal checkout failed. Please try again.
+important=Important
+you-will-be-redirected-to-PayPal=You will be redirected to PayPal to process the payment
+PayPal-payment-message=In order to send payments you must have a PayPal Account. Payments will be sent from your PayPal Account to the Recipient’s PayPal Account
+PayPal-payment-refund=If you will be not satisfied with the performance of the Publisher you can always request refundation within 72 hours after issuing the payment.
+join-event=Access to session &bdquo;%s&rdquo; is charged
+PayPal-error=PayPal checkout failed. Please try again.
 unit-price=Unit price
-total=Total
-checkout-with-paypal=Checkout with Paypal
-pay-with-paypal=Checkout with Paypal
+total=Total price
+checkout-with-PayPal=Checkout with PayPal
+pay-with-PayPal=Checkout with PayPal
 
 #userProfile.html
 
@@ -625,9 +659,9 @@ no-reviews-yet=No reviews yet
 #raw.html
 
 #password.html
-password-change=Password change
-password.new=Password.new
-password-repeat=Password repeat
+password-change=Change password
+password.new=New password
+password-repeat=Repat new password
 
 #passwordReset.html
 password-reset=Password reset
@@ -657,9 +691,11 @@ login.return=Login.return
 #userAbout.html
 
 #userTop.html
+online=Online
+offline=Offline
 edit-profile=Edit profile
 last-online=Last online
-public-calendar=Public calendar
+public-calendar=View Public calendar
 followers=Followers
 
 #wiki.html
@@ -757,7 +793,7 @@ unmute=Unmute
 #starEvent.js
 new-message=New Notification
 attachments=Attachments
-write-a-reply=Write a reply
+write-a-reply=Write reply
 before=Before
 starts-in=Starts in
 days=days

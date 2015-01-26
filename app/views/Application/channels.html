@@ -35,7 +35,9 @@
 						    	<option #{if request.params.category == 'art'} selected="selected" #{/if} value="art"> &{'art'}</option>
 						    	<option #{if request.params.category == 'sport'} selected="selected" #{/if} value="sport"> &{'sport'}</option>
 						    	<option #{if request.params.category == 'household'} selected="selected" #{/if} value="household"> &{'household'}</option>
+						    	*{
 						    	<option #{if request.params.category == '18plus'} selected="selected" #{/if} value="18plus"> &{'18plus'}</option>
+						    	}*
 						    </select>
 						</div>				    
 						<div class="form-group">

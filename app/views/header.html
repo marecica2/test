@@ -24,7 +24,7 @@
 
 			</div>
 			<div class="col-md-10">
-
+			
 				<!-- header-right start -->
 				<!-- ================ -->
 				<div class="header-right clearfix">
@@ -50,23 +50,16 @@
 								<div class="collapse navbar-collapse" id="navbar-collapse-1">
 									<ul class="nav navbar-nav navbar-right">
 									
+										
+										<li class="header-notification #{if user && user.unreadMessages}#{/if}#{else}hidden#{/else}" style="padding-left:30px">
+							  	  			<a href="/mail" class="object-non-visible animated object-visible wobble" data-animation-effect="wobble" data-effect-delay="6000" ><i style="font-size:1.3em" class="text-default fa fa-envelope title="&{'received-new-message'}"></i></a>
+							  	  		</li>	
+							  	  		
+									
 										<li class="logo-menu pull-left" style="display:none">
 											<a href="/home"><img style="position:relative;bottom:2px;height:22px;" src="/public/images/logo_purple.png"></a>
 										</li>
 
-								 	  	#{if user && user.unreadMessages}
-								  	  		<li>
-								  	  			<a href="/mail" class="object-non-visible animated object-visible wobble" data-animation-effect="wobble" data-effect-delay="6000" ><i style="font-size:1.3em" class="text-default fa fa-envelope title="&{'received-new-message'}"></i></a>
-									  	  		<script>
-									  	  			var prev = document.title;
-											  	  	setInterval(function(){
-											  	      	var title = i18n("new-message"); 
-											  	    	document.title = (document.title == i18n("new-message") ? prev : i18n("new-message"));
-											  	    }, 1000);
-									  	  		</script>
-								  	  		</li>
-									  	#{/if}
-										
 									 	#{if user}
 									      <li #{if request.url.indexOf("dashboard")>=0}class="active" #{/if}><a href="/dashboard">&{'dashboard'}</a></li>
 									      <li #{if request.url.indexOf("calendar")>=0}class="active" #{/if}><a href="/user/${user.login}/calendar">&{'calendar'}</a></li>
@@ -118,6 +111,7 @@
 									          	<li><a href="/contacts"><i class="icon-users"></i> &{'contacts'}</a></li>
 									          	<li><a href="/mail"><i class="fa fa-envelope-o"></i> &{'notifications'}</a></li>
 									          	<li><a href="/payments"><i class="fa fa-bar-chart-o"></i> &{'received-payments'}</a></li>
+									          	<li><a href="/payments?sent=true"><i class="fa fa-bar-chart-o"></i> &{'sent-payments'}</a></li>
 									          	<li><a href="/settings"><i class=" icon-tools"></i> &{'settings'}</a></li>
 
 						  						#{if user.isAdmin()}

@@ -200,6 +200,24 @@ public class Accounts extends BaseController
         render("Accounts/account.html", user, baseUrl, account, edit);
     }
 
+    public static void addFacebook(String facebookName, String facebookId)
+    {
+        final User user = getLoggedUserNotCache();
+        final User usr = User.getUserByFacebook(facebookId);
+        if (usr != null)
+            flash.error(Messages.get("login-already-used"));
+
+        if (user != null && usr == null)
+        {
+            user.facebookName = facebookName;
+            user.facebookId = facebookId;
+            user.save();
+        }
+
+        flash.keep();
+        account();
+    }
+
     public static void googleCalendarClear(String url)
     {
         final User user = getLoggedUserNotCache();
@@ -246,17 +264,7 @@ public class Accounts extends BaseController
         account();
     }
 
-    public static void checkConnection(String id, String url)
-    {
-        final User user = getLoggedUserNotCache();
-        user.lastOnlineTime = new Date();
-        user.save();
-        JsonObject resp = new JsonObject();
-        resp.addProperty("result", "ok");
-        renderJSON(resp);
-    }
-
-    public static void payments()
+    public static void payments(String transaction, String sender, Boolean sent)
     {
         final DateTimeUtils dt = new DateTimeUtils(DateTimeUtils.TYPE_DATE_ONLY);
         final User user = getLoggedUser();
@@ -264,12 +272,20 @@ public class Accounts extends BaseController
         final String timeTo = request.params.get("filterTimeTo");
         final Date from = dt.fromJson(timeFrom);
         final Date to = dt.fromJson(timeTo);
+        final User senderUser = User.getUserByLogin(sender);
+        User receiverUser = user;
+
+        if (!user.isAdmin() && StringUtils.getStringOrNull(transaction) != null)
+            notFound();
+
+        if (user.isAdmin() && transaction != null)
+            receiverUser = User.getUserByLogin(transaction);
+
+        List<Attendance> payments = Attendance.getPayments(receiverUser, from, to, senderUser, sent);
 
         Map<String, BigDecimal> totals = new HashMap<String, BigDecimal>();
         Map<String, BigDecimal> providers = new HashMap<String, BigDecimal>();
         Map<String, BigDecimal> fees = new HashMap<String, BigDecimal>();
-
-        List<Attendance> payments = Attendance.getPayments(user, from, to);
         Map<String, Map<Long, BigDecimal>> mapTotal = new HashMap<String, Map<Long, BigDecimal>>();
         for (Attendance attendance : payments)
         {
@@ -308,7 +324,7 @@ public class Accounts extends BaseController
             }
         }
         params.flash();
-        render(user, payments, mapTotal);
+        render(user, payments, mapTotal, senderUser);
     }
 
     public static void facebookClear(String url)
@@ -323,6 +339,15 @@ public class Accounts extends BaseController
         user.facebookTab = null;
         user.facebook = null;
         user.save();
+        redirectTo("/settings");
+    }
+
+    public static void publisherInfoDismiss(String url)
+    {
+        User user = getLoggedUserNotCache();
+        user.hideInfoPublisher = true;
+        user.save();
         redirectTo(url);
+        clearUserFromCache();
     }
 }

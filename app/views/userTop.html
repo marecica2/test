@@ -21,7 +21,7 @@
 		
 
 		
-		<div class="col-lg-5 col-sm-5">
+		<div class="col-lg-6 col-sm-6">
 						
 			<h2 class="margin-clear">
 				<span style="font-size:0.6em">
@@ -53,13 +53,24 @@
 				#{/if}				
 			</h2>
 			<ul class="list-icons">
-				<li><i class="fa fa-clock-o"></i> &{'last-online'} #{if usr.lastOnlineTime} ${usr.lastOnlineTime.format("dd MMM, yyyy")} #{time time:usr.lastOnlineTime/} #{/if}</li>
-				<li><i class="fa fa-calendar pr-5"></i><a href="/user/${usr.login}/calendar/public">&{'public calendar'}</a></li>
-				<li><i class="fa fa-envelope pr-5"></i>${usr.login}</li>
+				#{if !usr.isOnline()}
+					<li><i class="fa fa-clock-o"></i> &{'offline'} - &{'last-online'} #{if usr.lastOnlineTime} ${usr.lastOnlineTime.format("dd MMM, yyyy")} #{time time:usr.lastOnlineTime/} #{/if}</li>
+				#{/if}
+				#{else}
+				<li><i class="fa fa-clock-o"></i> &{'online'}
+				#{/else}
+				
+				<li><i class="fa fa-calendar pr-5"></i><a href="/user/${usr.login}/calendar/public" class="link">&{'public-calendar'}</a></li>
+				<li>
+					<i class="fa fa-envelope pr-5"></i><a href="/mail?action=new&to=${usr.login}" class="link">&{'write-message-for'} ${usr.firstName}</a>
+				</li>
+				#{if user && user.isPublisher()}
+					<li><i class="fa fa-bar-chart-o pr-5"></i><a href="/payments?sender=${usr.login}" class="link">&{'payments-receivedPayments-for-this-user'} ${usr.fullName}</a></li>
+				#{/if}
 			</ul>
 		</div>
 
-		<div class="col-lg-4 col-sm-4 " style="height:100%">
+		<div class="col-lg-3 col-sm-3 " style="height:100%">
 			<div class="vertical-divider-left-lg side">
 				<h5 class="title margin-clear">&{'followers'}</h5>
 				#{if followers}

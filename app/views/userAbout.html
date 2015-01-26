@@ -20,5 +20,5 @@
 </ul>
 
 #{if usr.account.url}
-<p class="black">&{'website'} <a href="${usr.account.url}" target="_blank">${usr.account.url}</a></p>
+<p class="black">&{'website'} <a href="${usr.account.formatUrl(usr.account.url)}" target="_blank">${usr.account.url}</a></p>
 #{/if}

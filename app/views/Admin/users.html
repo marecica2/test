@@ -39,7 +39,7 @@
 							${item.account.type}
 						</td>
 						<td>
-							${item.account.currentPlan()}
+							<a class="link" href="/settings/paypal/payments?id=${item.uuid}">${item.account.currentPlan().type}</a>
 						</td>
 						<td>
 							#{if item.registrationToken && usersMap.get(item.registrationToken) != null}
@@ -53,6 +53,7 @@
 							#{/if}
 						</td>
 						<td>
+							<a href="/payments?transaction=${item.login}">transactions</a>
 							<a href="/admin/approve?uuid=${item.uuid}&url=${request.url.urlEncode()}" class="btn btn-default btn-sm btn-short btn-margin">Unblock</a>
 							<a href="/admin/deny?uuid=${item.uuid}&url=${request.url.urlEncode()}" class="btn btn-white btn-sm btn-short btn-margin">Block</a>
 							<a href="/mail?action=new&to=${item.login}">&nbsp;<i class="fa fa-envelope"></i>&nbsp;</a>

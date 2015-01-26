@@ -15,9 +15,9 @@
           	$("#facebookName").val(data.name);
           	$("#url").val(data.link);
           	
-            $('#registrationForm').attr('action', "/registration/facebook");
-            $("#registrationForm").submit();
-            e.preventDefault();
+            //$('#registrationForm').attr('action', "/registration/facebook");
+            //$("#registrationForm").submit();
+            //e.preventDefault();
 	      });
 	  }
 	</script>
@@ -55,9 +55,10 @@
 					<label class="" for="accPlan">&{'account-plan'}</label>
 					<select class="form-control" name="accPlan" id="accPlan">
 						<option #{if request.params.plan == "standard"}  selected='selected' #{/if} #{if params.accPlan == "standard"}  selected='selected' #{/if} value="standard">&{'standard'}</option>
-						<option #{if request.params.plan == "premium"}  selected='selected' #{/if} #{if params.accPlan == "premium"}  selected='selected' #{/if} value="premium">&{'monthly-basic'}</option>
-						<option #{if request.params.plan == "pro"}  selected='selected' #{/if} #{if params.accPlan == "pro"}  selected='selected' #{/if} value="pro">&{'monthly-premium'}</option>
+						<option #{if request.params.plan == "premium"}  selected='selected' #{/if} #{if params.accPlan == "premium"}  selected='selected' #{/if} value="premium">&{'premium'}</option>
+						<option #{if request.params.plan == "pro"}  selected='selected' #{/if} #{if params.accPlan == "pro"}  selected='selected' #{/if} value="pro">&{'pro'}</option>
 					</select>
+					<div class="error">#{error 'accPlan' /}</div>
 				</div>				
 				<div class="form-group">
 					<label class="" for="firstName">&{'first-name'}</label>

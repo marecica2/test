@@ -46,8 +46,8 @@ public class Admin extends BaseController
     public static void approve(String uuid, String url)
     {
         final User user = User.getUserByUUID(uuid);
-        final String subject = Messages.get("publisher-request-approved-subject");
-        final String message = Messages.get("publisher-request-approved-message");
+        final String subject = Messages.getMessage(user.locale, "publisher-request-approved-subject");
+        final String message = Messages.getMessage(user.locale, "publisher-request-approved-message");
 
         Message.createAdminNotification(user, subject, message);
         new EmailNotificationBuilder()
@@ -66,9 +66,9 @@ public class Admin extends BaseController
     public static void deny(String uuid, String url)
     {
         final User user = User.getUserByUUID(uuid);
-        final String subject = Messages.get("publisher-request-declined-subject");
-        String email = getBaseUrl() + "mail?action=new&to=" + getAdmin().login;
-        final String message = Messages.get("publisher-request-declined-message", email);
+        final String email = getBaseUrl() + "mail?action=new&to=" + getAdminUser().login;
+        final String subject = Messages.getMessage(user.locale, "publisher-request-declined-subject");
+        final String message = Messages.getMessage(user.locale, "publisher-request-declined-message", email);
 
         Message.createAdminNotification(user, subject, message);
         new EmailNotificationBuilder()

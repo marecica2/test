@@ -1,5 +1,6 @@
 package controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -99,10 +100,16 @@ public class Comments extends BaseController
         renderJSON("{\"response\":\"ok\"}");
     }
 
-    public static void addComment(String uuid, String objectType, String comment, String type, String url, String tempId)
+    public static void addComment() throws IOException
     {
-        final User user = getLoggedUser();
+        final JsonObject jo = JsonUtils.getJson(request.body);
+        final String comment = JsonUtils.getString(jo, "comment");
+        final String tempId = JsonUtils.getString(jo, "tempId");
+        final String type = JsonUtils.getString(jo, "type");
+        final String objectType = JsonUtils.getString(jo, "objectType");
+        final String uuid = JsonUtils.getString(jo, "uuid");
 
+        final User user = getLoggedUser();
         final Comment c = new Comment();
         c.user = user;
         c.comment = StringEscapeUtils.escapeHtml(comment);
@@ -148,9 +155,8 @@ public class Comments extends BaseController
             for (FileUpload fileUpload2 : fu)
                 fileUpload2.stored = true;
         }
-
         c.saveComment();
-        redirectTo(url);
+        renderJSON("{\"response\":\"ok\"}");
     }
 
     public static void deleteComment(String uuid, String url)

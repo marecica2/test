@@ -35,6 +35,7 @@ if(star.userInRoom){
 
 // events for instant room
 $(document).ready(function(){
+    
     // stop instant broadcast
     $(".btn-instant-stop").click(function(){
         send_chat(' stopped broadcasting', star.user);
@@ -47,12 +48,7 @@ $(document).ready(function(){
 
     // start instat room
     $(".no-schedule-start").click(function(e){
-        e.preventDefault();
         
-        var data = {};
-        data.id = socket.socket.sessionid;
-        socket_message_broadcast("no-schedule-start", data);
-        window.location = $(this).attr("data-href");
     });
 
     // go to private room
@@ -74,6 +70,7 @@ $(document).ready(function(){
     });
 });
 
+
 socket.on('socket_message', function(data) {
     if(data.event == "instant-room-private-broadcast"){
         setTimeout(function(){ window.location.reload();
@@ -91,6 +88,13 @@ socket.on('socket_message', function(data) {
     } 
  });
 
+//automatically create user_joined event
+var usr = {};
+usr.user = star.user;
+usr.room = star.room;
+usr.avatar = star.avatar;
+if(webrtc == null)
+    socket.emit('user_joined', usr);
 
 // if user is room
 if(webrtc != null){
@@ -98,8 +102,9 @@ if(webrtc != null){
     //bind all event handlers when webrtc is ready
     webrtc.on('readyToCall', function () {
         
-         //automatically create user_joined event
-         socket.emit('user_joined', {"user" : star.user, "room" : star.room, "usr" : star.usr, "peer" : webrtc.connection.socket.sessionid, "avatar" : star.avatar});
+        if(webrtc != null)
+            usr.peer = getPeerId();
+         socket.emit('user_joined', usr);
         
          // automatic join to room
          var room = star.room
@@ -231,6 +236,8 @@ if(webrtc != null){
          if (!webrtc.capabilities.screenSharing) {
              $('#screenShareButton').attr('disabled', 'disabled');
          }
+         if(navigator.userAgent.toLowerCase().indexOf('chrome') == -1)
+             $('#screenShareButton').attr('disabled', 'disabled');
          
          $('#screenShareButton').click(function () {
              if (!star.screenShare) {
@@ -262,20 +269,25 @@ if(webrtc != null){
                          myStream.type = "screenShare";
                          webrtc.shareScreenMy(myStream);
                          //$("#screen-unique-id")[0].src = URL.createObjectURL(stream);
+                         
+                         $(".peer-label-screenshare[data-id='"+getPeerId()+"']").show();
+                         star.screenShare = true;
+                         $("#screen-unique-id").show();
+                         webrtc.pauseVideo();                 
+                         $(this).removeClass("btn-dark");
+                         $(this).addClass("btn-success");
+                         var data = {};
+                         data.id = getPeerId();
+                         data.screenShare = true;
+                         socket_message_broadcast("screenshare-broadcast", data);
+                         
                      }, function (error) {
                          console.error(error);
+                         $('#extensionModal').modal({show:true});
                      });
                  }); 
-                 $(".peer-label-screenshare[data-id='"+getPeerId()+"']").show();
-                 star.screenShare = true;
-                 $("#screen-unique-id").show();
-                 webrtc.pauseVideo();                 
-                 $(this).removeClass("btn-dark");
-                 $(this).addClass("btn-success");
-                 var data = {};
-                 data.id = getPeerId();
-                 data.screenShare = true;
-                 socket_message_broadcast("screenshare-broadcast", data);
+                 
+
              } else {
                  $(".peer-label-screenshare[data-id='"+getPeerId()+"']").hide();
                  $("#screen-unique-id")[0].src = "";
@@ -312,6 +324,7 @@ if(webrtc != null){
              socket_message_all("controls-hangup", data);
              send_chat(' has left the conversation', star.user);
 
+             //$("#ratingModal").modal({"show" : true});
              window.close();
          });
          
@@ -393,10 +406,9 @@ if(webrtc != null){
     
     // a peer was removed
     webrtc.on('videoRemoved', function (video, peer) {
-        //console.log('video removed ');
-        
         var isScreen = $(video).attr("id").indexOf("_screen") != -1 ? true : false;
         if(isScreen){
+            
             //$("#video-element-"+peer.id+"[data-screen='true']").remove();
             //console.log("removing screen");
             //console.log(video);
@@ -410,7 +422,7 @@ if(webrtc != null){
             $("#"+peer.id+"_video_incoming").show();
         } else {
             console.log("video removed");
-            console.log(peer);
+            
             $(video).remove();
             //$("#"+peer.id+"_video_incoming").remove();
             $("#video-element-"+peer.id).remove();
@@ -442,6 +454,22 @@ if(webrtc != null){
     //});
 }
 
+
+function usersChatRender(data){
+    data = JSON.parse(data);
+    var html = "";
+    users = [];
+    for ( var index in data) {
+        var row = data[index];
+        for ( var usr in row) {
+            if(row[usr].room == star.room){
+                html += "<img src='/"+row[usr].avatar+"_32x32' class='avatar22 avatar_"+row[usr].id+"' title='"+row[usr].user+"' style='margin-right:1px'>";
+                
+            }
+        }
+    }
+    $(".chat-avatars").html(html);
+}
 
 function usersRender(data) {
     data = JSON.parse(data);
@@ -586,7 +614,6 @@ function joinRoom(room, joinRoomCallback){
     if(!isInRoom){
         webrtc.joinRoom(room , joinRoomCallback);
     } else {
-        console.log("Join room status: Already in room:" + room + " peer:" + getPeerId());
     }
 }
 
@@ -616,153 +643,144 @@ function showVolume(el, volume) {
 
 
 if(webrtc != null){
-socket.on('socket_message', function(data) {
-
-    // notify other that user has joined
-    if(data.event == "speaking"){
-        if(data != undefined){
-            
-            // update volume bar 
-            var vol = $("#volume_"+data.data.id);
-            if(vol.length){
-                showVolume(vol[0], data.data.volume);
-            }
-            
-            // update maximized screen
-            if(star.switchAuto && data.data.id != getPeerId()){
-                if(star.maximizedId == null || data.data.id != star.maximizedId){
-                    maximizeMimize(data.data.id, false);
+    socket.on('socket_message', function(data) {
+    
+        // notify other that user has joined
+        if(data.event == "speaking"){
+            if(data != undefined){
+                
+                // update volume bar 
+                var vol = $("#volume_"+data.data.id);
+                if(vol.length){
+                    showVolume(vol[0], data.data.volume);
+                }
+                
+                // update maximized screen
+                if(star.switchAuto && data.data.id != getPeerId()){
+                    if(star.maximizedId == null || data.data.id != star.maximizedId){
+                        maximizeMimize(data.data.id, false);
+                    }
                 }
             }
         }
-    }
-    
-    if(data.event == "mute"){
-        if(data.data.id == getPeerId()){
-            console.log("you has been muted");
-            webrtc.mute();
-            $("#controls-mute").addClass("btn-danger");
-            star.muted = true;
-        }
-    }
-
-    if(data.event == "mute-broadcast"){
-        if(data.data.id == getPeerId() && data.data.muted){
-            $("#controls-mute").removeClass("btn-dark");
-            $("#controls-mute").addClass("btn-danger");   
-            $("#controls-mute").html("<i class='icon-mute'></i>");
-            star.muted = true;
-            webrtc.mute();
-        }
-        if(data.data.id == getPeerId() && !data.data.muted){
-            $("#controls-mute").addClass("btn-dark");
-            $("#controls-mute").removeClass("btn-danger");   
-            $("#controls-mute").html("<i class='icon-sound'></i>");
-            star.muted = false;
-            webrtc.unmute();
-        }
-        if(data.data.muted){
-            $(".peer-label-muted[data-id='"+data.data.id+"']").show();
-        } else {
-            $(".peer-label-muted[data-id='"+data.data.id+"']").hide();
-        }
-    }
-
-    if(data.event == "camera-broadcast"){
-        if(data.data.cameraoOff){
-            $(".peer-label-camera[data-id='"+data.data.id+"']").show();
-            if(star.maximizedId != data.data.id)
-                $(".videoContainer", "#video-element-"+data.data.id).hide();
-            if(star.maximizedId != data.data.id)
-                $("#"+data.data.id+"_video_small").show();
-            
-        } else {
-            $(".peer-label-camera[data-id='"+data.data.id+"']").hide();
-            if(star.maximizedId != data.data.id)
-                $(".videoContainer", "#video-element-"+data.data.id).show();
-            if(star.maximizedId != data.data.id)
-                $("#"+data.data.id+"_video_small").hide();
-        }
-    }
-
-    
-    if(data.event == "screenshare-broadcast"){
-        if(data.data.screenShare){
-            $(".peer-label-screenshare[data-id='"+data.data.id+"']").show();
-        } else {
-            $(".peer-label-screenshare[data-id='"+data.data.id+"']").hide();
-        }
-    }
-    
-
-    // notify other that user has joined
-    if(data.event == "user-joined"){
-        peerRemoveCurrent();
-    }
-
-    else if(data.event == "controls-hangup"){
-        // remove peer which has hanged up
-        var id = data.data.id;
-        //console.log("controls-hangup " + id);
         
-        //remove video elements
-        var peer = getPeerById(id);
-        //console.log("removing peer " + id + " after hangup");
+        if(data.event == "mute"){
+            if(data.data.id == getPeerId()){
+                $("#controls-mute").addClass("btn-danger");
+                star.muted = true;
+            }
+        }
+    
+        if(data.event == "mute-broadcast"){
+            if(data.data.id == getPeerId() && data.data.muted){
+                $("#controls-mute").removeClass("btn-dark");
+                $("#controls-mute").addClass("btn-danger");   
+                $("#controls-mute").html("<i class='icon-mute'></i>");
+                star.muted = true;
+                webrtc.mute();
+            }
+            if(data.data.id == getPeerId() && !data.data.muted){
+                $("#controls-mute").addClass("btn-dark");
+                $("#controls-mute").removeClass("btn-danger");   
+                $("#controls-mute").html("<i class='icon-sound'></i>");
+                star.muted = false;
+                webrtc.unmute();
+            }
+            if(data.data.muted){
+                $(".peer-label-muted[data-id='"+data.data.id+"']").show();
+            } else {
+                $(".peer-label-muted[data-id='"+data.data.id+"']").hide();
+            }
+        }
+    
+        if(data.event == "camera-broadcast"){
+            if(data.data.cameraoOff){
+                $(".peer-label-camera[data-id='"+data.data.id+"']").show();
+                if(star.maximizedId != data.data.id)
+                    $(".videoContainer", "#video-element-"+data.data.id).hide();
+                if(star.maximizedId != data.data.id)
+                    $("#"+data.data.id+"_video_small").show();
+                
+            } else {
+                $(".peer-label-camera[data-id='"+data.data.id+"']").hide();
+                if(star.maximizedId != data.data.id)
+                    $(".videoContainer", "#video-element-"+data.data.id).show();
+                if(star.maximizedId != data.data.id)
+                    $("#"+data.data.id+"_video_small").hide();
+            }
+        }
+    
+        if(data.event == "screenshare-broadcast"){
+            if(data.data.screenShare){
+                $(".peer-label-screenshare[data-id='"+data.data.id+"']").show();
+            } else {
+                $(".peer-label-screenshare[data-id='"+data.data.id+"']").hide();
+            }
+        }
+    
+        if(data.event == "user-joined"){
+            peerRemoveCurrent();
+        }
 
+        if(data.event == "controls-hangup"){
+            var id = data.data.id;
+            var peer = getPeerById(id);
+            if(peer != null){
+                var video = $(peer.videoEl);
+                if(video != null)
+                    video.remove();
+            }
+            while(peer != null){
+                peer.end();
+                peer = getPeerById(id);
+            }
+            peerRemoveCurrent();
+            if(webrtc.webrtc.peers.length == 0 ){
+                webrtc.leaveRoom();
+            } 
+        }
+        
+        if(data.event == "check-last-peer"){
+            if(webrtc.webrtc.peers.length == 1){
+                webrtc.webrtc.peers[0].end();
+            }
+        }    
+    });
+    
+    socket.on('user_disconnect', function(data) {
+        var peerId = JSON.parse(data).peer;
+        var peer = getPeerById(peerId);
+        peer.end();
         if(peer != null){
             var video = $(peer.videoEl);
-            if(video != null)
+            if(video != null){
                 video.remove();
+                //$("#"+peer.id+"_video_incoming").remove();
+                $("#video-element-"+peer.id).remove();
+            }
         }
-        
-        //end disconnected peer manually
-        while(peer != null){
-            peer.end();
-            peer = getPeerById(id);
-        }
-        
-        peerRemoveCurrent();
-        //console.log("remaining peers");
-        //console.log(webrtc.webrtc.peers);
-        
-        // clean all in case of last peer
-        if(webrtc.webrtc.peers.length == 0 ){
-            webrtc.leaveRoom();
-        } 
-    }
+    });
+    
+    socket.on('user_update', function(data) {
+        usersRender(data);
+    });
     
     
-    else if(data.event == "check-last-peer"){
-        if(webrtc.webrtc.peers.length == 1){
-            webrtc.webrtc.peers[0].end();
-        }
-    }    
     
-});
-
-socket.on('user_disconnect', function(data) {
-    var disconnected_client = JSON.parse(data).client;
-    usersRender(data);
-    
-    for(var i = 0; i < webrtc.webrtc.peers.length ; i++){
-        if(webrtc.webrtc.peers[i].id == disconnected_client){
-            webrtc.webrtc.peers[i].end();
-        }
-    }
-    
-    if(webrtc.webrtc.peers.length == 1 && webrtc.webrtc.peers[0].id == getPeerId()){
-    //    webrtc.webrtc.peers[0].end();
-    }
-    
-    if(webrtc.webrtc.peers.length == 0){
-    //    $("#controls").hide();
-    } 
-});
-
-socket.on('user_update', function(data) {
-    usersRender(data);
-});
+} else {
+    socket.on('user_update', function(data) {
+        usersChatRender(data);
+    });
+    socket.on('socket_message', function(data) {
+    });
+    // if webrtc is null
+    socket.on('user_disconnect', function(data) {
+        data =  JSON.parse(data);
+        console.log($(".avatar_"+data.client));
+        $(".avatar_"+data.client).remove();
+    });
 }
+
 
 
 
@@ -774,7 +792,6 @@ socket.on('user_update', function(data) {
 //
 
 function socket_message_all(event, data) {
-    //console.log("emiting socket_message_all data: " + event);
     socket.emit('socket_message_all', {
         "user" : star.user,
         "room" : star.room,
@@ -785,7 +802,6 @@ function socket_message_all(event, data) {
 };
 
 function socket_message_broadcast(event, data) {
-    //console.log("emiting socket_message_broadcast:" + event);
     socket.emit('socket_message_broadcast', {
         "user" : star.user,
         "room" : star.room,
@@ -796,7 +812,6 @@ function socket_message_broadcast(event, data) {
 };
 
 function socket_message_broadcast_to(event, to, data) {
-    //console.log("emiting socket_message_broadcast_to: " + event + " to: " + to);
     socket.emit('socket_message_broadcast_to', {
         "user" : star.user,
         "room" : star.room,
@@ -807,51 +822,12 @@ function socket_message_broadcast_to(event, to, data) {
     });
 };
 
-function socket_message_broadcast_peers(event, data) {
-    var peers = webrtc.webrtc.peers;
-    var ids = [];
-    
-    for(usr in users){
-        for(peer in peers){
-            if(users[usr].id == peers[peer].id){
-                ids.push(users[usr].id);
-            }
-        }
-    }
-    
-    for(id in ids){
-        socket_message_broadcast_to(event, ids[id], data);
-    }
-};
-
-function socket_message_broadcast_not_peers(event, data) {
-    var peers = webrtc.webrtc.peers;
-    var ids = [];
-    
-    for(usr in users){
-        var isPeer = false;
-        for(peer in peers){
-            if(users[usr].id == peers[peer].id){
-                isPeer = true;
-                break;
-            }
-        }
-        if(!isPeer){
-            ids.push(users[usr].id);
-        }
-    }
-    
-    for(id in ids){
-        socket_message_broadcast_to(event, ids[id], data);
-    }
-};
-
 function send_chat(message, usr){
     if(usr == undefined){
-        socket.emit('send', { "message": message });  
+        socket.emit('send', { "message": message, "room" : star.room });  
     }
     else {
-        socket.emit('send', { "message": message, "username": usr });  
+        socket.emit('send', { "message": message, "username": usr, "room" : star.room});  
     }
 };
 
@@ -928,17 +904,12 @@ $(document).ready(function(){
         }
     });
     
-    
-    // chat
     $("#content").click(function() {
         //$("#chat-text").focus();
     });
 
-    // chat send
     $("#chat-send").click(function() {
         var comment = $("#chat-text").val();
-        comment = comment.replace(/</g, '&lt;')
-        comment = comment.replace(/>/g, '&gt;');
         send_chat(comment, $("#chat-name").val());
         $("#chat-text").val("");
         return false;
@@ -948,15 +919,11 @@ $(document).ready(function(){
 socket.on('message', function(data) {
     if (data.message) {
         var html = '';
-        if(data.username){
-            html += '<strong>' + (data.username ? data.username : 'Server').replace(/>/g, '&gt;') + ': </strong>';
-            html += data.message.replace(/>/g, '&gt;') + '<br />';
-        }
-        content.innerHTML = content.innerHTML + html;
-        
-        //if(messages.length > 20){
-        //    messages.splice(0, 1);
-        //}
+        if(data.username)
+            html += '<strong>' + data.username.replace(/>/g, '&gt;') + '</strong>: ';
+        var message = linkify(data.message);
+        html += message + '<br/>';
+        $("#content").append(html);
         
         console.log(data);
         var elm = $("#chat-container");
@@ -1005,13 +972,30 @@ $(document).ready(function(){
         
         for(var i = data.length-1; i >= 0; i--){
             var date = new Date(data[i].created).toLocaleString();
-            html += "<b title='"+date+"' >"+data[i].name+": </b>"+data[i].comment+"<br/>";
+            html += "<b title='"+date+"' >"+data[i].name+": </b>"+linkify(data[i].comment)+"<br/>";
         }
         $("#content").html(html);
     });
-    
 });
 
+
+function linkify(inputText) {
+    var replacedText, replacePattern1, replacePattern2, replacePattern3;
+
+    //URLs starting with http://, https://, or ftp://
+    replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+
+    //URLs starting with "www." (without // before it, or it'd re-link the ones done above).
+    replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+
+    //Change email addresses to mailto:: links.
+    replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+    replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+
+    return replacedText;
+}
 
 
 (function ($) {

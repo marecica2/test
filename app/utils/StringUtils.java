@@ -64,6 +64,15 @@ public class StringUtils
         return null;
     }
 
+    public static String extractReturnDefault(String data, String regex)
+    {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(data);
+        if (matcher.find())
+            return matcher.group(1);
+        return data;
+    }
+
     public static boolean isValidEmailAddress(String email)
     {
         boolean stricterFilter = true;

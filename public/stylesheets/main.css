@@ -94,6 +94,7 @@ img {
 .vertical-divider-left {
 	margin-left: 0px;
 }
+
 /* theme fixes */
 
 
@@ -172,7 +173,14 @@ img {
 	width: 100%
 }
 
-@media screen and (max-width: 667px) {
+.social-pull-right {
+	float:right;
+}
+
+@media screen and (max-width: 990px) {
+	.social-pull-right {
+		float:left;
+	}	
 	.listing-item {
 		display: none;
 	}
@@ -188,7 +196,10 @@ img {
 	}	
 }
 
+
 @media screen and (min-width: 767px) {
+
+
 	.banner-search {
 		max-width:400px;
 		position:absolute;
@@ -498,6 +509,12 @@ img {
 	-webkit-box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 1);
 	-moz-box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 1);
 	box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 1);
+}	
+
+.shadow-outset {
+	-webkit-box-shadow: 0px 0px 90px 49px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 0px 90px 49px rgba(0, 0, 0, 0.5);
+	box-shadow:  0px 0px 90px 49px rgba(0, 0, 0, 0.5);
 }	
 
 @media screen and (max-width: 767px) {
@@ -835,7 +852,7 @@ object {
 
 #chat-container {
 	position:relative;
-	background: #111;
+	background: rgba(40,40,40, 0.99);
 	display: table-cell;
 	vertical-align: middle;
 	padding: 15px;

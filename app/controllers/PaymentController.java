@@ -10,6 +10,7 @@ import models.Account;
 import models.AccountPlan;
 import models.Attendance;
 import models.Event;
+import models.Message;
 import models.User;
 
 import org.apache.http.client.utils.URIBuilder;
@@ -23,6 +24,7 @@ import play.libs.Crypto;
 import play.mvc.With;
 import utils.NumberUtils;
 import utils.RandomUtil;
+import email.EmailNotificationBuilder;
 
 @With(controllers.Secure.class)
 public class PaymentController extends BaseController
@@ -41,6 +43,7 @@ public class PaymentController extends BaseController
 
     public static void paymentPost(String event, String url, String payment, String transactionId) throws Exception
     {
+        System.err.println("ssss");
         final User user = getLoggedUser();
         final Event e = Event.get(event);
         Attendance attendance = e.getInviteForCustomer(user);
@@ -52,6 +55,7 @@ public class PaymentController extends BaseController
         //TODO add here other payment methods
         if (payment.equals(Attendance.ATTENDANCE_PAYMENT_PAYPAL))
         {
+            System.err.println("fff");
             //processWithPaypal(attendance, e, user, url, null);
             processWithPaypalAdaptive(attendance, e, user, url, transactionId);
         }
@@ -108,6 +112,22 @@ public class PaymentController extends BaseController
             {
                 flash.error(Messages.get("paypal-error"));
                 payment(e.uuid, url);
+            }
+
+            // notification
+            final String subject = Messages.getMessage(e.user.locale, "event-payment-completed-subject", e.listing.title);
+            final String body = Messages.getMessage(e.user.locale, "event-payment-completed-message", e.listing.title, user.getFullName(), e.listing.title, getBaseUrl() + "event/" + e.uuid);
+            if (e.customer != null)
+                Message.createAdminNotification(e.user, subject, body);
+
+            if (e.customer != null && e.customer.emailNotification)
+            {
+                EmailNotificationBuilder eb = new EmailNotificationBuilder();
+                eb.setTo(e.user);
+                eb.setFrom(user)
+                        .setSubject(subject)
+                        .setMessageWiki(body)
+                        .send();
             }
 
             attendance.save();
@@ -198,6 +218,13 @@ public class PaymentController extends BaseController
         validation.required(reason);
         validation.required(attendance);
 
+        if (user == null)
+            forbidden();
+        if (attendance == null)
+            notFound();
+        if (!attendance.customer.equals(user))
+            forbidden();
+
         if (!validation.hasErrors())
         {
             if (user.equals(attendance.customer))
@@ -205,6 +232,28 @@ public class PaymentController extends BaseController
                 attendance.refundReason = reason;
                 attendance.refundRequested = true;
                 attendance.save();
+
+                // notification
+                final String subject = Messages.getMessage(attendance.event.user.locale, "event-refund-request-subject", user.getFullName());
+                final String body = Messages.getMessage(attendance.event.user.locale, "event-refund-request-message",
+                        user.getFullName(),
+                        attendance.event.listing.title,
+                        getBaseUrl() + "event/" + attendance.event.uuid,
+                        getBaseUrl() + "payments",
+                        attendance.refundReason
+                        );
+                if (attendance.event.customer != null)
+                    Message.createAdminNotification(attendance.event.user, subject, body);
+
+                if (attendance.event.customer != null && attendance.event.customer.emailNotification)
+                {
+                    EmailNotificationBuilder eb = new EmailNotificationBuilder();
+                    eb.setTo(attendance.event.user);
+                    eb.setFrom(user)
+                            .setSubject(subject)
+                            .setMessageWiki(body)
+                            .send();
+                }
             }
         } else
         {
@@ -340,31 +389,42 @@ public class PaymentController extends BaseController
 
         // cancel current plan but keep valid until last payment
         final AccountPlan current = AccountPlan.getCurrentPlan(user.account);
-        Date validTo = current.validTo;
-        if (current.canceled == null)
+        if (current != null && current.profile != null)
         {
-            validTo = getValidUntil(current);
-            pp.cancelRecurringPayments(user, current);
-            current.validTo = validTo;
-            current.canceled = true;
-            current.save();
+            Date validTo = current.validTo;
+            if (current.canceled == null)
+            {
+                validTo = getValidUntil(current);
+                pp.cancelRecurringPayments(user, current);
+                current.validTo = validTo;
+                current.canceled = true;
+                current.save();
+            }
+
+            // if there is already paid upgrade plan, discard it
+            AccountPlan last = AccountPlan.getLast(user.account);
+            if (!last.id.equals(current.id) && last.profile != null)
+            {
+                pp.cancelRecurringPayments(user, last);
+                last.delete();
+            }
+            // create standard plan for user
+            final AccountPlan standard = new AccountPlan();
+            standard.account = user.account;
+            standard.type = Account.PLAN_STANDARD;
+            standard.price = new BigDecimal(0);
+            standard.validFrom = validTo;
+            standard.save();
+        } else
+        {
+            final AccountPlan standard = new AccountPlan();
+            standard.account = user.account;
+            standard.type = Account.PLAN_STANDARD;
+            standard.price = new BigDecimal(0);
+            standard.validFrom = new Date();
+            standard.save();
         }
 
-        // if there is already paid upgrade plan, discard it
-        AccountPlan last = AccountPlan.getLast(user.account);
-        if (!last.id.equals(current.id) && last.profile != null)
-        {
-            pp.cancelRecurringPayments(user, last);
-            last.delete();
-        }
-
-        // create standard plan for user
-        final AccountPlan standard = new AccountPlan();
-        standard.account = user.account;
-        standard.type = Account.PLAN_STANDARD;
-        standard.price = new BigDecimal(0);
-        standard.validFrom = validTo;
-        standard.save();
         redirectTo("/settings");
     }
 
@@ -417,19 +477,22 @@ public class PaymentController extends BaseController
         return newPlan;
     }
 
-    public static void paypalPayments() throws Exception
+    public static void paypalPayments(String id) throws Exception
     {
         User user = getLoggedUser();
+        if (!user.isAdmin())
+            forbidden();
+
+        User usr = User.getUserByUUID(id);
         String cancelUrl = null;
         String redirectUrl = null;
         final Paypal pp = new Paypal(redirectUrl, cancelUrl,
                 getProperty(CONFIG_PAYPAL_USER),
                 getProperty(CONFIG_PAYPAL_PWD),
                 getProperty(CONFIG_PAYPAL_SIGNATURE),
-                user.account.getPlanPrice(),
+                usr.account.getPlanPrice(),
                 Account.PRICE_PLAN_CURRENCY);
-        AccountPlan plan = AccountPlan.getCurrentPlan(user.account);
-        System.err.println(plan);
+        AccountPlan plan = AccountPlan.getCurrentPlan(usr.account);
         Map<String, String> respMap = pp.getRecurringPayments(plan.profile);
         render(respMap);
     }

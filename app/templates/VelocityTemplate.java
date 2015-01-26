@@ -62,25 +62,28 @@ public class VelocityTemplate
         ctx.put("logo", baseUrl + "public/images/logo_purple_footer.png");
         ctx.put("logo_footer", baseUrl + "public/images/logo_purple_footer.png");
 
-        ctx.put("user", from.getFullName());
-        ctx.put("userImage", baseUrl + from.avatarUrl);
-        ctx.put("userUrl", baseUrl + "user/" + from.login);
-        ctx.put("userUrlLabel", Messages.get("view-on-widgr"));
-        ctx.put("contact", Messages.get("contact"));
-        ctx.put("help", Messages.get("help"));
-        ctx.put("security", Messages.get("security"));
+        if (from != null)
+        {
+            ctx.put("user", from.getFullName());
+            ctx.put("userImage", baseUrl + from.avatarUrl);
+            ctx.put("userUrl", baseUrl + "user/" + from.login);
+            ctx.put("userUrlLabel", Messages.getMessage(locale, "view-on-widgr"));
+            ctx.put("title", Messages.getMessage(locale, "you-have-been-invited-to-widgr", from.getFullName()));
+            ctx.put("userAbout", "<h3>" + from.getFullName() + "</h3>" + from.userAboutHtml());
+            ctx.put("url", baseUrl + "registration?email=" + email + "&token=" + from.referrerToken);
+        }
 
-        ctx.put("regards", Messages.get("regards-html"));
-        ctx.put("title", Messages.get("you-have-been-invited-to-widgr", from.getFullName()));
-        ctx.put("message", Messages.get("email-what-is-widgr", baseUrl));
-        ctx.put("userAbout", "<h3>" + from.getFullName() + "</h3>" + from.userAboutHtml());
-        ctx.put("footer", Messages.get("email-footer"));
-        ctx.put("url", baseUrl + "registration?email=" + email + "&token=" + from.referrerToken);
-        ctx.put("urlLabel", Messages.get("register-now"));
+        ctx.put("contact", Messages.getMessage(locale, "contact"));
+        ctx.put("help", Messages.getMessage(locale, "help"));
+        ctx.put("security", Messages.getMessage(locale, "security"));
+        ctx.put("regards", Messages.getMessage(locale, "regards-html"));
+        ctx.put("whatIsWidgr", Messages.getMessage(locale, "email-what-is-widgr", baseUrl));
+        ctx.put("urlLabel", Messages.getMessage(locale, "register-now"));
+        ctx.put("footer", Messages.getMessage(locale, "email-footer"));
 
         if (event != null)
         {
-            ctx.put("title", Messages.get("you-have-been-invited-to-event", event.listing.title));
+            ctx.put("title", Messages.getMessage(locale, "you-have-been-invited-to-event", event.listing.title));
             ctx.put("event", event.listing.title);
             ctx.put("eventDescription", event.listing.getDescriptionHtml());
             ctx.put("eventUrl", baseUrl + "event/" + event.uuid);
@@ -97,7 +100,7 @@ public class VelocityTemplate
         return ctx;
     }
 
-    public static VelocityContext createBasicTemplate(String locale, String baseUrl, String title, String message)
+    public static VelocityContext createBasicTemplate(User to, String locale, String baseUrl, String title, String message)
     {
         VelocityContext ctx = new VelocityContext();
         ctx.put("color0", "#BF94D1");
@@ -111,12 +114,14 @@ public class VelocityTemplate
 
         ctx.put("title", title);
         ctx.put("message", message);
+        ctx.put("existing", to != null ? true : false);
+        ctx.put("whatIsWidgr", Messages.getMessage(locale, "email-what-is-widgr", baseUrl));
 
-        ctx.put("regards", Messages.get("regards-html"));
-        ctx.put("contact", Messages.get("contact"));
-        ctx.put("help", Messages.get("help"));
-        ctx.put("security", Messages.get("security"));
-        ctx.put("footer", Messages.get("email-footer"));
+        ctx.put("regards", Messages.getMessage(locale, "regards-html"));
+        ctx.put("contact", Messages.getMessage(locale, "contact"));
+        ctx.put("help", Messages.getMessage(locale, "help"));
+        ctx.put("security", Messages.getMessage(locale, "security"));
+        ctx.put("footer", Messages.getMessage(locale, "email-footer"));
         return ctx;
     }
 }

@@ -1,17 +1,19 @@
-#{if objectType == "user" || (!edit && isOwner) || (!edit && fromEvent && user && object && object.commentsEnabled)}
+#{if objectType == "user" || (!edit && isOwner) || (!edit && user && object && object.commentsEnabled)}
 <div class="row">
 <div class="col-md-12">
-	<form role="form" action="/event/comment?uuid=${object.uuid}&objectType=${objectType}&url=${request.url.urlEncode()}" id="comment-form" method="post">
+	<form action="/event/comment?uuid=${object.uuid}&objectType=${objectType}&url=${request.url.urlEncode()}" id="comment-form" method="post">
 		<h2><img class="img-circle" style="float:left" src="/${user.avatarUrl}_32x32">&nbsp;&{'share-whats-new'}</h2>
 		<div class="separator-2"></div>
     	<div class="form-group has-feedback">
     		<div class="">
+    			<input type="hidden" name="objectType" value="${objectType}">
+				<input type="hidden" name="uuid" value="${object.uuid}">
 	    		<textarea rows="3" class="form-control" maxlength="1000" name="comment" id="dialog-comment-input"></textarea>
     		</div>
 	   		#{include 'help.html' /}
     	</div>
-	    	
-  	        <button class="btn btn-default pull-right margin-clear" id="comment-save" type="button">&{'submit'}</button>
+    	
+  	    <button class="btn btn-default pull-right margin-clear" id="comment-save" type="button">&{'submit'}</button>
 		
 		<div class="form-group">
 			<div class="btn-group pull-left" data-toggle="buttons">
@@ -24,7 +26,7 @@
 				  </label>
 			  #{/if}
 			  #{else}
-				      	  <input type="hidden" name="type" id="upload-buttonLink" checked="checked" value="text">
+				   <input type="hidden" name="type" id="upload-buttonLink" checked="checked" value="text">
 			  #{/else}
 			</div>				
 		</div>					
@@ -79,7 +81,7 @@
     
     
 <div class="commentsContainer" style="display:none;margin-top:40px">
-	<div id="comments-container"></div>   
+	<div id="comments-container" class="image-boxes"></div>   
 	<div class="spinner-container2" style="display:table;width:100%">
 		<div class="spinner-container">
 			<div id="spinnerComments" class="spinner-load"></div>
@@ -87,6 +89,9 @@
 		</div>
 	</div>
 </div>   
+
+
+
 <script>
 	$(document).ready(function(){
 	    var params = "";
@@ -107,7 +112,16 @@
 
 	    $("#comment-save").click(function(e){
 	        e.preventDefault();
-	        $.post($("#comment-form").attr("action"), $( "#comment-form" ).serialize(), function(){
+	        
+	        var data = {};
+	        data.uuid = $("input[name='uuid']").val();
+	        data.objectType = $("input[name='objectType']").val();
+	        data.comment = $("textarea[name='comment']").val();
+	        data.type = $("input[name='type']:checked").val();
+	        data.url = $("input[name='url']").val();
+	        data.tempId = $("input[name='tempId']").val();
+
+	        starServices.addComment(data, function(){
 	            $('#comment-form')[0].reset();
 	            $('#images').html("");
 		        star.loadComments(params, star.dashboard);

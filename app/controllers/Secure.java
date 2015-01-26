@@ -154,6 +154,7 @@ public class Secure extends BaseController
             user.save();
 
             String url = getRedirectUrl();
+            url = getBaseUrlWithoutSlash() + url;
             renderText(url);
         }
     }
@@ -176,7 +177,7 @@ public class Secure extends BaseController
     {
         Security.invoke("onAuthenticated");
         String url = getRedirectUrl();
-        redirect(url);
+        redirect(getBaseUrlWithoutSlash() + url);
     }
 
     private static String getRedirectUrl()

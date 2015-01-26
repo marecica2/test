@@ -19,12 +19,22 @@ public class JsonUtils
     {
         try
         {
-            String json = IOUtils.toString(is);
+            String json = IOUtils.toString(is, "UTF-8");
             final JsonElement js = new JsonParser().parse(json);
             return js.getAsJsonObject();
         } catch (Exception e)
         {
             Logger.error(e, "Error occured while parsing json");
+        }
+        return null;
+    }
+
+    public static String getString(JsonObject jo, String key)
+    {
+        final JsonElement jsonElement = jo.get(key);
+        if (jsonElement != null)
+        {
+            return StringUtils.htmlEscape(jsonElement.getAsString());
         }
         return null;
     }

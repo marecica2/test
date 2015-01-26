@@ -93,21 +93,25 @@
 	  	
 			#{if plan && planLast != null && planLast.id != plan.id}
 				<div class="shadow alert alert-info alert-dismissible" role="alert">
-					Account Plan &{planLast.type} will be valid from ${planLast.validFrom.format("dd MMM yyyy")}. 
+					&{account-will-be-valid, planLast.type}  ${planLast.validFrom.format("dd MMM yyyy")}. 
 				</div>
 			#{/if}	
 
 			#{if plan && planLast != null && planLast.id != plan.id && planLast.type != "standard" && planLast.profile == null}
 				<div class="shadow alert alert-info alert-dismissible" role="alert">
-					Your subscription for plan &{planLast.type} is not activated yet. To activate your subscription please proceed with Paypal
+					&{'your-subscription-not-activated', plan.type}
+					&{'PayPal-payment-message'}
 					<img style="cursor:pointer" class="paypal-subscription pull-right" src="//www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" border="0" data-id="${planLast.id}" align="top" alt="&{'checkout-with-paypal'}"/>
 				</div>
 			#{/if}	
 			
 			#{if plan != null && !plan.isStandard() && plan.paid == null}
 				<div class="shadow alert alert-info alert-dismissible" role="alert">
-					Your subscription for plan &{plan.type} is not activated yet. To activate your subscription please proceed with Paypal
+					&{'your-subscription-not-activated', plan.type}
 					<img style="cursor:pointer" class="paypal-subscription pull-right" src="//www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" border="0" data-id="${plan.id}" align="top" alt="&{'checkout-with-paypal'}"/>
+					<br/>
+					<br/>
+					<span style="font-size:12px">&{'PayPal-payment-message'}</span>
 				</div>					
 			#{/if}			
 			<script>
@@ -175,11 +179,11 @@
 				<dt>&{'account-type'}</dt>
 				<dd>
 					#{if user && user.account.type == "publisherReq"}
-						<span class="label label-default">&{user.account.type}</span>
+						<span class="label label-default">&{user.account.type}</span><br/>
 						<span class="label label-success">&{'waiting-for-approvement'}</span>
 					#{/if}
 					#{elseif user && user.account.type == "standard"}
-						<span class="label label-default">&{user.account.type}</span>
+						<span class="label label-default">&{user.account.type}</span><br/>
 						<a href="/settings/request-publisher?url=${request.url.urlEncode()}">&{'become-a-publisher'}</a>
 					#{/elseif}
 					#{else}
@@ -190,46 +194,39 @@
 				<dt>&{'account-plan'}</dt>
 				<dd>
 					#{if plan}
-						<p>
-							<span class="label default-bg">
-								&{plan.type} 
-								#{if !plan.isStandard()}
-								, Price: ${plan.price}$ per month
-								#{/if}
+						<span class="label default-bg">
+							&{plan.type} 
+							#{if !plan.isStandard()}
+							, &{'price'}: ${user.account.getPlanPrice()}$ &{'per-month'}
+							#{/if}
+						</span>
+						#{if plan && plan.validTo != null}&nbsp;
+							<span class="label label-default">
+								&{'valid-to'} ${plan.validTo.format("dd MMM yyyy")}
 							</span>
-							#{if plan && plan.validTo != null}&nbsp;
-								<span class="label label-default">
-									Valid to ${plan.validTo.format("dd MMM yyyy")}
-								</span>
+						#{/if}
+						<br/>
+					
+						#{if plan.type == "standard" || plan == null}
+							#{if planLast == null || (plan && planLast && planLast.id == plan.id)}
+								<a href="/settings/paypal/upgrade?type=premium">&{'upgrade-to-plan'} &{'premium'}</a> &middot;
+								<a href="/settings/paypal/upgrade?type=pro">&{'upgrade-to-plan'} &{'pro'}</a> &middot;
 							#{/if}
-						</p>
-						
-						<p>
-							#{if plan.type == "standard" || plan == null}
-								#{if planLast == null || (plan && planLast && planLast.id == plan.id)}
-									<a href="/settings/paypal/upgrade?type=premium">Upgrade to plan Monthly Premium</a> &middot;
-									<a href="/settings/paypal/upgrade?type=pro">Upgrade to plan Monthly Pro</a> &middot;
-								#{/if}
+						#{/if}
+						#{if plan.type == "premium"}
+							#{if plan && planLast && planLast.id == plan.id && plan.profile != null}
+								<a href="/settings/paypal/upgrade?type=pro">&{'upgrade-to-plan'} &{'pro'}</a> &middot;
 							#{/if}
-							#{if plan.type == "premium"}
-								#{if plan && planLast && planLast.id == plan.id && plan.profile != null}
-									<a href="/settings/paypal/upgrade?type=pro">Upgrade to plan Monthly Pro</a> &middot;
-								#{/if}
-								#{if plan && plan.canceled == null}
-									<a href="/settings/paypal/cancel">Cancel subscription</a> &middot;
-								#{/if}
+							#{if plan && plan.canceled == null}
+								<a href="/settings/paypal/cancel">&{'cancel-subscription'}</a> &middot;
 							#{/if}
-							#{if plan.type == "pro"}
-								#{if plan && plan.canceled == null}
-									<a href="/settings/paypal/cancel">Cancel subscription</a> &middot;
-								#{/if}
+						#{/if}
+						#{if plan.type == "pro"}
+							#{if plan && plan.canceled == null}
+								<a href="/settings/paypal/cancel">&{'cancel-subscription'}</a> &middot;
 							#{/if}
-							
-							#{if plan.profile != null && false}
-								<a href="/settings/paypal/payments">View subscription detail</a> &middot;
-							#{/if}
-							<a href="/about#pricing">Learn more about pricing</a>
-						</p>
+						#{/if}
+						<a href="/about#pricing">&{'learn-more-about-pricing'}</a>
 					#{/if}
 				</dd>
 			</dl>
@@ -271,17 +268,36 @@
 				
 				<dt>&{'email-notifications'}</dt>
 				<dd>
-					<span class="" rel="tooltip" data-placement="right" data-original-title="&{'enable-or-disable-email-notifications'}">${user.emailNotification}</span>
+					&{user.emailNotification}<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'enable-or-disable-email-notifications'}"></i>
 				</dd>	
 				
 				<dt>&{'facebook-id'}</dt>
 				<dd>
 					${user.facebookName}
+					<div class="fb-login-button" data-max-rows="1" data-scope="public_profile" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
 					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'connect-with-your-facebook-account'}"></i><br/>
 					#{if user.facebookId != null}
-					<a href="/facebook/clear?${request.url.urlEncode()}">&{'clear-facebook-id'}</a><br/>
-					<a target="_blank" href="https://www.facebook.com/add.php?api_key=731388346951866&pages">&{'install-widgr-app-to-your-facebook-page'}</a><br/>
-					#{/if}
+						<a href="/facebook/clear?${request.url.urlEncode()}">&{'clear-facebook-id'}</a> &middot;
+					#{/if}				
+					<a target="_blank" href="https://www.facebook.com/add.php?api_key=731388346951866&pages">&{'install-widgr-app-to-your-facebook-page'}</a> &middot;
+					<a href="/help">&{'learn-more'}</a>
+				  	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
+					<script>
+					  star.fbClbck = function() {
+					      FB.api('/me', function(response) {
+					        $("#facebookId").val(response.id);
+					        $("#facebookName").val(response.name);
+					        $('<form>', {
+					            "html": '<input name="facebookId" value="' + response.id + '" /><input name="facebookName" value="' + response.name + '" />',
+					            "action": '/settings/facebook/add',
+					            "method": 'POST'
+					        }).appendTo(document.body).submit();
+					      });
+					  }
+					</script>		
+					<div id="fb-root"></div>				
+				
+
 				</dd>
 			</dl>
 			#{/if}
@@ -353,25 +369,6 @@
 				</label>
 			</div>				
 			</div>						
-			<div class="form-group">
-				<label for="facebook" class="col-sm-2 control-label">&{'facebook-id'}</label>
-				<div class="col-sm-10">
-					<input type="hidden" class="form-control" id="facebookId" placeholder="&{'facebook-id'}" name="facebookId" value="${params.facebookId}">
-					<input type="text" class="disabled form-control" id="facebookName" name="facebookName" value="${params.facebookName}" readonly>
-				  	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
-					<script>
-					  star.fbClbck = function() {
-					      FB.api('/me', function(response) {
-					        $("#facebookId").val(response.id);
-					        $("#facebookName").val(response.name);
-					      });
-					  }
-					</script>		
-					<br/>
-					<strong>&{'connect-with-your-facebook-account'}</strong> <div class="fb-login-button" data-max-rows="1" data-scope="public_profile" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>						
-					<div id="fb-root"></div>
-				</div>				
-			</div>				
 			#{/else}			
 			
 			
@@ -410,7 +407,7 @@
 					#{/if}
 				</dd>
 			</dl>
-`			
+			
 			#{/if}
 			#{else}
 			<div class="form-group">
@@ -517,7 +514,7 @@
 			    </div>
 			</div>
 			#{/else}
-					
+				
 
 
 

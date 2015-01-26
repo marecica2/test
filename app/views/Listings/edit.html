@@ -203,7 +203,7 @@
 		
 		<div class="event-edit">
 			<button type="submit" class="btn btn-default" id="event-dialog-save" >&{'save'}</button>
-	   		<a href="${request.params.url}" type="button" class="btn btn-white">&{'cancel'}</a> 
+	   		<a href="${request.params.url}" type="button" class="btn btn-light-gray">&{'cancel'}</a> 
 		</div>
 	#{/if}
 	#{else}
@@ -282,8 +282,10 @@
 				<option value="health" #{if params.category == "health"} selected="selected" #{/if} >&{'health'}</option>
 				<option value="art" #{if params.category == "art"} selected="selected" #{/if} >&{'art'}</option>
 				<option value="sport" #{if params.category == "sport"} selected="selected" #{/if} >&{'sport'}</option>
-				<option value="18plus" #{if params.category == "18plus"} selected="selected" #{/if} >&{'18plus'}</option>
 				<option value="household" #{if params.category == "household"} selected="selected" #{/if} >&{'household'}</option>
+				*{
+				<option value="18plus" #{if params.category == "18plus"} selected="selected" #{/if} >&{'18plus'}</option>
+				}*
 				<option value="other" #{if params.category == "other"} selected="selected" #{/if} >&{'other'}</option>
 			</select>						
 			<div class="alert alert-danger">#{error 'category' /}</div>
@@ -426,7 +428,7 @@
 		
 		<div class="event-edit">
 			<button type="submit" class="btn btn-default" id="event-dialog-save" >&{'save'}</button>
-	   		<a href="${request.params.url}" type="button" class="btn btn-white"><i class="fa fa-times"></i> &{'cancel'}</a> 
+	   		<a href="${request.params.url}" type="button" class="btn btn-light-gray">&{'cancel'}</a> 
 		</div>
 
 	#{/else}

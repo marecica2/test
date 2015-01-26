@@ -7,6 +7,7 @@ import models.User;
 import play.cache.Cache;
 import play.i18n.Messages;
 import play.mvc.With;
+import utils.RandomUtil;
 import utils.StringUtils;
 
 @With(Secure.class)
@@ -35,12 +36,27 @@ public class Notifications extends BaseController
             clearUserFromCache();
             Cache.delete(userTo.login);
 
+            if (thread == null)
+                thread = RandomUtil.getUUID();
+
             Message m = new Message();
             m.fromUser = userFrom;
             m.toUser = userTo;
             m.body = emailBody;
             m.subject = subject;
             m.thread = thread;
+            m.isMessage = true;
+            m.owner = userFrom;
+            m.saveMessage();
+
+            m = new Message();
+            m.fromUser = userFrom;
+            m.toUser = userTo;
+            m.body = emailBody;
+            m.subject = subject;
+            m.thread = thread;
+            m.isMessage = true;
+            m.owner = userTo;
             m.saveMessage();
 
             flash.success(Messages.get("message-sent-successfully"));
@@ -60,6 +76,20 @@ public class Notifications extends BaseController
             String action = "new";
             renderTemplate("Notifications/inbox.html", action, user);
         }
+    }
+
+    public static void delete(String uuid, String url)
+    {
+        User user = getLoggedUser();
+        Message message = Message.getById(uuid);
+
+        if (user == null)
+            forbidden();
+        if (!user.equals(message.owner))
+            forbidden();
+
+        message.delete();
+        redirectTo(url);
     }
 
     public static void inbox(String action, Integer from)
@@ -92,6 +122,9 @@ public class Notifications extends BaseController
             Cache.delete(user.login);
         }
         Message message = Message.getById(id);
+        if (message == null)
+            redirect("/mail");
+
         if (message.toUser.equals(user) && message.read == null)
         {
             message.read = true;
@@ -100,9 +133,9 @@ public class Notifications extends BaseController
 
         List<Message> thread = null;
         if (message.thread != null)
-            thread = Message.getByThread(message.thread);
+            thread = Message.getByThread(message.thread, user);
         else
-            thread = Message.getByThread(id);
+            thread = Message.getByThread(id, user);
 
         renderTemplate("Notifications/inbox.html", user, thread, message);
     }

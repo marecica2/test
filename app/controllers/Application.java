@@ -34,7 +34,45 @@ public class Application extends BaseController
     public static void about()
     {
         final User user = getLoggedUser();
-        renderTemplate("Application/about.html", user);
+        String uuid = RandomUtil.getUUID();
+        params.put("uuid", uuid);
+        params.flash();
+        renderTemplate("Application/about.html", user, uuid);
+    }
+
+    public static void contactUs(String uuid, String name, String email, String subject, String message, String captcha)
+    {
+        final User user = getLoggedUser();
+        final Object cap = Cache.get("captcha." + uuid);
+
+        if (user == null)
+        {
+            validation.required("email", email);
+            validation.required("name", name);
+            validation.email("email", email).message("validation.login");
+        }
+        validation.required("subject", subject);
+        validation.required("message", message);
+        validation.required("captcha", captcha);
+
+        if (captcha != null && cap != null)
+            validation.equals(captcha, cap).message("invalid.captcha");
+
+        if (!validation.hasErrors())
+        {
+            System.err.println("sending mail ");
+            flash.success(Messages.get("message-sent-successfully"));
+            flash.keep();
+            about();
+        } else
+        {
+            uuid = RandomUtil.getUUID();
+            flash.error(Messages.get("message-sent-error"));
+            params.put("uuid", uuid);
+            params.flash();
+            renderTemplate("Application/about.html", user, uuid);
+        }
+
     }
 
     public static void facebook() throws IOException
@@ -121,7 +159,7 @@ public class Application extends BaseController
         final User user = getLoggedUser();
         Map<String, Object> ratings = initRatings();
 
-        if (user != null && user.isStandard())
+        if (user != null && user.isStandard() && user.hideInfoPublisher == null && user.hideInfoPublisher == null)
             flash.success(Messages.get("start-helping-others"));
         render(user, ratings);
     }
@@ -164,7 +202,7 @@ public class Application extends BaseController
 
         final List<Comment> comments = Comment.getByFollower(user, 0, 200);
 
-        if (user != null && user.isStandard())
+        if (user != null && user.isStandard() && user.hideInfoPublisher == null)
             flash.success(Messages.get("start-helping-others"));
 
         //Http.Cookie c = new Http.Cookie();
@@ -184,6 +222,9 @@ public class Application extends BaseController
         // for event request user must be logged in
         if (channel != null)
         {
+            if (!userDisplayed.isPublisher())
+                forbidden();
+
             if (user == null)
                 redirectToLogin(request.url);
             flash.put("success", Messages.get("click-and-drag-to-create-event"));

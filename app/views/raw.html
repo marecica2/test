@@ -5,7 +5,7 @@
 <!--<![endif]-->
 	<head>
 		<meta charset="utf-8">
-        <title>Widgr #{get 'title' /}</title>
+        <title>#{get 'title' /}</title>
         
         <!-- My meta tags -->
         <meta name="viewport" content="width=100,initial-scale=1, maximum-scale=1, minimum-scale=1"/>
@@ -134,7 +134,13 @@
 	    	});
 	    	#{/if}
         </script>
-
+        <script>
+        $(document).ready(function(){
+			if ($("[rel=tooltip]").length) {
+	        	$("[rel=tooltip]").tooltip({'delay': { show: 100, hide: 0 }});
+	        }
+        });
+        </script>
         #{get 'moreHtml' /}
 	</body>
 </html>	

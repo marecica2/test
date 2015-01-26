@@ -113,6 +113,8 @@ public class User extends Model
     // identifies user who invited this user
     public String registrationToken;
 
+    public Boolean hideInfoPublisher;
+
     public static User getUserByLogin(String login)
     {
         return User.find("byLogin", login).first();

@@ -3,10 +3,10 @@
 
 
 <!-- edit buttons -->
-<div class="pull-right" style="margin-right:2px">	
+<div class="pull-right" style="margin-left:15px">	
 	#{if fromEvent && event}
 	
-   		#{if event.state == 'customer_created'}
+   		#{if event.state == 'customer_created' && user && !isOwner}
 			<span class="btn btn-default  btn-social margin-clear">&{'waiting-for-approvement'}</span>
 		#{/if}
 		
@@ -14,30 +14,36 @@
 		#{if event.charging != null && attendance && !event.isFree()}
 			#{if !paid }
 				#{set displayStream:false /}
-				<a class="btn btn-default  btn-social margin-clear" href="/payment/${event.uuid}?url=${request.url.urlEncode()}" rel="tooltip" data-placement="top" title="&{'you-can-pay-for-event-before-or-you-can-wait-until-event-starts'}">
+				<a class="btn btn-warning  btn-social margin-clear" href="/payment/${event.uuid}?url=${request.url.urlEncode()}" rel="tooltip" data-placement="top" title="&{'you-can-pay-for-event-before-or-you-can-wait-until-event-starts'}">
 					&{'pay-for-event-now'}
 				</a>
 			#{/if}
+			
 			#{elseif paid && attendance.paypalTransactionDate}
-				<span class="btn btn-default  btn-social margin-clear">
+				<span class="btn btn-warning  btn-social margin-clear">
 					&{'paid-on'} ${attendance.paypalTransactionDate.format("dd MMM, yyyy")}
 				</span>
 			#{/elseif} 
+			
 			#{if attendance && attendance.paid && !attendance.refundRequested}
-				<a  class="btn btn-default  btn-social margin-clear" href="" data-toggle="modal" data-target="#refundModal" onclick="$('#share-link').select();">&{'request-refund'}</a>
+				<a  class="btn btn-warning  btn-social margin-clear" href="" data-toggle="modal" data-target="#refundModal" onclick="$('#share-link').select();">&{'request-refund'}</a>
+			#{/if}
+			#{if attendance && attendance.paid && attendance.refundRequested}
+				<span class="btn btn-warning  btn-social margin-clear">&{'refund-requested'}</span>
 			#{/if}
 		#{/if}
 
 
 		#{if isOwner && (event.state == 'customer_created' )}
-			<a class="btn btn-default  btn-social margin-clear" href="/event-approve?event=${event.uuid}&url=${request.url.urlEncode()}"><i class="fa fa-check"></i> &{'approve'}</a>
-			<a class="btn btn-default  btn-social margin-clear" href="/event-decline?event=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('&{'confirm-decline'}')){return true;} else {return false;}">
+			<a class="btn btn-success  btn-social margin-clear" href="/event-approve?event=${event.uuid}&url=${request.url.urlEncode()}"><i class="fa fa-check"></i> &{'approve'}</a>
+			<a class="btn btn-danger  btn-social margin-clear" href="/event-decline?event=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" 
+				onclick="if(confirm('&{'confirm-decline'}')){return true;} else {return false;}">
 				<i class="dialog-event-edit fa fa-times fa-1x"></i> &{'decline'}
 			</a>
 	   	#{/if} 				
 		
 		
-		#{if !edit && event.type == 'p2p'}
+		#{if !edit && event.type == 'p2p' && (event.state.equals("user_accepted") || event.state.equals("user_created"))}
 			<a class="btn btn-default  btn-social margin-clear" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank"><i class="fa fa-play"></i> &{'join-video-call'}</a>
 		#{/if}		
 		

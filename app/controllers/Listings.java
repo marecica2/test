@@ -14,7 +14,6 @@ import models.Event;
 import models.FileUpload;
 import models.Listing;
 import models.ListingFilter;
-import models.Message;
 import models.Rating;
 import models.User;
 import play.i18n.Messages;
@@ -23,7 +22,6 @@ import utils.NumberUtils;
 import utils.RandomUtil;
 import utils.StringUtils;
 import dto.ListingDTO;
-import email.EmailNotificationBuilder;
 
 public class Listings extends BaseController
 {
@@ -50,6 +48,9 @@ public class Listings extends BaseController
         final String commentTemp = RandomUtil.getUUID();
         final Map<String, String> errs = new HashMap<String, String>();
         final String baseUrl = getBaseUrl().substring(0, getBaseUrl().length() - 1);
+
+        if (!isOwner && user != null && !listing.user.isPublisher() && !user.isAdmin())
+            forbidden();
 
         if (isOwner && !user.account.type.equals(Account.TYPE_PUBLISHER))
             flash.success(Messages.get("start-helping-others"));
@@ -367,22 +368,6 @@ public class Listings extends BaseController
         l.save();
 
         Attendance.createDefaultAttendances(l.user, user, e, true, true);
-
-        // notification
-        final String subject = Messages.get("new-event-request-subject", e.listing.title);
-        final String body = Messages.get("new-event-request-message", user.getFullName(), getBaseUrl() + "event/" + e.uuid, e.listing.title);
-        if (e.customer != null)
-            Message.createNotification(user, e.user, subject, body);
-        if (e.customer != null && e.customer.emailNotification)
-        {
-            EmailNotificationBuilder eb = new EmailNotificationBuilder();
-            eb.setTo(e.user);
-            eb.setFrom(user)
-                    .setSubject(subject)
-                    .setMessageWiki(body)
-                    .send();
-        }
-
         redirectTo("/room?id=" + e.uuid);
     }
 

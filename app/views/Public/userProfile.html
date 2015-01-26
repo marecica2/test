@@ -14,16 +14,12 @@
 
 #{include 'userTop.html' /}
 
-<div class="container" style="min-height:60vh">				
+<div class="container" >				
 	<div class="row">
 	
-	  	<div class="col-md-4 col-md-push-8">
-	  		#{set mail:true /}
-	  		#{include 'leftPanel.html' /}
-	  	</div>
-	  	
-		<div class="col-md-8 col-md-pull-4">
-			#{if listings}
+  	
+		<div class="col-md-12">
+			#{if listings && usr.isPublisher()}
 				<h2>&{'all-channels-from'} ${usr.firstName}</h2>
 				<div class="separator-2"></div>
 				#{set items:listings /}
@@ -31,12 +27,14 @@
 				#{include 'listingsList.html' /}
 			#{/if}			
 		
+			#{if (usr.userAbout != null && usr.userAbout.length() > 0 ) || (usr.userExperiences != null && usr.userExperiences.length() > 0) || (usr.userEducation != null && usr.userEducation.length() > 0)}
 			<div>
 				<h2 class="">&{'about'} ${usr.firstName}</h2>
 				<div class="separator-2"></div>
 				#{set usr:usr /}
 				#{include 'userAbout.html' /}
 			</div>
+			#{/if}
 						
 			<div>
 				#{set object:usr /}
