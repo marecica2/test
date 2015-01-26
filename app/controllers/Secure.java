@@ -81,6 +81,8 @@ public class Secure extends BaseController
 
     public static void authenticate(@Required String username, String password, boolean remember) throws Throwable
     {
+        checkAuthenticity();
+
         // Check tokens
         Boolean allowed = false;
         allowed = (Boolean) Security.invoke("authenticate", username, password);

@@ -49,7 +49,7 @@ public class Listings extends BaseController
         final Map<String, String> errs = new HashMap<String, String>();
         final String baseUrl = getBaseUrl().substring(0, getBaseUrl().length() - 1);
 
-        if (!isOwner && user != null && !listing.user.isPublisher() && !user.isAdmin())
+        if (!isNew && !isOwner && user != null && !listing.user.isPublisher() && !user.isAdmin())
             forbidden();
 
         if (isOwner && !user.account.type.equals(Account.TYPE_PUBLISHER))
@@ -141,6 +141,7 @@ public class Listings extends BaseController
         boolean edit = action != null && action.equals("edit") ? true : false;
         final User user = getLoggedUser();
 
+        checkAuthenticity();
         validation.required(type);
         validation.required(privacy);
         validation.required(charging);
@@ -175,7 +176,6 @@ public class Listings extends BaseController
                 listing.roomSecret = RandomUtil.getUUID();
                 listing.created = new Date();
                 listing.user = user;
-                listing.imageUrl = FileuploadController.PATH_TO_LISTING_AVATARS + "ava_" + RandomUtil.getRandomInteger(22) + ".png";
                 listing.state = Event.EVENT_STATE_USER_CREATED;
             }
             listing.chatEnabled = chatEnabled != null ? true : null;
@@ -193,7 +193,10 @@ public class Listings extends BaseController
             listing.category = category;
             listing.tags = tags;
             listing.video = video;
-            if (imageUrl != null)
+            if (listing == null && StringUtils.getStringOrNull(imageUrl) == null)
+            {
+                listing.imageUrl = Listing.IMAGE_DEFAULT;
+            } else if (StringUtils.getStringOrNull(imageUrl) != null)
             {
                 listing.imageUrl = imageUrl;
                 listing.imageId = imageId;
@@ -220,6 +223,7 @@ public class Listings extends BaseController
 
     public static void deleteListing(String uuid)
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         final Listing listing = Listing.get(uuid);
 
@@ -234,6 +238,7 @@ public class Listings extends BaseController
 
     public static void availableStart(String id, String url)
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         final Listing l = Listing.get(id);
 
@@ -249,6 +254,7 @@ public class Listings extends BaseController
 
     public static void availableStop(String id, String url)
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         final Listing l = Listing.get(id);
 
@@ -281,6 +287,7 @@ public class Listings extends BaseController
 
     public static void privateRoom(String id)
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         final Listing l = Listing.get(id);
 
@@ -326,6 +333,7 @@ public class Listings extends BaseController
 
     public static void instantRoom(String id)
     {
+        checkAuthenticity();
         final User user = getLoggedUserNotCache();
         final Listing l = Listing.get(id);
 

@@ -259,6 +259,7 @@ public class Events extends BaseController
         String temp
         )
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         final Boolean edit = action != null && action.equals("edit") ? true : false;
         final Boolean fromEvent = true;
@@ -276,6 +277,7 @@ public class Events extends BaseController
             forbidden();
 
         // validation
+        checkAuthenticity();
         validation.required(eventStart);
         validation.required(eventEnd);
         validation.required(eventDate);
@@ -356,6 +358,7 @@ public class Events extends BaseController
 
     public static void eventSaveRest()
     {
+        checkAuthenticity();
         final User user = getLoggedUserNotCache();
         final JsonObject jo = JsonUtils.getJson(request.body);
         final DateTimeUtils time = new DateTimeUtils(DateTimeUtils.TYPE_OTHER);
@@ -456,6 +459,7 @@ public class Events extends BaseController
 
     public static void eventSyncGoogleRest(String uuid)
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         final Event event = Event.get(uuid);
         // google event sync
@@ -471,6 +475,7 @@ public class Events extends BaseController
 
     public static void eventUpdateRest()
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         final JsonObject jo = JsonUtils.getJson(request.body);
         final String uuid = jo.get("uuid").getAsString();
@@ -503,6 +508,7 @@ public class Events extends BaseController
 
     public static void eventDeleteRest()
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         final JsonObject jo = JsonUtils.getJson(request.body);
         final String uuid = jo.get("uuid").getAsString();
@@ -523,6 +529,7 @@ public class Events extends BaseController
 
     public static void eventDelete(String uuid, String url)
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         final Event event = Event.get(uuid);
 
@@ -537,6 +544,7 @@ public class Events extends BaseController
 
     public static void approve(String event, String url)
     {
+        checkAuthenticity();
         final User user = getLoggedUserNotCache();
         final Event e = Event.get(event);
 
@@ -577,6 +585,7 @@ public class Events extends BaseController
 
     public static void decline(String event, String url)
     {
+        checkAuthenticity();
         final User user = getLoggedUserNotCache();
         final Event e = Event.get(event);
 
@@ -605,6 +614,7 @@ public class Events extends BaseController
 
     public static void start(String event, String url)
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         final Event e = Event.get(event);
 
@@ -620,6 +630,7 @@ public class Events extends BaseController
 
     public static void stop(String event, String url)
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         final Event e = Event.get(event);
 
@@ -655,6 +666,7 @@ public class Events extends BaseController
 
     public static void eventInvite(String message, String eventId, String url, String[] invite)
     {
+        checkAuthenticity();
         final User user = getLoggedUserNotCache();
         final Event event = Event.get(eventId);
 

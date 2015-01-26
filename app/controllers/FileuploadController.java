@@ -47,34 +47,11 @@ public class FileuploadController extends BaseController
 
     public static void uploadFile(String item, String temp, File attachment, String contentType, String size, String avatar) throws IOException
     {
+        checkAuthenticity();
         int fileSize = NumberUtils.parseInt(size);
         if (fileSize < FILESIZE)
         {
             FileUpload fu = createFile(item, temp, attachment, contentType, size, avatar);
-
-            // resize big images
-            //            if (contentType.contains("image"))
-            //            {
-            //                try
-            //                {
-            //                    BufferedImage readImage = ImageIO.read(attachment);
-            //                    int h = readImage.getHeight();
-            //                    int w = readImage.getWidth();
-            //                    System.err.println(w);
-            //                    System.err.println(h);
-            //                    if (w > 1200 || h > 1200)
-            //                    {
-            //                        System.err.println("resizing to 1200");
-            //                        Images.resize(attachment, attachment, 1200, 1200, true);
-            //                    }
-            //                    File thumbnail = new File(PATH_TO_UPLOADS_FILESYSTEM + fu.getUrl() + "_128x128");
-            //                    Images.resize(attachment, thumbnail, 128, 128, true);
-            //                } catch (Exception e)
-            //                {
-            //                    Logger.error(e, "FileUploadcontroller.uploadFile Exception");
-            //                }
-            //            }
-
             JsonObject jo = new JsonObject();
             jo.addProperty("url", fu.url);
             jo.addProperty("uuid", fu.uuid);
@@ -171,7 +148,7 @@ public class FileuploadController extends BaseController
 
                 // resize big images
                 File destinationMax = new File(PATH_TO_UPLOADS_FILESYSTEM + filename + "_bck");
-                Images.resize(destination, destinationMax, 1200, 1200, true);
+                Images.resize(destination, destinationMax, 1170, 1170, true);
                 destination.delete();
                 destinationMax.renameTo(new File(PATH_TO_UPLOADS_FILESYSTEM + filename));
                 fileSize = destinationMax.length();

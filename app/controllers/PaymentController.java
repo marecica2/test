@@ -17,8 +17,6 @@ import org.apache.http.client.utils.URIBuilder;
 
 import payments.Paypal;
 import payments.Paypal.AccessToken;
-import payments.Paypal.PaypalResponseParser;
-import play.Logger;
 import play.i18n.Messages;
 import play.libs.Crypto;
 import play.mvc.With;
@@ -43,7 +41,7 @@ public class PaymentController extends BaseController
 
     public static void paymentPost(String event, String url, String payment, String transactionId) throws Exception
     {
-        System.err.println("ssss");
+        checkAuthenticity();
         final User user = getLoggedUser();
         final Event e = Event.get(event);
         Attendance attendance = e.getInviteForCustomer(user);
@@ -55,7 +53,6 @@ public class PaymentController extends BaseController
         //TODO add here other payment methods
         if (payment.equals(Attendance.ATTENDANCE_PAYMENT_PAYPAL))
         {
-            System.err.println("fff");
             //processWithPaypal(attendance, e, user, url, null);
             processWithPaypalAdaptive(attendance, e, user, url, transactionId);
         }
@@ -142,77 +139,78 @@ public class PaymentController extends BaseController
         }
     }
 
-    public static void processWithPaypal(Attendance attendance, final Event e, final User user, String url, String transactionId) throws Exception
-    {
-        final AccountPlan currentPlan = e.user.account.currentPlan();
-        Boolean dual = true;
-        if (currentPlan != null && !currentPlan.type.equals(Account.TYPE_STANDARD) && currentPlan.profile != null)
-            dual = false;
-
-        final String payerId = request.params.get("PayerID");
-        final String baseUrl = getBaseUrl();
-        final String paypalCancelUrl = baseUrl + url.substring(1);
-        final String paypalRedirectUrl = new URIBuilder(baseUrl + "/paypal/" + e.uuid)
-                .addParameter("transactionId", Crypto.encryptAES(user.uuid))
-                .addParameter("url", url)
-                .build()
-                .toString();
-
-        final Paypal pp = new Paypal(e, paypalRedirectUrl, paypalCancelUrl,
-                getProperty(CONFIG_PAYPAL_PROVIDER_ACCOUNT),
-                getProperty(CONFIG_PAYPAL_PROVIDER_ACCOUNT_MICROPAYMENT),
-                getProperty(CONFIG_PAYPAL_USER),
-                getProperty(CONFIG_PAYPAL_PWD),
-                getProperty(CONFIG_PAYPAL_SIGNATURE),
-                getProperty(CONFIG_PAYPAL_ENDPOINT),
-                getProperty(CONFIG_PAYPAL_URL),
-                getProperty(CONFIG_PAYPAL_PERCENTAGE)
-                );
-
-        // handle response from paypal
-        if (transactionId != null && Crypto.decryptAES(transactionId).equals(user.uuid) && payerId != null)
-        {
-            attendance.paypalPayerId = payerId;
-            final PaypalResponseParser resp = pp.doExpressCheckoutDual(attendance.paypalAccessToken, attendance.paypalPayerId, e, dual);
-
-            if (resp.success)
-            {
-                attendance.paid = true;
-                attendance.paypalTransactionDate = new Date();
-                attendance.fee = resp.fee;
-                attendance.price = resp.price;
-                attendance.providerPrice = resp.providerPrice;
-                attendance.currency = e.currency;
-                attendance.paypalAccount = e.user.account.paypalAccount;
-                attendance.paypalAccountProvider = resp.providerAccount;
-                attendance.paypalTransactionId = resp.transactionIdProvider;
-                attendance.paypalTransactionIdProvider = resp.transactionIdOur;
-                attendance.result = Attendance.ATTENDANCE_RESULT_ACCEPTED;
-                attendance.save();
-                redirectTo(request.params.get("url"));
-            } else
-            {
-                Logger.error(resp.errorMessage);
-                BaseController.flashErrorPut(resp.errorMessage);
-                redirectTo(request.params.get("url"));
-            }
-        }
-
-        // redirect to paypal
-        if (attendance.paid == null || !attendance.paid)
-        {
-            AccessToken token = pp.setExpressCheckoutDual(e, dual);
-            attendance.paypalAccessToken = token.getToken();
-            attendance.paypalAccessTokenValidity = token.getValidity();
-            attendance.paymentMethod = "paypal";
-            attendance.save();
-            redirect(pp.getPaymentUrl(token.getToken()));
-        }
-
-    }
+    //    private static void processWithPaypal(Attendance attendance, final Event e, final User user, String url, String transactionId) throws Exception
+    //    {
+    //        final AccountPlan currentPlan = e.user.account.currentPlan();
+    //        Boolean dual = true;
+    //        if (currentPlan != null && !currentPlan.type.equals(Account.TYPE_STANDARD) && currentPlan.profile != null)
+    //            dual = false;
+    //
+    //        final String payerId = request.params.get("PayerID");
+    //        final String baseUrl = getBaseUrl();
+    //        final String paypalCancelUrl = baseUrl + url.substring(1);
+    //        final String paypalRedirectUrl = new URIBuilder(baseUrl + "/paypal/" + e.uuid)
+    //                .addParameter("transactionId", Crypto.encryptAES(user.uuid))
+    //                .addParameter("url", url)
+    //                .build()
+    //                .toString();
+    //
+    //        final Paypal pp = new Paypal(e, paypalRedirectUrl, paypalCancelUrl,
+    //                getProperty(CONFIG_PAYPAL_PROVIDER_ACCOUNT),
+    //                getProperty(CONFIG_PAYPAL_PROVIDER_ACCOUNT_MICROPAYMENT),
+    //                getProperty(CONFIG_PAYPAL_USER),
+    //                getProperty(CONFIG_PAYPAL_PWD),
+    //                getProperty(CONFIG_PAYPAL_SIGNATURE),
+    //                getProperty(CONFIG_PAYPAL_ENDPOINT),
+    //                getProperty(CONFIG_PAYPAL_URL),
+    //                getProperty(CONFIG_PAYPAL_PERCENTAGE)
+    //                );
+    //
+    //        // handle response from paypal
+    //        if (transactionId != null && Crypto.decryptAES(transactionId).equals(user.uuid) && payerId != null)
+    //        {
+    //            attendance.paypalPayerId = payerId;
+    //            final PaypalResponseParser resp = pp.doExpressCheckoutDual(attendance.paypalAccessToken, attendance.paypalPayerId, e, dual);
+    //
+    //            if (resp.success)
+    //            {
+    //                attendance.paid = true;
+    //                attendance.paypalTransactionDate = new Date();
+    //                attendance.fee = resp.fee;
+    //                attendance.price = resp.price;
+    //                attendance.providerPrice = resp.providerPrice;
+    //                attendance.currency = e.currency;
+    //                attendance.paypalAccount = e.user.account.paypalAccount;
+    //                attendance.paypalAccountProvider = resp.providerAccount;
+    //                attendance.paypalTransactionId = resp.transactionIdProvider;
+    //                attendance.paypalTransactionIdProvider = resp.transactionIdOur;
+    //                attendance.result = Attendance.ATTENDANCE_RESULT_ACCEPTED;
+    //                attendance.save();
+    //                redirectTo(request.params.get("url"));
+    //            } else
+    //            {
+    //                Logger.error(resp.errorMessage);
+    //                BaseController.flashErrorPut(resp.errorMessage);
+    //                redirectTo(request.params.get("url"));
+    //            }
+    //        }
+    //
+    //        // redirect to paypal
+    //        if (attendance.paid == null || !attendance.paid)
+    //        {
+    //            AccessToken token = pp.setExpressCheckoutDual(e, dual);
+    //            attendance.paypalAccessToken = token.getToken();
+    //            attendance.paypalAccessTokenValidity = token.getValidity();
+    //            attendance.paymentMethod = "paypal";
+    //            attendance.save();
+    //            redirect(pp.getPaymentUrl(token.getToken()));
+    //        }
+    //
+    //    }
 
     public static void paypalRefundRequest(String id, String url, String reason)
     {
+        checkAuthenticity();
         User user = getLoggedUser();
         Attendance attendance = Attendance.get(id);
         validation.required(reason);
@@ -265,6 +263,7 @@ public class PaymentController extends BaseController
 
     public static void paypalRefund(String id, String url)
     {
+        checkAuthenticity();
         User user = getLoggedUser();
         Attendance a = Attendance.get(id);
         if (user == null)
@@ -302,6 +301,7 @@ public class PaymentController extends BaseController
 
     public static void subscription(String id)
     {
+        checkAuthenticity();
         final User user = getLoggedUserNotCache();
         final String redirectUrl = getBaseUrl() + "settings/subscription/response?id=" + id;
         final String cancelUrl = getBaseUrl() + "settings";
@@ -377,6 +377,7 @@ public class PaymentController extends BaseController
 
     public static void paypalCancelRecurring() throws Exception
     {
+        checkAuthenticity();
         final User user = getLoggedUserNotCache();
         final String cancelUrl = null;
         final String redirectUrl = null;
@@ -430,6 +431,7 @@ public class PaymentController extends BaseController
 
     public static void paypalUpgradeRecurring(String type)
     {
+        checkAuthenticity();
         final User user = getLoggedUserNotCache();
         final AccountPlan currentPlan = user.account.currentPlan();
         final String cancelUrl = null;

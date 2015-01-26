@@ -15,8 +15,7 @@ public class Ratings extends BaseController
 {
     public static void addRating(String uuid, String comment, String type, Integer stars, String url, String userUuid)
     {
-        System.err.println("rating add");
-
+        checkAuthenticity();
         final User user = getLoggedUser();
         final Listing listing = Listing.get(uuid);
 
@@ -56,6 +55,7 @@ public class Ratings extends BaseController
 
     public static void deleteRating(String uuid, String url)
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         if (user == null)
             forbidden();
@@ -77,6 +77,7 @@ public class Ratings extends BaseController
 
     public static void voteForRating(String uuid, String url)
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         if (user == null)
             forbidden();
@@ -92,6 +93,7 @@ public class Ratings extends BaseController
 
     public static void unvoteForRating(String uuid, String url)
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         if (user == null)
             forbidden();
@@ -107,6 +109,7 @@ public class Ratings extends BaseController
 
     public static void abuseForRating(String uuid, String url)
     {
+        checkAuthenticity();
         final Rating r = Rating.getByUuid(uuid);
         r.save();
         redirectTo(url);

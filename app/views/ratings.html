@@ -73,7 +73,7 @@
 					#{if user && !isOwner && listing}
 					<div class="modal-comments">
 						<div class="">
-							<form action="/rating?url=${request.url.urlEncode()}" method="post">
+							<form action="/rating?url=${request.url.urlEncode()}&#{token /}" method="post">
 								<h3><img class="img-circle" style="float:left" src="../${user.avatarUrl}_32x32">&nbsp;&{'write-your-review'}</h3>
 								<input type="number" name="stars" data-max="4" id="stars" class="rating" data-icon-lib="fa" data-active-icon="fa-star blue" data-inactive-icon="fa-star-o" data-clearable-icon="fa-times"/>
 						      	<input type="hidden" name="type" value="${ratingType}">
@@ -104,10 +104,10 @@
 					       <tr>
 					       	   <td style="position:relative"> 
 						       	   #{if user && (item.user.equals(user) || user.isAdmin())}
-								       	<a href="/rating/delete?uuid=${item.uuid}&url=${request.url.urlEncode()}"><i style="position:absolute;right:15px;top:15px;" class='pull-right color-link fa fa-times delete-comment'></i></a>
+								       	<a href="/rating/delete?uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}"><i style="position:absolute;right:15px;top:15px;" class='pull-right color-link fa fa-times delete-comment'></i></a>
 							       #{/if} 
 							       #{if user && false} 
-							       		<a href="/rating/${item.uuid}/abuse?url=${request.url.urlEncode()}"><i style="margin:10px" class='pull-right color-link fa fa-flag'></i></a>
+							       		<a href="/rating/${item.uuid}/abuse?url=${request.url.urlEncode()}&#{token /}"><i style="margin:10px" class='pull-right color-link fa fa-flag'></i></a>
 							       #{/if} 
 							        
 							       <div style='display:table-cell'>
@@ -141,8 +141,8 @@
 				    				       		<p>
 					    				       		&{'was-this-review-helpful'}?
 													<span class="btn-group pull-right">
-													  <a href="/rating/${item.uuid}/vote?url=${request.url.urlEncode()}" class="btn btn-light-gray btn-short">Yes</a>
-													  <a href="/rating/${item.uuid}/unvote?url=${request.url.urlEncode()}" class="btn btn-light-gray btn-short">No</a>
+													  <a href="/rating/${item.uuid}/vote?url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-short">Yes</a>
+													  <a href="/rating/${item.uuid}/unvote?url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-short">No</a>
 													</span>
 				    				       		</p>  
 											#{/if}					       			

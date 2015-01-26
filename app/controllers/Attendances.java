@@ -58,6 +58,7 @@ public class Attendances extends BaseController
 
     public static void attendanceNewSave(String email, String eventId, String url)
     {
+        checkAuthenticity();
         email = StringUtils.extractReturnDefault(email, "\\((.+?)\\)");
         final Event event = Event.get(eventId);
         final User user = getLoggedUserNotCache();
@@ -128,8 +129,8 @@ public class Attendances extends BaseController
 
     public static void attendanceNewDelete(String uuid, String url)
     {
+        checkAuthenticity();
         User user = getLoggedUser();
-
         Attendance a = Attendance.get(uuid);
         a.delete();
 

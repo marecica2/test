@@ -21,6 +21,7 @@ public class Contacts extends BaseController
 
     public static void contactAdd(String uuid, String url)
     {
+        checkAuthenticity();
         User user = getLoggedUser();
         User c = User.getUserByUUID(uuid);
         Contact contact = new Contact();
@@ -32,6 +33,7 @@ public class Contacts extends BaseController
 
     public static void contactInvite(String email)
     {
+        checkAuthenticity();
         User user = getLoggedUser();
         User u = User.getUserByLogin(email);
 
@@ -66,6 +68,7 @@ public class Contacts extends BaseController
 
     public static void contactBlock(String uuid, String url)
     {
+        checkAuthenticity();
         Contact contact = Contact.get(uuid);
         contact.blocked = true;
         contact.save();
@@ -74,6 +77,7 @@ public class Contacts extends BaseController
 
     public static void contactUnblock(String uuid, String url)
     {
+        checkAuthenticity();
         Contact contact = Contact.get(uuid);
         contact.blocked = false;
         contact.save();
@@ -82,6 +86,7 @@ public class Contacts extends BaseController
 
     public static void contactFollow(String uuid, String url, String usr)
     {
+        checkAuthenticity();
         if (usr != null)
         {
             User user = getLoggedUser();

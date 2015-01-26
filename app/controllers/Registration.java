@@ -1,6 +1,8 @@
 package controllers;
 
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import models.Account;
 import models.AccountPlan;
@@ -47,6 +49,7 @@ public class Registration extends BaseController
 
     public static void passwordResetPost(String login, String captcha, String uuid) throws Exception
     {
+        checkAuthenticity();
         validation.required(login);
         validation.required(captcha);
         final Object cap = Cache.get("captcha." + uuid);
@@ -103,6 +106,7 @@ public class Registration extends BaseController
         String token,
         Integer offset)
     {
+        checkAuthenticity();
         validation.required(login);
         validation.required(firstName);
         validation.match("firstName", firstName, "[A-Za-z]+").message("bad-characters");
@@ -110,7 +114,12 @@ public class Registration extends BaseController
         validation.match("lastName", lastName, "[A-Za-z]+").message("bad-characters");
         validation.email(login).message("validation.login");
         validation.required(password);
-        validation.equals(password, passwordRepeat).message("validation.passwordMatch");
+
+        Pattern pattern = Pattern.compile("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}");
+        Matcher matcher = pattern.matcher(password);
+        if (!matcher.matches())
+            validation.addError("password", Messages.get("password-error"));
+        validation.equals(passwordRepeat, password).message("validation.passwordMatch");
         validation.required(captcha);
 
         final Object cap = Cache.get("captcha." + uuid);
@@ -175,6 +184,7 @@ public class Registration extends BaseController
         String token,
         Integer offset)
     {
+        checkAuthenticity();
         validation.required(firstName);
         validation.required(lastName);
         validation.email(login).message("validation.login");
@@ -220,14 +230,19 @@ public class Registration extends BaseController
 
     public static void passwordPost(String oldPassword, String password, String passwordRepeat)
     {
-        final User user = getLoggedUser();
+        final User user = getLoggedUserNotCache();
 
+        checkAuthenticity();
         validation.required(oldPassword);
         validation.required(password);
-        validation.equals(password, passwordRepeat).message("validation.passwordMatch");
-
         if (!oldPassword.equals(user.password))
-            validation.addError("oldPassword", "validation.invalidPassword");
+            validation.addError("oldPassword", "validation-invalidPassword");
+
+        Pattern pattern = Pattern.compile("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}");
+        Matcher matcher = pattern.matcher(password);
+        if (!matcher.matches())
+            validation.addError("password", Messages.get("password-error"));
+        validation.equals(passwordRepeat, password).message("validation.passwordMatch");
 
         if (!validation.hasErrors())
         {

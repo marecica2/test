@@ -287,8 +287,8 @@
 						<button class="btn btn-default btn-short event-dialog-sync">&{'sync-with-google-cal'}</button> 
 					#{/if}
 					<span class="popup-event-approvement" style="display:none;">
-						<a class="btn btn-success btn-short event-anchor popup-event-approve" href='' style="margin:2px;" id="" data-url="/event-approve?url=${request.url.urlEncode()}&event="><i class="fa fa-check"></i> &{'approve'}</a>
-						<a class="btn btn-danger btn-short event-anchor popup-event-decline" href='' style="margin:2px;" id="" data-url="/event-decline?url=${request.url.urlEncode()}&event="><i class="fa fa-times"></i> &{'decline'}</a>
+						<a class="btn btn-success btn-short event-anchor popup-event-approve" href='' style="margin:2px;" id="" data-url="/event-approve?url=${request.url.urlEncode()}&#{token /}&event="><i class="fa fa-check"></i> &{'approve'}</a>
+						<a class="btn btn-danger btn-short event-anchor popup-event-decline" href='' style="margin:2px;" id="" data-url="/event-decline?url=${request.url.urlEncode()}&#{token /}&event="><i class="fa fa-times"></i> &{'decline'}</a>
 					</span>				
 				</span>
 				<span style="float:right">

@@ -39,7 +39,9 @@
 							${item.account.type}
 						</td>
 						<td>
+							#{if item.account.currentPlan()}
 							<a class="link" href="/settings/paypal/payments?id=${item.uuid}">${item.account.currentPlan().type}</a>
+							#{/if}
 						</td>
 						<td>
 							#{if item.registrationToken && usersMap.get(item.registrationToken) != null}

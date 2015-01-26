@@ -15,65 +15,6 @@
 
 #{/set}
 
-#{set 'moreHtml'}
-	*{
-	<!-- Color Switcher (Remove these lines) -->
-	<script type="text/javascript" src="@{'/public/style-switcher/style-switcher.js'}"></script>
-	<div class="style-switcher closed">
-		<div class="header">
-			<a class="trigger" href="#"><i class="icon-tools"></i></a>
-			<h2>Style Switcher</h2>
-		</div>
-		<div class="clearfix body">
-			<h3>Predifined Colors</h3>
-			<ul class="styleChange">
-				<li class="red selected" data-style="red" title="red"></li>
-				<li class="blue" data-style="blue" title="blue"></li>
-				<li class="green" data-style="green" title="green"></li>
-				<li class="orange" data-style="orange" title="orange"></li>
-				<li class="dark-gray" data-style="dark_gray" title="dark_gray"></li>
-				<li class="pink" data-style="pink" title="pink"></li>
-				<li class="purple" data-style="purple" title="purple"></li>
-				<li class="dark-cyan" data-style="dark_cyan" title="dark_cyan"></li>
-				<li class="yellow" data-style="yellow" title="yellow"></li>
-				<li class="light-blue" data-style="light_blue" title="light_blue"></li>
-				<li class="brown" data-style="brown" title="brown"></li>
-				<li class="light-green" data-style="light_green" title="light_green"></li>
-				<li class="dark-red" data-style="dark_red" title="dark_red"></li>
-			</ul>
-			<hr>
-			<h3>Footer</h3>
-			<ul class="footerChange">
-				<li class="dark selected" data-style="dark" title="dark"><i class="fa fa-square-o"></i> Dark</li>
-				<li class="light" data-style="light" title="light"><i class="fa fa-square-o"></i> Light</li>
-			</ul>
-			<hr>
-			<h3>Layout Mode</h3>
-			<ul class="layoutChange">
-				<li class="wide selected" data-style="wide" title="wide"><i class="fa fa-arrow-left pr-10"></i>Wide<i class="fa fa-arrow-right pl-10"></i></li>
-				<li class="boxed" data-style="boxed" title="boxed"><i class="fa fa-arrow-right pr-5"></i>Boxed<i class="fa fa-arrow-left pl-5"></i></li>
-			</ul>
-			<h3>Patterns</h3>
-			<ul class="patternChange">
-				<li class="pattern-0" data-style="pattern-0" title="white background"></li>
-				<li class="pattern-1" data-style="pattern-1" title="pattern-1"></li>
-				<li class="pattern-2" data-style="pattern-2" title="pattern-2"></li>
-				<li class="pattern-3" data-style="pattern-3" title="pattern-3"></li>
-				<li class="pattern-4" data-style="pattern-4" title="pattern-4"></li>
-				<li class="pattern-5" data-style="pattern-5" title="pattern-5"></li>
-				<li class="pattern-6" data-style="pattern-6" title="pattern-6"></li>
-				<li class="pattern-7" data-style="pattern-7" title="pattern-7"></li>
-				<li class="pattern-8" data-style="pattern-8" title="pattern-8"></li>
-				<li class="pattern-9" data-style="pattern-9" title="pattern-9"></li>
-			</ul>
-			<ul class="resetAll">
-				<li class="btn btn-default btn-sm" title="Reset">Reset All</li>
-			</ul>
-		</div>
-	</div>
-	<!-- Color Switcher End -->
-	}*
-#{/set}
 
 <form id="cropForm" action="/crop" method="post">
 	<input type="hidden" id="url" name="url" value="${request.url.urlEncode()}" />
@@ -90,10 +31,9 @@
 <div class="container">
 	<div class="row">
 	  	<div class="col-md-12">
-	  	
 			#{if plan && planLast != null && planLast.id != plan.id}
 				<div class="shadow alert alert-info alert-dismissible" role="alert">
-					&{account-will-be-valid, planLast.type}  ${planLast.validFrom.format("dd MMM yyyy")}. 
+					&{'account-will-be-valid', planLast.type}  ${planLast.validFrom.format("dd MMM yyyy")}. 
 				</div>
 			#{/if}	
 
@@ -136,7 +76,7 @@
 				</span>
 			</h2>
 			<form class="form-horizontal" role="form" method="post" action="/settings?edit=true">	
-		    
+		    #{authenticityToken /}
 
 			<div class="row">
 				<div class="col-md-9">
@@ -184,7 +124,7 @@
 					#{/if}
 					#{elseif user && user.account.type == "standard"}
 						<span class="label label-default">&{user.account.type}</span><br/>
-						<a href="/settings/request-publisher?url=${request.url.urlEncode()}">&{'become-a-publisher'}</a>
+						<a href="/settings/request-publisher?url=${request.url.urlEncode()}&#{token /}">&{'become-a-publisher'}</a>
 					#{/elseif}
 					#{else}
 						<span class="label default-bg">&{user.account.type}</span>
@@ -209,21 +149,21 @@
 					
 						#{if plan.type == "standard" || plan == null}
 							#{if planLast == null || (plan && planLast && planLast.id == plan.id)}
-								<a href="/settings/paypal/upgrade?type=premium">&{'upgrade-to-plan'} &{'premium'}</a> &middot;
-								<a href="/settings/paypal/upgrade?type=pro">&{'upgrade-to-plan'} &{'pro'}</a> &middot;
+								<a href="/settings/paypal/upgrade?type=premium&url=${request.url.urlEncode()}&#{token /}">&{'upgrade-to-plan'} &{'premium'}</a> &middot;
+								<a href="/settings/paypal/upgrade?type=pro&url=${request.url.urlEncode()}&#{token /}">&{'upgrade-to-plan'} &{'pro'}</a> &middot;
 							#{/if}
 						#{/if}
 						#{if plan.type == "premium"}
 							#{if plan && planLast && planLast.id == plan.id && plan.profile != null}
-								<a href="/settings/paypal/upgrade?type=pro">&{'upgrade-to-plan'} &{'pro'}</a> &middot;
+								<a href="/settings/paypal/upgrade?type=pro&url=${request.url.urlEncode()}&#{token /}">&{'upgrade-to-plan'} &{'pro'}</a> &middot;
 							#{/if}
 							#{if plan && plan.canceled == null}
-								<a href="/settings/paypal/cancel">&{'cancel-subscription'}</a> &middot;
+								<a href="/settings/paypal/cancel?url=${request.url.urlEncode()}&#{token /}">&{'cancel-subscription'}</a> &middot;
 							#{/if}
 						#{/if}
 						#{if plan.type == "pro"}
 							#{if plan && plan.canceled == null}
-								<a href="/settings/paypal/cancel">&{'cancel-subscription'}</a> &middot;
+								<a href="/settings/paypal/cancel?url=${request.url.urlEncode()}&#{token /}">&{'cancel-subscription'}</a> &middot;
 							#{/if}
 						#{/if}
 						<a href="/about#pricing">&{'learn-more-about-pricing'}</a>
@@ -277,7 +217,7 @@
 					<div class="fb-login-button" data-max-rows="1" data-scope="public_profile" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
 					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'connect-with-your-facebook-account'}"></i><br/>
 					#{if user.facebookId != null}
-						<a href="/facebook/clear?${request.url.urlEncode()}">&{'clear-facebook-id'}</a> &middot;
+						<a href="/facebook/clear?${request.url.urlEncode()}&#{token /}">&{'clear-facebook-id'}</a> &middot;
 					#{/if}				
 					<a target="_blank" href="https://www.facebook.com/add.php?api_key=731388346951866&pages">&{'install-widgr-app-to-your-facebook-page'}</a> &middot;
 					<a href="/help">&{'learn-more'}</a>
@@ -289,7 +229,7 @@
 					        $("#facebookName").val(response.name);
 					        $('<form>', {
 					            "html": '<input name="facebookId" value="' + response.id + '" /><input name="facebookName" value="' + response.name + '" />',
-					            "action": '/settings/facebook/add',
+					            "action": '/settings/facebook/add?#{token /}',
 					            "method": 'POST'
 					        }).appendTo(document.body).submit();
 					      });
@@ -401,9 +341,9 @@
 						#{/if}
 						<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'enable-google-calendar-sync'}"></i>
 					</div>
-					<div><a href="/google?url=${request.url.urlEncode()}">&{'enable-google-calendar-sync'}</a></div>
+					<div><a href="/google?url=${request.url.urlEncode()}&#{token /}">&{'enable-google-calendar-sync'}</a></div>
 					#{if user.googleTokenExpires}
-						<div><a href="/google/clear?url=${request.url.urlEncode()}">&{'disable-google-calendar-sync'}</a></div>
+						<div><a href="/google/clear?url=${request.url.urlEncode()}&#{token /}">&{'disable-google-calendar-sync'}</a></div>
 					#{/if}
 				</dd>
 			</dl>
@@ -648,94 +588,7 @@
 			
 			
 			
-			*{
-			<br/>
-			<h3>&{'outgoing-email'}</h3>
-			<div class="separator-2"></div>
-			<div class="alert alert-success alert-dismissable" style="display:none;" id="email-success"></div>
-			<div class="alert alert-danger alert-dismissable" style="display:none;" id="email-danger"></div>
-			#{if !edit}
-			<dl class="dl-horizontal">
-				<dt>Smtp host</dt>
-				<dd>${user.account.smtpHost} &nbsp;</dd>
-				
-				#{if user.account.smtpHost == null || user.account.smtpHost != "DEFAULT"}
-				<dt>Smtp port</dt>
-				<dd>${user.account.smtpPort} &nbsp;</dd>
-				<dt>&{'account.account'}</dt>
-				<dd>${user.account.smtpAccount} &nbsp;</dd>
-				<dt>&{'account.protocol'}</dt>
-				<dd>${user.account.smtpProtocol} &nbsp;</dd>
-				<dt></dt>
-				#{/if}
-				<dd>
-					<a style="cursor:pointer" id="test-email">&{'email.test.link'}</a><span class="spinner-small spinner-test"></span> |
-					<a href="/settings/smtp/reset?url=${request.url.urlEncode()}">Reset to default</a>
-				</dd>
-			</dl>
-				<script>
-					$("#test-email").click(function(){
-			            $(".spinner-test").show();
-					    $.ajax({
-					        type: "GET",
-					        url: "/test-email",
-					        success: function(data) {
-					            $("#email-success").html(data.response);
-					            $("#email-success").show();
-					            $(".spinner-test").hide();
-						    },
-					        error: function(data) {
-					            console.log(data);
-					            $("#email-danger").html(data.responseText);
-					            $("#email-danger").show();
-					            $(".spinner-test").hide();
-						    },
-					        contentType: "application/json"
-					    });
-					});
-				</script>
-			#{/if}
-			#{else}
-			<div class="form-group">
-				<label for="smtpHost" class="col-sm-2 control-label">Smtp host</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="smtpHost" placeholder="Smtp host" name="smtpHost" value="${flash.smtpHost}">
-			      <div class="error">#{error 'smtpHost' /}</div>
-			    </div>
-			</div>
-			<div class="form-group">
-				<label for="smtpPort" class="col-sm-2 control-label">Smtp port</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="smtpPort" placeholder="Smtp port" name="smtpPort" value="${flash.smtpPort}">
-			      <div class="error">#{error 'smtpPort' /}</div>
-			    </div>
-			</div>
-			<div class="form-group">
-				<label for="smtpPort" class="col-sm-2 control-label">&{'account.account'}</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="smtpAccount" placeholder="&{'account.account'}" name="smtpAccount" value="${flash.smtpAccount}">
-			      <div class="error">#{error 'smtpAccount' /}</div>
-			    </div>
-			</div>
-			<div class="form-group">
-				<label for="smtpPort" class="col-sm-2 control-label">&{'password'}</label>
-			    <div class="col-sm-10">
-			      <input type="password" class="form-control" id="smtpPassword" placeholder="&{'password'}" name="smtpPassword" value="${flash.smtpPassword}">
-			      <div class="error">#{error 'smtpPassword' /}</div>
-			    </div>
-			</div>
-			<div class="form-group">
-				<label for="smtpProtocol" class="col-sm-2 control-label">&{'account.protocol'}</label>
-			    <div class="col-sm-10">
-					<select class="form-control" name="smtpProtocol" id="smtpProtocol">
-						<option #{if flash.smtpProtocol == "SMTP"}selected='selected'#{/if} value="SMTP">SMTP</option>
-						<option #{if flash.smtpProtocol == "SMTPS"}selected='selected'#{/if} value="SMTPS">SMTPS</option>
-					</select>
-					<div class="error">#{error 'smtpProtocol' /}</div>
-			    </div>
-			</div>			
-			#{/else}
-			}*
+
 
 			
 			*{

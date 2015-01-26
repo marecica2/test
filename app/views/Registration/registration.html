@@ -1,26 +1,25 @@
-#{extends 'main.html' /}
+#{extends 'main.html' /} #{set 'moreScripts'}
+<script type="text/javascript"
+	src="@{'/public/javascripts/facebook.js'}"></script>
+<script>
+    $("#offset").val(timezoneOffset);
 
-#{set 'moreScripts'}
-	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
-	<script>
-      $("#offset").val(timezoneOffset);
-	  
-      star.fbClbck = function() {
-	      FB.api('/me', function(data) {
-	        console.log(data);
-          	$("#firstName").val(data.first_name);
-          	$("#lastName").val(data.last_name);
-          	$("#login").val(data.email);
-          	$("#facebook").val(data.id);
-          	$("#facebookName").val(data.name);
-          	$("#url").val(data.link);
-          	
-            //$('#registrationForm').attr('action', "/registration/facebook");
-            //$("#registrationForm").submit();
-            //e.preventDefault();
-	      });
-	  }
-	</script>
+    star.fbClbck = function() {
+        FB.api('/me', function(data) {
+            console.log(data);
+            $("#firstName").val(data.first_name);
+            $("#lastName").val(data.last_name);
+            $("#login").val(data.email);
+            $("#facebook").val(data.id);
+            $("#facebookName").val(data.name);
+            $("#url").val(data.link);
+            
+            $('#registrationForm').attr('action', "/registration/facebook?"+star.token);
+            $("#registrationForm").submit();
+            e.preventDefault();
+        });
+    }
+</script>
 #{/set}
 
 <div id="fb-root"></div>
@@ -28,80 +27,101 @@
 
 
 <div class="container">
-<div class="row">
-	<div class="col-md-3">
-	</div>
-	<div class="col-md-6">
-		<form action="/registration" method="POST" id="registrationForm">
-		    	<h2 class="segoe-bold-h1">&{'registration'}</h2>
-			    <div class="separator-2"></div>
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<form action="/registration" method="POST" id="registrationForm">
+				<h2 class="segoe-bold-h1">&{'registration'}</h2>
+				<div class="separator-2"></div>
 
 				<h4>
-					&{'register-with-facebook'}
-					<span class="pull-right fb-login-button" data-max-rows="1" data-size="large" data-scope="email" data-show-faces="false" data-auto-logout-link="false"></span>
+					&{'register-with-facebook'} <span
+						class="pull-right fb-login-button" data-max-rows="1"
+						data-size="large" data-scope="email" data-show-faces="false"
+						data-auto-logout-link="false"></span>
 				</h4>
-				<br/>				
-	
+				<br />
+
 				<div class="form-group">
-					<label class="" for="login">&{'login'}</label>
-					<input type="text" class="form-control" id="login" name="login" value="#{if request.params.email}${request.params.email}#{/if}#{else}${params.login}#{/else}" placeholder="&{'registration-login'}"/>
-					<input type="hidden" class="form-control" id="token" name="token" value="${request.params.token}"/>
-					<input type="hidden" class="form-control" id="invitation" name="invitation" value="${request.params.invitation}"/>
-					<input type="hidden" class="form-control" id="facebook" name="facebook"  />
-					<input type="hidden" class="form-control" id="facebookName" name="facebookName"  />
+					<label class="" for="login">&{'login'} *</label>
+					#{authenticityToken /} <input type="text" class="form-control"
+						id="login" name="login"
+						value="#{if request.params.email}${request.params.email}#{/if}#{else}${params.login}#{/else}"
+						placeholder="&{'registration-login'}" /> <input type="hidden"
+						class="form-control" id="token" name="token"
+						value="${request.params.token}" /> <input type="hidden"
+						class="form-control" id="invitation" name="invitation"
+						value="${request.params.invitation}" /> <input type="hidden"
+						class="form-control" id="facebook" name="facebook" /> <input
+						type="hidden" class="form-control" id="facebookName"
+						name="facebookName" />
 					<div class="error">#{error 'login' /}</div>
 				</div>
 				<div class="form-group">
-					<label class="" for="accPlan">&{'account-plan'}</label>
-					<select class="form-control" name="accPlan" id="accPlan">
-						<option #{if request.params.plan == "standard"}  selected='selected' #{/if} #{if params.accPlan == "standard"}  selected='selected' #{/if} value="standard">&{'standard'}</option>
-						<option #{if request.params.plan == "premium"}  selected='selected' #{/if} #{if params.accPlan == "premium"}  selected='selected' #{/if} value="premium">&{'premium'}</option>
-						<option #{if request.params.plan == "pro"}  selected='selected' #{/if} #{if params.accPlan == "pro"}  selected='selected' #{/if} value="pro">&{'pro'}</option>
+					<label class="" for="accPlan">&{'account-plan'}</label> <select
+						class="form-control" name="accPlan" id="accPlan">
+						<option #{if request.params.plan==
+							"standard"}  selected='selected' #{/if} #{if params.accPlan==
+							"standard"}  selected='selected' #{/if} value="standard">&{'standard'}</option>
+						<option #{if request.params.plan== "premium"}  selected='selected'
+							#{/if} #{if params.accPlan== "premium"}  selected='selected'
+							#{/if} value="premium">&{'premium'}</option>
+						<option #{if request.params.plan== "pro"}  selected='selected'
+							#{/if} #{if params.accPlan== "pro"}  selected='selected'
+							#{/if} value="pro">&{'pro'}</option>
 					</select>
 					<div class="error">#{error 'accPlan' /}</div>
-				</div>				
+				</div>
 				<div class="form-group">
-					<label class="" for="firstName">&{'first-name'}</label>
-					<input type="text" class="form-control" id="firstName" name="firstName" value="${params.firstName}"  placeholder="&{'first-name'}"/>
+					<label class="" for="firstName">&{'first-name'} *</label> <input
+						type="text" class="form-control" id="firstName" name="firstName"
+						value="${params.firstName}" placeholder="&{'first-name'}" />
 					<div class="error">#{error 'firstName' /}</div>
 				</div>
 				<div class="form-group">
-					<label class="" for="lastName">&{'last-name'}</label>
-					<input type="text" class="form-control" id="lastName" name="lastName" value="${params.lastName}"  placeholder="&{'last-name'}"/>
+					<label class="" for="lastName">&{'last-name'} *</label> <input
+						type="text" class="form-control" id="lastName" name="lastName"
+						value="${params.lastName}" placeholder="&{'last-name'}" />
 					<div class="error">#{error 'lastName' /}</div>
 				</div>
 				<div class="form-group">
-					<label class="" for="login">&{'password'}</label>
-					<input type="password" class="form-control" id="password" name="password" value="${params.password}"  placeholder="&{'password'}"/>
+					<label class="" for="login">&{'password'} *<span
+						style="font-weight: normal; opacity: 0.7">&{'password-label'}</span></label>
+					<input type="password" class="form-control" id="password"
+						name="password" value="${params.password}"
+						placeholder="&{'password'}" />
 					<div class="error">#{error 'password' /}</div>
 				</div>
 				<div class="form-group">
-					<label class="" for="login">&{'password-repeat'}</label>
-					<input type="password" class="form-control" id="passwordRepeat" name="passwordRepeat" value="${params.passwordRepeat}"  placeholder="&{'password-repeat'}"/>
+					<label class="" for="login">&{'password-repeat'} *</label> <input
+						type="password" class="form-control" id="passwordRepeat"
+						name="passwordRepeat" value="${params.passwordRepeat}"
+						placeholder="&{'password-repeat'}" />
 					<div class="error">#{error 'passwordRepeat' /}</div>
 					<input type="hidden" name="offset" id="offset">
 					<script>
-						var d = new Date()
-						var n = d.getTimezoneOffset();
-						$("#offset").val(n);
-					</script>
+                        var d = new Date()
+                        var n = d.getTimezoneOffset();
+                        $("#offset").val(n);
+                    </script>
 				</div>
-		
+
 				<div class="form-group">
-					<input type="hidden" value="${params.uuid}" name="uuid" />
-					<input type="text" placeholder="&{'captcha'}" class="form-control" style="display:inline !important;width:20%" name="captcha"/>
+					<input type="hidden" value="${params.uuid}" name="uuid" /> <input
+						type="text" placeholder="&{'captcha'}" class="form-control"
+						style="display: inline !important; width: 20%" name="captcha" />
 					<img src="/captcha?uuid=${params.uuid}">
 					<div class="error">#{error 'captcha' /}</div>
-				</div>		
-				
+				</div>
+
 				<div class="form-group">
 					<button class="btn btn-default pull-left">&{'submit'}</button>
-					<a class="btn btn-white pull-right" href="/home">&{'cancel'}</a>
+					<a class="btn btn-light-gray pull-right" href="/home">&{'cancel'}</a>
 				</div>
-				<div style="clear:both"></div>
-		</form>		
+				<div style="clear: both"></div>
+			</form>
+		</div>
 	</div>
-</div>
 </div>
 
 

@@ -19,36 +19,13 @@ import play.i18n.Lang;
 import play.i18n.Messages;
 import play.mvc.With;
 import utils.DateTimeUtils;
-import utils.JsonUtils;
 import utils.StringUtils;
 
 import com.google.api.services.calendar.model.CalendarListEntry;
-import com.google.gson.JsonObject;
 
 @With(controllers.Secure.class)
 public class Accounts extends BaseController
 {
-    public static void setStyle()
-    {
-        final User user = getLoggedUserNotCache();
-        final JsonObject jo = JsonUtils.getJson(request.body);
-        final String stylesheet = jo.get("stylesheet") != null ? jo.get("stylesheet").getAsString() : null;
-        final String pattern = jo.get("pattern") != null ? jo.get("pattern").getAsString() : null;
-        final String layout = jo.get("layout") != null ? jo.get("layout").getAsString() : null;
-        final String footer = jo.get("footer") != null ? jo.get("footer").getAsString() : null;
-        if (pattern != null)
-            user.pattern = pattern;
-        if (stylesheet != null)
-            user.stylesheet = stylesheet;
-        if (layout != null)
-            user.layout = layout;
-        if (footer != null)
-            user.footer = footer;
-        user.save();
-        Cache.delete(user.login);
-        renderJSON("ok");
-    }
-
     public static void account()
     {
         final boolean edit = request.params.get("edit") == null ? false : true;
@@ -133,13 +110,14 @@ public class Accounts extends BaseController
         Integer timezone, String workingHourStart, String workingHourEnd, String[] hiddenDays, String imageId, String imageUrl
         )
     {
-        validation.required(firstName);
-        validation.required(lastName);
+        checkAuthenticity();
+        final User user = getLoggedUserNotCache();
 
         final boolean edit = request.params.get("edit") == null ? false : true;
-        final User user = getLoggedUserNotCache();
         final Account account = Account.get(user.account.key);
         final String baseUrl = request.getBase();
+        validation.required(firstName);
+        validation.required(lastName);
 
         if (!validation.hasErrors())
         {
@@ -202,6 +180,7 @@ public class Accounts extends BaseController
 
     public static void addFacebook(String facebookName, String facebookId)
     {
+        checkAuthenticity();
         final User user = getLoggedUserNotCache();
         final User usr = User.getUserByFacebook(facebookId);
         if (usr != null)
@@ -220,8 +199,8 @@ public class Accounts extends BaseController
 
     public static void googleCalendarClear(String url)
     {
+        checkAuthenticity();
         final User user = getLoggedUserNotCache();
-
         GoogleOAuth.revokeToken();
 
         user.googleAccessToken = null;
@@ -235,6 +214,7 @@ public class Accounts extends BaseController
 
     public static void requestPublisher(String url)
     {
+        checkAuthenticity();
         User user = getLoggedUserNotCache();
         List<Listing> listings = Listing.getForUser(user);
         clearUserFromCache();
@@ -329,6 +309,7 @@ public class Accounts extends BaseController
 
     public static void facebookClear(String url)
     {
+        checkAuthenticity();
         User user = getLoggedUserNotCache();
         if (user == null)
             forbidden();

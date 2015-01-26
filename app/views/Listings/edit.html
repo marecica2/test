@@ -13,6 +13,7 @@
 	</form>
 	
 	<form action="" method="post" role="form">
+	#{authenticityToken /}
 	#{if fromEvent}
 		<input type="hidden" name="temp" id="temp" value="${temp}">
 		<div class="form-group" >
@@ -39,10 +40,10 @@
 				</div>
 			  </div>
 			</div>
-			<div class="alert alert-danger">#{error 'eventStart' /}</div>
-			<div class="alert alert-danger">#{error 'eventEnd' /}</div>
-			<div class="alert alert-danger">#{error 'eventDate' /}</div>
-			<div class="alert alert-danger">#{error 'time' /}</div>
+			<div class="error">#{error 'eventStart' /}</div>
+			<div class="error">#{error 'eventEnd' /}</div>
+			<div class="error">#{error 'eventDate' /}</div>
+			<div class="error">#{error 'time' /}</div>
 			
 			<input type="hidden" id="offset" name="offset"/>
 			<script>
@@ -102,7 +103,7 @@
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangoutAir"} checked="checked" #{/if} value="hangoutAir"><i class="fa fa-google-plus"></i> &{'google-hangout-air'}
 			  </label>
 			</div>				
-			<div class="alert alert-danger">#{error 'type' /}</div>
+			<div class="error">#{error 'type' /}</div>
 		</div>
 
 		<label class="control-label">&{'privacy'}</label>
@@ -115,7 +116,7 @@
 				    <input type="radio" name="privacy" id="option1" autocomplete="off" #{if params.privacy == "public"} checked="checked" #{/if} value="public"> &{'public'}
 				  </label>
 			</div>					
-			<div class="alert alert-danger">#{error 'privacy' /}</div>
+			<div class="error">#{error 'privacy' /}</div>
 		</div>
 		
 		<label class="control-label">&{'charging'}</label>
@@ -130,7 +131,7 @@
 					  </label>
 				</div>			
 			</div>
-			<div class="alert alert-danger">#{error 'charging' /}</div>
+			<div class="error">#{error 'charging' /}</div>
 			<script>
 				$(document).ready(function(){
 					if($('input[name=charging]:checked', '.event-charging-container').val() == 'free')    
@@ -173,8 +174,8 @@
 					  </select>
 				  </span>
 				</div>
-				<div class="alert alert-danger">#{error 'price' /}</div>
-				<div class="alert alert-danger">#{error 'currency' /}</div>
+				<div class="error">#{error 'price' /}</div>
+				<div class="error">#{error 'currency' /}</div>
 				
 				<br/> 
 				<div class="form-group event-category" >
@@ -183,7 +184,7 @@
 						<option value="10" #{if params.chargingTime == "10"} selected="selected" #{/if} >for 10 &{'minutes'}</option>
 						<option value="5" #{if params.chargingTime == "5"} selected="selected" #{/if} >for 5 &{'minutes'}</option>
 					</select>						
-					<div class="alert alert-danger">#{error 'category' /}</div>
+					<div class="error">#{error 'category' /}</div>
 				</div>					
 			</div>	
 		</div>			
@@ -250,10 +251,10 @@
 			</div>
 		</div>
 		
-		<label class="control-label">Title</label>
+		<label class="control-label">Title *</label>
 		<div class="form-group" >
 			<input type="text" class="form-control " id="event-title" maxlength="50" name="title" placeholder="&{'title'}" value="${params.title}"/>
-			<div class="alert alert-danger">#{error 'title' /}</div>
+			<div class="error">#{error 'title' /}</div>
 		</div>
 
 		<label class="control-label">&{'tags'}</label>
@@ -270,10 +271,10 @@
 					});
 				});		
 			</script>
-			<div class="alert alert-danger">#{error 'tags' /}</div>
+			<div class="error">#{error 'tags' /}</div>
 		</div>
 
-		<label class="control-label">Category</label>
+		<label class="control-label">Category *</label>
 		<div class="form-group event-category" >
   			<select class="event-category form-control" id="event-category" name="category">
 				<option value="business" #{if params.category == "business"} selected="selected" #{/if} >&{'business'}</option>
@@ -288,22 +289,22 @@
 				}*
 				<option value="other" #{if params.category == "other"} selected="selected" #{/if} >&{'other'}</option>
 			</select>						
-			<div class="alert alert-danger">#{error 'category' /}</div>
+			<div class="error">#{error 'category' /}</div>
 		</div>
 
-		<label class="control-label">&{'about'}</label>
+		<label class="control-label">&{'about'} *</label>
 		<div class="form-group">
 			<textarea class="form-control event-description event-edit" rows="12" id="event-description" maxlength="1000" name="description" placeholder="&{'description'}">${params.description}</textarea>
-			<div class="alert alert-danger">#{error 'description' /}</div>
+			<div class="error">#{error 'description' /}</div>
 		</div>
 	
 		<label class="control-label">&{'introduction-video-url'}</label>	
 		<div class="form-group event-title-1" >
 			<input type="text" class="form-control " id="event-title" maxlength="50" name="video" placeholder="&{'url'}" value="${params.video}"/>
-			<div class="alert alert-danger">#{error 'video' /}</div>
+			<div class="error">#{error 'video' /}</div>
 		</div>		
 		
-		<label class="control-label">&{'channel-type'}</label>
+		<label class="control-label">&{'channel-type'} *</label>
 		<div class="form-group">
 			<div class="btn-group" data-toggle="buttons">
 			  <label class="btn btn-light-gray #{if params.type == "p2p"} active #{/if}" >
@@ -326,7 +327,7 @@
 			</div>				
 		</div>
 
-		<label class="control-label">Privacy</label>
+		<label class="control-label">&{'privacy'} *</label>
 		<div class="form-group ">
 			<div class="btn-group" data-toggle="buttons">
 				  <label class="btn btn-light-gray #{if params.privacy == "private"} active #{/if}" >
@@ -336,10 +337,10 @@
 				    <input type="radio" name="privacy" id="option1" autocomplete="off" #{if params.privacy == "public"} checked="checked" #{/if} value="public"> &{'public'}
 				  </label>
 			</div>					
-			<div class="alert alert-danger">#{error 'privacy' /}</div>
+			<div class="error">#{error 'privacy' /}</div>
 		</div>
 		
-		<label class="control-label">&{'charging'}</label>
+		<label class="control-label">&{'charging'} *</label>
 		<div class="form-group">
 			<div class="event-charging-container">
 				<div class="btn-group" data-toggle="buttons">
@@ -351,7 +352,7 @@
 					  </label>
 				</div>			
 			</div>
-			<div class="alert alert-danger">#{error 'charging' /}</div>
+			<div class="error">#{error 'charging' /}</div>
 			<script>
 				$(document).ready(function(){
 					if($('input[name=charging]:checked', '.event-charging-container').val() == 'free')    
@@ -389,8 +390,8 @@
 					  </select>
 				  </span>
 				</div>
-				<div class="alert alert-danger">#{error 'price' /}</div>
-				<div class="alert alert-danger">#{error 'currency' /}</div>
+				<div class="error">#{error 'price' /}</div>
+				<div class="error">#{error 'currency' /}</div>
 				
 				<br/>
 				<div class="form-group event-category" >
@@ -399,13 +400,13 @@
 						<option value="10" #{if params.chargingTime == "10"} selected="selected" #{/if} >&{'for'} 10 &{'minutes'}</option>
 						<option value="5" #{if params.chargingTime == "5"} selected="selected" #{/if} >&{'for'} 5 &{'minutes'}</option>
 					</select>						
-					<div class="alert alert-danger">#{error 'category' /}</div>
+					<div class="error">#{error 'category' /}</div>
 				</div>					
 				<div class="form-group ">
 					<div class="" > 
 						<label class="" style="font-weight:100;"> <input type="checkbox" name="firstFree" value="firstFree" #{if params.firstFree != null} checked="checked" #{/if}> &{'first-free'}</label> &nbsp;&nbsp;&nbsp;
 					</div>
-					<div class="alert alert-danger">#{error 'firstFree' /}</div>
+					<div class="error">#{error 'firstFree' /}</div>
 				</div>						
 			</div>	
 		</div>								
@@ -415,14 +416,14 @@
 			<div class="" > 
 				<label class="" style="font-weight:100;"> <input type="checkbox" name="chatEnabled" value="chatEnabled" #{if params.chatEnabled != null} checked="checked" #{/if}> <strong>&{'enable-chat'}</strong></label> &nbsp;&nbsp;&nbsp;
 			</div>
-			<div class="alert alert-danger">#{error 'chatEnabled' /}</div>
+			<div class="error">#{error 'chatEnabled' /}</div>
 		</div>
 		
 		<div class="form-group ">
 			<div class="" > 
 				<label class="" style="font-weight:100;"> <input type="checkbox" name="commentsEnabled" value="commentsEnabled" #{if params.commentsEnabled != null} checked="checked" #{/if}> <strong>&{'enable-comments'}</strong></label> &nbsp;&nbsp;&nbsp;
 			</div>
-			<div class="alert alert-danger">#{error 'commentsEnabled' /}</div>
+			<div class="error">#{error 'commentsEnabled' /}</div>
 		</div>		
 		<br/>
 		

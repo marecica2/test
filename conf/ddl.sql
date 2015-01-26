@@ -25,7 +25,7 @@ SELECT listing.uuid,
        setweight(to_tsvector('simple', concat(users.firstName, ' ', users.lastName, ' ', users.login)), 'D') as document
 FROM listing
 JOIN users ON users.id = listing.user_id
-JOIN account ON users.account_id = account.id and account.type = 'publisher';
+JOIN account ON users.account_id = account.id and account.type = 'publisher' where deleted is null;
 CREATE INDEX idx_fts_search ON search_index USING gin(document);
 REFRESH MATERIALIZED VIEW search_index;
 

@@ -18,6 +18,8 @@ import utils.WikiUtils;
 @Entity
 public class Listing extends Model
 {
+    public static String IMAGE_DEFAULT = "public/images/channel_default";
+
     public static String EVENT_TYPE_DASHBOARD_UPCOMING = "dashboard-upcoming";
     public static String EVENT_TYPE_DASHBOARD_PREVIOUS = "dashboard-previous";
     public static String EVENT_TYPE_PROFILE_UPCOMING = "profile-upcoming";

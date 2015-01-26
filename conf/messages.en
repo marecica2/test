@@ -208,6 +208,8 @@ contact=Contact
 #WikiUtils.java
 
 #account.html
+paypal-account=PayPal Account
+paypal-info=To this account will be issued payments for your paid sessions. It must be a valid Business or Premium PayPal account
 login-already-used=Login already used
 true=Enabled
 false=Disabled
@@ -265,7 +267,7 @@ facebook=Facebook
 twitter=Twitter
 linkedIn=LinkedIn
 googlePlus=GooglePlus
-your-calendar=Your calendar
+your-calendar=Your public calendar
 working-hours=Working hours
 hidden-days=Free days
 cal.sunday=Cal.sunday
@@ -322,6 +324,7 @@ activities=Activities
 #users.html
 
 #about.html
+contact-us-text=Help us improve Widgr! In case of any questions or issues, feel free to ask us anything. We appreciate feedback from You. Use the email address below or web form.
 pricing-for-customers=Pricing for basic Users
 pricing-for-publishers=Pricing for Widgr Publishers
 widgr-share-your-knowledge=widgr<small style="font-size:0.6em"> &middot; share your knowledge</small>
@@ -330,9 +333,9 @@ get-help-header=Get help from Experts in one click
 get-paid-header=Become a publisher and get paid for helping others
 about-widgr=About Widgr
 about-widgr-subtext=Share your knowledge
-about-1=<strong>Widgr</strong> is an easy and comfortable way to learn skills and get help from experts over the Internet. No matter who you are, where you are, or what time it is, you can talk to someone who can help you. 
+about-1=Widgr is an easy and comfortable way to learn skills and get help from experts over the Internet. No matter who you are, where you are, or what time it is, you can talk to someone who can help you. 
 about-2=Widgr is a place where you can find people offering help on a wide variety of subjects. We call them Widgr Publishers. These publishers can be individuals or companies. You can find the help you need by visiting the Widgr and searching or browsing various categories.
-about-3=With Widgr you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.<br/>You can choose who to get help from based on qualifications, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. <br/>While some sessions are free, you'll need to pay for some. Paying is easy using PayPal.
+about-3=With Widgr you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.<br/>You can choose who to get help from based on qualifications, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. While some sessions are free, you'll need to pay for some. Paying is easy using PayPal.
 why-choose-widgr=Features
 why-choose-widgr-text=Why choose widgr?
 widgr-feature-1=Online Video Calls
@@ -426,12 +429,12 @@ dont-miss=Don't miss out!
 what-is=What is
 good-for=good for
 find-help=Search
-find-help-message=With Widgr you can get help anytime from people with expertise across a range of topics. Teachers, computer experts, home repair specialists, personal trainers, hobby enthusiasts, and more. <p>No matter who you are, no matter where you are and no matter what time it is, with Widgr you are just few click away from getting help.</p>
+find-help-message=With Widgr you can get help anytime from people with expertise across a range of topics. Teachers, computer experts, home repair specialists, personal trainers, hobby enthusiasts, and more. No matter who you are, no matter where you are and no matter what time it is, with Widgr you are just few click away from getting help.
 read-more=Read more
 get-help=Get help
-get-help-message=You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. <p>While some Publishers offer free sessions, some may be charged. For those just simply use your PayPal to pay securely and fast. Keep in mind that you have always your money back guaranteed.</p> 
+get-help-message=You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. While some Publishers offer free sessions, some may be charged. For those just simply use your PayPal to pay securely and fast. Keep in mind that you have always your money back guaranteed. 
 get-paid=Get paid
-get-paid-message=When you know something what might be useful for others you can become a Publisher. Widgr will provide you a simple platform which will help you to connect to your customers. <p>All you need is just PayPal account for receiving payments, and you are ready to start new Business</p>
+get-paid-message=When you know something what might be useful for others you can become a Publisher. Widgr will provide you a simple platform which will help you to connect to your customers. All you need is just PayPal account for receiving payments, and you are ready to start new Business
 you-are-on-the-right-place=Join Us, it's free
 fill-in-quick-registration-and-start-using-widgr=Just fill quick registration form and start using Widgr even today.
 channels-by-category=Channels by category
@@ -615,7 +618,6 @@ read-more=Read more
 by=By
 all-rights-reserved=All rights reserved
 terms=Terms of Use
-privacy=Privacy Policy
 about-widgr=About Widgr
 contact-us=Contact us
 
@@ -661,7 +663,8 @@ no-reviews-yet=No reviews yet
 #password.html
 password-change=Change password
 password.new=New password
-password-repeat=Repat new password
+password-repeat=Repeat new password
+validation-invalidPassword=Incorrect password
 
 #passwordReset.html
 password-reset=Password reset
@@ -669,6 +672,8 @@ login=Login
 captcha=Captcha
 
 #registration.html
+password-label=at least 8 characters with one digit and two uppercases
+password-error=Invalid password
 registration=Registration
 register-with-facebook=Register with facebook
 registration.login=Registration.login

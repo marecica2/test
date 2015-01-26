@@ -56,6 +56,7 @@ public class Comments extends BaseController
 
     public static void addReply()
     {
+        checkAuthenticity();
         final JsonObject body = JsonUtils.getJson(request.body);
         final User user = getLoggedUser();
         final String id = body.get("id").getAsString();
@@ -90,6 +91,7 @@ public class Comments extends BaseController
 
     public static void deleteReply(String uuid)
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         if (user != null)
         {
@@ -102,6 +104,7 @@ public class Comments extends BaseController
 
     public static void addComment() throws IOException
     {
+        checkAuthenticity();
         final JsonObject jo = JsonUtils.getJson(request.body);
         final String comment = JsonUtils.getString(jo, "comment");
         final String tempId = JsonUtils.getString(jo, "tempId");
@@ -148,7 +151,7 @@ public class Comments extends BaseController
             c.user = u;
         }
 
-        if (type.equals(Comment.TYPE_FILE))
+        if (type != null && type.equals(Comment.TYPE_FILE))
         {
             List<FileUpload> fu = FileUpload.getByTemp(tempId);
             c.files = fu;
@@ -161,6 +164,7 @@ public class Comments extends BaseController
 
     public static void deleteComment(String uuid, String url)
     {
+        checkAuthenticity();
         final User user = getLoggedUser();
         Comment c = Comment.getByUuid(uuid);
         if (c.canDelete(user))

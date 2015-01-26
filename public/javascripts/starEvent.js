@@ -84,7 +84,7 @@ star.renderComments = function(data, dashboard){
         html += "   <div class='image-box-body'>";
         
         if(item.isDeletable != undefined && item.isDeletable){
-            html += "           <a data-href='/event/comment/delete?uuid="+item.uuid+"' style='position:absolute;right:15px;cursor:pointer' class='comment-delete'><i class='fa fa-times'></i></a>";
+            html += "           <a data-href='/event/comment/delete?"+star.token+"&uuid="+item.uuid+"' style='position:absolute;right:15px;cursor:pointer' class='comment-delete'><i class='fa fa-times'></i></a>";
         }  
         
         var hr = false;
@@ -640,7 +640,7 @@ starServices.createEvent = function(data, success, error){
  //console.log(data);
  $.ajax({
      type: "POST",
-     url: "/event/save",
+     url: "/event/save?"+star.token,
      data: JSON.stringify(data),
      success: success,
      error: error,
@@ -653,7 +653,7 @@ starServices.updateEvent = function(data, success, error){
  //console.log(data);
  $.ajax({
      type: "POST",
-     url: "/event/update",
+     url: "/event/update?"+star.token,
      data: JSON.stringify(data),
      success: success,
      error: error,
@@ -666,7 +666,7 @@ starServices.deleteEvent = function(data, success, error){
     //console.log(data);
     $.ajax({
         type: "DELETE",
-        url: "/event/delete",
+        url: "/event/delete?"+star.token,
         data: JSON.stringify(data),
         success: success,
         error: error,
@@ -677,7 +677,7 @@ starServices.deleteEvent = function(data, success, error){
 starServices.inviteEvent = function(data, success, error){
     $.ajax({
         type: "POST",
-        url: "/event/invite",
+        url: "/event/invite?"+star.token,
         data: JSON.stringify(data),
         contentType: "application/json",
         success: success,
@@ -691,7 +691,7 @@ starServices.getItems = function(prefix, params, success, error){
         url = "channels-get";
     $.ajax({
         type: "GET",
-        url: "/"+url+"?"+params.url,
+        url: "/"+url+"?"+star.token+"&"+params.url,
         success: success,
         error: error,
         contentType: "application/json"
@@ -702,7 +702,7 @@ starServices.getItems = function(prefix, params, success, error){
 starServices.getEvent = function(params, success, error){
     $.ajax({
         type: "GET",
-        url: "/event?"+params,
+        url: "/event?"+star.token+"&"+params,
         success: success,
         error: error,
         contentType: "application/json"
@@ -713,7 +713,7 @@ starServices.getEvent = function(params, success, error){
 starServices.createAttendance = function(data, success, error){
     $.ajax({
         type: "POST",
-        url: "/attendance/save",
+        url: "/attendance/save?"+star.token,
         data: JSON.stringify(data),
         success: success,
         error: error,
@@ -724,7 +724,7 @@ starServices.createAttendance = function(data, success, error){
 starServices.updateAttendance = function(data, success, error){
     $.ajax({
         type: "POST",
-        url: "/attendance/update",
+        url: "/attendance/update?"+star.token,
         data: JSON.stringify(data),
         success: success,
         error: error,
@@ -735,7 +735,7 @@ starServices.updateAttendance = function(data, success, error){
 starServices.updateStyle = function(data, success, error){
     $.ajax({
         type: "POST",
-        url: "/settings/style",
+        url: "/settings/style?"+star.token,
         data: JSON.stringify(data),
         success: success,
         error: error,
@@ -747,7 +747,7 @@ starServices.updateStyle = function(data, success, error){
 starServices.deleteAttendance = function(data, success, error){
     $.ajax({
         type: "DELETE",
-        url: "/attendance/delete",
+        url: "/attendance/delete?"+star.token,
         data: JSON.stringify(data),
         success: success,
         error: error,
@@ -759,7 +759,7 @@ starServices.deleteAttendance = function(data, success, error){
 starServices.getAttendances = function(params, success, error){
     $.ajax({
         type: "GET",
-        url: "/attendances?"+params,
+        url: "/attendances?"+star.token+"&"+params,
         success: success,
         error: error,
         contentType: "application/json"
@@ -770,7 +770,7 @@ starServices.getAttendances = function(params, success, error){
 starServices.getActivities = function(params, success, error){
     $.ajax({
         type: "GET",
-        url: "/public/activities?"+params,
+        url: "/public/activities?"+star.token+"&"+params,
         success: success,
         error: error,
         contentType: "application/json"
@@ -780,7 +780,7 @@ starServices.getActivities = function(params, success, error){
 starServices.addComment = function(data, success, error){
     $.ajax({
         type: "POST",
-        url: "/event/comment",
+        url: "/event/comment?"+star.token,
         data: JSON.stringify(data),
         success: success,
         error: error,
@@ -791,7 +791,7 @@ starServices.addComment = function(data, success, error){
 starServices.getComments = function(params, success, error){
     $.ajax({
         type: "GET",
-        url: "/comments?"+params,
+        url: "/comments?"+star.token+"&"+params,
         success: success,
         error: error,
         contentType: "application/json"
@@ -801,7 +801,7 @@ starServices.getComments = function(params, success, error){
 starServices.deleteComment = function(data, success, error){
     $.ajax({
         type: "DELETE",
-        url: "/event/comment",
+        url: "/event/comment/delete?"+star.token,
         data: JSON.stringify(data),
         success: success,
         error: error,
@@ -812,7 +812,7 @@ starServices.deleteComment = function(data, success, error){
 starServices.addCommentReply = function(data, success, error){
     $.ajax({
         type: "POST",
-        url: "/comment/reply",
+        url: "/comment/reply?"+star.token,
         data: JSON.stringify(data),
         success: success,
         error: error,
@@ -823,7 +823,7 @@ starServices.addCommentReply = function(data, success, error){
 starServices.hangoutInvite = function(data, success, error){
     $.ajax({
         type: "POST",
-        url: "/room/invite",
+        url: "/room/invite?"+star.token,
         data: JSON.stringify(data),
         success: success,
         error: error,

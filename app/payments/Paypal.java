@@ -177,8 +177,8 @@ public class Paypal
         final BigDecimal fee = true ? price.multiply(new BigDecimal(percentage)).round(new MathContext(2)) : new BigDecimal(0);
         final BigDecimal providerPrice = price.subtract(fee);
         String paypalAccount = providerPaypalAccount;
-        if (providerPrice.compareTo(new BigDecimal("3")) < 0)
-            paypalAccount = providerPaypalAccountMicropayment;
+        //if (providerPrice.compareTo(new BigDecimal("3")) < 0)
+        //    paypalAccount = providerPaypalAccountMicropayment;
 
         List<Header> headers = adaptiveHeaders();
 

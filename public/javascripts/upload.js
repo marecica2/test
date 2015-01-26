@@ -6,13 +6,13 @@ $(document).ready(function(){
     $("#upload").change(function(){
         var params = "";
         if(starCalendar.event != undefined){
-            params = "?item="+starCalendar.event;
+            params = "item="+starCalendar.event;
         } else {
-            params = "?temp="+starCalendar.temp;
+            params = "temp="+starCalendar.temp;
         }
         params += "&avatar=true";
         
-        star.utils.uploadFiles('/fileupload'+params, this.files, function(json){
+        star.utils.uploadFiles('/fileupload?'+star.token+'&'+params, this.files, function(json){
             var resp = JSON.parse(json);
             console.log(resp);
             $(".avatar-container").addClass("eg-wrapper");

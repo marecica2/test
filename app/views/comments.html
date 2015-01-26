@@ -34,6 +34,7 @@
 		<br/>
 		
 		<!-- File upload -->
+		#{authenticityToken /}
 		<input type="file" id="uploadComments" name="upload" style="display:none" multiple="multiple">
 		<input type="hidden" id="comment" name="tempId" value="${commentTemp}">
 		<input type="hidden" id="fileUploadComments" name="fileUpload">
@@ -45,9 +46,9 @@
 				$("#uploadComments").change(function(){
 				    // on edit page set ads uuid 
 				    var params = "";
-				    #{if temp}params = "?temp=${commentTemp}";#{/if}
+				    #{if temp}params = "temp=${commentTemp}";#{/if}
 				    
-		    		star.utils.uploadFiles('/fileupload'+params, this.files, function(json){
+		    		star.utils.uploadFiles('/fileupload?'+star.token+'&'+params, this.files, function(json){
 		    		    var resp = JSON.parse(json);
 		    		    if(resp.extension.indexOf("image") != -1){
 			    		    $("#images").append("<img class='img-thumbnail' style='height:100px;margin-bottom:4px' src='/public/uploads/"+resp.url+"_thumb'>");

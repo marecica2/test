@@ -14,7 +14,7 @@
 		#{if event.charging != null && attendance && !event.isFree()}
 			#{if !paid }
 				#{set displayStream:false /}
-				<a class="btn btn-warning  btn-social margin-clear" href="/payment/${event.uuid}?url=${request.url.urlEncode()}" rel="tooltip" data-placement="top" title="&{'you-can-pay-for-event-before-or-you-can-wait-until-event-starts'}">
+				<a class="btn btn-warning  btn-social margin-clear" href="/payment/${event.uuid}?url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-placement="top" title="&{'you-can-pay-for-event-before-or-you-can-wait-until-event-starts'}">
 					&{'pay-for-event-now'}
 				</a>
 			#{/if}
@@ -35,7 +35,7 @@
 
 
 		#{if isOwner && (event.state == 'customer_created' )}
-			<a class="btn btn-success  btn-social margin-clear" href="/event-approve?event=${event.uuid}&url=${request.url.urlEncode()}"><i class="fa fa-check"></i> &{'approve'}</a>
+			<a class="btn btn-success  btn-social margin-clear" href="/event-approve?event=${event.uuid}&url=${request.url.urlEncode()}&#{token /}"><i class="fa fa-check"></i> &{'approve'}</a>
 			<a class="btn btn-danger  btn-social margin-clear" href="/event-decline?event=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" 
 				onclick="if(confirm('&{'confirm-decline'}')){return true;} else {return false;}">
 				<i class="dialog-event-edit fa fa-times fa-1x"></i> &{'decline'}
@@ -50,10 +50,10 @@
 		
 		#{if isOwner && !edit && event.type == 'broadcast'}
 			#{if event.started == null}
-				<a class="btn btn-default btn-social margin-clear" href="/event-start?event=${event.uuid}&url=${request.url.urlEncode()}" >&{'start-live-broadcast'}</a>
+				<a class="btn btn-default btn-social margin-clear" href="/event-start?event=${event.uuid}&url=${request.url.urlEncode()}&#{token /}" >&{'start-live-broadcast'}</a>
 			#{/if}
 			#{else}
-				<a class="btn btn-default btn-social margin-clear" href="/event-stop?event=${event.uuid}&url=${request.url.urlEncode()}" >&{'stop-live-broadcast'}</a>
+				<a class="btn btn-default btn-social margin-clear" href="/event-stop?event=${event.uuid}&url=${request.url.urlEncode()}&#{token /}" >&{'stop-live-broadcast'}</a>
 			#{/else}
 		#{/if}		
 		
@@ -95,7 +95,7 @@
 		
 		
 		#{if !edit && isOwner && event.isEditable(user)}
-		<a class="btn btn-default btn-social margin-clear" href="/event?action=edit&uuid=${request.params.uuid}&url=${request.url.urlEncode()}">
+		<a class="btn btn-default btn-social margin-clear" href="/event?action=edit&uuid=${request.params.uuid}&url=${request.url.urlEncode()}&#{token /}">
 			<i class="dialog-event-edit fa fa-pencil fa-1x" title="&{'edit-event'}"></i>
 		</a>
 		#{/if}
@@ -119,11 +119,11 @@
 	#{else}	 
 		#{if isOwner && !edit && listing.type == 'instant'}
 			#{if listing.started == null}
-				<a class="btn btn-default btn-social margin-clear btn-instant-start" href="/channel-start?id=${listing.uuid}&url=${request.url.urlEncode()}" title="&{'star-instant-broadcast'}"><i class="fa fa-play"></i></a>
+				<a class="btn btn-default btn-social margin-clear btn-instant-start" href="/channel-start?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" title="&{'star-instant-broadcast'}"><i class="fa fa-play"></i></a>
 			#{/if}
 			#{else}
-				<a class="btn btn-default btn-social margin-clear btn-instant-stop" data-href="/channel-stop?id=${listing.uuid}&url=${request.url.urlEncode()}" title="&{'stop-instant-broadcast'}"><i class="fa fa-stop"></i></a>
-				<a class="btn btn-default btn-social margin-clear btn-instant-room" data-href="/create-room?id=${listing.uuid}&url=${request.url.urlEncode()}" title="&{'go-to-private-room'}"><i class="icon-key"></i></a>
+				<a class="btn btn-default btn-social margin-clear btn-instant-stop" data-href="/channel-stop?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" title="&{'stop-instant-broadcast'}"><i class="fa fa-stop"></i></a>
+				<a class="btn btn-default btn-social margin-clear btn-instant-room" data-href="/create-room?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" title="&{'go-to-private-room'}"><i class="icon-key"></i></a>
 			#{/else}
 		#{/if}		
 
@@ -139,14 +139,14 @@
 		
 		#{if !edit && isOwner}
 			#{if user.isPublisher() && listing.type != 'instant'}
-				<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&listingId=${listing.uuid}" class="btn btn-default btn-social margin-clear">
+				<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&#{token /}&listingId=${listing.uuid}" class="btn btn-default btn-social margin-clear">
 					<i class="fa fa-plus"></i> &{'add-event'}
 				</a>
 			#{/if}
-			<a href="/channel/${listing.uuid}?action=edit&url=${request.url.urlEncode()}" class="btn btn-default btn-social margin-clear" title="&{'edit-channel'}">
+			<a href="/channel/${listing.uuid}?action=edit&url=${request.url.urlEncode()}&#{token /}" class="btn btn-default btn-social margin-clear" title="&{'edit-channel'}">
 				<i class="fa fa-pencil fa-1x"></i>
 			</a>
-			<a href="/channel-delete?uuid=${listing.uuid}" class="btn btn-default btn-social margin-clear" onclick="if(confirm('&{'delete-selected-item'}?')){return true;} else {return false;}" title="&{'delete-channel'}">
+			<a href="/channel-delete?uuid=${listing.uuid}&#{token /}" class="btn btn-default btn-social margin-clear" onclick="if(confirm('&{'delete-selected-item'}?')){return true;} else {return false;}" title="&{'delete-channel'}">
 				<i class="fa fa-times"></i>
 			</a>
 		#{/if}

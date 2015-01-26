@@ -105,7 +105,7 @@
 <!-- Refund Modal -->
 #{if fromEvent && !edit && attendance}
 <div class="modal" id="refundModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <form method="POST" action="/paypal/refund/request/${attendance.uuid}?url=${request.url.urlEncode()}">
+  <form method="POST" action="/paypal/refund/request/${attendance.uuid}?url=${request.url.urlEncode()}&#{token /}">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
@@ -265,7 +265,7 @@
 					#{/elseif}
 					#{else}
 						<div class="avatar-container">
-							<img id="image" class="" style="width:100%" src="/public/images/no_image.png">	
+							<img id="image" class="" style="width:100%" src="/public/images/channel_default">	
 						</div>								
 					#{/else}
 				#{/if}
@@ -333,18 +333,18 @@
 				<div class="text-center">
 					<a href="/user/${usr.login}"><img style="height:57px;" src="/${usr.avatarUrl}_64x64"></a>	
 					#{if isOwner && !listing.isAvailable() && listing.type == 'p2p'}
-						<a class="btn btn-dark btn-lg btn-short" href="/available-start?id=${listing.uuid}&url=${request.url.urlEncode()}">&{'check-me-as-available'}</a>
+						<a class="btn btn-dark btn-lg btn-short" href="/available-start?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}">&{'check-me-as-available'}</a>
 					#{/if}
 					
 					#{if isOwner && listing.isAvailable()}
-						<a class="btn btn-success btn-lg btn-short" href="/available-stop?id=${listing.uuid}&url=${request.url.urlEncode()}">&{'uncheck-me-as-available'}</a>
+						<a class="btn btn-success btn-lg btn-short" href="/available-stop?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}">&{'uncheck-me-as-available'}</a>
 					#{/if}		
 								
 					#{if !isOwner && listing.user.account.type == "publisher"}
 						#{if !isOwner && listing.isAvailable() && listing.type == 'p2p'}
-							<a href="/instant-room?id=${listing.uuid}" class="btn btn-success btn-lg btn-short blink no-schedule-start" style="border-width:0px;"><i class="fa fa-play"></i> &{'request-for-event-instant'}</a>
+							<a href="/instant-room?id=${listing.uuid}&#{token /}" class="btn btn-success btn-lg btn-short blink no-schedule-start" style="border-width:0px;"><i class="fa fa-play"></i> &{'request-for-event-instant'}</a>
 						#{/if}			
-						<a href="/user/${usr.login}/calendar?channel=${listing.uuid}" class="btn btn-dark btn-lg"><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
+						<a href="/user/${usr.login}/calendar?channel=${listing.uuid}&#{token /}" class="btn btn-dark btn-lg"><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
 					#{/if}
 				</div>
 			</div>
@@ -395,19 +395,20 @@
 				<div class="separator-2"></div>
 				
 				#{if false && event && (attendance == null || !attendance.watchlist)}
-					<a href="/watchlist/add?event=${event.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm margin-clear">
+					<a href="/watchlist/add?event=${event.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm margin-clear">
 						<i class="dialog-event-edit color-link fa fa-plus fa-1x"></i> &{'add-to-watchlist'}
 					</a>
 				#{/if}
 				
 				#{if false && attendance != null && attendance.watchlist}
-					<a href="/watchlist/remove?id=${attendance.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm margin-clear">
+					<a href="/watchlist/remove?id=${attendance.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm margin-clear">
 						<i class="dialog-event-edit color-link fa fa-minus fa-1x"></i> &{'remove-from-watchlist'}
 					</a>
 				#{/if}				
 				
 				#{if isOwner}
-	 				<form class="" action="/attendance-new-save?eventId=${event.uuid}&url=${request.url.urlEncode()}#invitation" method="post">
+	 				<form class="" action="/attendance-new-save?eventId=${event.uuid}&url=${request.url.urlEncode()}&#{token /}#invitation" method="post">
+					    #{authenticityToken /}
 					    <div class="input-group" style="width:100%">
 							<input type="text" class="form-control" autocomplete="off" placeholder="&{'contact-name-or-email'}" style="font-size:0.9em" maxlength="100" name="email" id="dialog-invite-input" data-provide="typeahead">
 						    <span class="input-group-btn">
@@ -450,7 +451,7 @@
 					#{/if}					
 
 					#{if event && event.attendances}
-	  				<form action="/event/invite?eventId=${event.uuid}&url=${request.url.urlEncode()}" method="post">
+	  				<form action="/event/invite?eventId=${event.uuid}&url=${request.url.urlEncode()}&#{token /}" method="post">
 						<table class="dialog-invite-list" data-checkboxes="true" style="width:100%">
 							#{list items:event.attendances, as:'item'}
 							    <tr>
@@ -479,12 +480,12 @@
 							    	#{if !event.isLocked()}
 							    	<td style="text-align:right">
 							    		#{if user && item.email == user.login}
-							    		<a class="" href="/attendance-new-edit?type=accepted&uuid=${item.uuid}&url=${request.url.urlEncode()}#invitation">
+							    		<a class="" href="/attendance-new-edit?type=accepted&uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}#invitation">
 							    			<i class="fa fa-check color-link fa-1x"></i>
 							    		</a>
 							    		#{/if}
 							    		#{if (user && item.email == user.login && !isOwner) || (isOwner && user && item.email != user.login)}
-							    		<a class="" href="/attendance-new-delete?uuid=${item.uuid}&url=${request.url.urlEncode()}#invitation">
+							    		<a class="" href="/attendance-new-delete?uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}#invitation">
 							    			<i class="fa fa-times color-link fa-1x"></i>
 							    		</a>
 							    		#{/if}

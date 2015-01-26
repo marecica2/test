@@ -52,6 +52,7 @@
 			
 			<br/>
 			<form method="POST" action="/payment/${e.uuid}" onsubmit="return validate()" >
+	    		#{authenticityToken /}
 	    		<input type="image" class="pull-right" name="submit" src="https://www.PayPal.com/en_US/i/btn/btn_xpressCheckout.gif" border="0" align="top" alt="&{'checkout-with-PayPal'}"/>
 				<input type="hidden" name="url" value="${url}">
 				<input type="radio" name="payment" value="paypal" id="paypal" checked="checked"> <label for="paypal">&{'pay-with-PayPal'}</label>

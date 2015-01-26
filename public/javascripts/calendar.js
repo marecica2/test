@@ -261,7 +261,7 @@ starCalendar.decorateEvent = function(event, element, view){
 
     
 starCalendar.syncGoogle = function(){
-    $.get("/event-sync-google?uuid="+starCalendar.selectedEvent.uuid);
+    $.get("/event-sync-google?"+star.token+"&uuid="+starCalendar.selectedEvent.uuid);
     starCalendar.calendar.fullCalendar('refetchEvents');
     $('#myPopover').modal('hide');
 }
@@ -290,15 +290,6 @@ starCalendar.popupSaveNewEvent = function(proposal){
     
     starServices.createEvent(event, function(successEvent){
         starCalendar.calendar.fullCalendar('refetchEvents');
-
-        // set share link url
-        $(".event-link-share").each(function() {
-            if(starCalendar.isPublic){
-                $(this).val(window.location.origin + "/public/calendar" + $(this).attr("data-url")+successEvent.uuid+"&id="+starCalendar.userUUID);
-            } else {
-                $(this).val(window.location.origin + $(this).attr("data-url")+successEvent.uuid);
-            }
-        });
     }, null);
     starCalendar.calendar.fullCalendar('unselect');
 
@@ -428,9 +419,7 @@ starCalendar.copyValuesToDialog = function(event){
         $(".notify-check-all").show();
         $(".popup-event-delete").show();
     }
-        
     $(".popup-event-description").html(star.utils.trimTo(event.description, 250));
-    
     $(".event-anchor").each(function() {
         if(starCalendar.isPublic){
             $(this).attr("href", $(this).attr("data-url")+event.uuid+"&id="+starCalendar.userUUID);
@@ -438,26 +427,14 @@ starCalendar.copyValuesToDialog = function(event){
             $(this).attr("href", $(this).attr("data-url")+event.uuid);
         }
     });
-    
-    $(".event-link-share").each(function() {
-        if(starCalendar.isPublic){
-            $(this).val(window.location.origin + "/public/calendar" + $(this).attr("data-url")+event.uuid+"&id="+starCalendar.userUUID);
-        } else {
-            $(this).val(window.location.origin + $(this).attr("data-url")+event.uuid);
-        }
-    });    
-    
     $(".event-createdByName").html("<img class='img-circle avatar22' src='/"+event.createdByAvatarUrl+"'> <a href='/public/user?id="+event.createdBy+"'>" + event.createdByName + "</a>");
     $(".event-title-label").val(event.title);
     $(".event-title-label").html(event.title);
-    
     starCalendar.selectedEvent = event;
-    
     if(event.currency == null || event.currency.length <= 0)
         $(".event-currency").val(starCalendar.defaultCurrency);
     else
         $(".event-currency").val(event.currency);
-    
     $(".event-title").html(star.utils.trimTo(event.title, 35));
     if(event.start != null)
         $(".event-time-from").html(starUtils.formatDate(event.start) + " " + starUtils.formatTime(event.start));
