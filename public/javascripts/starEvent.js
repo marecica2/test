@@ -142,7 +142,7 @@ star.renderComments = function(data, dashboard){
             html += "</div>";
         }   
 
-        if(star.user && starCalendar.comments && item.commentsEnabled){
+        if(item.objectType == "user" || (star.user && item.commentsEnabled)){
             html += "<a href='#' class='comment-reply link pull-right'>"+i18n("write-a-reply")+"</a>";
             html += "<div style='display:none' class='comment-reply-input margin-top'>";
             html += "   <textarea class='form-control' placeholder='"+i18n('write-a-reply')+"'></textarea>";
