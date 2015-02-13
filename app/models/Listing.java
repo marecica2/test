@@ -245,5 +245,4 @@ public class Listing extends Model
             return true;
         return false;
     }
-
 }

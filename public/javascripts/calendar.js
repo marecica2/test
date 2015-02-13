@@ -373,8 +373,13 @@ starCalendar.copyValuesToDialog = function(event){
     $(".event-edit").hide();
     $(".event-view").show();
     var el = $(".event-detail-container");
-    if(event.uuid != undefined)
-        var html = "<span>" + (event.charging != "free" && event.price.length > 0 ? ("<span style='font-size:1em' class='label label-primary'>" + event.price + " " + event.currency + "</span> "): "") + starEvent.eventIcons(event) + "</span>";
+    var html = "";
+    if(event.uuid != undefined){
+        if(event.charging != "free")
+            html+="<span style='font-size:0.8em' class='label default-bg'>" + i18n("total-price") + ": " + event.priceTotal + " " + event.currency + "</span> ";
+        else
+            html+="<span style='font-size:0.8em' class='label default-bg'>" + i18n("free") + "</span> ";
+    }
     el.html(html);
     $(".popup-event-charging").html(html);
     $(".popup-edit-event").show();
@@ -467,7 +472,7 @@ starCalendar.hexToRgb = function(hex) {
     } : null;
 }
 
-starCalendar.defaultColor = "#3A87AD"; 
+starCalendar.defaultColor = "#812AAD"; 
 
 starCalendar.getEvents = function(start, end, callback) {
     var clbck = callback; 
@@ -512,11 +517,11 @@ starCalendar.getEvents = function(start, end, callback) {
             if(isInvited && !isOwner){
                 var rgb = starCalendar.hexToRgb(color);
                 if(rgb != null)
-                    color = "rgba("+rgb.r+","+rgb.g+","+rgb.b+",1)";
+                    color = "rgba("+rgb.r+","+rgb.g+","+rgb.b+",0.6)";
             }
             
             if(ev.state == "customer_created"){
-                color = "rgba(255,0,0,0.4)";
+                color = "rgba(255,0,0,0.5)";
             }
             
             event = {};
@@ -531,6 +536,7 @@ starCalendar.getEvents = function(start, end, callback) {
             event.state = ev.state;
             event.isInvite = ev.isInvite;
             event.price = ev.price;
+            event.priceTotal = ev.priceTotal;
             event.charging = ev.charging;
             event.comments = ev.comments;
             event.currency = ev.currency;

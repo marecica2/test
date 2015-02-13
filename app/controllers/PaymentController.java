@@ -17,6 +17,7 @@ import org.apache.http.client.utils.URIBuilder;
 
 import payments.Paypal;
 import payments.Paypal.AccessToken;
+import play.Logger;
 import play.i18n.Messages;
 import play.libs.Crypto;
 import play.mvc.With;
@@ -71,10 +72,11 @@ public class PaymentController extends BaseController
         final String baseUrl = getBaseUrl();
         final String paypalCancelUrl = baseUrl + request.url.substring(1);
         final String paypalRedirectUrl = new URIBuilder(baseUrl + "/paypal/adaptive/" + e.uuid)
-                .addParameter("transactionId", Crypto.encryptAES(user.uuid))
+                .addParameter("transactionId", Crypto.encryptAES(user.uuid + e.roomSecret))
                 .addParameter("url", url)
                 .build()
                 .toString();
+
         final AccountPlan currentPlan = e.user.account.currentPlan();
         Boolean dual = true;
         if (currentPlan != null && !currentPlan.type.equals(Account.TYPE_STANDARD) && currentPlan.profile != null)
@@ -92,7 +94,7 @@ public class PaymentController extends BaseController
                 );
 
         // payment transaction completed
-        if (transactionId != null && Crypto.decryptAES(transactionId).equals(user.uuid))
+        if (transactionId != null && Crypto.decryptAES(transactionId).equals(user.uuid + e.roomSecret))
         {
             Map<String, String> resp = pp.getAdaptiveCheckoutDetails(e, dual, attendance.paypalAdaptivePayKey);
             attendance.paid = true;
@@ -240,10 +242,11 @@ public class PaymentController extends BaseController
                         getBaseUrl() + "payments",
                         attendance.refundReason
                         );
-                if (attendance.event.customer != null)
+
+                if (attendance.event.user != null)
                     Message.createAdminNotification(attendance.event.user, subject, body);
 
-                if (attendance.event.customer != null && attendance.event.customer.emailNotification)
+                if (attendance.event.user != null && attendance.event.user.emailNotification)
                 {
                     EmailNotificationBuilder eb = new EmailNotificationBuilder();
                     eb.setTo(attendance.event.user);
@@ -265,13 +268,14 @@ public class PaymentController extends BaseController
     {
         checkAuthenticity();
         User user = getLoggedUser();
-        Attendance a = Attendance.get(id);
+        Attendance attendance = Attendance.get(id);
         if (user == null)
             forbidden();
-        if (!a.event.user.equals(user))
+
+        if (!attendance.event.user.equals(user) || !user.isAdmin())
             forbidden();
 
-        final Paypal pp = new Paypal(a.event, null, null,
+        final Paypal pp = new Paypal(attendance.event, null, null,
                 getProperty(CONFIG_PAYPAL_PROVIDER_ACCOUNT),
                 getProperty(CONFIG_PAYPAL_PROVIDER_ACCOUNT_MICROPAYMENT),
                 getProperty(CONFIG_PAYPAL_USER),
@@ -284,16 +288,41 @@ public class PaymentController extends BaseController
 
         try
         {
-            pp.doAdaptiveCheckoutRefund(a.paypalAdaptivePayKey);
-            //
-            //            if (StringUtils.getStringOrNull(a.paypalTransactionId) != null)
-            //                pp.refund(a.paypalPayerId, a.paypalTransactionId);
-            //            if (StringUtils.getStringOrNull(a.paypalTransactionIdProvider) != null)
-            //                pp.refund(a.paypalPayerId, a.paypalTransactionIdProvider);
-            a.refunded = true;
-            a.save();
+            Map<String, String> resp = pp.doAdaptiveCheckoutRefund(attendance.paypalTransactionId);
+            if (resp.get("responseEnvelope.ack").equals("Success"))
+            {
+                attendance.refunded = true;
+                attendance.save();
+
+                // notification
+                final String subject = Messages.getMessage(attendance.event.user.locale, "event-refunded-request-subject", attendance.event.listing.title);
+                final String body = Messages.getMessage(attendance.event.user.locale, "event-refunded-request-message",
+                        attendance.event.listing.title,
+                        attendance.event.listing.title,
+                        getBaseUrl() + "event/" + attendance.event.uuid
+                        );
+
+                if (attendance.customer != null)
+                    Message.createAdminNotification(attendance.customer, subject, body);
+
+                if (attendance.customer != null && attendance.customer.emailNotification)
+                {
+                    EmailNotificationBuilder eb = new EmailNotificationBuilder();
+                    eb.setTo(attendance.customer);
+                    eb.setFrom(user)
+                            .setSubject(subject)
+                            .setMessageWiki(body)
+                            .send();
+                }
+            } else
+            {
+                flashErrorPut(Messages.get("error-default-message"));
+                Logger.error("PaypalController.paypalRefund failed: \n" + resp.toString());
+            }
+
         } catch (Exception e)
         {
+            Logger.error(e, "paypalRefund ERROR");
             e.printStackTrace();
         }
         redirectTo(url);
@@ -347,9 +376,6 @@ public class PaymentController extends BaseController
             final String startDate = respMap.get("PROFILESTARTDATE").substring(0, respMap.get("PROFILESTARTDATE").length() - 1);
             final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
             Date from = sdf.parse(startDate);
-
-            System.err.println("profile " + profile);
-            System.err.println("updated current plan validity " + from);
 
             plan.validFrom = from;
             plan.profile = profile;
@@ -484,19 +510,24 @@ public class PaymentController extends BaseController
         User user = getLoggedUser();
         if (!user.isAdmin())
             forbidden();
-
         User usr = User.getUserByUUID(id);
+        Map<String, String> respMap = getPayPalRecurringDetail(usr.account);
+        render(respMap, user);
+    }
+
+    public static Map<String, String> getPayPalRecurringDetail(Account account)
+    {
         String cancelUrl = null;
         String redirectUrl = null;
         final Paypal pp = new Paypal(redirectUrl, cancelUrl,
                 getProperty(CONFIG_PAYPAL_USER),
                 getProperty(CONFIG_PAYPAL_PWD),
                 getProperty(CONFIG_PAYPAL_SIGNATURE),
-                usr.account.getPlanPrice(),
+                account.getPlanPrice(),
                 Account.PRICE_PLAN_CURRENCY);
-        AccountPlan plan = AccountPlan.getCurrentPlan(usr.account);
+        AccountPlan plan = AccountPlan.getCurrentPlan(account);
         Map<String, String> respMap = pp.getRecurringPayments(plan.profile);
-        render(respMap);
+        return respMap;
     }
 
     private static Date getValidUntil(final AccountPlan currentPlan)

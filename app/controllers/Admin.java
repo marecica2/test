@@ -43,6 +43,12 @@ public class Admin extends BaseController
         users();
     }
 
+    public static void deleteData()
+    {
+        flash.success(delete());
+        users();
+    }
+
     public static void approve(String uuid, String url)
     {
         final User user = User.getUserByUUID(uuid);
@@ -84,7 +90,7 @@ public class Admin extends BaseController
         redirectTo(url);
     }
 
-    private static String refreshIndex()
+    public static String refreshIndex()
     {
         try
         {
@@ -94,6 +100,36 @@ public class Admin extends BaseController
             Query q = JPA.em().createNativeQuery(query);
             q.executeUpdate();
             return "indexes updated successfully";
+        } catch (Exception e)
+        {
+            return e.getMessage();
+        }
+    }
+
+    private static String delete()
+    {
+        try
+        {
+            String query = "";
+            query += "DROP TABLE IF EXISTS ratingvote CASCADE;";
+            query += "DROP TABLE IF EXISTS comment_comment CASCADE;";
+            query += "DROP TABLE IF EXISTS comment_reply CASCADE;";
+            query += "DROP TABLE IF EXISTS comment_comment_reply CASCADE;";
+            query += "DROP TABLE IF EXISTS comment_fileupload CASCADE;";
+            query += "DROP TABLE IF EXISTS activity CASCADE;";
+            query += "DROP TABLE IF EXISTS rating CASCADE;";
+            query += "DROP TABLE IF EXISTS event_comment_fileupload CASCADE;";
+            query += "DROP TABLE IF EXISTS event_comment CASCADE;";
+            query += "DROP TABLE IF EXISTS fileupload CASCADE;";
+            query += "DROP TABLE IF EXISTS comment CASCADE;";
+            query += "DROP TABLE IF EXISTS message CASCADE;";
+            query += "DROP TABLE IF EXISTS event CASCADE;";
+            query += "DROP TABLE IF EXISTS chat_feed CASCADE;";
+            query += "DROP TABLE IF EXISTS attendance CASCADE;";
+
+            Query q = JPA.em().createNativeQuery(query);
+            q.executeUpdate();
+            return "tables cleared successfully";
         } catch (Exception e)
         {
             return e.getMessage();

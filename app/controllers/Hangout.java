@@ -3,6 +3,7 @@ package controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import jobs.ScheduledNotification;
 import models.Event;
 import models.Message;
 import models.Rating;
@@ -36,22 +37,25 @@ public class Hangout extends BaseController
         final Event event = Event.get(id);
         final Event e = event;
 
-        if (user != null && event != null && !user.isOwner(event))
-        {
-            List<Rating> ratings = Rating.getByObjectUser(event.uuid, user);
-            if (ratings.size() == 0 || (ratings.size() > 0 && ratings.get(0).created.getTime() < (System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 0)))
-            {
-                final String subject = Messages.getMessage(user.locale, "please-rating-subject");
-                final String message = Messages.getMessage(user.locale, "please-rating-message", event.listing.title, getBaseUrl() + "event/" + event.uuid + "#ratings");
-                Message.createAdminNotification(user, subject, message);
-            }
-        }
-
         if (user == null && tempName == null)
             joinRoom(id);
 
         if (e != null && !e.isFree())
             checkPayment(e, request.url);
+
+        // send rating request if user has not rated this channel
+        if (user != null && event != null && !user.isOwner(event))
+        {
+            List<Rating> ratings = Rating.getByObjectUser(event.listing.uuid, user);
+            System.err.println(ratings);
+            if (ratings.size() == 0)
+            {
+                final String subject = Messages.getMessage(user.locale, "please-rating-subject");
+                final String message = Messages.getMessage(user.locale, "please-rating-message", event.listing.title, getBaseUrl() + "event/" + event.uuid + "#ratings");
+                ScheduledNotification scheduledNotification = new ScheduledNotification(user, subject, message);
+                scheduledNotification.in(300);
+            }
+        }
 
         final String name = user != null ? user.getFullName() : tempName;
         final String room = id;

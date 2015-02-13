@@ -54,6 +54,8 @@ public class Comment extends Model
     @Column(length = 10)
     public String objectType;
 
+    public Boolean paid;
+
     @Cascade({ org.hibernate.annotations.CascadeType.DELETE })
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     public List<FileUpload> files;

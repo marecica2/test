@@ -1,17 +1,22 @@
 package models;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import play.Logger;
 import play.db.jpa.Model;
+import utils.DateTimeUtils;
 import utils.StringUtils;
 import utils.WikiUtils;
 import controllers.FileuploadController;
+import controllers.PaymentController;
 
 @Entity
 @Table(name = "\"users\"")
@@ -220,7 +225,8 @@ public class User extends Model
 
     public String getFullName()
     {
-        return firstName + " " + lastName;
+        String fullName = firstName + " " + lastName;
+        return fullName;
     }
 
     public Boolean isPublisher()
@@ -292,17 +298,42 @@ public class User extends Model
         return true;
     }
 
-    public boolean canCreatePaidEvent()
-    {
-        if (this.paidForCurrentMonth())
-            return false;
-        return true;
-    }
-
     public boolean syncWithGoogle()
     {
         if (this.googleTokenExpires != null && this.googleCalendarId != null && this.googleAccessToken != null)
             return true;
         return false;
+    }
+
+    public Integer availableEvents()
+    {
+        try
+        {
+            final AccountPlan currentPlan = this.account.currentPlan();
+            if (currentPlan == null || (currentPlan != null && currentPlan.type.equals(Account.PLAN_STANDARD)))
+                return 99999;
+
+            if (currentPlan != null && currentPlan.profile != null && currentPlan.type.equals(Account.PLAN_MONTH_PREMIUM))
+            {
+                Map<String, String> respMap = PaymentController.getPayPalRecurringDetail(this.account);
+                DateTimeUtils dt = new DateTimeUtils(DateTimeUtils.TYPE_PAYPAL);
+                final String date = respMap.get("NEXTBILLINGDATE");
+                Date next = currentPlan.validTo;
+                if (date != null)
+                    next = dt.fromString(date);
+
+                final Calendar cal = Calendar.getInstance();
+                cal.setTime(next);
+                cal.add(Calendar.MONTH, -1);
+                final Date last = cal.getTime();
+
+                List<Event> events = Event.getPaidFromDate(last, next, this);
+                return 10 - events.size();
+            }
+        } catch (Exception e)
+        {
+            Logger.error(e, "availableEvents ERROR");
+        }
+        return 99999;
     }
 }

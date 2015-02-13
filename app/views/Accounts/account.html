@@ -31,24 +31,27 @@
 <div class="container">
 	<div class="row">
 	  	<div class="col-md-12">
+	  	
 			#{if plan && planLast != null && planLast.id != plan.id}
 				<div class="shadow alert alert-info alert-dismissible" role="alert">
-					&{'account-will-be-valid', planLast.type}  ${planLast.validFrom.format("dd MMM yyyy")}. 
+					&{'account-will-be-valid'} <strong>&{planLast.type}</strong> &{'account-will-be-valid-2'}  ${planLast.validFrom.format("dd MMM yyyy")}, #{time time:planLast.validFrom/}
 				</div>
 			#{/if}	
 
 			#{if plan && planLast != null && planLast.id != plan.id && planLast.type != "standard" && planLast.profile == null}
 				<div class="shadow alert alert-info alert-dismissible" role="alert">
-					&{'your-subscription-not-activated', plan.type}
+					&{'your-subscription-not-activated', messages.get(plan.type)}
 					&{'PayPal-payment-message'}
-					<img style="cursor:pointer" class="paypal-subscription pull-right" src="//www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" border="0" data-id="${planLast.id}" align="top" alt="&{'checkout-with-paypal'}"/>
+					<img style="cursor:pointer" class="paypal-subscription pull-right" src="//www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" data-id="${planLast.id}" align="top" alt="&{'subscribe-with-paypal'}"/>
 				</div>
 			#{/if}	
 			
 			#{if plan != null && !plan.isStandard() && plan.paid == null}
 				<div class="shadow alert alert-info alert-dismissible" role="alert">
-					&{'your-subscription-not-activated', plan.type}
-					<img style="cursor:pointer" class="paypal-subscription pull-right" src="//www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" border="0" data-id="${plan.id}" align="top" alt="&{'checkout-with-paypal'}"/>
+					&{'your-subscription-not-activated', messages.get(plan.type)}
+					<br/>
+					&{'total'}: <strong>${plan.account.getPlanPrice()} USD &{'monthly'}</strong>
+					<img style="cursor:pointer" class="paypal-subscription pull-right" src="//www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" data-id="${plan.id}" align="top" alt="&{'subscribe-with-paypal'}"/>
 					<br/>
 					<br/>
 					<span style="font-size:12px">&{'PayPal-payment-message'}</span>
@@ -59,7 +62,7 @@
 				    var id = $(this).attr("data-id");
 				    $('<form>', {
 				        "method": 'post',
-				        "action": '/settings/subscription?id='+id
+				        "action": '/settings/subscription?'+star.token+'&id='+id
 				    }).appendTo(document.body).submit();
 				});
 			</script>	  	
@@ -113,6 +116,8 @@
 			<div class="separator-2"></div>
 			#{if !edit}
 			<dl class="dl-horizontal">
+				<dt>&{'login'}</dt>
+				<dd>${user.login} &nbsp;</dd>
 				<dt>&{'account-name'}</dt>
 				<dd>${user.account.name} &nbsp;</dd>
 
@@ -130,7 +135,8 @@
 						<span class="label default-bg">&{user.account.type}</span>
 					#{/else}
 				</dd>
-
+				
+				#{if user.isPublisher()}
 				<dt>&{'account-plan'}</dt>
 				<dd>
 					#{if plan}
@@ -139,20 +145,29 @@
 							#{if !plan.isStandard()}
 							, &{'price'}: ${user.account.getPlanPrice()}$ &{'per-month'}
 							#{/if}
+						</span>&nbsp;
+						
+						#{if plan.profile && plan.type == "premium"}
+						<span class="label default-bg">
+							&{'events-left'}: ${user.availableEvents()}						
 						</span>
+						#{/if}
+						
 						#{if plan && plan.validTo != null}&nbsp;
 							<span class="label label-default">
 								&{'valid-to'} ${plan.validTo.format("dd MMM yyyy")}
 							</span>
 						#{/if}
 						<br/>
-					
+						<br/>
+						*{
 						#{if plan.type == "standard" || plan == null}
 							#{if planLast == null || (plan && planLast && planLast.id == plan.id)}
 								<a href="/settings/paypal/upgrade?type=premium&url=${request.url.urlEncode()}&#{token /}">&{'upgrade-to-plan'} &{'premium'}</a> &middot;
 								<a href="/settings/paypal/upgrade?type=pro&url=${request.url.urlEncode()}&#{token /}">&{'upgrade-to-plan'} &{'pro'}</a> &middot;
 							#{/if}
 						#{/if}
+						
 						#{if plan.type == "premium"}
 							#{if plan && planLast && planLast.id == plan.id && plan.profile != null}
 								<a href="/settings/paypal/upgrade?type=pro&url=${request.url.urlEncode()}&#{token /}">&{'upgrade-to-plan'} &{'pro'}</a> &middot;
@@ -161,14 +176,17 @@
 								<a href="/settings/paypal/cancel?url=${request.url.urlEncode()}&#{token /}">&{'cancel-subscription'}</a> &middot;
 							#{/if}
 						#{/if}
+						
 						#{if plan.type == "pro"}
 							#{if plan && plan.canceled == null}
-								<a href="/settings/paypal/cancel?url=${request.url.urlEncode()}&#{token /}">&{'cancel-subscription'}</a> &middot;
+								<a href="/settings/paypal/cancel?url=${request.url.urlEncode()}&#{token /}">&{'cancel-subscription'} &middot;
 							#{/if}
 						#{/if}
+						}*
 						<a href="/about#pricing">&{'learn-more-about-pricing'}</a>
 					#{/if}
 				</dd>
+				#{/if}
 			</dl>
 			#{/if}
 			#{else}
@@ -216,6 +234,7 @@
 					${user.facebookName}
 					<div class="fb-login-button" data-max-rows="1" data-scope="public_profile" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
 					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'connect-with-your-facebook-account'}"></i><br/>
+					<br/>
 					#{if user.facebookId != null}
 						<a href="/facebook/clear?${request.url.urlEncode()}&#{token /}">&{'clear-facebook-id'}</a> &middot;
 					#{/if}				
@@ -341,9 +360,10 @@
 						#{/if}
 						<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'enable-google-calendar-sync'}"></i>
 					</div>
-					<div><a href="/google?url=${request.url.urlEncode()}&#{token /}">&{'enable-google-calendar-sync'}</a></div>
+					<br/>
+					<span><a href="/google?url=${request.url.urlEncode()}&#{token /}">&{'enable-google-calendar-sync'}</a></span> &middot; 
 					#{if user.googleTokenExpires}
-						<div><a href="/google/clear?url=${request.url.urlEncode()}&#{token /}">&{'disable-google-calendar-sync'}</a></div>
+						<span><a href="/google/clear?url=${request.url.urlEncode()}&#{token /}">&{'disable-google-calendar-sync'}</a></span>
 					#{/if}
 				</dd>
 			</dl>

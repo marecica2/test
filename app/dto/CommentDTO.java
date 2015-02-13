@@ -3,10 +3,12 @@ package dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.Attendance;
 import models.Comment;
 import models.CommentReply;
 import models.FileUpload;
 import models.User;
+import play.i18n.Messages;
 import utils.WikiUtils;
 
 public class CommentDTO
@@ -23,6 +25,7 @@ public class CommentDTO
     public long eventStart;
     public long eventEnd;
     public String listing;
+    public Boolean paid;
     public String listingName;
     public String listingImage;
     public boolean isDeletable;
@@ -42,6 +45,7 @@ public class CommentDTO
         c.createdByAvatarUrl = com.user.getAvatarUrl();
         c.objectType = com.objectType;
         c.isDeletable = com.canDelete(user);
+        c.paid = com.paid != null ? com.paid : null;
 
         if (com.event != null)
         {
@@ -64,6 +68,20 @@ public class CommentDTO
             c.attachments.add(new AttachmentDTO(fu.name, fu.contentType, fu.url, fu.size));
         for (CommentReply cr : com.replies)
             c.replies.add(CommentReplyDTO.convert(cr));
+
+        if (com.paid != null && com.paid && com.event != null)
+        {
+            Attendance attendance = com.event.getInviteForCustomer(user);
+            if ((attendance != null && attendance.paid != null && attendance.paid) || user.isOwner(com.event))
+            {
+
+            } else
+            {
+                c.comment = Messages.get("paid-comment-note");
+                c.attachments = new ArrayList<AttachmentDTO>();
+                c.replies = new ArrayList<CommentReplyDTO>();
+            }
+        }
 
         return c;
     }

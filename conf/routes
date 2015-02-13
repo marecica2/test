@@ -91,6 +91,7 @@ GET		/locale									Public.locale
 GET 	/user/{userLogin}						Public.userProfile
 GET 	/public/user							Public.userProfile
 GET 	/public/feeds							Public.feeds
+GET 	/public/feeds-clear						Public.feedsClear
 POST 	/public/feed							Public.feedSave
 GET 	/public/activities						Public.activities
 GET 	/public/facebook/registration			Public.facebookRegistration
@@ -158,6 +159,7 @@ GET 	/admin/users							Admin.users
 GET 	/admin/approve							Admin.approve
 GET 	/admin/deny								Admin.deny
 GET 	/admin/refresh 							Admin.refreshIndexes
+GET 	/admin/delete							Admin.deleteData
 
 
 # Map static resources from the /app/public folder to the /public path

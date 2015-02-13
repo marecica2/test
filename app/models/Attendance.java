@@ -89,7 +89,6 @@ public class Attendance extends Model
             query += " and a.customer = :senderUser ";
 
         query += " order by paypalTransactionDate desc";
-        System.err.println(query);
 
         TypedQuery<Attendance> q = Attendance.em().createQuery(query, Attendance.class);
         q.setParameter("paid", true);

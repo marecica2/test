@@ -35,68 +35,50 @@
 				<div class="separator-2"></div>
 
 				<h4>
-					&{'register-with-facebook'} <span
-						class="pull-right fb-login-button" data-max-rows="1"
-						data-size="large" data-scope="email" data-show-faces="false"
-						data-auto-logout-link="false"></span>
+					&{'register-with-facebook'} 
+					<span class="pull-right fb-login-button" data-max-rows="1" data-size="large" data-scope="email" data-show-faces="false"	data-auto-logout-link="false"></span>
 				</h4>
 				<br />
 
 				<div class="form-group">
 					<label class="" for="login">&{'login'} *</label>
-					#{authenticityToken /} <input type="text" class="form-control"
-						id="login" name="login"
-						value="#{if request.params.email}${request.params.email}#{/if}#{else}${params.login}#{/else}"
-						placeholder="&{'registration-login'}" /> <input type="hidden"
-						class="form-control" id="token" name="token"
-						value="${request.params.token}" /> <input type="hidden"
-						class="form-control" id="invitation" name="invitation"
-						value="${request.params.invitation}" /> <input type="hidden"
-						class="form-control" id="facebook" name="facebook" /> <input
-						type="hidden" class="form-control" id="facebookName"
-						name="facebookName" />
+					#{authenticityToken /} 
+					<input type="text" class="form-control" id="login" name="login" value="#{if request.params.email}${request.params.email}#{/if}#{else}${params.login}#{/else}" placeholder="&{'registration-login'}" /> <input type="hidden" class="form-control" id="token" name="token" value="${request.params.token}" /> 
+					<input type="hidden" class="form-control" id="invitation" name="invitation"	value="${request.params.invitation}" /> 
+					<input type="hidden" class="form-control" id="facebook" name="facebook" /> 
+					<input type="hidden" class="form-control" id="facebookName" name="facebookName" />
 					<div class="error">#{error 'login' /}</div>
 				</div>
 				<div class="form-group">
-					<label class="" for="accPlan">&{'account-plan'}</label> <select
-						class="form-control" name="accPlan" id="accPlan">
-						<option #{if request.params.plan==
-							"standard"}  selected='selected' #{/if} #{if params.accPlan==
-							"standard"}  selected='selected' #{/if} value="standard">&{'standard'}</option>
-						<option #{if request.params.plan== "premium"}  selected='selected'
-							#{/if} #{if params.accPlan== "premium"}  selected='selected'
-							#{/if} value="premium">&{'premium'}</option>
-						<option #{if request.params.plan== "pro"}  selected='selected'
-							#{/if} #{if params.accPlan== "pro"}  selected='selected'
-							#{/if} value="pro">&{'pro'}</option>
+					<label class="" for="accPlan">&{'account-plan'}</label> 
+					<select	class="form-control" name="accPlan" id="accPlan">
+						<option #{if request.params.plan== "standard"}  selected='selected' #{/if} #{if params.accPlan == "standard"}  selected='selected' #{/if} value="standard">&{'standard'}</option>
+						*{
+						<option #{if request.params.plan== "premium"}  selected='selected' #{/if} #{if params.accPlan== "premium"}  selected='selected' #{/if} value="premium">&{'premium'}</option>
+						<option #{if request.params.plan== "pro"}  selected='selected' #{/if} #{if params.accPlan== "pro"}  selected='selected'	#{/if} value="pro">&{'pro'}</option>
+						}*
 					</select>
 					<div class="error">#{error 'accPlan' /}</div>
+					<a href="/about#pricing" target="_blank">&{'learn-more'}</a>
 				</div>
 				<div class="form-group">
-					<label class="" for="firstName">&{'first-name'} *</label> <input
-						type="text" class="form-control" id="firstName" name="firstName"
-						value="${params.firstName}" placeholder="&{'first-name'}" />
+					<label class="" for="firstName">&{'first-name'} *</label> 
+					<input type="text" class="form-control" id="firstName" name="firstName" value="${params.firstName}" placeholder="&{'first-name'}" />
 					<div class="error">#{error 'firstName' /}</div>
 				</div>
 				<div class="form-group">
-					<label class="" for="lastName">&{'last-name'} *</label> <input
-						type="text" class="form-control" id="lastName" name="lastName"
-						value="${params.lastName}" placeholder="&{'last-name'}" />
+					<label class="" for="lastName">&{'last-name'} *</label> 
+					<input type="text" class="form-control" id="lastName" name="lastName" value="${params.lastName}" placeholder="&{'last-name'}" />
 					<div class="error">#{error 'lastName' /}</div>
 				</div>
 				<div class="form-group">
-					<label class="" for="login">&{'password'} *<span
-						style="font-weight: normal; opacity: 0.7">&{'password-label'}</span></label>
-					<input type="password" class="form-control" id="password"
-						name="password" value="${params.password}"
-						placeholder="&{'password'}" />
+					<label class="" for="login">&{'password'} *<span style="font-weight: normal; opacity: 0.7">&{'password-label'}</span></label>
+					<input type="password" class="form-control" id="password" name="password" value="${params.password}" placeholder="&{'password'}" />
 					<div class="error">#{error 'password' /}</div>
 				</div>
 				<div class="form-group">
-					<label class="" for="login">&{'password-repeat'} *</label> <input
-						type="password" class="form-control" id="passwordRepeat"
-						name="passwordRepeat" value="${params.passwordRepeat}"
-						placeholder="&{'password-repeat'}" />
+					<label class="" for="login">&{'password-repeat'} *</label> 
+					<input type="password" class="form-control" id="passwordRepeat"	name="passwordRepeat" value="${params.passwordRepeat}" placeholder="&{'password-repeat'}" />
 					<div class="error">#{error 'passwordRepeat' /}</div>
 					<input type="hidden" name="offset" id="offset">
 					<script>
@@ -107,18 +89,24 @@
 				</div>
 
 				<div class="form-group">
-					<input type="hidden" value="${params.uuid}" name="uuid" /> <input
-						type="text" placeholder="&{'captcha'}" class="form-control"
-						style="display: inline !important; width: 20%" name="captcha" />
+					<input type="hidden" value="${params.uuid}" name="uuid" /> 
+					<input type="text" placeholder="&{'captcha'}" class="form-control" style="display: inline !important; width: 20%" name="captcha" />
 					<img src="/captcha?uuid=${params.uuid}">
 					<div class="error">#{error 'captcha' /}</div>
 				</div>
 
+				<p>
+					&{'agreement'}
+				</p>
+				
 				<div class="form-group">
 					<button class="btn btn-default pull-left">&{'submit'}</button>
 					<a class="btn btn-light-gray pull-right" href="/home">&{'cancel'}</a>
 				</div>
-				<div style="clear: both"></div>
+				<div class="clearfix"></div>
+				
+				<br/>
+								
 			</form>
 		</div>
 	</div>

@@ -14,7 +14,7 @@
     	</div>
     	
   	    <button class="btn btn-default pull-right margin-clear" id="comment-save" type="button">&{'submit'}</button>
-		
+  	    
 		<div class="form-group">
 			<div class="btn-group pull-left" data-toggle="buttons">
 			  #{if isOwner}
@@ -28,8 +28,16 @@
 			  #{else}
 				   <input type="hidden" name="type" id="upload-buttonLink" checked="checked" value="text">
 			  #{/else}
-			</div>				
-		</div>					
+			</div>	
+		</div>			
+		
+		#{if isOwner && fromEvent}
+			<label class="pull-left" style="margin:10px;font-weight:100;" rel="tooltip" data-original-title="&{'paid-comment-info'}"> 
+				<input type="checkbox" name="paidComment" value="paidComment"> &{'paid-comment'}
+			</label>
+			<div class="clearfix"></div>	
+		#{/if}
+				
 		<br/>
 		<br/>
 		
@@ -121,6 +129,7 @@
 	        data.type = $("input[name='type']:checked").val();
 	        data.url = $("input[name='url']").val();
 	        data.tempId = $("input[name='tempId']").val();
+	        data.paid = $("input[name='paidComment']").is(':checked');
 
 	        starServices.addComment(data, function(){
 	            $('#comment-form')[0].reset();

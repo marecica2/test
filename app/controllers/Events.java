@@ -264,6 +264,7 @@ public class Events extends BaseController
         final Boolean edit = action != null && action.equals("edit") ? true : false;
         final Boolean fromEvent = true;
         final Boolean isNew = newEvent != null ? true : false;
+        int availableEvents = 9999;
 
         Event event = !isNew ? Event.get(uuid) : null;
         if (event != null)
@@ -278,6 +279,7 @@ public class Events extends BaseController
 
         // validation
         checkAuthenticity();
+
         validation.required(eventStart);
         validation.required(eventEnd);
         validation.required(eventDate);
@@ -294,6 +296,13 @@ public class Events extends BaseController
                 validation.addError("price", Messages.get("invalid-price"));
             if (NumberUtils.parseDecimal(price) != null && NumberUtils.parseDecimal(price).compareTo(new BigDecimal("0")) <= 0)
                 validation.addError("price", Messages.get("invalid-price"));
+
+            availableEvents = user.availableEvents();
+            if (availableEvents <= 0)
+            {
+                validation.addError("charging", Messages.get("limit-reached"));
+                flash.error(Messages.get("limit-reached"));
+            }
         }
         if (eventSt == null || eventEn == null || eventSt.compareTo(eventEn) > 0)
             validation.addError("time", Messages.get("invalid-time-range"));
@@ -349,6 +358,10 @@ public class Events extends BaseController
                     fileUpload.save();
                 }
             }
+
+            if (availableEvents < 20)
+                flash.success(Messages.get("events-left") + ": " + (availableEvents - 1));
+
             Attendance.createDefaultAttendances(user, null, event, create, false);
             redirect("/event/" + event.uuid);
         }
@@ -368,6 +381,7 @@ public class Events extends BaseController
         final String googleId = jo.get("googleId") != null ? jo.get("googleId").getAsString() : null;
         final Boolean proposal = jo.get("proposal").getAsBoolean();
         final User customer = user;
+        Listing listing = Listing.get(listingId);
 
         if (user == null)
             forbidden();
@@ -382,10 +396,18 @@ public class Events extends BaseController
 
             if (userTo.hasBlockedContact(customer))
                 forbidden();
+
+            int availableEvents = listing.user.availableEvents();
+            if (availableEvents <= 0)
+                forbidden();
+        } else
+        {
+            int availableEvents = user.availableEvents();
+            if (availableEvents <= 0)
+                forbidden();
         }
 
         // create event
-        Listing listing = Listing.get(listingId);
         Event event = new Event();
         event = eventFromJson(time, jo, event);
         event.listing = listing;
@@ -407,7 +429,9 @@ public class Events extends BaseController
         if (proposal)
         {
             //TODO change this when this could be paid
-            event.charging = Event.EVENT_CHARGING_FREE;
+            event.charging = listing.charging;
+            event.price = listing.price;
+            event.currency = listing.currency;
             event.state = Event.EVENT_STATE_CUSTOMER_CREATED;
             event.customer = customer;
             event.createdByUser = false;

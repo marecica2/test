@@ -238,6 +238,17 @@ public class Event extends Model
         return events;
     }
 
+    public static List<Event> getPaidFromDate(Date last, Date next, User user)
+    {
+        String query = "Select distinct ev from Event ev where user = :user and ev.charging != 'free' and ev.eventStart > :last and ev.eventStart < :next ";
+        TypedQuery<Event> q = Event.em().createQuery(query, Event.class);
+        q.setParameter("user", user);
+        q.setParameter("last", last);
+        q.setParameter("next", next);
+        List<Event> events = q.getResultList();
+        return events;
+    }
+
     public Event deleteEvent()
     {
         // delete attendances
@@ -356,8 +367,6 @@ public class Event extends Model
 
     private boolean isLocked()
     {
-        // TODO fix this 
-
         //if (this.isEnded())
         //    return true;
 
@@ -365,16 +374,13 @@ public class Event extends Model
         for (Attendance attendance : list)
         {
             if (attendance.paid != null && attendance.paid)
-            {
-                return false;
-            }
+                return true;
         }
         return false;
     }
 
     public Boolean isEditable(User user)
     {
-        // TODO fix this 
         if (this.isOwner(user) && !this.isLocked())
             return true;
         if (user != null && this.hasInviteForCustomer(user) && this.state.equals(EVENT_STATE_CUSTOMER_CREATED))

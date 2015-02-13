@@ -35,7 +35,6 @@ public class Listings extends BaseController
     {
         final Boolean isNew = request.params.get("new") != null ? true : false;
         final Boolean edit = action != null && action.equals("edit") ? true : false;
-
         final User user = getLoggedUser();
         final Listing listing = Listing.get(uuid);
         if ((!isNew && listing == null) || (listing != null && listing.deleted != null))
@@ -193,7 +192,7 @@ public class Listings extends BaseController
             listing.category = category;
             listing.tags = tags;
             listing.video = video;
-            if (listing == null && StringUtils.getStringOrNull(imageUrl) == null)
+            if (listing.id == null && StringUtils.getStringOrNull(imageUrl) == null)
             {
                 listing.imageUrl = Listing.IMAGE_DEFAULT;
             } else if (StringUtils.getStringOrNull(imageUrl) != null)

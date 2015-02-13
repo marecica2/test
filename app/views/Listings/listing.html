@@ -142,16 +142,26 @@
 		   		#{else}
 		   			<i>&{'create-new-channel'}</i>
 		   		#{/else}
-		   		#{if event}
-		   			<br/>
-			   		<i style="font-size:0.7em;font-weight:bold; position:relative;bottom:3px">
-				   		<span>${event.eventStart.format("dd MMM")}, </span>
-				   		<span>#{time time:event.eventStart/}</span> - 
-				   		<span>#{time time:event.eventEnd/}</span> &middot;		   		
-				   		<span>${event.getMinutes()} min</span>		   		
-			   		</i>
-		   		#{/if}
 		   	</h2>	
+	   		#{if event}
+		   		<i style="font-weight:bold;">
+			   		<span>${event.eventStart.format("dd MMM")}, </span>
+			   		<span>#{time time:event.eventStart/}</span> - 
+			   		<span>#{time time:event.eventEnd/}</span> &middot;		   		
+			   		<span>${event.getMinutes()} min</span>		   		
+		   		</i>
+		   		
+	   		   	#{if event.charging != null && attendance && !event.isFree()}
+					#{if paid && attendance.paypalTransactionDate}
+						<span class="label label-success margin-clear">
+							&{'paid-on'} ${attendance.paypalTransactionDate.format("dd MMM, yyyy")}
+						</span>&nbsp;
+					#{/if} 						
+		   		#{/if}
+				#{if attendance && attendance.paid && attendance.refundRequested}
+					<span class="label label-success margin-clear">&{'refund-requested'}</span>
+				#{/if}		   		
+	   		#{/if}
 		   	
 	   	</div>
 		
@@ -161,12 +171,7 @@
 		
 			<!-- social -->
 		   	<div class="social-pull-right">
-				<ul class="social-links colored clearfix" style="margin:0px; margin-top:5px">
-					#{if listing && listing.video}
-					<li class="vimeo">
-						<a class="popup-iframe" href="${listing.video}" title="&{'play-introduction'}"><i class="fa fa-youtube-play"></i></a>
-					</li>
-					#{/if}					
+				<ul class="social-links light clearfix" style="margin:0px; margin-top:5px">
 					<li class="dribbble"><a href="" data-toggle="modal" data-target="#myModal" ><i class="fa fa-link"></i></a></li>
 					<li class="facebook">
 						<a id="fb-share" href="#"><i class="fa fa-facebook"></i></a>
@@ -177,23 +182,35 @@
 						<a id="linkedin-share-button" href="#" ><i class="fa fa-linkedin"></i></a>
 					</li>
 					<li class="googleplus">
-						<a href="https://plus.google.com/share?url=${(request.base+request.url).urlEncode()}" onclick="javascript:window.open(this.href,
+						<a href="https://plus.google.com/share?url=${baseUrl+request.url}" onclick="javascript:window.open(this.href,
 						  '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"><i class="fa fa-google-plus"></i></a>					
 					</li>
+					
+					<li class="googleplus">
+						<a href="/mail?action=new&url=${request.url.urlEncode()}&to=info@wid.gr" rel="tooltip" data-original-title="Report a problem"><i class="icon-megaphone"></i> </a>
+					</li>
+				
+					#{if listing && listing.video}
+					<li class="vimeo">
+						<a style="background-color: #b31217;border-color: #b31217;color: #fff;" class="popup-iframe" href="${listing.video}" rel="tooltip" data-original-title="&{'play-introduction'}"><i class="fa fa-youtube-play"></i></a>
+					</li>
+					#{/if}
+										
 				</ul>
 		   	</div>
 		   	#{if listing}
 			<script>
 				$("#fb-share").click(function(e){
 				    e.preventDefault();
+				    console.log(window.location.href);
 				    FB.ui(
 				    {
 					    method: 'feed',
 					    name: '${listing.title}',
-					    link: '${request.base}${request.url}',
-					    picture: '${request.base}/${listing.imageUrl}',
+					    link: window.location.href,
+					    picture: '${baseUrl}/${listing.imageUrl}',
 					    caption: 'by ${listing.user.fullName}',
-					    description: "${listing.description.escapeJavaScript().raw()}",
+					    description: "${listing.description.escapeJavaScript().trimDot(300).raw()}",
 					    message: ''
 				    });
 				});		
@@ -225,7 +242,7 @@
 			                 ',height=' + height +
 			                 ',top='    + top    +
 			                 ',left='   + left;
-				    var url = "//www.linkedin.com/shareArticle?mini=true&url=${request.url.urlEncode()}&title=${listing.title}&summary=${listing.description.escapeJavaScript().raw()}&source=${request.url}";
+				    var url = "//www.linkedin.com/shareArticle?mini=true&url="+this.href+"&title=${listing.title}&summary=${listing.description.escapeJavaScript().raw()}&source=${request.url}";
 			    	window.open(url, 'linkedin', opts);						    
 				})
 			</script>	 
@@ -332,7 +349,7 @@
 			<div class="col-md-4">
 				<div class="text-center">
 					<a href="/user/${usr.login}"><img style="height:57px;" src="/${usr.avatarUrl}_64x64"></a>	
-					#{if isOwner && !listing.isAvailable() && listing.type == 'p2p'}
+					#{if isOwner && user.isPublisher() && !listing.isAvailable() && listing.type == 'p2p'}
 						<a class="btn btn-dark btn-lg btn-short" href="/available-start?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}">&{'check-me-as-available'}</a>
 					#{/if}
 					
@@ -367,7 +384,7 @@
 			<div style="width:100%; padding:0px">
 				#{list items:comments, as:'item'}
 					#{list items:item.files, as:'file'}
-						#{if file.isImage()}
+						#{if file.isImage() && item.paid == false}
 							<span style="float:left;" title="${file.name}">
 							<span class="overlay-container">
 								<img src="/public/uploads/${file.url}_thumb" style="height:62px" alt="${file.name}">
@@ -410,7 +427,7 @@
 	 				<form class="" action="/attendance-new-save?eventId=${event.uuid}&url=${request.url.urlEncode()}&#{token /}#invitation" method="post">
 					    #{authenticityToken /}
 					    <div class="input-group" style="width:100%">
-							<input type="text" class="form-control" autocomplete="off" placeholder="&{'contact-name-or-email'}" style="font-size:0.9em" maxlength="100" name="email" id="dialog-invite-input" data-provide="typeahead">
+							<input type="text" class="form-control" autocomplete="off" placeholder="&{'contact-name-or-email'}" style="font-size:0.9em" maxlength="100" name="email" id="dialog-invite-input" data-provide="typeahead" rel="tooltip" data-original-title="&{'add-more-people'}">
 						    <span class="input-group-btn">
 						    	<button class="btn btn-default btn-short" style="margin:0px;height:40px" id="dialog-invite-button" type="submit">&{'add'}</button>
 						    </span>
@@ -501,7 +518,7 @@
 						    	<textarea rows="4" cols="" name="message" class="form-control" placeholder="Message" style="margin-top:5px"></textarea>
 						    </div>
 						    }*
-					        <button type="submit" class="pull-right btn btn-light-gray btn-short"><span class="spinner-small spinner-notify"> </span>&{'send-invitation'}</button>
+					        <button type="submit" class="pull-right btn btn-light-gray btn-short" rel="tooltip" data-original-title="&{'invite-press'}">&{'send-invitation'}</button>
 			  				<div class="clearfix"></div>
 						#{/if}
 	  				</form>					
@@ -544,14 +561,14 @@
  	    	   	<span>
 					#{if fromEvent && event}
 						#{if event.privacy == 'private'}
-							<span class="labels "><i class="fa fa-lock"></i> &{event.privacy}</span> &middot;
+							<span class="labels " rel="tooltip" data-original-title="&{'privacy-private-description'}"><i class="fa fa-lock"></i> &{event.privacy}</span> &middot;
 						#{/if}
 						
 						#{if event.privacy == 'public'}
-							<span class="labels "><i class="fa fa-unlock"></i> &{event.privacy}</span> 
+							<span class="labels " rel="tooltip" data-original-title="&{'privacy-public-description'}"><i class="fa fa-unlock"></i> &{event.privacy}</span> 
 						#{/if}
 						
-						<span class="labels "><i class="fa fa-comments"></i> &{event.type}</span> 
+						<span class="labels " rel="tooltip" data-original-title="&{ event.type+'-description'}"><i class="fa fa-comments"></i> &{event.type}</span> 
 
 					#{/if}		 	    	   	
 					#{else}
@@ -673,7 +690,6 @@
 
 #{if !edit && globalObject && (globalObject.type == "instant" || globalObject.availableNow != null || globalObject.chatEnabled)}
 <script>
-	console.log("sockets activated");
     star.user = '${name}';
     star.room = '${room}';
     #{if user}

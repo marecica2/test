@@ -1,22 +1,20 @@
 #{if !isOwner && mail}
 <br/>
-<a href="/mail?action=new&to=${usr.login}" class="btn btn-light-gray btn-block"><i class="fa fa-envelope"></i> &{'write-message-for'} ${usr.firstName}</a>
+<a href="/mail?action=new&to=${usr.login}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-block"><i class="fa fa-envelope"></i> &{'write-message-for'} ${usr.firstName}</a>
 <br/>
 #{/if}
 
-*{
 <h2>&{'tips-for-first-timers'}</h2>
 <div class="separator-2"></div>
-<br/>
 
 <h5><i class="fa fa-globe fa-1x"></i> Get modern browser</h5>
-<p>To get full user experience update your browser to latest</p>
+<p>
+	To get full user experience update your browser to latest.
+	<a href="/about#compatibility">Check compatibility of your browser</a>
+</p>
 
-<h5><i class="fa fa-video-camera fa-1x"></i> Set up your camera</h5>
-<p>All Wigdr events happen over camera, so be sure that yours works properly</p>
-
-<h5><i class="fa fa-microphone fa-1x"></i> Set up your mic</h5>
-<p>All Wigdr events happen over camera, so be sure that yours works properly</p>
+<h5><i class="fa fa-video-camera fa-1x"></i> &{''}Set up your camera</h5>
+<p>&{''}Wigdr sessions happen over video conferencing, so be sure that yours works properly</p>
 
 <h5><i class="fa fa-youtube fa-1x"></i> Video tutorials</h5>
 <ul>
@@ -24,4 +22,3 @@
 	<li><a href="">How to create a channel</a>
 </ul>
 <br/>
-}*

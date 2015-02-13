@@ -100,7 +100,6 @@
 		    	if(window.self !== window.top){
 		    	    $(".logo-header").hide();
 		    	    $(".about-header").hide();
-		    	    $(".shadow-inset").hide();
 		    	    $("body").addClass("wide");
 		    	    $("body").removeClass("boxed");
 		    	    $(".logo-menu").show();
@@ -242,6 +241,12 @@
 								  <strong>Error!</strong> ${flash.error.raw()} 
 								</div>				
 								#{/if}
+								#{if request.cookies.error}
+								<div class="shadow alert alert-danger alert-dismissible" role="alert">
+								  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
+								  <strong>Error!</strong> ${request.cookies.error.value.raw()} 
+								</div>				
+								#{/if}
 							</div>
 						</div>
 					</div>
@@ -267,9 +272,13 @@
 									<div class="row">
 										<div class="col-sm-8">
 											<p>
-											&{'about-1'}
+												&{'about-1'} <a href="/about" class="link"><span>&{'read-more'}</span></a>
 											</p>
-											<i class="fa fa-envelope-o pr-10"></i> info@wid.gr
+											<p>
+												<i class="fa fa-envelope-o pr-10"></i> info@wid.gr
+											</p>
+											
+											&{'follow-us'}
 											<ul class="social-links circle">
 												<li class="facebook"><a target="_blank" href="http://www.facebook.com/"><i class="fa fa-facebook"></i></a></li>
 												<li class="twitter"><a target="_blank" href="http://www.twitter.com/"><i class="fa fa-twitter"></i></a></li>
@@ -293,7 +302,6 @@
 											</div>
 										</div>										
 									</div>
-									<a href="/about" class="link"><span>&{'read-more'}</span></a>
 								</div>
 							</div>
 						</div>
@@ -374,7 +382,7 @@
         <script>
         $(document).ready(function(){
 			if ($("[rel=tooltip]").length) {
-	        	$("[rel=tooltip]").tooltip({'delay': { show: 100, hide: 0 }});
+	        	$("[rel=tooltip]").tooltip({'delay': { show: 1000, hide: 0 }});
 	        }
         });
         </script>

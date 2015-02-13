@@ -142,6 +142,25 @@ public class Attendances extends BaseController
             act.event = a.event;
             act.eventName = a.event.listing.title;
             act.saveActivity();
+
+            //            // notification to owner of the event
+            //            if (user.equals(a.customer))
+            //            {
+            //                final String subject = Messages.getMessage(a.event.user.locale, "your-proposal-declined-subject", user.getFullName());
+            //                final String body = Messages.getMessage(a.event.user.locale, "your-proposal-declined-message", user.getFullName(), a.event.listing.title, getBaseUrl() + "channel/"
+            //                        + a.event.listing.uuid);
+            //                if (a.event.customer != null)
+            //                    Message.createNotification(user, a.event.customer, subject, body);
+            //                if (a.event.user != null && a.event.user.emailNotification)
+            //                {
+            //                    EmailNotificationBuilder eb = new EmailNotificationBuilder();
+            //                    eb.setTo(a.event.customer);
+            //                    eb.setFrom(user)
+            //                            .setSubject(subject)
+            //                            .setMessageWiki(body)
+            //                            .send();
+            //                }
+            //            }
         }
         redirectTo(url);
     }

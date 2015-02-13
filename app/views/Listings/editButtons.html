@@ -3,15 +3,17 @@
 
 
 <!-- edit buttons -->
-<div class="pull-right" style="margin-left:15px">	
+<div class="pull-right" style="margin-left:1px">
+
 	#{if fromEvent && event}
 	
    		#{if event.state == 'customer_created' && user && !isOwner}
-			<span class="btn btn-default  btn-social margin-clear">&{'waiting-for-approvement'}</span>
+			<span class="label default_bg ">&{'waiting-for-approvement'}</span>
 		#{/if}
 		
 		
 		#{if event.charging != null && attendance && !event.isFree()}
+			
 			#{if !paid }
 				#{set displayStream:false /}
 				<a class="btn btn-warning  btn-social margin-clear" href="/payment/${event.uuid}?url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-placement="top" title="&{'you-can-pay-for-event-before-or-you-can-wait-until-event-starts'}">
@@ -19,24 +21,14 @@
 				</a>
 			#{/if}
 			
-			#{elseif paid && attendance.paypalTransactionDate}
-				<span class="btn btn-warning  btn-social margin-clear">
-					&{'paid-on'} ${attendance.paypalTransactionDate.format("dd MMM, yyyy")}
-				</span>
-			#{/elseif} 
-			
 			#{if attendance && attendance.paid && !attendance.refundRequested}
-				<a  class="btn btn-warning  btn-social margin-clear" href="" data-toggle="modal" data-target="#refundModal" onclick="$('#share-link').select();">&{'request-refund'}</a>
-			#{/if}
-			#{if attendance && attendance.paid && attendance.refundRequested}
-				<span class="btn btn-warning  btn-social margin-clear">&{'refund-requested'}</span>
+				<a class="btn btn-warning  btn-social margin-clear" href="" data-toggle="modal" data-target="#refundModal" onclick="$('#share-link').select();">&{'request-refund'}</a>
 			#{/if}
 		#{/if}
 
-
 		#{if isOwner && (event.state == 'customer_created' )}
 			<a class="btn btn-success  btn-social margin-clear" href="/event-approve?event=${event.uuid}&url=${request.url.urlEncode()}&#{token /}"><i class="fa fa-check"></i> &{'approve'}</a>
-			<a class="btn btn-danger  btn-social margin-clear" href="/event-decline?event=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" 
+			<a class="btn btn-danger  btn-social margin-clear" href="/event-decline?event=${request.params.uuid}&#{token /}&url=${'/channel/'+listing.uuid.urlEncode()}" 
 				onclick="if(confirm('&{'confirm-decline'}')){return true;} else {return false;}">
 				<i class="dialog-event-edit fa fa-times fa-1x"></i> &{'decline'}
 			</a>
@@ -102,7 +94,7 @@
 
 
 		#{if !edit && isOwner && event.isEditable(user)}
-		<a class="btn btn-default btn-social margin-clear" href="/event-delete?uuid=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('&{'delete-selected-item'}?')){return true;} else {return false;}">
+		<a class="btn btn-default btn-social margin-clear" href="/event-delete?uuid=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}">
 			<i class="dialog-event-edit fa fa-times fa-1x" title="&{'delete-event'}"></i>
 		</a>
 		#{/if}
@@ -143,10 +135,10 @@
 					<i class="fa fa-plus"></i> &{'add-event'}
 				</a>
 			#{/if}
-			<a href="/channel/${listing.uuid}?action=edit&url=${request.url.urlEncode()}&#{token /}" class="btn btn-default btn-social margin-clear" title="&{'edit-channel'}">
+			<a href="/channel/${listing.uuid}?action=edit&url=${request.url.urlEncode()}&#{token /}" class="btn btn-default btn-social margin-clear" rel="tooltip" data-original-title="&{'edit-channel'}">
 				<i class="fa fa-pencil fa-1x"></i>
 			</a>
-			<a href="/channel-delete?uuid=${listing.uuid}&#{token /}" class="btn btn-default btn-social margin-clear" onclick="if(confirm('&{'delete-selected-item'}?')){return true;} else {return false;}" title="&{'delete-channel'}">
+			<a href="/channel-delete?uuid=${listing.uuid}&#{token /}" class="btn btn-default btn-social margin-clear" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}" rel="tooltip" data-original-title="&{'delete-channel'}">
 				<i class="fa fa-times"></i>
 			</a>
 		#{/if}

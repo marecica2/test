@@ -133,9 +133,6 @@ public class Secure extends BaseController
             return;
         }
 
-        // final String body = StringUtils.newStringUtf8(Base64.decodeBase64(parts[1]));
-        // final JsonObject jo = new JsonParser().parse(p).getAsJsonObject();
-        // System.err.println(jo);
         if (user == null)
         {
             flash.error(Messages.get("user-does-not-exist"));

@@ -62,9 +62,18 @@ public class Comments extends BaseController
         final String id = body.get("id").getAsString();
         final String comment = body.get("comment").getAsString();
 
+        if (user == null)
+            forbidden();
+
+        Comment c = Comment.getByUuid(id);
+        if (c == null)
+            forbidden();
+
+        if (c.user.hasBlockedContact(user))
+            forbidden();
+
         if (user != null)
         {
-            Comment c = Comment.getByUuid(id);
             CommentReply cr = new CommentReply();
             cr.comment = StringUtils.htmlEscape(comment);
             cr.user = user;
@@ -111,10 +120,12 @@ public class Comments extends BaseController
         final String type = JsonUtils.getString(jo, "type");
         final String objectType = JsonUtils.getString(jo, "objectType");
         final String uuid = JsonUtils.getString(jo, "uuid");
+        final Boolean paid = Boolean.parseBoolean(JsonUtils.getString(jo, "paid"));
 
         final User user = getLoggedUser();
         final Comment c = new Comment();
         c.user = user;
+        c.paid = paid;
         c.comment = StringEscapeUtils.escapeHtml(comment);
         c.uuid = tempId != null ? tempId : RandomUtil.getUUID();
         c.type = type;

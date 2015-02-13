@@ -8,6 +8,7 @@ import java.util.Map;
 import models.Activity;
 import models.ChatFeed;
 import models.Contact;
+import models.Event;
 import models.Listing;
 import models.Rating;
 import models.User;
@@ -26,10 +27,11 @@ public class Public extends BaseController
 {
     public static void checkConnection()
     {
-        final User user = getLoggedUserNotCache();
+        User user = getLoggedUser();
         if (user == null)
             forbidden();
 
+        user = getLoggedUserNotCache();
         user.lastOnlineTime = new Date();
         user.save();
 
@@ -61,6 +63,25 @@ public class Public extends BaseController
         renderJSON(feedsDto);
     }
 
+    public static void feedsClear(String uuid, String url)
+    {
+        User user = getLoggedUser();
+        Listing l = Listing.get(uuid);
+        if (l != null && !user.equals(l.user))
+            forbidden();
+        Event e = Event.get(uuid);
+        if (e != null && !user.equals(e.user))
+            forbidden();
+
+        checkAuthenticity();
+
+        final List<ChatFeed> feeds = ChatFeed.getByUuid(uuid);
+        for (ChatFeed chatFeed : feeds)
+            chatFeed.delete();
+
+        redirectTo(url);
+    }
+
     public static void feedSave()
     {
         final User user = getLoggedUser();
@@ -83,7 +104,7 @@ public class Public extends BaseController
         final List<Activity> activities = Activity.getByUser(user, limit, uuid);
         final List<ActivityDTO> aDto = new ArrayList<ActivityDTO>();
         for (Activity activity : activities)
-            aDto.add(ActivityDTO.convert(activity));
+            aDto.add(ActivityDTO.convert(activity, user));
         renderJSON(aDto);
     }
 
@@ -124,4 +145,5 @@ public class Public extends BaseController
         feed.created = new Date();
         return feed;
     }
+
 }

@@ -126,16 +126,16 @@
 				<div class="shadow-blur" style="background: #fafafa; width:100%; margin:0 0 20px 0;">
 					<div class="anchorLink" data-href="/channel/${item.uuid}" style="cursor:pointer;display:table;text-align:left;width:100%">
 				   		
-				   		<div style="display:table-cell; height:128px; width:200px; min-width:200px; background: url('/${item.imageUrl}') no-repeat center; background-size:cover; border-right:5px solid #{if item && item.color} ${item.color} #{/if} #{else} #3A87AD #{/else};">
+				   		<div style="display:table-cell; height:128px; width:200px; min-width:200px; background: url('/${item.imageUrl}') no-repeat center; background-size:cover; border-right:0px solid #{if item && item.color} ${item.color} #{/if} #{else} #812AAD #{/else};">
 				   		</div>
 				   		<div style="display:table-cell;vertical-align:top;padding:0 15px 0 15px;position:relative;">
 							<h4>${item.title}</h4>
 							<p style="margin-bottom:5px">
 								<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
 								<strong>${item.user.fullName}</strong>  &middot; 
-								${item.category}  &middot; 
-								${item.privacy}  &middot; 
-								${item.type}
+								&{item.category}  &middot; 
+								&{item.privacy}  &middot; 
+								&{item.type}
 							</p>
 							<span class="truncate">${item.getDescriptionHtml().trimDot(140).raw()}</span>
 				   			<p>
@@ -250,6 +250,8 @@
 							<h3>&{'description'}</h3>
 							<p class="popup-event-description">
 							</p>
+							
+							<span class="event-detail-container"></span>
 				
 							<h3>&{'guests'}</h3>
 							<div class="form-group">

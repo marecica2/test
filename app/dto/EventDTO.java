@@ -153,7 +153,7 @@ public class EventDTO
         e.createdByLogin = null;
         e.createdByName = null;
         e.createdByUser = null;
-        e.color = "#FF0000";
+        e.color = "#000000";
         e.chargingTime = null;
         e.privacy = null;
         e.isOwner = false;

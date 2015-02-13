@@ -13,10 +13,11 @@ import utils.StringUtils;
 @With(Secure.class)
 public class Notifications extends BaseController
 {
-    public static void send(String toUser, String subject, String emailBody, String url, String thread)
+    public static void send(String toUser, String subject, String emailBody, String url, String thread, String link)
     {
         final User userFrom = getLoggedUserNotCache();
         final User user = userFrom;
+
         String email = StringUtils.extract(toUser, "\\((.+?)\\)");
         if (email == null)
             email = toUser;
@@ -24,13 +25,13 @@ public class Notifications extends BaseController
         validation.required("userTo", email);
         validation.required("subject", subject);
         validation.email("userTo", email).message("invalid-user-name");
-
-        System.err.println(emailBody);
         validation.required("emailBody", emailBody);
+        final User userTo = User.getUserByLogin(email);
+        if (userTo.hasBlockedContact(userFrom))
+            validation.addError("userTo", Messages.get("you-are-blocked"));
 
         if (!validation.hasErrors())
         {
-            final User userTo = User.getUserByLogin(email);
             userTo.unreadMessages = true;
             userTo.save();
             clearUserFromCache();
@@ -40,6 +41,7 @@ public class Notifications extends BaseController
                 thread = RandomUtil.getUUID();
 
             Message m = new Message();
+            m.url = link;
             m.fromUser = userFrom;
             m.toUser = userTo;
             m.body = emailBody;
@@ -50,6 +52,7 @@ public class Notifications extends BaseController
             m.saveMessage();
 
             m = new Message();
+            m.url = link;
             m.fromUser = userFrom;
             m.toUser = userTo;
             m.body = emailBody;

@@ -20,7 +20,7 @@ star.moreComments = function(params, dashboard){
 
 star.loadComments = function(params, dashboard){
     star.comments = {};
-    star.comments.size = 4;
+    star.comments.size = 8;
     star.comments.first = 0;
     star.comments.count = star.comments.size;
     
@@ -160,7 +160,7 @@ star.renderComments = function(data, dashboard){
 star.initItems = function(prefix, urlParams){
     $(document).ready(function(){
         star[prefix] = {};
-        star[prefix].size = 4;
+        star[prefix].size = 8;
         star[prefix].first = 0;
         star[prefix].count = star[prefix].size;
 
@@ -267,7 +267,7 @@ star.renderItems = function(data, prefix){
             }       
             
             html += "   <p class='event-box-links'><span><a href='/channel/"+item.uuid+"' class='link-left'><span>"+star.utils.trimTo(item.title, 40)+"</span></a></span></p>";
-            html += "   <div class='event-box-link' style='position:fixed;bottom:15px'>";            
+            html += "   <div class='event-box-link' style='position:absolute;bottom:15px'>";            
             for(var j = 0; j < 5; j++){
                 if(j < item.ratingAvg)
                     html += "<i class='fa fa-star' data-value='1'></i>";
@@ -498,7 +498,7 @@ starEvent.inviteLoad = function(event, clbck){
 
                 if(starCalendar.selectedEvent.charging != "free" && starCalendar.selectedEvent.isOwner){
                     html += "<td style='text-align:center;'>";
-                    html += data[i].paid ? "<p class='label label-success'>paid</p>" : "<p class='label label-default'>unpaid</p>";
+                    html += data[i].paid ? "<p class='label label-success'>"+i18n("paid")+"</p>" : "";
                     html += "</td>";
                 }
                 

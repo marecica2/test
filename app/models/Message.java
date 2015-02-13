@@ -30,6 +30,7 @@ public class Message extends Model
     public String body;
 
     public String subject;
+    public String url;
     public Boolean read;
     public Boolean replied;
     public Date created;

@@ -62,10 +62,7 @@ public class BaseController extends Controller
 
     public static boolean flashErrorPut(String msg)
     {
-        Http.Cookie c = new Http.Cookie();
-        c.name = "error";
-        c.value = msg;
-        request.cookies.put("error", c);
+        response.setCookie("error", msg, "1s");
         return true;
     }
 

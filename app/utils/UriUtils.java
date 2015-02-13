@@ -42,6 +42,8 @@ public class UriUtils
 
     public static String urlEncode(String url)
     {
+        if (url == null)
+            return null;
         try
         {
             url = URLEncoder.encode(url, "UTF-8");

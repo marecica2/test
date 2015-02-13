@@ -1,7 +1,9 @@
 package dto;
 
 import models.Activity;
+import models.User;
 import play.db.jpa.Model;
+import play.i18n.Messages;
 
 public class ActivityDTO extends Model
 {
@@ -22,9 +24,8 @@ public class ActivityDTO extends Model
     public String customerLogin;
     public String login;
 
-    public static ActivityDTO convert(Activity a)
+    public static ActivityDTO convert(Activity a, User user)
     {
-
         ActivityDTO aDto = new ActivityDTO();
         aDto.created = a.created != null ? a.created.getTime() : null;
         aDto.event = a.eventName;
@@ -46,9 +47,14 @@ public class ActivityDTO extends Model
         if (Activity.ACTIVITY_EVENT_INVITED.equals(a.type))
         {
             if (a.customer != null)
-                aDto.message = a.getText(a.customer.login, a.customer.getFullName(), a.event.uuid, a.eventName);
+            {
+                final String name = user != null && user.equals(a.customer) ? Messages.get("you-2") : a.customer.getFullName();
+                aDto.message = a.getText(a.customer.login, name, a.event.uuid, a.eventName);
+            }
             else
+            {
                 aDto.message = a.getText(a.login, a.login, a.event.uuid, a.eventName);
+            }
         }
         if (Activity.ACTIVITY_EVENT_INVITE_ACCEPTED.equals(a.type))
             aDto.message = a.getText(a.event.uuid, a.eventName);

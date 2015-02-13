@@ -7,14 +7,6 @@
 			<div class="box-style-1 gray-bg team-member">
 				<div class="overlay-container">
 					<img src="/${usr.avatarUrl}" style="width:100%s">
-					<div class="overlay">
-						<ul class="social-links colored clearfix">
-						#{if usr.facebook}<li class="facebook"><a target="_blank" href="${usr.facebook}"><i class="fa fa-facebook"></i></a></li>#{/if}
-						#{if usr.twitter}<li class="twitter"><a target="_blank" href="${usr.twitter}"><i class="fa fa-twitter"></i></a></li>#{/if}
-						#{if usr.linkedIn}<li class="linkedin"><a target="_blank" href="${usr.linkedIn}"><i class="fa fa-linkedin"></i></a></li> #{/if}
-						#{if usr.googlePlus}<li class="googleplus"><a target="_blank" href="${usr.googlePlus}"><i class="fa fa-google-plus"></i></a></li>#{/if}
-						</ul>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -23,7 +15,7 @@
 		
 		<div class="col-lg-6 col-sm-6">
 						
-			<h2 class="margin-clear">
+			<h3 class="margin-clear">
 				<span style="font-size:0.6em">
 		  		#{if usr.isOnline()}
 		  			<i class="text-default icon-record"></i>
@@ -42,16 +34,16 @@
 						#{if user && !isOwner}
 						<span>
 							#{if follow && follow.following == true}
-								<a href="/contact-unfollow?uuid=${follow.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-minus"></i> &{'unfollow'}</a> 
+								<a href="/contact-unfollow?uuid=${follow.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-minus"></i> &{'unfollow'}</a> 
 							#{/if}
 							#{else}
-								<a href="/contact-follow?uuid=${follow}&usr=${usr.uuid}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-plus"></i> &{'follow'}</a> 
+								<a href="/contact-follow?uuid=${follow}&usr=${usr.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-plus"></i> &{'follow'}</a> 
 							#{/else}
 						</span>
 						#{/if}	
 					</span>
 				#{/if}				
-			</h2>
+			</h3>
 			<ul class="list-icons">
 				#{if !usr.isOnline()}
 					<li><i class="fa fa-clock-o"></i> &{'offline'} - &{'last-online'} #{if usr.lastOnlineTime} ${usr.lastOnlineTime.format("dd MMM, yyyy")} #{time time:usr.lastOnlineTime/} #{/if}</li>
@@ -68,6 +60,12 @@
 					<li><i class="fa fa-bar-chart-o pr-5"></i><a href="/payments?sender=${usr.login}" class="link">&{'payments-receivedPayments-for-this-user'} ${usr.fullName}</a></li>
 				#{/if}
 			</ul>
+						<ul class="social-links colored clearfix">
+						#{if usr.facebook}<li class="facebook"><a target="_blank" href="${usr.facebook}"><i class="fa fa-facebook"></i></a></li>#{/if}
+						#{if usr.twitter}<li class="twitter"><a target="_blank" href="${usr.twitter}"><i class="fa fa-twitter"></i></a></li>#{/if}
+						#{if usr.linkedIn}<li class="linkedin"><a target="_blank" href="${usr.linkedIn}"><i class="fa fa-linkedin"></i></a></li> #{/if}
+						#{if usr.googlePlus}<li class="googleplus"><a target="_blank" href="${usr.googlePlus}"><i class="fa fa-google-plus"></i></a></li>#{/if}
+						</ul>			
 		</div>
 
 		<div class="col-lg-3 col-sm-3 " style="height:100%">

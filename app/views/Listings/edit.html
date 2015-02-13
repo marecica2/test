@@ -88,20 +88,20 @@
 		<label class="control-label">Event type</label>
 		<div class="form-group">
 			<div class="btn-group" data-toggle="buttons">
-			  <label class="btn btn-light-gray #{if params.type == "p2p"} active #{/if}" >
-			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "p2p"} checked="checked" #{/if} value="p2p"> &{'video-conference'}
+			  <label class="btn btn-light-gray #{if params.type == "p2p"} active #{/if}" rel="tooltip" data-original-title="&{'p2p-description'}">
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "p2p"} checked="checked" #{/if} value="p2p"> &{'p2p'}
 			  </label>
 			  *{
-			  <label class="btn btn-light-gray #{if params.type == "broadcast"} active #{/if}" >
+			  <label class="btn btn-light-gray #{if params.type == "broadcast"} active #{/if}" rel="tooltip" data-original-title="&{'broadcast-description'}">
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "broadcast"} checked="checked" #{/if} value="broadcast"> &{'live-broadcast'}
 			  </label>
-			  }*
-			  <label class="btn btn-light-gray #{if params.type == "hangout"} active #{/if}" >
+			  <label class="btn btn-light-gray #{if params.type == "hangout"} active #{/if}" rel="tooltip" data-original-title="&{'hangout-description'}">
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangout"} checked="checked" #{/if} value="hangout"><i class="fa fa-google-plus"></i> &{'google-hangout'}
 			  </label>
-			  <label class="btn btn-light-gray #{if params.type == "hangoutAir"} active #{/if}" >
+			  <label class="btn btn-light-gray #{if params.type == "hangoutAir"} active #{/if}" rel="tooltip" data-original-title="&{'hangoutAir-description'}">
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangoutAir"} checked="checked" #{/if} value="hangoutAir"><i class="fa fa-google-plus"></i> &{'google-hangout-air'}
 			  </label>
+			  }*
 			</div>				
 			<div class="error">#{error 'type' /}</div>
 		</div>
@@ -109,10 +109,10 @@
 		<label class="control-label">&{'privacy'}</label>
 		<div class="form-group ">
 			<div class="btn-group" data-toggle="buttons">
-				  <label class="btn btn-light-gray #{if params.privacy == "private"} active #{/if}" >
+				  <label class="btn btn-light-gray #{if params.privacy == "private"} active #{/if}"  rel="tooltip" data-original-title="&{'privacy-private-description'}">
 				    <input type="radio" name="privacy" id="option1" autocomplete="off" #{if params.privacy == "private"} checked="checked" #{/if} value="private"> &{'private'}
 				  </label>				
-				  <label class="btn btn-light-gray #{if params.privacy == "public"} active #{/if}" >
+				  <label class="btn btn-light-gray #{if params.privacy == "public"} active #{/if}"  rel="tooltip" data-original-title="&{'privacy-public-description'}">
 				    <input type="radio" name="privacy" id="option1" autocomplete="off" #{if params.privacy == "public"} checked="checked" #{/if} value="public"> &{'public'}
 				  </label>
 			</div>					
@@ -123,10 +123,10 @@
 		<div class="form-group">
 			<div class="event-charging-container">
 				<div class="btn-group" data-toggle="buttons">
-					  <label class="btn btn-light-gray #{if params.charging == "free"} active #{/if}" >
+					  <label class="btn btn-light-gray #{if params.charging == "free"} active #{/if}" rel="tooltip" data-original-title="&{'charging-free-description'}">
 					    <input type="radio" name="charging" id="option1" autocomplete="off" #{if params.charging == "free"} checked="checked" #{/if} class="event-charging" value="free"> &{'free'}
 					  </label>				
-					  <label class="btn btn-light-gray #{if params.charging == "before"} active #{/if}" >
+					  <label class="btn btn-light-gray #{if params.charging == "before"} active #{/if}" rel="tooltip" data-original-title="&{'charging-paid-description'}">
 					    <input type="radio" name="charging" id="option1" autocomplete="off" #{if params.charging == "before"} checked="checked" #{/if} class="event-charging" value="before"> &{'paid'} 
 					  </label>
 				</div>			
@@ -154,7 +154,7 @@
 					</p>
 				 #{/if}			
 				<div class="input-group">
-    			  <input type="text" class="form-control event-charging-price" style="height:40px;" id="event-charging-price" maxlength="30" placeholder="&{'dashboard.price'}" name="price" value="${params.price}"/>
+    			  <input type="text" class="form-control event-charging-price" style="height:40px;" id="event-charging-price" maxlength="30" placeholder="&{'price'}" name="price" value="${params.price}"/>
 				  <span class="input-group-addon">
 					  <select class="event-currency" name="currency">
 						<option value="USD" #{if params.currency == "USD"} selected="selected" #{/if} >USD</option>
@@ -179,10 +179,11 @@
 				
 				<br/> 
 				<div class="form-group event-category" >
-		  			<select class="form-control" name="chargingTime">
+		  			<select class="form-control" name="chargingTime" rel="tooltip" data-original-title="&{'charging-time'}">
+						<option value="30" #{if params.chargingTime == "30"} selected="selected" #{/if} >for 30 &{'minutes'}</option>
 						<option value="15" #{if params.chargingTime == "15"} selected="selected" #{/if} >for 15 &{'minutes'}</option>
 						<option value="10" #{if params.chargingTime == "10"} selected="selected" #{/if} >for 10 &{'minutes'}</option>
-						<option value="5" #{if params.chargingTime == "5"} selected="selected" #{/if} >for 5 &{'minutes'}</option>
+						<option value="5"  #{if params.chargingTime == "5"}  selected="selected" #{/if} >for 5 &{'minutes'}</option>
 					</select>						
 					<div class="error">#{error 'category' /}</div>
 				</div>					
@@ -191,13 +192,17 @@
 		
 		<div class="form-group ">
 			<div class="" > 
-				<label class="" style="font-weight:100;"> <input type="checkbox" name="chatEnabled" value="chatEnabled" #{if params.chatEnabled != null} checked="checked" #{/if}> <strong>&{'enable-chat'}</strong></label> &nbsp;&nbsp;&nbsp;
+				<label class="" style="font-weight:100;" rel="tooltip" data-original-title="&{'chat-enable-disable'}"> 
+					<input type="checkbox" name="chatEnabled" value="chatEnabled" #{if params.chatEnabled != null} checked="checked" #{/if}> <strong>&{'enable-chat'}</strong>
+				</label> &nbsp;&nbsp;&nbsp;
 			</div>
 		</div>											
 		
 		<div class="form-group ">
 			<div class="" > 
-				<label class="" style="font-weight:100;"> <input type="checkbox" name="commentsEnabled" value="commentsEnabled" #{if params.commentsEnabled != null} checked="checked" #{/if}> <strong>&{'enable-comments'}</strong></label> &nbsp;&nbsp;&nbsp;
+				<label class="" style="font-weight:100;" rel="tooltip" data-original-title="&{'comments-enable-disable'}"> 
+					<input type="checkbox" name="commentsEnabled" value="commentsEnabled" #{if params.commentsEnabled != null} checked="checked" #{/if}> <strong>&{'enable-comments'}</strong>
+				</label> &nbsp;&nbsp;&nbsp;
 			</div>
 		</div>											
 		<br/>
@@ -226,8 +231,9 @@
 
 		<div class="form-group"> 
 			<div class="event-edit">
-				<div id="selectedColor" style="height:30px;width:30px;background:#{if listing && listing.color.length() > 0}${listing.color}#{/if}#{else}#3A87AD#{/else};float:left;margin:3px;margin-left:0px;"></div>
+				<div id="selectedColor" style="height:30px;width:30px;background:#{if listing && listing.color.length() > 0}${listing.color}#{/if}#{else}#812AAD#{/else};float:left;margin:3px;margin-left:0px;"></div>
 				<div style="height:30px;width:2px;background:#AAAAAA;float:left;margin-right:5px;margin:3px;"></div>
+				<div class="colorHover" onclick="starCalendar.dialogColorPick('#812AAD');" style="height:30px;width:30px;background:#812AAD;float:left;margin:3px;"></div>
 				<div class="colorHover" onclick="starCalendar.dialogColorPick('#3A87AD');" style="height:30px;width:30px;background:#3A87AD;float:left;margin:3px;"></div>
 				<div class="colorHover" onclick="starCalendar.dialogColorPick('#429CF6');" style="height:30px;width:30px;background:#429CF6;float:left;margin:3px;"></div>
 				<div class="colorHover" onclick="starCalendar.dialogColorPick('#20D1E8');" style="height:30px;width:30px;background:#20D1E8;float:left;margin:3px;"></div>
@@ -284,56 +290,97 @@
 				<option value="art" #{if params.category == "art"} selected="selected" #{/if} >&{'art'}</option>
 				<option value="sport" #{if params.category == "sport"} selected="selected" #{/if} >&{'sport'}</option>
 				<option value="household" #{if params.category == "household"} selected="selected" #{/if} >&{'household'}</option>
+				<option value="other" #{if params.category == "other"} selected="selected" #{/if} >&{'other'}</option>
 				*{
 				<option value="18plus" #{if params.category == "18plus"} selected="selected" #{/if} >&{'18plus'}</option>
 				}*
-				<option value="other" #{if params.category == "other"} selected="selected" #{/if} >&{'other'}</option>
 			</select>						
 			<div class="error">#{error 'category' /}</div>
 		</div>
 
 		<label class="control-label">&{'about'} *</label>
-		<div class="form-group">
+		<div class="form-group has-feedback">
 			<textarea class="form-control event-description event-edit" rows="12" id="event-description" maxlength="1000" name="description" placeholder="&{'description'}">${params.description}</textarea>
 			<div class="error">#{error 'description' /}</div>
+			#{include 'help.html' /}
 		</div>
 	
 		<label class="control-label">&{'introduction-video-url'}</label>	
 		<div class="form-group event-title-1" >
-			<input type="text" class="form-control " id="event-title" maxlength="50" name="video" placeholder="&{'url'}" value="${params.video}"/>
+			<input type="text" class="form-control " id="event-video-url" maxlength="50" name="video" placeholder="&{'url'}" value="${params.video}" rel="tooltip" data-original-title="&{'introduction-video'}"/>
 			<div class="error">#{error 'video' /}</div>
 		</div>		
+		<div>
+			<label>&{'video-recorder-directly'}</label>
+			<br/>
+		    <div id="widget"></div>
+		    <div id="player"></div>
+		    <script>
+		      var tag = document.createElement('script');
+		      tag.src = "https://www.youtube.com/iframe_api";
+		      var firstScriptTag = document.getElementsByTagName('script')[0];
+		      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+		      var widget;
+		      var player;
+		      function onYouTubeIframeAPIReady() {
+		        widget = new YT.UploadWidget('widget', {
+		          width: 500,
+		          events: {
+		            'onUploadSuccess': onUploadSuccess,
+		            'onProcessingComplete': onProcessingComplete
+		          }
+		        });
+		      }
+		      
+		      function onUploadSuccess(event) {
+		        var url = 'https://www.youtube.com/watch?v=' + event.data.videoId;
+		        $("#event-video-url").val(url);
+		      }
+		      
+		      function onProcessingComplete(event) {
+		        $("#widget").hide();
+		        player = new YT.Player('player', {
+		          height: 390,
+		          width: 640,
+		          videoId: event.data.videoId,
+		          events: {}
+		        });
+		      }
+		    </script>	
+		    <br/>	
+		</div>
+		
 		
 		<label class="control-label">&{'channel-type'} *</label>
 		<div class="form-group">
 			<div class="btn-group" data-toggle="buttons">
-			  <label class="btn btn-light-gray #{if params.type == "p2p"} active #{/if}" >
-			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "p2p"} checked="checked" #{/if} value="p2p"> &{'video-conference'}
+			  <label class="btn btn-light-gray #{if params.type == "p2p"} active #{/if}" rel="tooltip" data-original-title="&{'p2p-description'}">
+			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "p2p"} checked="checked" #{/if} value="p2p"> &{'p2p'}
 			  </label>
 			  *{
-			  <label class="btn btn-light-gray #{if params.type == "broadcast"} active #{/if}" >
+			  <label class="btn btn-light-gray #{if params.type == "broadcast"} active #{/if}" rel="tooltip" data-original-title="&{'p2p-description'}">
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "broadcast"} checked="checked" #{/if} value="broadcast"> &{'live-broadcast'}
 			  </label>
-			  <label class="btn btn-light-gray #{if params.type == "instant"} active #{/if}" >
+			  <label class="btn btn-light-gray #{if params.type == "instant"} active #{/if}" rel="tooltip" data-original-title="&{'p2p-description'}">
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "instant"} checked="checked" #{/if} value="instant"> &{'instant-broadcast'}
 			  </label>
-			  }*
-			  <label class="btn btn-light-gray #{if params.type == "hangout"} active #{/if}" >
+			  <label class="btn btn-light-gray #{if params.type == "hangout"} active #{/if}" rel="tooltip" data-original-title="&{'p2p-description'}">
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangout"} checked="checked" #{/if} value="hangout"> &{'google-hangout'}
 			  </label>
-			  <label class="btn btn-light-gray #{if params.type == "hangoutAir"} active #{/if}" >
+			  <label class="btn btn-light-gray #{if params.type == "hangoutAir"} active #{/if}" rel="tooltip" data-original-title="&{'p2p-description'}">
 			    <input type="radio" name="type" id="option1" autocomplete="off" #{if params.type == "hangoutAir"} checked="checked" #{/if} value="hangoutAir"> &{'google-hangout-air'}
 			  </label>
+			  }*
 			</div>				
 		</div>
 
 		<label class="control-label">&{'privacy'} *</label>
 		<div class="form-group ">
 			<div class="btn-group" data-toggle="buttons">
-				  <label class="btn btn-light-gray #{if params.privacy == "private"} active #{/if}" >
+				  <label class="btn btn-light-gray #{if params.privacy == "private"} active #{/if}" rel="tooltip" data-original-title="&{'privacy-private-description'}">
 				    <input type="radio" name="privacy" id="option1" autocomplete="off" #{if params.privacy == "private"} checked="checked" #{/if} value="private"> &{'private'}
 				  </label>				
-				  <label class="btn btn-light-gray #{if params.privacy == "public"} active #{/if}" >
+				  <label class="btn btn-light-gray #{if params.privacy == "public"} active #{/if}" rel="tooltip" data-original-title="&{'privacy-public-description'}">
 				    <input type="radio" name="privacy" id="option1" autocomplete="off" #{if params.privacy == "public"} checked="checked" #{/if} value="public"> &{'public'}
 				  </label>
 			</div>					
@@ -344,10 +391,10 @@
 		<div class="form-group">
 			<div class="event-charging-container">
 				<div class="btn-group" data-toggle="buttons">
-					  <label class="btn btn-light-gray #{if params.charging == "free"} active #{/if}" >
+					  <label class="btn btn-light-gray #{if params.charging == "free"} active #{/if}" rel="tooltip" data-original-title="&{'charging-free-description'}">
 					    <input type="radio" name="charging" id="option1" autocomplete="off" #{if params.charging == "free"} checked="checked" #{/if} class="event-charging" value="free"> &{'free'}
 					  </label>				
-					  <label class="btn btn-light-gray #{if params.charging == "before"} active #{/if}" >
+					  <label class="btn btn-light-gray #{if params.charging == "before"} active #{/if}" rel="tooltip" data-original-title="&{'charging-paid-description'}">
 					    <input type="radio" name="charging" id="option1" autocomplete="off" #{if params.charging == "before"} checked="checked" #{/if} class="event-charging" value="before"> &{'paid'} 
 					  </label>
 				</div>			
@@ -394,17 +441,20 @@
 				<div class="error">#{error 'currency' /}</div>
 				
 				<br/>
-				<div class="form-group event-category" >
-		  			<select class="form-control" name="chargingTime">
-						<option value="15" #{if params.chargingTime == "15"} selected="selected" #{/if} >&{'for'} 15 &{'minutes'}</option>
-						<option value="10" #{if params.chargingTime == "10"} selected="selected" #{/if} >&{'for'} 10 &{'minutes'}</option>
-						<option value="5" #{if params.chargingTime == "5"} selected="selected" #{/if} >&{'for'} 5 &{'minutes'}</option>
+				<div class="form-group event-category">
+		  			<select class="form-control" name="chargingTime" rel="tooltip" data-original-title="&{'charging-time'}">
+						<option value="30" #{if params.chargingTime == "30"} selected="selected" #{/if} >for 30 &{'minutes'}</option>
+						<option value="15" #{if params.chargingTime == "15"} selected="selected" #{/if} >for 15 &{'minutes'}</option>
+						<option value="10" #{if params.chargingTime == "10"} selected="selected" #{/if} >for 10 &{'minutes'}</option>
+						<option value="5"  #{if params.chargingTime == "5"}  selected="selected" #{/if} >for 5 &{'minutes'}</option>
 					</select>						
 					<div class="error">#{error 'category' /}</div>
 				</div>					
 				<div class="form-group ">
 					<div class="" > 
-						<label class="" style="font-weight:100;"> <input type="checkbox" name="firstFree" value="firstFree" #{if params.firstFree != null} checked="checked" #{/if}> &{'first-free'}</label> &nbsp;&nbsp;&nbsp;
+						<label style="font-weight:100;" rel="tooltip" data-original-title="&{'charging-first-free'}"> 
+							<input type="checkbox" name="firstFree" value="firstFree" #{if params.firstFree != null} checked="checked" #{/if}> &{'first-free'}
+						</label> &nbsp;&nbsp;&nbsp;
 					</div>
 					<div class="error">#{error 'firstFree' /}</div>
 				</div>						
@@ -414,14 +464,18 @@
 		<br/>
 		<div class="form-group ">
 			<div class="" > 
-				<label class="" style="font-weight:100;"> <input type="checkbox" name="chatEnabled" value="chatEnabled" #{if params.chatEnabled != null} checked="checked" #{/if}> <strong>&{'enable-chat'}</strong></label> &nbsp;&nbsp;&nbsp;
+				<label style="font-weight:100;" rel="tooltip" data-original-title="&{'chat-enable-disable'}">
+					<input type="checkbox" name="chatEnabled" value="chatEnabled" #{if params.chatEnabled != null} checked="checked" #{/if}> <strong>&{'enable-chat'}</strong>
+				</label> &nbsp;&nbsp;&nbsp;
 			</div>
 			<div class="error">#{error 'chatEnabled' /}</div>
 		</div>
 		
 		<div class="form-group ">
 			<div class="" > 
-				<label class="" style="font-weight:100;"> <input type="checkbox" name="commentsEnabled" value="commentsEnabled" #{if params.commentsEnabled != null} checked="checked" #{/if}> <strong>&{'enable-comments'}</strong></label> &nbsp;&nbsp;&nbsp;
+				<label style="font-weight:100;" rel="tooltip" data-original-title="&{'comments-enable-disable'}"> 
+					<input type="checkbox" name="commentsEnabled" value="commentsEnabled" #{if params.commentsEnabled != null} checked="checked" #{/if}> <strong>&{'enable-comments'}</strong>
+				</label> &nbsp;&nbsp;&nbsp;
 			</div>
 			<div class="error">#{error 'commentsEnabled' /}</div>
 		</div>		

@@ -252,7 +252,7 @@ public class Accounts extends BaseController
         final String timeTo = request.params.get("filterTimeTo");
         final Date from = dt.fromJson(timeFrom);
         final Date to = dt.fromJson(timeTo);
-        final User senderUser = User.getUserByLogin(sender);
+        User senderUser = User.getUserByLogin(sender);
         User receiverUser = user;
 
         if (!user.isAdmin() && StringUtils.getStringOrNull(transaction) != null)
@@ -260,6 +260,8 @@ public class Accounts extends BaseController
 
         if (user.isAdmin() && transaction != null)
             receiverUser = User.getUserByLogin(transaction);
+        if (user.isAdmin() && transaction != null && sent != null)
+            senderUser = User.getUserByLogin(transaction);
 
         List<Attendance> payments = Attendance.getPayments(receiverUser, from, to, senderUser, sent);
 

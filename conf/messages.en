@@ -1,5 +1,6 @@
 
 #Accounts.java
+error-default-message=Something went wrong. Exception has been logged. Try again.
 you-need-at-least-one-listing=To become a Publisher You need at least one channel. <a href="/channel/new?action=edit&new=true">Click here to create one</a>
 please-fill-in-information-about-you=To become a Publisher please fill in information about you
 please-fill-in-information-about-you=To become a Publisher please fill in information about you
@@ -12,10 +13,11 @@ publisher-request-declined-message=h3. Your request for publisher was declined \
 
 #Application.java
 start-helping-others=Start helping others and become Publisher. <a href='/settings/request-publisher'>Request for publisher account here</a> or <a href='/settings/publisherinfo'>dismiss</a>.
-click-and-drag-to-create-event=Click and drag to create a request for session
+click-and-drag-to-create-event=Select a free time slot and start dragging to create a request for a new session. <br/><span style='opacity:0.5'>Session marked with solid black color means, that this time slot is already reserved.</span>
 
 #Attendances.java
 blocked-contact=This contact is blocked
+you-are-blocked=You have been blocked by user
 
 #BaseController.java
 
@@ -32,6 +34,9 @@ invitation-sent-to=Invitation has been successfully sent to %s
 view-on-widgr=View on Widgr
 c
 #Events.java
+limit-reached=You have reached the monthly limit for paid Sessions. <a href='/about#pricing'>Learn more</a>
+event-created=Session was successfully created.
+event-left=Session was successfully created.
 invalid-price=Invalid price
 invalid-time-range=Invalid time range
 setup-PayPal-account-warning=To create paid session you must set up your PayPal account first. <a href='/settings?edit=true#PayPal'>Set up your PayPal account here</a>
@@ -42,7 +47,7 @@ new-event-proposed-for-channel-message=h3. New session request \n%s requested ne
 you-have-been-invited-subject=%s invited you to session %s
 you-have-been-invited-message=h3. Invitation to session \n%s invited you to session [%s|%s]
 your-proposal-declined-subject=%s declined your session request
-your-proposal-declined-message=h3. Your session session request was declined \n%s declined your request for channel %s
+your-proposal-declined-message=h3. Your session session request was declined \n%s declined your request for channel [%s|%s]
 your-proposal-approved-subject=%s accepted your session request
 your-proposal-approved-message=h3. Your session request was approved \n%s accepted your request [%s|%s] 
 new-event-request-subject=New instant session request for %s
@@ -70,7 +75,9 @@ message-sent-successfully=Message has been sent
 event-payment-completed-subject=New payment received for session %s
 event-payment-completed-message=h3. New payment received for session %s \n %s sended you a payment for %s. [Click here to open session details|%s]
 event-refund-request-subject=Refund request from %s
-event-refund-request-message=h3. Refundation request \n%s requested refundation for session [%s|%s]. You can issue refund through [Received payments page|%s] \nh4. Refundation message from customer \n%s
+event-refund-request-message=h3. Refund request \n%s requested refund for session [%s|%s]. You can issue refund through [Received payments page|%s] \nh4. Refundation message from customer \n%s
+event-refunded-request-subject=Approved refund request for Session %s 
+event-refunded-request-message=h3. Approved refund request for Session %s \nYour refund request for session [%s|%s] was approved.
 
 #Public.java
 
@@ -208,8 +215,10 @@ contact=Contact
 #WikiUtils.java
 
 #account.html
+valid-to=Valid to
+events-left=Sessions left for current billing cycle
 paypal-account=PayPal Account
-paypal-info=To this account will be issued payments for your paid sessions. It must be a valid Business or Premium PayPal account
+paypal-info=Your PayPal account to receive incoming payments for paid sessions. It must be a verified Business or Premium PayPal account
 login-already-used=Login already used
 true=Enabled
 false=Disabled
@@ -218,10 +227,12 @@ learn-more-about-pricing=Learn more about pricing
 cancel-subscription=Cancel subscription
 upgrade-to-plan=Upgrade to plan
 per-month=per month
-account-will-be-valid=Account Plan %s will be valid from
+account-will-be-valid=Account Plan 
+account-will-be-valid-2=will be applied from
 your-subscription-not-activated=Your subscription for plan %s is not activated yet. To activate your subscription please proceed with PayPal
 standard=Standard
 publisher=Publisher
+receiver=Receiver
 publisherReq=Standard
 edit=Edit
 cancel=Cancel
@@ -252,7 +263,7 @@ enable-or-disable-email-notifications=Enable or disable email notifications
 facebook-id=Connect Facebook
 clear-facebook-id=Disconnect Facebook Account
 connect-with-your-facebook-account=Connect Widgr with your facebook account. You will be able to login to Widgr using your facebook account.
-install-widgr-app-to-your-facebook-page=Install widgr app to your facebook page
+install-widgr-app-to-your-facebook-page=Install Widgr app to your Facebook page
 first-name=First name
 last-name=Last name
 language=Language
@@ -324,7 +335,7 @@ activities=Activities
 #users.html
 
 #about.html
-contact-us-text=Help us improve Widgr! In case of any questions or issues, feel free to ask us anything. We appreciate feedback from You. Use the email address below or web form.
+contact-us-text=Help us improve Widgr! In case of any questions or issues, feel free to ask us anything. We appreciate feedback from You. Use the email address below or the web form.
 pricing-for-customers=Pricing for basic Users
 pricing-for-publishers=Pricing for Widgr Publishers
 widgr-share-your-knowledge=widgr<small style="font-size:0.6em"> &middot; share your knowledge</small>
@@ -341,13 +352,13 @@ why-choose-widgr-text=Why choose widgr?
 widgr-feature-1=Online Video Calls
 widgr-feature-2=Scheduling flexibility
 widgr-feature-3=Pricing options
-widgr-feature-4=Easy payments
+widgr-feature-4=Easy payments and refunds with PayPal
 widgr-feature-5=Integration with Facebook
 widgr-feature-6=Integration with Google Calendar
-widgr-feature-1-text=Widgr sessions are conducted through live video calls. During the session, you can point your camera to show what you need help with, If you don't want the provider to see you, you can always turn off your camera. 
+widgr-feature-1-text=Widgr sessions are conducted through live video calls. During the session, you can point your camera to show what you need help with, If you don't want the Publisher to see you, you can always turn off your camera. 
 widgr-feature-2-text=There are two ways to create join session -- instantly and scheduled. If a publisher's channel has a purple "Available now" icon, you are just a few clicks away from getting help instantly. Otherwise, you can see when publishers are available in their calendar and pick a time slot or send a message to request a different time.
-widgr-feature-3-text=Prices are set by the publishers and can be free or charged by the session. Some publishers might offer the first session for free.
-widgr-feature-4-text=All payments are currently done through PayPal, so if you haven't already, you'll need to create a Premier or account to be able to create paid sessions. Sessions that are free don't require a PayPal account.
+widgr-feature-3-text=Sessions that are free don't require a PayPal account. Prices are set by the publishers and can be free or charged by the session. Some publishers might offer the first session for free.
+widgr-feature-4-text=All payments are currently done through PayPal with easy refundantion policy. If you as a User will not be satisfied with the session, you can ask for a refund with one click.<br/><br/>If you plan to use Widgr as a Publisher and offer paid Sessions, you'll need to have a verified Premier or Business account to be able to receive money through PayPal.
 widgr-feature-5-text=You can easily integrate your Widgr account with existing Facebook page, that your account will be more accesible to your Facebook community. If you own a Facebook page, you can install Widgr app to custom tab. With this option, your potential customers are just few clicks away using your services. <br/><a href="https://www.facebook.com/add.php?api_key=731388346951866&pages">Click here to add Widgr app to your Facebook page</a>
 widgr-feature-6-text=You can easily connect your Widgr account with Google Calendar. With Google calendar you can schedule and manage and be notified about your sessions on every device you use.
 pricing=Pricing
@@ -374,7 +385,7 @@ email-address=Email address
 message=Message
 send=Send
 get-modern-browser=Compatibility
-compatibility=<p><strong>To get full experience</strong> make sure that you are using up-to-date browser<br/>Video calls are based on Webrtc browser technology. Which is still under development and is not supported by all browsers. <a href="http://iswebrtcreadyyet.com/">Check your browser support for Webrtc here &raquo;</p>
+compatibility=<p><strong>To get full experience</strong> make sure that you are using up-to-date browser<br/>Widgr sessions happens over live video calls. These Video calls are based on Webrtc browser technology, which is still under development and is not fully supported by all browsers. Make sure that your browser supports Webrtc <a href="/instant">by starting test video call.</a> You should be able to see yourself on the screen. Or you can check your <a target="_blank" href="http://iswebrtcreadyyet.com/">browser support for Webrtc in detail here &raquo;</p>
 
 #calendar.html
 for=For
@@ -432,7 +443,7 @@ find-help=Search
 find-help-message=With Widgr you can get help anytime from people with expertise across a range of topics. Teachers, computer experts, home repair specialists, personal trainers, hobby enthusiasts, and more. No matter who you are, no matter where you are and no matter what time it is, with Widgr you are just few click away from getting help.
 read-more=Read more
 get-help=Get help
-get-help-message=You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. While some Publishers offer free sessions, some may be charged. For those just simply use your PayPal to pay securely and fast. Keep in mind that you have always your money back guaranteed. 
+get-help-message=You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. While some Publishers offer free sessions, some may be charged. For those just simply use your PayPal to pay securely and fast. 
 get-paid=Get paid
 get-paid-message=When you know something what might be useful for others you can become a Publisher. Widgr will provide you a simple platform which will help you to connect to your customers. All you need is just PayPal account for receiving payments, and you are ready to start new Business
 you-are-on-the-right-place=Join Us, it's free
@@ -441,6 +452,9 @@ channels-by-category=Channels by category
 view-all=View all
 
 #comments.html
+paid-comment=Paid feed
+paid-comment-note=<p class="bg-info" style="padding:10px;"><i class="fa fa-key"></i> This feed is hidden. Feed will be displayed after completed payment</p>
+paid-comment-info=This feed will be displayed only for customers who paid for the Session
 share-whats-new=Share what's new
 text=Text
 
@@ -521,11 +535,45 @@ settings=Settings
 
 #homeRating.html
 
+
+<h5><i class="fa fa-globe fa-1x"></i> Get modern browser</h5>
+<p>
+	To get full user experience update your browser to latest.
+	<a href="about">Check compatibility</a>
+</p>
+
+<h5><i class="fa fa-video-camera fa-1x"></i> &{'setup-camera'}</h5>
+<p>&{'setup-camera-description'}</p>
+
+<h5><i class="fa fa-youtube fa-1x"></i> &{'check-out-tutorials'}</h5>
+<ul>
+	<li><a href="">How to request for publisher account</a>
+	<li><a href="">How to create a channel</a>
+</ul>
+<br/>
+
 #leftPanel.html
+setup-camera=Set up your camera
+setup-camera-description=Wigdr sessions happen over video conferencing, so be sure that yours works properly
+checkout-tutorials=Check out tutorials
 write-message-for=Write message for
 tips-for-first-timers=Tips for first timers
 
 #edit.html
+video-recorder-directly=Create Introductory video using Youtube widget
+introduction-video=Link to youtube/vimeo introductory video displayed on Session page
+p2p-description=Online Video Call
+broadcast-description=Broadcasting
+hangout-description=Google hangout conversation
+hangoutAir-description=Broadcasting via Google hangout Air
+privacy-private-description=Session will be accessible only for invited users
+privacy-public-description=Session will be accessible for all users
+charging-free-description=Free Session
+charging-paid-description=Customers will be charged for the access to the Session
+charging-first-free=Channel will be labeled as first free. You can then optionally offer first paid Session to the Customer for free.
+charging-time=Default charging time period
+comments-enable-disable=Enable or disable Customer comments in Session page
+chat-enable-disable=Enable or disable interactive chat box in Session page
 event-date=Session date
 video-conference=Video conference
 live-broadcast=Live broadcast
@@ -544,7 +592,7 @@ title=Title
 tags=Tags
 other=Other
 description=Description
-introduction-video-url=Introduction video url
+introduction-video-url=Introductory video url
 url=Url
 channel-type=Channel type
 instant-broadcast=Instant broadcast
@@ -554,8 +602,8 @@ first-free=First free
 #editButtons.html
 approved=Approved
 you-can-pay-for-event-before-or-you-can-wait-until-event-starts=You can pay for session before or you can wait until session starts
-pay-for-event-now=Pay for session now
-join-video-call=Join video call
+pay-for-event-now=Pay for session
+join-video-call=Join
 start-live-broadcast=Start live broadcast
 stop-live-broadcast=Stop live broadcast
 stop-instant-broadcast=Stop instant broadcast
@@ -568,9 +616,11 @@ delete-event=Delete
 star-instant-broadcast=Start instant broadcast
 go-to-private-room=Go to private room
 edit-channel=Edit channel
-delete-channel=Delete channel
+delete-channel=Delete&nbsp;channel
 
 #listing.html
+add-more-people=Invite more people to this session
+invite-press=Check selected users and press to submit an invitation to this Session
 check-me-as-available=Activate Available now
 uncheck-me-as-available=Deactivate Available now
 paid-on=Paid on
@@ -582,7 +632,7 @@ reason-required=You must enter reason of refundation request
 write-reason=Write reason why you are requesting refundation
 confirm-decline=Confirm your choice
 create-new-channel=Create new channel
-play-introduction=Play introduction
+play-introduction=Play&nbsp;introduction
 total-price=Total price
 min=Min
 request-for-event=Schedule session later
@@ -608,6 +658,7 @@ create-event=New session
 request-event=Schedule session
 
 #main.html
+follow-us=Follow us on
 select-page-to-display=Select page to display
 channel=Channel
 select channel=Select channel
@@ -642,6 +693,7 @@ PayPal-error=PayPal checkout failed. Please try again.
 unit-price=Unit price
 total=Total price
 checkout-with-PayPal=Checkout with PayPal
+subscribe-with-PayPal=Subscribe with PayPal
 pay-with-PayPal=Checkout with PayPal
 
 #userProfile.html
@@ -672,12 +724,13 @@ login=Login
 captcha=Captcha
 
 #registration.html
+agreement=By submitting registration you agree with <a href="/terms" target="_blank">Terms of Use</a>
 password-label=at least 8 characters with one digit and two uppercases
 password-error=Invalid password
 registration=Registration
 register-with-facebook=Register with facebook
 registration.login=Registration.login
-registration-login=Your login as email address
+registration-login=Your email address as login
 validation.login=Not valid email address
 validation.required=This field is required
 validation.passwordMatch=Password does not match
@@ -809,6 +862,7 @@ hangout=Hangout
 hangoutAir=Hangout on Air
 app.admin=admin
 you=You
+you-2=You
 on=on
 reply=Write reply
 

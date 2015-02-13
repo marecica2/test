@@ -32,7 +32,7 @@
 
 #{else}
 	#{if obj.type == 'p2p'}
-		#{set displayChat:false /}
+		#{set displayChat:true /}
 	#{/if}
 	
 	#{if obj.type == 'broadcast'}
@@ -137,13 +137,16 @@
 							<div style="height:100%">
 								<div style="text-align:left;font-size:1.3em;padding-top:10px;padding-bottom:10px;">
 									<span class="label default-bg">Chat box</span>
+									#{if isOwner}
+										<a href="/public/feeds-clear?uuid=${globalObject.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-default btn-sm btn-short margin-clear">clear</a>
+									#{/if}
 									<span class="chat-avatars">
 									</span>
 								</div>
 								
 								<div id="content" class="text-shadow" style="height:385px; overflow-y: auto; overflow-x:hidden; text-align:left; color:white; "></div>
 								
-								#{if user}
+								#{if user && obj && !obj.user.hasBlockedContact(user)}
 								<form onsubmit="return false;" style="margin-top:15px;">
 									<div class="input-group">
 										<input id="chat-text" class="form-control" style="color:white; background: rgba(33, 33, 33, 0.6)" placeholder="&{'enter-your-message'}"> 

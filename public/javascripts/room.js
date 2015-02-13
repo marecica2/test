@@ -86,6 +86,14 @@ socket.on('socket_message', function(data) {
         setTimeout(function(){ window.location.reload();
         }, 5000);
     } 
+    if(data.event == "canvas-draw"){
+        canvas.drawMessage(data.data);
+    }     
+    if(data.event == "canvas-erase"){
+        canvas.eraseMessage();
+    }     
+    if(data.event == "canvas-save"){
+    }     
  });
 
 //automatically create user_joined event
@@ -328,6 +336,10 @@ if(webrtc != null){
              window.close();
          });
          
+         
+         
+         
+         
     });
     
     
@@ -337,26 +349,37 @@ if(webrtc != null){
     
     // local screen share obtained
     webrtc.on('localScreenAdded', function (video) {
-        
+        console.log('localScreenAdded');
+        console.log(video);
     });
     
     
-    // we got access to the camera
-    webrtc.on('localStream', function (stream) {
-        console.log("local stream added " + getPeerId());
-        
-        // move the video avatar
-        var id = getPeerId();
+    webrtc.on('connectionReady', function (id) {
+        console.log("connectionReady");
+        console.log(id);
+        console.log(webrtc.getLocalVideoContainer());
+
         $(webrtc.getLocalVideoContainer()).parent().wrap("<div data-id='"+id+"' data-local='true' style='position:relative' id='video-element-"+id+"' class='user-elm'></div>");
         $(webrtc.getLocalVideoContainer()).parent().parent().append("<div id='localVolume' class='volumeBar'></div>");
         webrtc.getLocalVideoContainer().play();
     });
     
+    // we got access to the camera
+    webrtc.on('localStream', function (stream) {
+        
+        console.log("localStream");
+        console.log(getPeerId());
+        console.log(webrtc.getLocalVideoContainer());
+//        
+//        var id = getPeerId();
+//        $(webrtc.getLocalVideoContainer()).parent().wrap("<div data-id='"+id+"' data-local='true' style='position:relative' id='video-element-"+id+"' class='user-elm'></div>");
+//        $(webrtc.getLocalVideoContainer()).parent().parent().append("<div id='localVolume' class='volumeBar'></div>");
+//        webrtc.getLocalVideoContainer().play();
+    });
+    
     
     // a peer video has been added
     webrtc.on('videoAdded', function (video, peer) {
-        console.log('remote video added ' +peer.id);
-        
         var remotes = document.getElementById('remotes');
         var isScreen = $(video).attr("id").indexOf("_screen") != -1 ? true : false;
     
@@ -408,10 +431,7 @@ if(webrtc != null){
     webrtc.on('videoRemoved', function (video, peer) {
         var isScreen = $(video).attr("id").indexOf("_screen") != -1 ? true : false;
         if(isScreen){
-            
             //$("#video-element-"+peer.id+"[data-screen='true']").remove();
-            //console.log("removing screen");
-            //console.log(video);
             
             // remove screen share video
             $(video).remove();
@@ -421,8 +441,6 @@ if(webrtc != null){
             // show original video
             $("#"+peer.id+"_video_incoming").show();
         } else {
-            console.log("video removed");
-            
             $(video).remove();
             //$("#"+peer.id+"_video_incoming").remove();
             $("#video-element-"+peer.id).remove();
@@ -461,10 +479,11 @@ function usersChatRender(data){
     users = [];
     for ( var index in data) {
         var row = data[index];
+        var avatars = [];
         for ( var usr in row) {
-            if(row[usr].room == star.room){
-                html += "<img src='/"+row[usr].avatar+"_32x32' class='avatar22 avatar_"+row[usr].id+"' title='"+row[usr].user+"' style='margin-right:1px'>";
-                
+            if(row[usr].room == star.room && $.inArray(row[usr].avatar, avatars) == -1 && row[usr].avatar != undefined){
+                html += "<img src='/"+row[usr].avatar+"_32x32' id="+row[usr].avatar+" class='avatar22 avatar_"+row[usr].id+"' title='"+row[usr].user+"' style='margin-right:1px'>";
+                avatars.push(row[usr].avatar);
             }
         }
     }
@@ -501,9 +520,9 @@ function usersRender(data) {
                     html += "   <button class='peer-mute btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' data-type='audio' data-name='" + row[usr].user + "' data-id='"+peerId+"'>"
                     html += "       <i class='icon-mute'></i> "+i18n("mute");
                     html += "   </button> ";
-                    html += "   <button class='peer-unmute btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' data-type='audio' data-name='" + row[usr].user + "' data-id='"+peerId+"'>"
-                    html += "       <i class='icon-sound'></i> "+i18n("unmute");
-                    html += "   </button> ";
+                    //html += "   <button class='peer-unmute btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' data-type='audio' data-name='" + row[usr].user + "' data-id='"+peerId+"'>"
+                    //html += "       <i class='icon-sound'></i> "+i18n("unmute");
+                    //html += "   </button> ";
                     html += "</div>";
 
                     // peer avatar
@@ -543,7 +562,7 @@ function maximizeMimize(id, local){
         $(star.maximized).appendTo(moveTo);
         if(star.maximized != null)
             star.maximized.play();
-        $("#video-element-"+star.maximizedId).css("border", "3px solid rgba(0,0,0,0.7)");
+        $("#video-element-"+star.maximizedId).css("border", "3px solid rgba(0,0,0,0.0)");
         $("#"+star.maximizedId+"_video_small").hide();
         
         // mimize maximized screen
@@ -750,8 +769,8 @@ if(webrtc != null){
     socket.on('user_disconnect', function(data) {
         var peerId = JSON.parse(data).peer;
         var peer = getPeerById(peerId);
-        peer.end();
-        if(peer != null){
+        if(peer != null && peer != undefined){
+            peer.end();
             var video = $(peer.videoEl);
             if(video != null){
                 video.remove();
@@ -776,7 +795,6 @@ if(webrtc != null){
     // if webrtc is null
     socket.on('user_disconnect', function(data) {
         data =  JSON.parse(data);
-        console.log($(".avatar_"+data.client));
         $(".avatar_"+data.client).remove();
     });
 }
@@ -830,6 +848,148 @@ function send_chat(message, usr){
         socket.emit('send', { "message": message, "username": usr, "room" : star.room});  
     }
 };
+
+
+
+
+// canvas
+var canvas = {};
+canvas.canvas = null;
+canvas.ctx; 
+canvas.flag = false, 
+canvas.prevX = 0; 
+canvas.currX = 0; 
+canvas.prevY = 0; 
+canvas.currY = 0, 
+canvas.dot_flag = false;
+canvas.x = "black"; 
+canvas.y = 10;
+
+canvas.init = function() {
+    canvas.canvas = $(".canvas-paper")[0];
+    canvas.ctx = canvas.canvas.getContext("2d");
+    canvas.w = canvas.canvas.width;
+    canvas.h = canvas.canvas.height;
+
+    canvas.canvas.addEventListener("mousemove", function (e) {
+        canvas.findxy('move', e)
+    }, false);
+    canvas.canvas.addEventListener("mousedown", function (e) {
+        canvas.findxy('down', e)
+    }, false);
+    canvas.canvas.addEventListener("mouseup", function (e) {
+        canvas.findxy('up', e)
+    }, false);
+    canvas.canvas.addEventListener("mouseout", function (e) {
+        canvas.findxy('out', e)
+    }, false);
+}
+
+canvas.draw = function() {
+    canvas.ctx.beginPath();
+    canvas.ctx.moveTo(canvas.prevX, canvas.prevY);
+    canvas.ctx.lineTo(canvas.currX, canvas.currY);
+    canvas.ctx.lineCap="round";
+    canvas.ctx.strokeStyle = canvas.x;
+    canvas.ctx.lineWidth = canvas.y;
+    canvas.ctx.stroke();
+    canvas.ctx.closePath();
+    
+    var data = {};
+    data.prevX = canvas.prevX;
+    data.prevY = canvas.prevY;
+    data.currX = canvas.currX;
+    data.currY = canvas.currY;
+    socket_message_broadcast("canvas-draw", data);
+}
+
+canvas.drawMessage = function(data){
+    canvas.ctx.beginPath();
+    canvas.ctx.moveTo(data.prevX, data.prevY);
+    canvas.ctx.lineTo(data.currX, data.currY);
+    canvas.ctx.lineCap="round";
+    canvas.ctx.strokeStyle = canvas.x;
+    canvas.ctx.lineWidth = canvas.y;
+    canvas.ctx.stroke();
+    canvas.ctx.closePath();
+}
+
+canvas.eraseMessage = function(){
+    canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+    document.getElementById("canvasimg").style.display = "none";
+}
+
+canvas.erase = function() {
+    canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+    document.getElementById("canvasimg").style.display = "none";
+    var data = {};
+    socket_message_broadcast("canvas-erase", data);
+}
+
+canvas.save = function() {
+    var dataURL = canvas.canvas.toDataURL();
+    document.getElementById("canvasimg").src = dataURL;
+    document.getElementById("canvasimg").style.display = "inline";
+}
+
+canvas.findxy = function(res, e) {
+    if (res == 'down') {
+        canvas.prevX = canvas.currX;
+        canvas.prevY = canvas.currY;
+        canvas.currX = e.clientX - $(canvas.canvas).offset().left;
+        canvas.currY = e.clientY - $(canvas.canvas).offset().top;
+
+        canvas.flag = true;
+        canvas.dot_flag = true;
+        if (canvas.dot_flag) {
+            canvas.ctx.beginPath();
+            canvas.ctx.moveTo(data.currX, data.prevY);
+            canvas.ctx.lineTo(data.currX, data.currY);
+            canvas.ctx.lineCap="round";
+            canvas.ctx.strokeStyle = canvas.x;
+            canvas.ctx.lineWidth = canvas.y;
+            canvas.ctx.stroke();
+            canvas.ctx.closePath();
+        }
+    }
+    if (res == 'up' || res == "out") {
+        canvas.flag = false;
+    }
+    if (res == 'move') {
+        if (canvas.flag) {
+            canvas.prevX = canvas.currX;
+            canvas.prevY = canvas.currY;
+            canvas.currX = e.clientX - $(canvas.canvas).offset().left;
+            canvas.currY = e.clientY - $(canvas.canvas).offset().top;
+            canvas.draw();
+        }
+    }
+}
+
+$(document).ready(function(){
+    $(".canvas-container").css('position','fixed');
+    $(".canvas-container").css("left", ($(window).width()/2-$('.canvas-container').width()/2) + "px");
+    $(".canvas-container").css("top", ($(window).height()/2-$('.canvas-container').height()/2) + "px");
+    $(".canvas-container").show();
+
+    $(".canvas-container").draggable({handle:"#canvas-slider"});
+    $(".canvas-paper").resizable({
+        minHeight: 200,
+        minWidth: 200,
+        stop: function(event, ui) {
+              canvas.erase();
+              canvas.w = ui.size.width;
+              canvas.h = ui.size.height;
+              $(canvas.canvas).attr({ width: ui.size.width, height: ui.size.height });
+//            $("canvas", this).each(function() { 
+//                $(this).attr({ width: ui.size.width, height: ui.size.height });
+//            });
+        }
+    });
+    
+    
+    canvas.init(); 
+});
 
 
 
@@ -924,8 +1084,6 @@ socket.on('message', function(data) {
         var message = linkify(data.message);
         html += message + '<br/>';
         $("#content").append(html);
-        
-        console.log(data);
         var elm = $("#chat-container");
         if(star.chatMimized){
             elm.animate({right:'0px'},100);

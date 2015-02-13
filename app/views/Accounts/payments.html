@@ -165,7 +165,7 @@
 				<thead>
 		        <tr>
 		          #{if request.params.sent}
-			          <th>&{'publisher'}</th>
+			          <th>&{'receiver'}</th>
 		          #{/if}
 		          #{else}
 			          <th>&{'customer'}</th>
@@ -209,7 +209,9 @@
 		    				<span class="label label-danger" rel="tooltip" data-placement="top" data-original-title="${p.refundReason}">
 		    					&{'refund-reason'}
 		    				</span>&nbsp;
+		    				#{if request.params.sent == null}
 	    					<a href="/paypal/refund/${p.uuid}?url=${request.url.urlEncode()}&#{token /}" class="btn btn-default btn-sm margin-clear"  onclick="if(confirm('&{'confirm-decline'}')){return true;} else {return false;}">Refund</a>
+	    					#{/if}
 	    				#{/if}
 	    				#{if request.params.sent && p.refundRequested == null}
 	    					<a href="/event/${p.event.uuid}">&{'request-refund'}</a>&nbsp;
