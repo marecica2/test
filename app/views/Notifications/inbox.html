@@ -11,7 +11,7 @@
 	<div>
 		<div class="row">
 			<div class="col-md-12">
-				<h2><i class="fa fa-envelope-o"></i> &{'notifications'}</h2>
+				<h2><i class="icon-mail"></i> &{'notifications'}</h2>
 				<div class="separator-2"></div>
 			</div>
 		</div>
@@ -80,8 +80,7 @@
 
 				<div class="clearfix"></div>
  				<form action="/mail-new" role="form" method="post" class="reply-form hidden">
- 					<input type="hidden" name="url" value="${request.url.urlEncode()}">
- 					<input type="hidden" name="link" value="${request.params.url}">
+ 					<input type="hidden" name="link" #{if request.params.url} value="${request.params.url}" #{/if}#{else} value="${request.params.link}" #{/else}>
  					<input type="hidden" name="thread" value="#{if message && message.thread}${message.thread}#{/if}#{else}${message.uuid}#{/else}">
 					<div class="form-group">
 						<label for="exampleInputEmail1">&{'write-reply'}</label>
@@ -105,8 +104,7 @@
  				#{elseif action && action.equals("new")}	
 				<div class="error">#{error 'email' /}</div>		
  				<form action="/mail-new" role="form" method="post" class="margin-clear">
- 					<input type="hidden" name="url" value="${request.url.urlEncode()}">
- 					<input type="hidden" name="link" value="${request.params.url}">
+ 					<input type="hidden" name="link" #{if request.params.url} value="${request.params.url}" #{/if}#{else} value="${request.params.link}" #{/else}>
 					<div class="form-group">
 						<label for="exampleInputEmail1">&{'subject'}</label>
 					    <input type="text" class="form-control" name="subject" id="exampleInputEmail1" placeholder="&{'subject'}" value="#{if params.subject}${params.subject}#{/if}#{else}${request.params.subject}#{/else}">

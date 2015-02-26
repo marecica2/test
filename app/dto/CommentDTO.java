@@ -15,6 +15,7 @@ public class CommentDTO
 {
     public String uuid;
     public String comment;
+    public String commentRaw;
     public long created;
     public String createdBy;
     public String createdByName;
@@ -38,6 +39,7 @@ public class CommentDTO
         CommentDTO c = new CommentDTO();
         c.uuid = com.uuid;
         c.comment = WikiUtils.parseToHtml(com.comment);
+        c.commentRaw = com.comment;
         c.created = com.created.getTime();
         c.createdBy = com.user.uuid;
         c.createdByLogin = com.user.login;

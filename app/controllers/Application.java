@@ -40,6 +40,15 @@ public class Application extends BaseController
         renderTemplate("Application/about.html", user, uuid);
     }
 
+    public static void contact()
+    {
+        final User user = getLoggedUser();
+        String uuid = RandomUtil.getUUID();
+        params.put("uuid", uuid);
+        params.flash();
+        render(user, uuid);
+    }
+
     public static void contactUs(String uuid, String name, String email, String subject, String message, String captcha)
     {
         final User user = getLoggedUser();
@@ -70,7 +79,7 @@ public class Application extends BaseController
             flash.error(Messages.get("message-sent-error"));
             params.put("uuid", uuid);
             params.flash();
-            renderTemplate("Application/about.html", user, uuid);
+            renderTemplate("Application/contact.html", user, uuid);
         }
 
     }
@@ -113,7 +122,6 @@ public class Application extends BaseController
             pageId = session.get("pageId");
 
         User displayedUser = pageId != null ? User.getUserByFacebookPage(pageId) : null;
-
         if (displayedUser != null && displayedUser.facebookPageType != null)
         {
             if (displayedUser.facebookPageType.equals("calendar"))
@@ -123,6 +131,7 @@ public class Application extends BaseController
             if (displayedUser.facebookPageType.equals("channel"))
                 redirect("/channel/" + displayedUser.facebookPageChannel);
         }
+
         redirect("/dashboard");
     }
 
@@ -210,6 +219,46 @@ public class Application extends BaseController
         //c.value = user.timezone.toString();
         //request.cookies.put("timezone", c);
         render(user, watchList, listings, approved, type, isOwner, contacts, comments, temp, commentTemp, results, dashboard);
+    }
+
+    public static void manageChannels()
+    {
+        final User user = getLoggedUser();
+        final Boolean isOwner = true;
+        final Boolean dashboard = true;
+        final List<Contact> contacts = Contact.getContacts(user);
+        final List<Listing> listings = user != null ? Listing.getForUser(user) : null;
+
+        render(user, listings, isOwner, contacts, dashboard);
+    }
+
+    public static void approvements()
+    {
+        final User user = getLoggedUser();
+        final Boolean isOwner = true;
+        final Boolean dashboard = true;
+        final List<Event> approved = user != null ? Event.getApprovement(user) : null;
+        final List<Contact> contacts = Contact.getContacts(user);
+
+        render(user, approved, isOwner, contacts, dashboard);
+    }
+
+    public static void upcoming()
+    {
+        final Boolean dashboard = true;
+        final User user = getLoggedUser();
+        final Boolean isOwner = true;
+        final List<Contact> contacts = Contact.getContacts(user);
+        render(user, isOwner, contacts, dashboard);
+    }
+
+    public static void past()
+    {
+        final Boolean dashboard = true;
+        final User user = getLoggedUser();
+        final Boolean isOwner = true;
+        final List<Contact> contacts = Contact.getContacts(user);
+        render(user, isOwner, contacts, dashboard);
     }
 
     public static void calendarUser(String login, String channel) throws Throwable

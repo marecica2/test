@@ -67,6 +67,8 @@
 	    	var d = new Date();
 	    	var timezoneOffset = d.getTimezoneOffset();
 	    	document.cookie="timezoneJs="+timezoneOffset;
+	    	star.token = "#{token /}";
+			star.baseUrl = "${baseUrl}";	
 	    	$(document).ready(function(){
 		    	if(window.self !== window.top){
 		    	    $("#footer").hide();
@@ -137,7 +139,7 @@
         <script>
         $(document).ready(function(){
 			if ($("[rel=tooltip]").length) {
-	        	$("[rel=tooltip]").tooltip({'delay': { show: 100, hide: 0 }});
+	        	$("[rel=tooltip]").tooltip({'delay': { show: 2000, hide: 0 }});
 	        }
         });
         </script>

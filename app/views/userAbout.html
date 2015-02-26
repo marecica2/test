@@ -1,13 +1,13 @@
-#{if usr.userAbout}
+#{if usr.userAbout != null && usr.userAbout.length() > 0}
 <p class="black">${usr.userAboutHtml().raw()}</p>
 #{/if}
 
-#{if usr.userEducation}
+#{if usr.userEducation != null && usr.userEducation.length() > 0}
 <h3>&{'education'}</h3>
 <p class="black ">${usr.userEducationHtml().raw()}</p>
 #{/if}
 
-#{if usr.userExperiences}
+#{if usr.userExperiences != null && usr.userExperiences.length() > 0}
 <h3>&{'experiences'}</h3>
 <p class="black ">${usr.userExperiencesHtml().raw()}</p>
 #{/if}

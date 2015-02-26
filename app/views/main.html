@@ -52,28 +52,9 @@
 		<link href="@{'/public/css/custom.css'}" rel="stylesheet">
 		<link href="@{'public/css/skins/purple.css'}"  rel="stylesheet">
         <link href="@{'/public/stylesheets/main.css'}" rel="stylesheet" media="screen">		
+		<link href="@{'/public/style-switcher/style-switcher.css'}" rel="stylesheet">
          #{get 'moreStyles' /}       
          
-		*{
-		<!-- Style Switcher Styles (Remove these two lines) -->
-		#{set switcherBody: "wide" /}
-		#{set switcherFooter: "" /}
-		#{if switcher}
-			<link href="#" data-style="styles" rel="stylesheet">
-			<link href="@{'/public/style-switcher/style-switcher.css'}" rel="stylesheet">
-		#{/if}
-		#{else}
-			#{if usr}
-				#{set switcherFooter: usr.footer /}
-				#{set switcherBody: usr.layout + " " + usr.pattern /}
-				<link href="/css/skins/${usr.stylesheet}.css"  rel="stylesheet">
-			#{/if}
-			#{else}
-				<link href="/css/skins/purple.css"  rel="stylesheet">
-			#{/else}
-		#{/else}	
-		}*	
-
         <!-- Jquery and Bootstap core js files -->
 		<script type="text/javascript" src="@{'/public/plugins/jquery.js'}"></script>
 		<script type="text/javascript" src="@{'/public/bootstrap/js/bootstrap.min.js'}"></script>
@@ -85,7 +66,8 @@
 	    	var d = new Date();
 	    	var timezoneOffset = d.getTimezoneOffset();
 	    	star.token = "#{token /}";
-		</script>
+			star.baseUrl = "${baseUrl}";	
+	    </script>
 		<script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>
 		<script>
 			// init time zone
@@ -95,17 +77,18 @@
 	    	}
 	    	
 	    	$(document).ready(function(){
-	    	    
 	    	    // if running in iframe
 		    	if(window.self !== window.top){
 		    	    $(".logo-header").hide();
 		    	    $(".about-header").hide();
+		    	    $("footer").hide();
 		    	    $("body").addClass("wide");
 		    	    $("body").removeClass("boxed");
 		    	    $(".logo-menu").show();
 		    	    $("#facebook-tab-manager").show();
-		    	    //$("header").hide();
 		    	    $("body").css("background", "white");
+		    	    $(window).unbind("scroll");
+		    		$(".parallax").addClass("iframe");
 		    	}
 	    	    
 	    	    #{if user}
@@ -160,7 +143,9 @@
 			"boxed": boxed layout mode e.g. <body class="boxed">
 			"pattern-1 ... pattern-9": background patterns for boxed layout mode e.g. <body class="boxed pattern-1"> 
 	-->
-	<body class="boxed pattern-8 ${switcherBody}">
+
+	<body class="wide pattern-8 ${switcherBody}">
+	
 
 		<!-- scrollToTop -->
 		<!-- ================ -->
@@ -213,7 +198,8 @@
 				</div>
 			</div>
 			#{/if}
-		
+			
+			
 			<!-- content -->
 			<div class="body">
 				<div class="body-container" >
@@ -292,11 +278,11 @@
 												<nav>
 													<ul class="nav nav-pills nav-stacked">
 														<li><a href="/home">&{'home'}</a></li>
-														<li><a href="/about">&{'about-widgr'}</a></li>
+														<li><a href="/about">&{'about'}</a></li>
 														<li><a href="/terms">&{'terms'}</a></li>
 														<li><a href="/privacy">&{'privacy'}</a></li>
 														<li><a href="/help">&{'help'}</a></li>
-														<li><a href="/about#contact">&{'contact-us'}</a></li>
+														<li><a href="/contact">&{'contact-us'}</a></li>
 													</ul>
 												</nav>
 											</div>
@@ -325,6 +311,37 @@
 	
 			</footer>
 			<!-- footer end -->
+			
+			
+			<!-- Chat box -->
+			#{if (listing != null && listing.user.isAvailable()) || (usr != null && usr.isAvailable())}
+			<script type="text/javascript" src="@{'/public/style-switcher/style-switcher.js'}"></script>
+			<div class="style-switcher closed shadow-small style-switcher-container" >
+				<div style="color:white; background: #5cb85c" class="header btn-success">
+					<a class="trigger btn-success" href="#"><i class="fa fa-comments-o"></i></a>
+					<h2 style="color:white; background: #5cb85c" ><i class="fa fa-comments-o"></i> &{'chat'}</h2>
+				</div>
+				<div style="background: #fafafa;padding:5px;font-size:0.9em; color:black" class="style-switcher-container-2">
+					<p class="">
+						<strong>&{'guests'}: </strong>
+						<span class="chat-avatars2"></span>
+					</p>
+					<div id="content2" class="" style="height:385px; overflow-y: auto; overflow-x:hidden; text-align:left; color:black"></div>
+					<p>
+						<strong>&{'recipient'}:</strong>
+						<span class="chatroom-user-select"></span> <a href="#" style="display:none" class="chatroom-user-clear"><i class="fa fa-times"></i></a>
+					</p>
+					<div class="input-group">
+						<input id="chat-text2" class="form-control" style="color:black" placeholder="&{'enter-your-message'}"> 
+						<input id="chat-name2" type="hidden" value="${name}"> 
+						<span class="input-group-btn">
+							<button id="chat-send2" class="btn btn-gray btn-short" style="margin:0px;height:40px"><i class="fa fa-paper-plane-o"></i></button>
+						</span>
+					</div>
+				</div>
+			</div>
+			#{/if}
+			<!-- Chat box -->				
 
 		</div>
 		<!-- page-wrapper end -->	
@@ -383,6 +400,12 @@
         $(document).ready(function(){
 			if ($("[rel=tooltip]").length) {
 	        	$("[rel=tooltip]").tooltip({'delay': { show: 1000, hide: 0 }});
+	        	
+	            $(document).ajaxStop(function () {
+	                if(typeof FB !== "undefined"){
+		                FB.Canvas.setSize({ width: 640, height: $(window.document).height() });
+	                }
+	            });
 	        }
         });
         </script>

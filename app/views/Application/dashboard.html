@@ -18,29 +18,19 @@
 <div class="padding container container-xs-height">
 	<div class="row row-xs-height">
 	
-		<div class="col-md-4 col-md-push-8 col-xs-height col-top" style="background: #fdfdfd;" >
+		<div class="col-md-3 col-md-push-9 col-xs-height col-top" style="background: #fdfdfd;" >
 			#{include 'activities.html' /}
 		</div>		
 
-		<div class="col-md-8 col-md-pull-4 col-xs-height col-top">
+		<div class="col-md-9 col-md-pull-3 col-xs-height col-top">
 			
-			<div>
-				<a href="/channel/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-block margin-clear"><i class="fa fa-plus"></i> Create Channel</a>
-			</div>	
-			<br/>	
-			#{if listings}
-				#{set items:listings /}
-				#{set forEvents:false /}
-				#{include 'listingsList.html' /}
-			#{/if}	
-			
-
 			<div class="tabs-style-2">
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs" role="tablist">
 					<li class="active"><a href="#h2tab6" role="tab" data-toggle="tab" class="">&{'lates-posts'}</a></li>
 					<li><a href="#h2tab4" role="tab" data-toggle="tab" class="">&{'upcoming-events'}</a></li>
 					<li><a href="#h2tab5" role="tab" data-toggle="tab" class="">&{'previous-events'}</a></li>
+					<li><a href="#h2tab7" role="tab" data-toggle="tab" class="">&{'manage-channels'}</a></li>
 					<li><a href="#h2tab3" role="tab" data-toggle="tab" class="">&{'waiting-for-approvement'}</a></li>
 					<!-- 
 					<li><a href="#h2tab2" role="tab" data-toggle="tab"><i class="fa fa-list pr-5"></i>Watchlist</a></li>
@@ -65,6 +55,18 @@
 						#{if approved && approved.size() > 0}
 							#{set items:approved /}
 							#{include 'eventsList.html' /}	
+						#{/if}	
+					</div>
+
+					<div class="tab-pane fade" id="h2tab7">
+						<div>
+							<a href="/channel/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-block margin-clear"><i class="fa fa-plus"></i> Create Channel</a>
+						</div>	
+						<br/>	
+						#{if listings}
+							#{set items:listings /}
+							#{set forEvents:false /}
+							#{include 'listingsList.html' /}
 						#{/if}	
 					</div>
 					

@@ -1,22 +1,32 @@
 div.style-switcher {
 	background-color: #fff;
 	color: #262626;
-	width: 225px;
+	width: 425px;
 	position: fixed;
-	top: 65px;
-	z-index: 1002;
-	left: -227px;
+	top: 230px;
+	z-index: 9002;
+	left: -427px;
 }
 div.style-switcher .header {
 	padding: 10px 30px;
-	background: #f1f1f1;
 	z-index: 2;
 	position: relative;
 	border: 1px solid #ddd;
 	height: 45px;
 }
+
+.dark-bg div.style-switcher-container-2 a {
+	color: #954db3;
+	text-decoration: none;
+}
+.dark-bg div.style-switcher-container-2 a:hover {
+	color: #954db3;
+	text-decoration: underline;
+}
+
 div.style-switcher .body {
 	padding: 0 15px 10px;
+	color:black;
 	top: 0px;
 	position: absolute;
 	opacity: 0;
@@ -53,11 +63,9 @@ div.style-switcher a.trigger {
 	position: absolute;
 	right: -45px;
 	top: -1px;
-	background: #f1f1f1;
 	width: 45px;
 	font-size: 24px;
 	line-height: 44px;
-	color: #666666;
 	text-align: center;
 	text-decoration: none;
 	border: 1px solid #ddd;

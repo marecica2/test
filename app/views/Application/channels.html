@@ -19,38 +19,36 @@
 			<div class="col-md-12">
 
 				<form class="form-inline" role="form">
-				  <div class="form-group">
-					    <div class="form-group">
-					      	<input type="text" class="form-control" placeholder="&{'search-string'}" autocomplete="off" size="50" maxlength="100" name="search" id="query-search" value="${request.params.search}" data-provide="typeahead">
-							<script src="@{'/public/javascripts/suggest.js'}" type="text/javascript"></script>					      	
-					    </div>
-						<div class="form-group">
-							<label class="sr-only" for="category">&{'category'}</label>
-						    <select class="form-control" name="category" id="category">
-						    	<option value="">Select category</option>
-						    	<option #{if request.params.category == 'business'} selected="selected" #{/if} value="business"> &{'business'}</option>
-						    	<option #{if request.params.category == 'education'} selected="selected" #{/if} value="education"> &{'education'}</option>
-						    	<option #{if request.params.category == 'electronics'} selected="selected" #{/if} value="electronics"> &{'electronics'}</option>
-						    	<option #{if request.params.category == 'health'} selected="selected" #{/if} value="health"> &{'health'}</option>
-						    	<option #{if request.params.category == 'art'} selected="selected" #{/if} value="art"> &{'art'}</option>
-						    	<option #{if request.params.category == 'sport'} selected="selected" #{/if} value="sport"> &{'sport'}</option>
-						    	<option #{if request.params.category == 'household'} selected="selected" #{/if} value="household"> &{'household'}</option>
-						    	*{
-						    	<option #{if request.params.category == '18plus'} selected="selected" #{/if} value="18plus"> &{'18plus'}</option>
-						    	}*
-						    </select>
-						</div>				    
-						<div class="form-group">
-							<label class="sr-only" for="sorting">&{'sorting'}</label>
-						    <select class="form-control" name="sort" id="sort">
-						    	<option #{if request.params.sort == 'reviews'} selected="selected" #{/if} value="reviews"> &{'sort-by-reviews'}</option>
-						    	<option #{if request.params.sort == 'match'} selected="selected" #{/if} value="match"> &{'sort-by-best-match'}</option>
-						    </select>
-						</div>	
-				  </div>
-				  <div class="form-group">
-					  <button type="submit" class="btn btn-default">&{'search'}</button>
-				  </div>
+				    <div class="form-group">
+				      	<input type="text" class="form-control" placeholder="&{'search-string'}" autocomplete="off" size="50" maxlength="100" name="search" id="query-search" value="${request.params.search}" data-provide="typeahead">
+						<script src="@{'/public/javascripts/suggest.js'}" type="text/javascript"></script>					      	
+				    </div>
+					<div class="form-group">
+						<label class="sr-only" for="category">&{'category'}</label>
+					    <select class="form-control" name="category" id="category">
+					    	<option value="">Select category</option>
+					    	<option #{if request.params.category == 'business'} selected="selected" #{/if} value="business"> &{'business'}</option>
+					    	<option #{if request.params.category == 'education'} selected="selected" #{/if} value="education"> &{'education'}</option>
+					    	<option #{if request.params.category == 'electronics'} selected="selected" #{/if} value="electronics"> &{'electronics'}</option>
+					    	<option #{if request.params.category == 'health'} selected="selected" #{/if} value="health"> &{'health'}</option>
+					    	<option #{if request.params.category == 'art'} selected="selected" #{/if} value="art"> &{'art'}</option>
+					    	<option #{if request.params.category == 'sport'} selected="selected" #{/if} value="sport"> &{'sport'}</option>
+					    	<option #{if request.params.category == 'household'} selected="selected" #{/if} value="household"> &{'household'}</option>
+					    	*{
+					    	<option #{if request.params.category == '18plus'} selected="selected" #{/if} value="18plus"> &{'18plus'}</option>
+					    	}*
+					    </select>
+					</div>				    
+					<div class="form-group">
+						<label class="sr-only" for="sorting">&{'sorting'}</label>
+					    <select class="form-control" name="sort" id="sort">
+					    	<option #{if request.params.sort == 'reviews'} selected="selected" #{/if} value="reviews"> &{'sort-by-reviews'}</option>
+					    	<option #{if request.params.sort == 'match'} selected="selected" #{/if} value="match"> &{'sort-by-best-match'}</option>
+					    </select>
+					</div>	
+					<div class="form-group">
+						<button type="submit" class="btn btn-default">&{'search'}</button>
+					</div>
 				</form>	
 				<div class="clearfix"></div>	
 						

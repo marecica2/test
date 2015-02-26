@@ -15,20 +15,19 @@
    		<div class="listing-item" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover; border-right:0px solid #{if item && item.color} ${item.color} #{/if} #{else} #3A87AD #{/else};">
    		</div>
    		
-   		<div class="listing-item-right">
+   		<div class="listing-item-right" style="background: #fafafa">
+			<p style="width: 100%;">
+				<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
+				<strong>${item.user.fullName}</strong>  &middot; 
+				&{item.category}  
+			</p>
+			
 			<h4 class="margin-clear">${item.title.trimDot(90)}
-			#{if user && item.availableNow != null && item.user.uuid == user.uuid}
+			#{if user && item.isAvailable() != null && item.user.uuid == user.uuid}
 				<small class="label label-success pull-right" style="font-size:0.6em">&{'available-activated'}</small>
 			#{/if}			
 			</h4>
-			<p style="width: 100%; margin:5px 0">
-				<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
-				<strong>${item.user.fullName}</strong>  &middot; 
-				&{item.category}  &middot; 
-				&{item.privacy}  &middot; 
-				&{item.type}
-			</p>
-			
+			<br/>
 			
 			<span class="truncate">${item.getDescriptionHtml().trimDot(90).raw()}</span>
    			<p>

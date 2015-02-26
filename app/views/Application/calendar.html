@@ -123,35 +123,46 @@
 				#{set item: listing /}
 				#{set usr: userDisplayed /}
 				<br/>
-				<div class="shadow-blur" style="background: #fafafa; width:100%; margin:0 0 20px 0;">
-					<div class="anchorLink" data-href="/channel/${item.uuid}" style="cursor:pointer;display:table;text-align:left;width:100%">
+				<div class="anchorLink shadow-blur" data-href="/channel/${item.uuid}" style="cursor:pointer;text-align:left;width:100%; background: #fafafa; width:100%; margin:0 0 20px 0;">
 				   		
-				   		<div style="display:table-cell; height:128px; width:200px; min-width:200px; background: url('/${item.imageUrl}') no-repeat center; background-size:cover; border-right:0px solid #{if item && item.color} ${item.color} #{/if} #{else} #812AAD #{/else};">
-				   		</div>
-				   		<div style="display:table-cell;vertical-align:top;padding:0 15px 0 15px;position:relative;">
-							<h4>${item.title}</h4>
-							<p style="margin-bottom:5px">
-								<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
-								<strong>${item.user.fullName}</strong>  &middot; 
-								&{item.category}  &middot; 
-								&{item.privacy}  &middot; 
-								&{item.type}
-							</p>
-							<span class="truncate">${item.getDescriptionHtml().trimDot(140).raw()}</span>
-				   			<p>
-				   			#{if item.charging != 'free'}
-				   				<strong>&{'from'} ${item.price} <small>${item.currency}</small></strong>
-					   			<nobr>&{'for'} 15</nobr> &{'minutes'}
-				   			#{/if}
-				   			#{else}
-				   				<strong class="">&{'free'}</strong>
-				   			#{/else}
-				   			#{if item.firstFree}
-				   				<span class="label label-default">&{'first-event-is-free'}</span>
-				   			#{/if}
-				   			</p>
-				   		</div>
-				   	</div>		
+			   		<div class="listing-item-top" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
+			   		</div>
+			
+			   		<div class="listing-item" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
+			   		</div>				   		
+			   		
+			   		<div style="display:table-cell;vertical-align:top;padding:15px;position:relative;">
+						<p>
+							<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
+							<strong>${item.user.fullName}</strong>  &middot; 
+							&{item.category} 
+						</p>
+						<h4>${item.title}</h4>
+						
+						<span class="truncate">${item.getDescriptionHtml().trimDot(140).raw()}</span>
+			   			<p>
+			   			#{if item.charging != 'free'}
+			   				<strong>&{'from'} ${item.price} <small>${item.currency}</small></strong>
+				   			<nobr>&{'for'} 15</nobr> &{'minutes'}
+			   			#{/if}
+			   			#{else}
+			   				<strong class="">&{'free'}</strong>
+			   			#{/else}
+			   			#{if item.firstFree}
+			   				<span class="label default-bg">&{'first-free'}</span>
+			   			#{/if}
+			   			
+			   			</p>
+			      		#{list items:1..5, as:'i'} 
+			       			#{if i <= item.ratingAvg} 
+							    <i class="fa fa-star text-default" data-value="1"></i>
+			       			#{/if}
+			       			#{else}
+							    <i class="fa fa-star-o" data-value="1"></i>
+			       			#{/else}
+						#{/list}
+			            ${item.ratingStars} &{'reviews'}   					   			
+			   		</div>
 				</div>
 
 			</div>
@@ -170,7 +181,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			#{if user && user.syncWithGoogle()}
-				<label for="google-checkbox">Show Google Calendar Events</label>
+				<label for="google-checkbox">&{'show-google-calendar-events'}</label>
 				<input id="google-checkbox" type="checkbox" name="check">
 			#{/if}
 			<div class="" id="calendar-div"></div>
@@ -299,23 +310,6 @@
 			</div>
 		</div>
 	</div>
-</div>
-
-
-
-
-
-<!-- popup dialog -->
-<div id="myPopover" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
-<div class="modal-dialog" style="">
-<div class="modal-content">
-<div class="modal-body">
-
-
-
-</div>
-</div>
-</div>
 </div>
 
 #{/set}

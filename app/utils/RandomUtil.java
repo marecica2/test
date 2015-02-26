@@ -17,7 +17,8 @@ public class RandomUtil
 
     public static String getRandomDigits(int number)
     {
-        return Math.round(Math.random() * (10 * number)) + "";
+        Random r = new Random();
+        return r.nextInt(1000) + "";
     }
 
     public static Integer getRandomInteger(int number)

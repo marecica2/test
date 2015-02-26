@@ -215,6 +215,8 @@ contact=Contact
 #WikiUtils.java
 
 #account.html
+default-currency=Default currency
+google-calendar-id=Google calendar Id
 valid-to=Valid to
 events-left=Sessions left for current billing cycle
 paypal-account=PayPal Account
@@ -244,7 +246,7 @@ account.account=Account
 account-name=Account name
 account-plan=Account plan
 account-type=Account type
-waiting-for-approvement=Waiting for approvement
+waiting-for-approvement=Session requests
 become-a-publisher=Become a publisher
 account.accountName=Account.accountName
 Account Plan=Account Plan
@@ -388,6 +390,7 @@ get-modern-browser=Compatibility
 compatibility=<p><strong>To get full experience</strong> make sure that you are using up-to-date browser<br/>Widgr sessions happens over live video calls. These Video calls are based on Webrtc browser technology, which is still under development and is not fully supported by all browsers. Make sure that your browser supports Webrtc <a href="/instant">by starting test video call.</a> You should be able to see yourself on the screen. Or you can check your <a target="_blank" href="http://iswebrtcreadyyet.com/">browser support for Webrtc in detail here &raquo;</p>
 
 #calendar.html
+show-google-calendar-events=Show Google calendar events
 for=For
 minutes=Minutes
 free=Free
@@ -490,6 +493,7 @@ remove=Remove
 waiting=Waiting
 
 #joinRoom.html
+open-canvas=Collaborative drawing
 join-vide-conference=Join video call
 your-name=Your name
 join=Join
@@ -497,6 +501,14 @@ or=or
 sign-in=Sign in
 
 #room.html
+posts-and-uploads=Posts and Uploads
+canvas=Canvas
+paint=Pencil
+eraser=Eraser
+undo=Undo
+clear=Clear
+save-painting=Store painting in feeds
+share=Share with others
 extension-needs-to-be-installed=Add extension to Chrome
 extension-needs-to-be-installed-message=To use screensharing feature you need to install an extension to your browser. <a target="_blank" href="https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk">Click here to proceed to the Chrome app store</a>
 share=Share with others
@@ -513,6 +525,7 @@ refresh=Reload call
 hang-up=End&nbsp;call
 
 #header.html
+manage-channels=Manage channels
 share-your-knowledge=Share your knowledge
 toggle-navigation=Toggle navigation
 received-new-message=Received new message
@@ -526,7 +539,7 @@ contact-us=Contact us
 start-instant-chat=Instant&nbsp;video&nbsp;call
 sign-out=Sign out
 profile=Profile
-notifications=Notifications
+notifications=Messages
 received-payments=Received payments
 sent-payments=Sent payments
 settings=Settings
@@ -535,22 +548,6 @@ settings=Settings
 
 #homeRating.html
 
-
-<h5><i class="fa fa-globe fa-1x"></i> Get modern browser</h5>
-<p>
-	To get full user experience update your browser to latest.
-	<a href="about">Check compatibility</a>
-</p>
-
-<h5><i class="fa fa-video-camera fa-1x"></i> &{'setup-camera'}</h5>
-<p>&{'setup-camera-description'}</p>
-
-<h5><i class="fa fa-youtube fa-1x"></i> &{'check-out-tutorials'}</h5>
-<ul>
-	<li><a href="">How to request for publisher account</a>
-	<li><a href="">How to create a channel</a>
-</ul>
-<br/>
 
 #leftPanel.html
 setup-camera=Set up your camera
@@ -573,7 +570,7 @@ charging-paid-description=Customers will be charged for the access to the Sessio
 charging-first-free=Channel will be labeled as first free. You can then optionally offer first paid Session to the Customer for free.
 charging-time=Default charging time period
 comments-enable-disable=Enable or disable Customer comments in Session page
-chat-enable-disable=Enable or disable interactive chat box in Session page
+chat-enable-disable=Enable or disable interactive Public chat box in Session page
 event-date=Session date
 video-conference=Video conference
 live-broadcast=Live broadcast
@@ -585,7 +582,7 @@ public=Public
 charging=Charging
 paid=Paid
 dashboard.price=Dashboard.price
-enable-chat=Enable chat
+enable-chat=Enable Public chat
 enable-comments=Enable comments
 upload-new-picture=Upload new picture
 title=Title
@@ -602,23 +599,26 @@ first-free=First free
 #editButtons.html
 approved=Approved
 you-can-pay-for-event-before-or-you-can-wait-until-event-starts=You can pay for session before or you can wait until session starts
-pay-for-event-now=Pay for session
-join-video-call=Join
+pay-for-event-now=Pay for session with PayPal
+join-video-call=Join&nbsp;Session
 start-live-broadcast=Start live broadcast
 stop-live-broadcast=Stop live broadcast
 stop-instant-broadcast=Stop instant broadcast
 start-hangout=Start hangout
 join-hangout=Join hangout
-edit-event=Edit
+edit-event=Edit&nbsp;session
 add-event=New Session
 delete-selected-item=Confirm your choice
-delete-event=Delete
+delete-event=Delete&nbsp;Session
 star-instant-broadcast=Start instant broadcast
 go-to-private-room=Go to private room
 edit-channel=Edit channel
-delete-channel=Delete&nbsp;channel
+delete-channel=Archive&nbsp;channel
 
 #listing.html
+open-chat=Open&nbsp;chat&nbsp;with&nbsp;Publisher
+this-channel-is-free=Free
+media=Media
 add-more-people=Invite more people to this session
 invite-press=Check selected users and press to submit an invitation to this Session
 check-me-as-available=Activate Available now
@@ -628,6 +628,7 @@ refundation=Refundation
 request-refund=Request refund
 refund-reason=Reason of refundation
 refund-requested=Refund requested
+refunded=Refunded
 reason-required=You must enter reason of refundation request
 write-reason=Write reason why you are requesting refundation
 confirm-decline=Confirm your choice
@@ -635,7 +636,7 @@ create-new-channel=Create new channel
 play-introduction=Play&nbsp;introduction
 total-price=Total price
 min=Min
-request-for-event=Schedule session later
+request-for-event=Schedule Session
 request-for-event-instant=Take session now
 guests=Guests
 add-to-watchlist=Add to watchlist
@@ -646,18 +647,23 @@ write-custom-message=Write custom message
 notify=Notify
 recent-events=Recent sessions
 all-channels-from=All channels from
-enter-your-message=Your message
+enter-your-message=Write message
 
 #stream.html
 send=Send
+chat-box=Public Chat
 
 #listingsList.html
+anonymous=Guest
 available-activated=Available Now
 reviews=Reviews
 create-event=New session
 request-event=Schedule session
 
 #main.html
+recipient=Message to
+all=All
+chat=Chat box
 follow-us=Follow us on
 select-page-to-display=Select page to display
 channel=Channel
@@ -749,11 +755,12 @@ login.return=Login.return
 #userAbout.html
 
 #userTop.html
+view-profile=View profile
 online=Online
 offline=Offline
 edit-profile=Edit profile
 last-online=Last online
-public-calendar=View Public calendar
+public-calendar=Calendar
 followers=Followers
 
 #wiki.html
@@ -849,6 +856,7 @@ add-google-event=Convert Google event to Widgr
 unmute=Unmute
 
 #starEvent.js
+requested=Requested
 new-message=New Notification
 attachments=Attachments
 write-a-reply=Write reply

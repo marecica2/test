@@ -32,7 +32,6 @@
 	<script src="@{'/public/javascripts/lib/bootstrap-datepicker.js'}" type="text/javascript"></script>	
 	<script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>	
 	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
-	<script src="@{'/public/javascripts/upload.js'}" type="text/javascript"></script>	
 	<script type="text/javascript" src="@{'/public/javascripts/lib/bootstrap-timepicker.min.js'}"></script>
 	#{if listing}
 	<script>
@@ -82,7 +81,6 @@
 	#{set usr:user /} 
 #{/else}
 
-
 <!-- Share Modal -->
 <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -131,47 +129,78 @@
 <div class="section gray-bg" style="padding-top:15px;padding-bottom:15px">
 	<div class="container">
 		<div class="row">
-	   	<div class="col-md-5">
+	   	<div class="col-md-6">
 
-		   	<h2 class="margin-clear" style="font-size:1.4em">
+		   	<h3 class="margin-top-clear" style="font-style:italic;">
 		   		#{if listing}
-				   	<a href="/user/${listing.user.login}"><img class="avatar32 img-circle" src="/${listing.user.avatarUrl}_32x32"></a>
-			   		<a href="/channels?category=${listing.category}" class="anchor"><i>${listing.category.capAll()}</i></a> 
-			   		&middot; <i><a class="anchor" href="/channel/${listing.uuid}">${listing.title}</a></i>
+			   		<a class="black anchor" href="/channel/${listing.uuid}">${listing.title}</a>
 		   		#{/if}
 		   		#{else}
 		   			<i>&{'create-new-channel'}</i>
 		   		#{/else}
-		   	</h2>	
+		   		#{if event}
+			   		<nobr>
+			   		<i style="font-size:0.7em">
+				   		<span>${event.eventStart.format("d MMM yyyy")}, </span>
+				   		<span>#{time time:event.eventStart/}</span> - 
+				   		<span>#{time time:event.eventEnd/}</span> &middot;		   		
+				   		<span>${event.getMinutes()} min</span>		   		
+			   		</i>
+			   		</nobr>
+			   	#{/if}
+		   	</h3>	
+
+		   	<a href="/channels?category=${listing.category}" class="label btn-dark">&{listing.category}</a>
 	   		#{if event}
-		   		<i style="font-weight:bold;">
-			   		<span>${event.eventStart.format("dd MMM")}, </span>
-			   		<span>#{time time:event.eventStart/}</span> - 
-			   		<span>#{time time:event.eventEnd/}</span> &middot;		   		
-			   		<span>${event.getMinutes()} min</span>		   		
-		   		</i>
-		   		
+				#{if item && item.charging == 'free'}
+					<span class="label label-success">&{'free'}</span>
+				#{/if}
+				#{else}
+					<span class="label default-bg">&{'price'}: ${event.getTotalPrice()} ${event.currency}</span>							
+					#{if !fromEvent && listing.firstFree}
+						<span class="label label-success">&{'first-event-is-free'}</span>
+					#{/if}
+				#{/else}
 	   		   	#{if event.charging != null && attendance && !event.isFree()}
 					#{if paid && attendance.paypalTransactionDate}
-						<span class="label label-success margin-clear">
+						<span class="label default-bg margin-clear">
 							&{'paid-on'} ${attendance.paypalTransactionDate.format("dd MMM, yyyy")}
 						</span>&nbsp;
 					#{/if} 						
 		   		#{/if}
-				#{if attendance && attendance.paid && attendance.refundRequested}
-					<span class="label label-success margin-clear">&{'refund-requested'}</span>
+				#{if attendance && attendance.paid && attendance.refundRequested && attendance.refunded == null}
+					<span class="label default-bg margin-clear">&{'refund-requested'}</span>&nbsp;
 				#{/if}		   		
+				#{if attendance && attendance.paid && attendance.refundRequested && attendance.refunded}
+					<span class="label default-bg margin-clear">&{'refunded'}</span>&nbsp;
+				#{/if}	
+				
+	   			#{if event.state == 'customer_created' }
+					<span class="label default_bg ">&{'waiting-for-approvement'}</span>
+				#{/if}					
 	   		#{/if}
-		   	
+	   		
+	   		#{else}
+  				#{if listing && listing.charging == 'free'}
+					<span class="label label-success">&{'price'}: &{'free'}</span>
+				#{/if}						
+				#{else}
+					<span class="label default-bg">&{'price'}: &{'from'} ${listing.price} ${item.currency} &{'for'} ${listing.chargingTime} &{'min'}</span>
+					#{if listing.firstFree}
+						<span class="label label-success">&{'first-event-is-free'}</span>
+					#{/if}
+				#{/else}
+	   		#{/else}
+	   		
+	   		
 	   	</div>
 		
-		<div class="col-md-7">
-		
+		<div class="col-md-6">
 			#{include 'Listings/editButtons.html' /}
 		
 			<!-- social -->
-		   	<div class="social-pull-right">
-				<ul class="social-links light clearfix" style="margin:0px; margin-top:5px">
+		   	<div style="float:right; display: inline-block;margin-top:5px;">
+				<ul class="social-links light clearfix" style="margin:0px; display: inline-block;">
 					<li class="dribbble"><a href="" data-toggle="modal" data-target="#myModal" ><i class="fa fa-link"></i></a></li>
 					<li class="facebook">
 						<a id="fb-share" href="#"><i class="fa fa-facebook"></i></a>
@@ -191,68 +220,65 @@
 					</li>
 				
 					#{if listing && listing.video}
-					<li class="vimeo">
-						<a style="background-color: #b31217;border-color: #b31217;color: #fff;" class="popup-iframe" href="${listing.video}" rel="tooltip" data-original-title="&{'play-introduction'}"><i class="fa fa-youtube-play"></i></a>
+					<li class="youtube">
+						<a class="popup-iframe" href="${listing.video}" rel="tooltip" data-original-title="&{'play-introduction'}"><i class="fa fa-youtube-play"></i></a>
 					</li>
 					#{/if}
 										
 				</ul>
+			   	#{if listing}
+				<script>
+					$("#fb-share").click(function(e){
+					    e.preventDefault();
+					    console.log(window.location.href);
+					    FB.ui(
+					    {
+						    method: 'feed',
+						    name: '${listing.title}',
+						    link: window.location.href,
+						    picture: '${baseUrl}/${listing.imageUrl}',
+						    caption: '${listing.user.fullName}',
+						    description: '${listing.description.newLines().trimDot(300).raw()}',
+						    message: ''
+					    });
+					});		
+					$("#twitter-share-button").click(function(e){
+					    e.preventDefault();
+					    var width  = 400,
+				        height = 400,
+				        left   = ($(window).width()  - width)  / 2,
+				        top    = ($(window).height() - height) / 2,
+				        url    = this.href,
+				        opts   = 'status=1' +
+				                 ',width='  + width  +
+				                 ',height=' + height +
+				                 ',top='    + top    +
+				                 ',left='   + left;
+					    var url = "https://twitter.com/share?text=${listing.title}";
+				    	window.open(url, 'twitter', opts);						    
+					})	
+					
+					$("#linkedin-share-button").click(function(e){
+					    e.preventDefault();
+					    var width  = 400,
+				        height = 400,
+				        left   = ($(window).width()  - width)  / 2,
+				        top    = ($(window).height() - height) / 2,
+				        url    = this.href,
+				        opts   = 'status=1' +
+				                 ',width='  + width  +
+				                 ',height=' + height +
+				                 ',top='    + top    +
+				                 ',left='   + left;
+					    var url = "https://www.linkedin.com/shareArticle?mini=true&url=${baseUrl}${request.url}&title=${listing.title.urlEncode()}&summary=${listing.description.newLines().trimDot(300).raw()}";
+				    	window.open(url, 'linkedin', opts);						    
+					})
+				</script>	 
+				#{/if}  					
 		   	</div>
-		   	#{if listing}
-			<script>
-				$("#fb-share").click(function(e){
-				    e.preventDefault();
-				    console.log(window.location.href);
-				    FB.ui(
-				    {
-					    method: 'feed',
-					    name: '${listing.title}',
-					    link: window.location.href,
-					    picture: '${baseUrl}/${listing.imageUrl}',
-					    caption: 'by ${listing.user.fullName}',
-					    description: "${listing.description.escapeJavaScript().trimDot(300).raw()}",
-					    message: ''
-				    });
-				});		
-				$("#twitter-share-button").click(function(e){
-				    e.preventDefault();
-				    var width  = 400,
-			        height = 400,
-			        left   = ($(window).width()  - width)  / 2,
-			        top    = ($(window).height() - height) / 2,
-			        url    = this.href,
-			        opts   = 'status=1' +
-			                 ',width='  + width  +
-			                 ',height=' + height +
-			                 ',top='    + top    +
-			                 ',left='   + left;
-				    var url = "https://twitter.com/share?text=${listing.title}";
-			    	window.open(url, 'twitter', opts);						    
-				})	
-				
-				$("#linkedin-share-button").click(function(e){
-				    e.preventDefault();
-				    var width  = 400,
-			        height = 400,
-			        left   = ($(window).width()  - width)  / 2,
-			        top    = ($(window).height() - height) / 2,
-			        url    = this.href,
-			        opts   = 'status=1' +
-			                 ',width='  + width  +
-			                 ',height=' + height +
-			                 ',top='    + top    +
-			                 ',left='   + left;
-				    var url = "//www.linkedin.com/shareArticle?mini=true&url="+this.href+"&title=${listing.title}&summary=${listing.description.escapeJavaScript().raw()}&source=${request.url}";
-			    	window.open(url, 'linkedin', opts);						    
-				})
-			</script>	 
-			#{/if}  	
-		
 
 		</div>
 		</div>
-		
-	   	
 	</div>
 </div>
 <!-- listing title controls -->
@@ -263,11 +289,11 @@
 
 
 <!-- header image -->
-<div class="section dark-bg" style="padding:0px;">
+<div class="section dark-bg" style="padding:0px;position:relative">
+
 	<div class="container">	
 		<div class="row">
 			<div class="col-md-12 " style="padding:0px;">
-
 				#{if edit}
 					<!-- edit background image -->
 					#{if listing}
@@ -309,7 +335,7 @@
 
 <!-- parallax -->
 #{if !edit}
-<div class="section parallax default-translucent-bg parallax-bg-4" style="">
+<div class="section parallax default-translucent-bg parallax-bg" style="background-image: url('/images/page-about-banner-2.jpg'); background-position: 0% 50px !important">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-8">
@@ -323,7 +349,7 @@
 								<strong>&{'free'}</strong>
 							#{/if}
 							#{else}
-								<strong>&{'total-price'}: ${event.getTotalPrice()} ${event.currency} for ${event.getMinutes()} &{'min'}</strong>							
+								<strong>&{'total-price'}: ${event.getTotalPrice()} ${event.currency} &{'for'} ${event.getMinutes()} &{'min'}</strong>							
 								#{if !fromEvent && listing.firstFree}
 									<span class="label btn-dark">&{'first-event-is-free'}</span>
 								#{/if}
@@ -342,13 +368,20 @@
 								#{/if}
 							#{/else}	
 						#{/else}
-					
 					</span>				
 				</h5>
 			</div>
 			<div class="col-md-4">
 				<div class="text-center">
-					<a href="/user/${usr.login}"><img style="height:57px;" src="/${usr.avatarUrl}_64x64"></a>	
+				  		#{if usr.isOnline()}
+				  			<span class="" style="background: none"><i class="icon-record " style="color:#5cb85c"></i></span>
+						#{/if}
+						#{else}
+				  			<span class="" style="background: none"><i class="icon-record " style="color:gray"></i></span>
+						#{/else}
+					<a href="/user/${usr.login}">
+						<img style="height:57px;" src="/${usr.avatarUrl}_64x64">
+					</a>	
 					#{if isOwner && user.isPublisher() && !listing.isAvailable() && listing.type == 'p2p'}
 						<a class="btn btn-dark btn-lg btn-short" href="/available-start?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}">&{'check-me-as-available'}</a>
 					#{/if}
@@ -359,7 +392,8 @@
 								
 					#{if !isOwner && listing.user.account.type == "publisher"}
 						#{if !isOwner && listing.isAvailable() && listing.type == 'p2p'}
-							<a href="/instant-room?id=${listing.uuid}&#{token /}" class="btn btn-success btn-lg btn-short blink no-schedule-start" style="border-width:0px;"><i class="fa fa-play"></i> &{'request-for-event-instant'}</a>
+							<a href="/instant-room?id=${listing.uuid}&#{token /}" class="btn btn-success btn-lg btn-short no-schedule-start" style="border-width:0px;"><i class="fa fa-play"></i> &{'request-for-event-instant'}</a>
+							<a href="#" class="btn btn-success btn-lg btn-short open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
 						#{/if}			
 						<a href="/user/${usr.login}/calendar?channel=${listing.uuid}&#{token /}" class="btn btn-dark btn-lg"><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
 					#{/if}
@@ -378,28 +412,160 @@
 	<br/>
 	<div class="row">
 
-		<div class="col-md-4 col-md-push-8">
-			<a name="invitation"></a>
-			#{if comments}
-			<div style="width:100%; padding:0px">
-				#{list items:comments, as:'item'}
-					#{list items:item.files, as:'file'}
-						#{if file.isImage() && item.paid == false}
-							<span style="float:left;" title="${file.name}">
-							<span class="overlay-container">
-								<img src="/public/uploads/${file.url}_thumb" style="height:62px" alt="${file.name}">
-								<a href="/public/uploads/${file.url}" class="overlay small popup-img">
-									<i class="fa fa-search-plus"></i>
-								</a>
-							</span>		
-							</span>		
+		<div class="col-md-8" >
+			<!-- description -->
+			<div>
+    	   	   <h2>
+					#{if listing}
+    	   	   			${listing.title}
+	 	    	   	#{/if}
+
+					#{if stats}
+						<a href="#reviews" style="font-size:0.3em;text-decoration: none">
+							<nobr>
+				       		#{list items:1..5, as:'i'} 
+				       			#{if stats.get("avgStars") >= i}
+								    <i class="fa fa-star fa-2x text-default" data-value="1"></i>
+				       			#{/if}
+				       			#{else}
+								    <i class="fa fa-star-o fa-2x" data-value="1"></i>
+				       			#{/else}
+							#{/list}
+							</nobr>
+						</a>
+	    	   	   	#{/if}
+    	   	   	</h2>
+    	   	   	<div class="separator-2"></div>
+    	   	   	<strong><a href="/user/${listing.user.login}"><img class="avatar16 img-circle" src="/${listing.user.avatarUrl}_32x32"> <span>${listing.user.fullName}</span></a></strong> 
+    	   	 	&middot;
+
+ 	    	   	<span>
+					#{if fromEvent && event}
+						#{if event.privacy == 'private'}
+							<span class="labels " rel="tooltip" data-original-title="&{'privacy-private-description'}"><i class="fa fa-lock"></i> &{event.privacy}</span> &middot;
 						#{/if}
-					#{/list}
-				#{/list}
-				<div class="clearfix"></div>
+						
+						#{if event.privacy == 'public'}
+							<span class="labels " rel="tooltip" data-original-title="&{'privacy-public-description'}"><i class="fa fa-unlock"></i> &{event.privacy}</span> 
+						#{/if}
+						
+						<span class="labels " rel="tooltip" data-original-title="&{ event.type+'-description'}"><i class="fa fa-comments"></i> &{event.type}</span> 
+
+					#{/if}		 	    	   	
+					#{else}
+						#{if listing.privacy == 'private'}
+							<span class="labels "><i class="fa fa-lock"></i> &{listing.privacy}</span> &middot;
+						#{/if}
+						
+						#{if listing.privacy == 'public'}
+							<span class="labels "><i class="fa fa-unlock"></i> &{listing.privacy}</span> &middot;
+						#{/if}
+						
+						<span class="labels "><i class="fa fa-comments"></i> &{listing.type}</span>
+					#{/else}		    	   
+	    	   	</span>
+    	   	   	
+				<p>${listing.getDescriptionHtml().raw()}</p>
+    	   		#{if listing && listing.tags}
+	    		    #{set tags = listing.tags.split(",") /}
+	    	    	#{list items:tags, as:'tag'}
+	    	    		<a href="/channels?search=${tag}" style="font-size:0.8em" class="label label-default">${tag}</a>
+	    	    	#{/list}
+    	    	#{/if}
+    	    	<br/>
+    	    	<br/>
 			</div>
-			#{/if}		
-		
+
+
+			<!-- listing events -->
+			#{if !fromEvent}
+			<div>
+				<div class="pull-left containerUpcoming" style="display:none;margin-top:20px;text-align:center;width:50%;padding-right:7px">
+					<h3>
+						&{'upcoming-events'}
+					</h3>
+					<div id="itemsListUpcoming" class="full-width"></div>
+					<div class="spinner-container1">
+						<div class="spinner-container">
+							<div id="spinnerUpcoming" class="spinner-load"></div>
+							<a id="moreResultsUpcoming" class="spinner-more"><i class=" icon-plus-circled"></i></a>
+						</div>
+					</div>
+				</div>
+				<div class="pull-left containerPrevious" style="display:none;margin-top:20px;text-align:center;width:50%;padding-left:7px">
+					<h3>
+						&{'recent-events'}
+					</h3>
+					<div id="itemsListPrevious" class="full-width"></div>
+					<div class="spinner-container1">
+						<div class="spinner-container">
+							<div id="spinnerPrevious" class="spinner-load"></div>
+							<a id="moreResultsPrevious" class="spinner-more"><i class=" icon-plus-circled"></i></a>
+						</div>
+					</div>
+				</div>	
+			</div>	
+			<div class="clearfix"></div>
+			#{/if}
+			
+			
+			<!-- comments -->
+			<div>
+				<!-- comments -->
+				#{if fromEvent}
+					#{set objectType:"event" /}
+					#{set object:event /}
+					#{include 'comments.html' /}			
+				#{/if}
+				#{else}
+					#{set objectType:"listing" /}
+					#{set object:listing /}
+					#{include 'comments.html' /}			
+				#{/else}
+			</div>		
+						
+
+			<!-- user about -->
+			<div>
+				<h2><a class="anchor" href="/user/${listing.user.login}">&{'about'} ${listing.user.firstName}</a></h2>
+				<div class="separator-2"></div>
+				#{if listing}
+					#{set usr: listing.user /}
+				#{/if}		
+				#{else}		
+					#{set usr: user /}
+				#{/else}		
+					
+				#{include 'userAbout.html' /}
+			</div>	
+						
+			<!-- listings -->
+			<div>
+				#{if listings && listing.user.isPublisher()}
+					<h2>&{'all-channels-from'} ${listing.user.firstName}</h2>
+					<div class="separator-2"></div>
+					#{set items:listings /}
+					#{set forEvents:false /}
+					#{include 'listingsList.html' /}
+				#{/if}	
+			</div>
+			<!-- listings -->	
+
+			<!-- ratings -->
+			<div>
+				#{if listing}
+					#{set object:listing /}
+					#{set ratingType:"listing" /}
+				#{/if}
+				#{include 'ratings.html' /}				
+			</div>		
+			<!-- ratings -->
+
+		</div>
+
+		<div class="col-md-4">
+
+			<a name="invitation"></a>
 			#{if fromEvent && !edit}
 			<!-- guests -->
 			<div>
@@ -518,7 +684,7 @@
 						    	<textarea rows="4" cols="" name="message" class="form-control" placeholder="Message" style="margin-top:5px"></textarea>
 						    </div>
 						    }*
-					        <button type="submit" class="pull-right btn btn-light-gray btn-short" rel="tooltip" data-original-title="&{'invite-press'}">&{'send-invitation'}</button>
+					        <button type="submit" class="btn btn-light-gray btn-short btn-block" rel="tooltip" data-original-title="&{'invite-press'}">&{'send-invitation'}</button>
 			  				<div class="clearfix"></div>
 						#{/if}
 	  				</form>					
@@ -526,176 +692,53 @@
 			</div>
   			<!-- guests -->				
 			#{/if}
+			
+			
+			<!-- Images -->
+			#{if comments}
+			<div style="width:100%;">
+				#{list items:comments, as:'item'}
+					#{list items:item.files, as:'file'}
+						#{if file.isImage() && item.paid == false}
+							<span style="float:left;margin:1px; " title="${file.name}">
+							<span class="overlay-container">
+								<img src="/public/uploads/${file.url}_thumb" title="${file.name}" style="height:62px" alt="${file.name}">
+								<a href="/public/uploads/${file.url}" class="overlay small popup-img">
+									<i class="fa fa-search-plus"></i>
+								</a>
+							</span>		
+							</span>		
+						#{/if}
+					#{/list}
+				#{/list}
+				<div class="clearfix"></div>
+			</div>
+			#{/if}		
 
 			#{set mail:true /}
-			#{include 'leftPanel.html' /}
+			#{include 'leftPanel.html' /}			
+			
+
 		</div>
 
-		<div class="col-md-8 col-md-pull-4" >
-			<!-- description -->
-			<div>
-    	   	   <h2>
-					#{if listing}
-    	   	   			${listing.title}
-	 	    	   	#{/if}
 
-					#{if stats}
-						<a href="#reviews" style="font-size:0.3em;text-decoration: none">
-							<nobr>
-				       		#{list items:1..5, as:'i'} 
-				       			#{if stats.get("avgStars") >= i}
-								    <i class="fa fa-star fa-2x text-default" data-value="1"></i>
-				       			#{/if}
-				       			#{else}
-								    <i class="fa fa-star-o fa-2x" data-value="1"></i>
-				       			#{/else}
-							#{/list}
-							</nobr>
-						</a>
-	    	   	   	#{/if}
-    	   	   	</h2>
-    	   	   	<div class="separator-2"></div>
-    	   	   	<strong><a href="/user/${listing.user.login}"><img class="avatar16 img-circle" src="/${listing.user.avatarUrl}_32x32"> <span>${listing.user.fullName}</span></a></strong> 
-    	   	 	&middot;
-
- 	    	   	<span>
-					#{if fromEvent && event}
-						#{if event.privacy == 'private'}
-							<span class="labels " rel="tooltip" data-original-title="&{'privacy-private-description'}"><i class="fa fa-lock"></i> &{event.privacy}</span> &middot;
-						#{/if}
-						
-						#{if event.privacy == 'public'}
-							<span class="labels " rel="tooltip" data-original-title="&{'privacy-public-description'}"><i class="fa fa-unlock"></i> &{event.privacy}</span> 
-						#{/if}
-						
-						<span class="labels " rel="tooltip" data-original-title="&{ event.type+'-description'}"><i class="fa fa-comments"></i> &{event.type}</span> 
-
-					#{/if}		 	    	   	
-					#{else}
-						#{if listing.privacy == 'private'}
-							<span class="labels "><i class="fa fa-lock"></i> &{listing.privacy}</span> &middot;
-						#{/if}
-						
-						#{if listing.privacy == 'public'}
-							<span class="labels "><i class="fa fa-unlock"></i> &{listing.privacy}</span> &middot;
-						#{/if}
-						
-						<span class="labels "><i class="fa fa-comments"></i> &{listing.type}</span>
-					#{/else}		    	   
-	    	   	</span>
-    	   	   	
-				<p>${listing.getDescriptionHtml().raw()}</p>
-    	   		#{if listing && listing.tags}
-	    		    #{set tags = listing.tags.split(",") /}
-	    	    	#{list items:tags, as:'tag'}
-	    	    		<a href="/channels?search=${tag}" style="font-size:0.8em" class="label label-default">${tag}</a>
-	    	    	#{/list}
-    	    	#{/if}
-    	    	<br/>
-    	    	<br/>
-			</div>
-
-
-			<!-- listing events -->
-			#{if !fromEvent}
-			<div>
-				<div class="pull-left containerUpcoming" style="display:none;margin-top:20px;text-align:center;width:50%;padding-right:7px">
-					<h3>
-						&{'upcoming-events'}
-					</h3>
-					<div id="itemsListUpcoming" class="full-width"></div>
-					<div class="spinner-container1">
-						<div class="spinner-container">
-							<div id="spinnerUpcoming" class="spinner-load"></div>
-							<a id="moreResultsUpcoming" class="spinner-more"><i class=" icon-plus-circled"></i></a>
-						</div>
-					</div>
-				</div>
-				<div class="pull-left containerPrevious" style="display:none;margin-top:20px;text-align:center;width:50%;padding-left:7px">
-					<h3>
-						&{'recent-events'}
-					</h3>
-					<div id="itemsListPrevious" class="full-width"></div>
-					<div class="spinner-container1">
-						<div class="spinner-container">
-							<div id="spinnerPrevious" class="spinner-load"></div>
-							<a id="moreResultsPrevious" class="spinner-more"><i class=" icon-plus-circled"></i></a>
-						</div>
-					</div>
-				</div>	
-			</div>	
-			<div class="clearfix"></div>
-			#{/if}
-			
-			
-			<!-- comments -->
-			<div>
-				<!-- comments -->
-				#{if fromEvent}
-					#{set objectType:"event" /}
-					#{set object:event /}
-					#{include 'comments.html' /}			
-				#{/if}
-				#{else}
-					#{set objectType:"listing" /}
-					#{set object:listing /}
-					#{include 'comments.html' /}			
-				#{/else}
-			</div>		
-						
-
-			<!-- user about -->
-			<div>
-				<h2><a class="anchor" href="/user/${listing.user.login}"><img class="img-circle" src="/${listing.user.avatarUrl}_32x32"> &{'about'} ${listing.user.firstName}</a></h2>
-				<div class="separator-2"></div>
-				#{if listing}
-					#{set usr: listing.user /}
-				#{/if}		
-				#{else}		
-					#{set usr: user /}
-				#{/else}		
-					
-				#{include 'userAbout.html' /}
-			</div>	
-						
-			<!-- listings -->
-			<div>
-				#{if listings && listing.user.isPublisher()}
-					<h2>&{'all-channels-from'} ${listing.user.firstName}</h2>
-					<div class="separator-2"></div>
-					#{set items:listings /}
-					#{set forEvents:false /}
-					#{include 'listingsList.html' /}
-				#{/if}	
-			</div>
-			<!-- listings -->	
-
-			<!-- ratings -->
-			<div>
-				#{if listing}
-					#{set object:listing /}
-					#{set ratingType:"listing" /}
-				#{/if}
-				#{include 'ratings.html' /}				
-			</div>		
-			<!-- ratings -->
-
-		</div>
 	
 	</div>	
 	<br/>
 </div>
 #{/if}
 
-
-#{if !edit && globalObject && (globalObject.type == "instant" || globalObject.availableNow != null || globalObject.chatEnabled)}
+#{if globalObject && (globalObject.type == "instant" || listing.user.available != null || globalObject.chatEnabled)}
 <script>
-    star.user = '${name}';
+	star.user = '${name}';
     star.room = '${room}';
+	star.chatRoom = '${listing.user.uuid}';
     #{if user}
 		star.avatar = '${user.avatarUrl}';
 	#{/if}    
-    star.userInRoom = false;
+   	#{if isOwner}
+   		star.isOwner = true;
+   	#{/if}
     star.server_host = '${socketIo}';
     star.livestream = true;
     star.peerId = null;

@@ -8,13 +8,13 @@
 				<div class="header-left clearfix">
 
 					<!-- logo -->
-					<div class="logo-header">
+					<div class="logo-header centered">
 						<div class="logo">
 							<a href="/home"><img id="logo" src="/images/logo_purple.png" style="height:40px;margin-top:5px" alt="widgr"></a>
 						</div>
 	
 						<!-- name-and-slogan -->
-						<div class="site-slogan">
+						<div class="site-slogan centered">
 							&{'share-your-knowledge'}
 						</div>
 					</div>
@@ -61,7 +61,21 @@
 										</li>
 
 									 	#{if user}
-									      <li #{if request.url.indexOf("dashboard")>=0}class="active" #{/if}><a href="/dashboard">&{'dashboard'}</a></li>
+									 	
+									      <li class="dropdown">
+									        <a href="/dashboard" class="dropdown-toggle" data-toggle="dropdown">
+									        	&{'dashboard'}
+									        </a>
+									        <ul class="dropdown-menu">
+									          	<li><a href="/dashboard"><i class="fa fa-dashboard"></i> &{'dashboard'}</a></li>
+									          	<li><a href="/upcoming"><i class="icon-clock"></i> &{'upcoming-events'}</a></li>
+									          	<li><a href="/past"><i class="icon-back-in-time"></i> &{'previous-events'}</a></li>
+									          	<li><a href="/manage-channels"><i class="fa fa-share-alt"></i> &{'manage-channels'}</a></li>
+									          	<li><a href="/approvements"><i class="fa fa-check"></i> &{'waiting-for-approvement'}</a></li>
+									        </ul>
+									      </li>	
+									      									 	
+									      <li #{if request.url.indexOf("dashboard")>=0}class="active" #{/if}></li>
 									      <li #{if request.url.indexOf("calendar")>=0}class="active" #{/if}><a href="/user/${user.login}/calendar">&{'calendar'}</a></li>
 										#{/if}
 										
@@ -109,10 +123,10 @@
 									        <ul class="dropdown-menu">
 									          	<li><a href="/user/${user.login}"><i class="icon-user"></i> &{'profile'}</a></li>
 									          	<li><a href="/contacts"><i class="icon-users"></i> &{'contacts'}</a></li>
-									          	<li><a href="/mail"><i class="fa fa-envelope-o"></i> &{'notifications'}</a></li>
+									          	<li><a href="/mail"><i class="icon-mail"></i> &{'notifications'}</a></li>
 									          	<li><a href="/payments"><i class="fa fa-bar-chart-o"></i> &{'received-payments'}</a></li>
 									          	<li><a href="/payments?sent=true"><i class="fa fa-bar-chart-o"></i> &{'sent-payments'}</a></li>
-									          	<li><a href="/settings"><i class=" icon-tools"></i> &{'settings'}</a></li>
+									          	<li><a href="/settings"><i class="fa fa-cog"></i> &{'settings'}</a></li>
 
 						  						#{if user.isAdmin()}
 						  						<li class="divider"></li>
@@ -148,4 +162,3 @@
 </header>
 <!-- header end -->		
 
-*{ss}*

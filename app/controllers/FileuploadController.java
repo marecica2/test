@@ -45,17 +45,17 @@ public class FileuploadController extends BaseController
         redirectTo(url);
     }
 
-    public static void uploadFile(String item, String temp, File attachment, String contentType, String size, String avatar) throws IOException
+    public static void uploadFile(String item, String temp, File attachment, String contentType, String size, String name) throws IOException
     {
         checkAuthenticity();
         int fileSize = NumberUtils.parseInt(size);
         if (fileSize < FILESIZE)
         {
-            FileUpload fu = createFile(item, temp, attachment, contentType, size, avatar);
+            FileUpload fu = createFile(item, temp, attachment, contentType, size, name);
             JsonObject jo = new JsonObject();
             jo.addProperty("url", fu.url);
             jo.addProperty("uuid", fu.uuid);
-            jo.addProperty("name", fu.name);
+            jo.addProperty("name", name);
             jo.addProperty("size", fu.size);
             jo.addProperty("extension", fu.contentType);
             renderJSON(jo.toString());
@@ -116,7 +116,7 @@ public class FileuploadController extends BaseController
         redirectTo(url);
     }
 
-    private static FileUpload createFile(String item, String temp, File attachment, String contentType, String size, String avatar) throws IOException
+    private static FileUpload createFile(String item, String temp, File attachment, String contentType, String size, String name) throws IOException
     {
         final String uuid = RandomUtil.getUUID();
         long fileSize = attachment.length();
@@ -160,7 +160,7 @@ public class FileuploadController extends BaseController
 
         FileUpload fu = new FileUpload();
         fu.url = filenamePath;
-        fu.name = attachment.getName();
+        fu.name = name;
         fu.size = fileSize;
         fu.contentType = contentType;
         fu.uuid = uuid;

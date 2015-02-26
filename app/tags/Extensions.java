@@ -11,6 +11,16 @@ public class Extensions extends JavaExtensions
         return input;
     }
 
+    public static String newLines(String input)
+    {
+        input = input.replaceAll("\"", "");
+        input = input.replaceAll("'", "");
+        input = input.replaceAll("\n", "");
+        input = input.replaceAll("\r", "");
+        input = input.replaceAll("\r\n", "");
+        return input;
+    }
+
     public static String trimDot(String input, int len)
     {
         if (input.length() > len && input.length() > 10)

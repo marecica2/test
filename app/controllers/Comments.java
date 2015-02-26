@@ -123,6 +123,9 @@ public class Comments extends BaseController
         final Boolean paid = Boolean.parseBoolean(JsonUtils.getString(jo, "paid"));
 
         final User user = getLoggedUser();
+        if (user == null)
+            forbidden();
+
         final Comment c = new Comment();
         c.user = user;
         c.paid = paid;

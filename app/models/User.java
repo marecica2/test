@@ -55,6 +55,8 @@ public class User extends Model
 
     public Boolean activated;
 
+    public Boolean available;
+
     public String hiddenDays;
 
     public String workingHourStart;
@@ -266,7 +268,14 @@ public class User extends Model
 
     public Boolean isOnline()
     {
-        return (this.lastOnlineTime != null && (this.lastOnlineTime.getTime() > System.currentTimeMillis() - 20000)) ? true : false;
+        return (this.lastOnlineTime != null && (this.lastOnlineTime.getTime() > System.currentTimeMillis() - 200000)) ? true : false;
+    }
+
+    public Boolean isAvailable()
+    {
+        if (this.available != null && this.available)
+            return true;
+        return false;
     }
 
     public boolean hasBlockedContact(User u)

@@ -152,7 +152,7 @@ public class GoogleCalendarClient
             insert.setStart(new EventDateTime().setDateTime(new DateTime(event.eventStart.getTime())));
             insert.setEnd(new EventDateTime().setDateTime(new DateTime(event.eventEnd.getTime())));
             insert.setSummary(event.listing.title);
-            insert.setDescription(event.listing.description + "\n<a href=\"" + baseUrl + "event/" + event.uuid + "\">go to event</a>");
+            insert.setDescription(event.listing.description + "\n\n" + baseUrl + "event/" + event.uuid + "");
             //insert.set("location", baseUrl + "event/" + event.uuid);
             GoogleCalendarClient.insertEvent(user, insert);
         }

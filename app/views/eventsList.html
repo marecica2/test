@@ -1,33 +1,43 @@
 #{list items:items, as:'item'}
-<div class='event-box shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>
+<div class='event-box2 shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>
 	<div class='overlay-container'>
-		<img src='/${item.listing.imageUrl}_128x128' alt=''>
 		<mark style='position:absolute;bottom:0px;padding:5px' class='title'><img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/${item.user.avatarUrl}_32x32'>${item.user.fullName}</mark>
+		<img src='/${item.listing.imageUrl}' alt=''>
 		<div class='overlay'>
 			<div class='overlay-links'>
 				<a href='/event/${item.uuid}'><i class='fa fa-link'></i></a>
 				<a href='/user/${item.user.login}'><i class='fa fa-user'></i></a>
 			</div>
 		</div>
-	</div>
+	</div>	
+	
 	<div class='image-box-body'>
-		<p>
-	       <span class='event-time-from' style='font-weight:bold' id='event-time-from'>${item.eventStart.format("d MMM, yyyy")}</span><br/> 
-	       <span class='event-time-to'>#{time time:item.eventStart/}</span> - 
-	       <span class='event-time-to'>#{time time:item.eventEnd/}</span>		
-			<br/>
-			#{if item.charging != 'free'}
-				<strong>${item.price}</strong> <small>${item.currency}</small>
-			#{/if}
-			#{else}
-				<strong>&{'free'}</strong>
-			#{/else}
-			#{if item.state == 'customer_created'}
-			<img class="img-circle avatar22" src="/${item.customer.avatarUrl}_32x32">
-			<span class='label label-danger'>&{'waiting'}</span>
-			#{/if}
-		</p>
-		<p class='event-box-link'><span><a href='/event/${item.uuid}' class='link-left'><span>${item.listing.title}</span></a></span></p>
+	
+	
+			<p>
+				<span>&{item.listing.category}</span> &middot; <span>&{item.type}</span><br/>			
+				#{if item.state == 'customer_created'}
+					<img class="img-circle avatar22" src="/${item.customer.avatarUrl}_32x32">
+					<span class='label label-danger'>&{'waiting'}</span>
+				#{/if}
+			</p>
+	
+			<p class='event-box-link'>
+				<a href='/event/${item.uuid}' class='link-left'>${item.listing.title}</a>
+				<br/>
+	       		<span class='event-time-from' id='event-time-from'>${item.eventStart.format("d MMM, yyyy")}</span>
+	       		<span class='event-time-to'>#{time time:item.eventStart/}</span> - 
+	       		<span class='event-time-to'>#{time time:item.eventEnd/}</span>		
+			</p>
+			
+			<p>
+				#{if item.charging != 'free'}
+					<strong>${item.price}</strong> <small>${item.currency}</small>
+				#{/if}
+				#{else}
+					<strong>&{'free'}</strong>
+				#{/else}
+			</p>
 	</div>
 </div>
 

@@ -94,13 +94,11 @@ public class Listings extends BaseController
                     temp, commentTemp, fromEvent);
         } else
         {
-            final String name = user != null ? user.getFullName() : null;
+            final String name = user != null ? user.getFullName() : Messages.get("anonymous") + RandomUtil.getRandomDigits(5);
             final String room = listing != null ? listing.uuid : null;
             final String rmtp = getProperty(CONFIG_RMTP_PATH);
             final String socketIo = getProperty(CONFIG_SOCKET_IO);
-
             final List<Comment> comments = Comment.getByListing(listing);
-
             final List<Rating> ratings = listing != null ? Rating.getByObject(uuid) : null;
             final Map<String, Object> stats = listing != null ? Rating.calculateStats(ratings) : null;
 
@@ -238,9 +236,11 @@ public class Listings extends BaseController
     public static void availableStart(String id, String url)
     {
         checkAuthenticity();
-        final User user = getLoggedUser();
-        final Listing l = Listing.get(id);
+        final User user = getLoggedUserNotCache();
+        user.available = true;
+        user.save();
 
+        final Listing l = Listing.get(id);
         if (user == null)
             forbidden();
         if (!l.user.equals(user))
@@ -254,9 +254,11 @@ public class Listings extends BaseController
     public static void availableStop(String id, String url)
     {
         checkAuthenticity();
-        final User user = getLoggedUser();
-        final Listing l = Listing.get(id);
+        final User user = getLoggedUserNotCache();
+        user.available = null;
+        user.save();
 
+        final Listing l = Listing.get(id);
         if (user == null)
             forbidden();
         if (!l.user.equals(user))

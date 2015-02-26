@@ -79,6 +79,7 @@ public class GoogleOAuth extends BaseController
         } catch (Exception e)
         {
             // delete invalid tokens
+            user = getLoggedUserNotCache();
             user.googleAccessToken = null;
             user.googleTokenExpires = null;
             user.googleRefreshToken = null;

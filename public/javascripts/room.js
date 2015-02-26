@@ -1,4 +1,3 @@
-var messages = [];
 var socket = io.connect(star.server_host);
 var content = document.getElementById("content");
 var callSound = null;
@@ -18,6 +17,9 @@ star.cameraoOff = false;
 star.switchAuto = true;
 star.chatMimized = true;
 star.screenShare = false;
+star.drawing = false;
+star.commentsDialog = false;
+star.users = [];
     
 var webrtc = null;
 if(star.userInRoom){
@@ -32,8 +34,17 @@ if(star.userInRoom){
     });
 }
 
+//automatically create user_joined event
+var usr = {};
+usr.user = star.user;
+usr.room = star.room;
+usr.avatar = star.avatar;
+usr.admin = star.isOwner;
+if(webrtc == null)
+    socket.emit('user_joined', usr);
 
-// events for instant room
+
+// video call buttons handlers
 $(document).ready(function(){
     
     // stop instant broadcast
@@ -85,31 +96,13 @@ socket.on('socket_message', function(data) {
     if(data.event == "instant-room-start-broadcast"){
         setTimeout(function(){ window.location.reload();
         }, 5000);
-    } 
-    if(data.event == "canvas-draw"){
-        canvas.drawMessage(data.data);
-    }     
-    if(data.event == "canvas-erase"){
-        canvas.eraseMessage();
-    }     
-    if(data.event == "canvas-save"){
-    }     
+    }  
  });
 
-//automatically create user_joined event
-var usr = {};
-usr.user = star.user;
-usr.room = star.room;
-usr.avatar = star.avatar;
-if(webrtc == null)
-    socket.emit('user_joined', usr);
-
-// if user is room
 if(webrtc != null){
     
-    //bind all event handlers when webrtc is ready
+    
     webrtc.on('readyToCall', function () {
-        
         if(webrtc != null)
             usr.peer = getPeerId();
          socket.emit('user_joined', usr);
@@ -122,6 +115,13 @@ if(webrtc != null){
              $(".peer-controls").hide();
          });
 
+         // show invite modal when there is only one user
+//         var stopInterval = setInterval(function(){
+//             if($(".user-elm").length <= 1)
+//                 $('#myModal').modal({show:true});
+//             clearInterval(stopInterval);
+//         }, 5000);
+         
          // camera on off
          $("#controls-camera").click(function(){
              if(!star.cameraoOff){
@@ -239,6 +239,29 @@ if(webrtc != null){
                  $(this).attr("data-reverse", "true");
              }
          });
+         
+         // hangup
+         $("#controls-hangup").click(function() {
+             $(".controls").hide();
+             peerRemoveCurrent();
+             for(var i = 0; i < peers().length; i++){
+                 peers()[i].end();
+             }
+             
+             $("#remotes").remove();
+             $("#localVideo").remove();
+             webrtc.leaveRoom();
+             webrtc.stopLocalVideo();
+             webrtc.connection.removeAllListeners();
+             webrtc.connection.disconnect();
+             var data = {};
+             data.id = getPeerId();
+             socket_message_all("controls-hangup", data);
+             send_chat(' has left the conversation', star.user);
+
+             //$("#ratingModal").modal({"show" : true});
+             window.close();
+         });         
     
          // screenshare
          if (!webrtc.capabilities.screenSharing) {
@@ -281,14 +304,17 @@ if(webrtc != null){
                          $(".peer-label-screenshare[data-id='"+getPeerId()+"']").show();
                          star.screenShare = true;
                          $("#screen-unique-id").show();
-                         webrtc.pauseVideo();                 
-                         $(this).removeClass("btn-dark");
-                         $(this).addClass("btn-success");
+                         webrtc.pauseVideo();
+                         
                          var data = {};
                          data.id = getPeerId();
                          data.screenShare = true;
                          socket_message_broadcast("screenshare-broadcast", data);
                          
+                         console.log("sss");
+                         console.log($(this));
+                         $("#screenShareButton").removeClass("btn-dark");
+                         $("#screenShareButton").addClass("btn-success");
                      }, function (error) {
                          console.error(error);
                          $('#extensionModal').modal({show:true});
@@ -303,78 +329,38 @@ if(webrtc != null){
                  webrtc.resumeVideo();
                  webrtc.stopScreenShare();
                  star.screenShare = false;
-                 $(this).addClass("btn-dark");
-                 $(this).removeClass("btn-success");
+                 $("#screenShareButton").removeClass("btn-success");
+                 $("#screenShareButton").addClass("btn-dark");
                  var data = {};
                  data.id = getPeerId();
                  data.screenShare = false;
                  socket_message_broadcast("screenshare-broadcast", data);
              }
          });         
-             
-         
-         
-         $("#controls-hangup").click(function() {
-             $(".controls").hide();
-             peerRemoveCurrent();
-             for(var i = 0; i < peers().length; i++){
-                 peers()[i].end();
-             }
-             
-             $("#remotes").remove();
-             $("#localVideo").remove();
-             webrtc.leaveRoom();
-             webrtc.stopLocalVideo();
-             webrtc.connection.removeAllListeners();
-             webrtc.connection.disconnect();
-             var data = {};
-             data.id = getPeerId();
-             socket_message_all("controls-hangup", data);
-             send_chat(' has left the conversation', star.user);
-
-             //$("#ratingModal").modal({"show" : true});
-             window.close();
-         });
-         
-         
-         
-         
-         
     });
     
     
     webrtc.on('localScreenRemoved', function () {
-    
+        
     });
     
-    // local screen share obtained
+    
     webrtc.on('localScreenAdded', function (video) {
         console.log('localScreenAdded');
         console.log(video);
     });
     
-    
-    webrtc.on('connectionReady', function (id) {
-        console.log("connectionReady");
-        console.log(id);
-        console.log(webrtc.getLocalVideoContainer());
 
+    webrtc.on('connectionReady', function (id) {
         $(webrtc.getLocalVideoContainer()).parent().wrap("<div data-id='"+id+"' data-local='true' style='position:relative' id='video-element-"+id+"' class='user-elm'></div>");
         $(webrtc.getLocalVideoContainer()).parent().parent().append("<div id='localVolume' class='volumeBar'></div>");
         webrtc.getLocalVideoContainer().play();
     });
     
+    
     // we got access to the camera
     webrtc.on('localStream', function (stream) {
         
-        console.log("localStream");
-        console.log(getPeerId());
-        console.log(webrtc.getLocalVideoContainer());
-//        
-//        var id = getPeerId();
-//        $(webrtc.getLocalVideoContainer()).parent().wrap("<div data-id='"+id+"' data-local='true' style='position:relative' id='video-element-"+id+"' class='user-elm'></div>");
-//        $(webrtc.getLocalVideoContainer()).parent().parent().append("<div id='localVolume' class='volumeBar'></div>");
-//        webrtc.getLocalVideoContainer().play();
     });
     
     
@@ -385,10 +371,6 @@ if(webrtc != null){
     
         if (remotes) {
             if(isScreen){
-                //$("#video-element-"+peer.id+"[data-screen='true']").remove();
-                //$("#"+peer.id+"_video_incoming").remove();
-                //$(container).wrap("<div data-screen='true' data-id='"+peer.id+"' id='video-element-"+peer.id+"' class='user-elm'></div>");
-                
                 // replace it with screen stream
                 $("#"+peer.id+"_video_incoming").before(video);
     
@@ -405,9 +387,6 @@ if(webrtc != null){
                 
                 // move the video avatar
                 remotes.appendChild(container);
-    
-                // suppress contextmenu
-                //video.oncontextmenu = function () { return false; };
     
                 // show the ice connection state
                 if (peer && peer.pc) {
@@ -431,8 +410,6 @@ if(webrtc != null){
     webrtc.on('videoRemoved', function (video, peer) {
         var isScreen = $(video).attr("id").indexOf("_screen") != -1 ? true : false;
         if(isScreen){
-            //$("#video-element-"+peer.id+"[data-screen='true']").remove();
-            
             // remove screen share video
             $(video).remove();
             $("#"+peer.id+"_screen_incoming").remove();
@@ -456,10 +433,6 @@ if(webrtc != null){
             if(volume > treshold && star.switchAuto){
                 var id = getPeerId();
                 
-//                if(id != star.maximizedId && star.switchAuto){
-//                    maximizeMimize(id, true);
-//                }
-                
                 var data = {};
                 data.id = getPeerId();
                 data.volume = volume;
@@ -468,27 +441,11 @@ if(webrtc != null){
         }
     });
     
+    
     //webrtc.webrtc.on("speaking", star.room, function(data){
     //});
 }
 
-
-function usersChatRender(data){
-    data = JSON.parse(data);
-    var html = "";
-    users = [];
-    for ( var index in data) {
-        var row = data[index];
-        var avatars = [];
-        for ( var usr in row) {
-            if(row[usr].room == star.room && $.inArray(row[usr].avatar, avatars) == -1 && row[usr].avatar != undefined){
-                html += "<img src='/"+row[usr].avatar+"_32x32' id="+row[usr].avatar+" class='avatar22 avatar_"+row[usr].id+"' title='"+row[usr].user+"' style='margin-right:1px'>";
-                avatars.push(row[usr].avatar);
-            }
-        }
-    }
-    $(".chat-avatars").html(html);
-}
 
 function usersRender(data) {
     data = JSON.parse(data);
@@ -617,54 +574,18 @@ function maximizeMimize(id, local){
 }
 
 
-function joinRoomCallback(err, r){
-    $(".controls").show();
-}
-
-
-function joinRoom(room, joinRoomCallback){
-    var isInRoom = false;
-    for(var i = 0; i < webrtc.webrtc.peers.length; i++){
-        if(webrtc.webrtc.peers[i].id == getPeerId()){
-            isInRoom = true;
-        }
-    }
-    
-    if(!isInRoom){
-        webrtc.joinRoom(room , joinRoomCallback);
-    } else {
-    }
-}
-
-
-function showVolume(el, volume) {
-    $(el).show();
-    $(el).css("opacity", "1");
-    if (!el) return;
-    if (volume < -45) { // vary between -45 and -20
-        el.style.height = '0px';
-    } else if (volume > -20) {
-        el.style.height = '100%';
-    } else {
-        el.style.height = '' + Math.floor((volume + 100) * 100 / 25 - 220) + '%';
-    }
-    $(el).fadeOut();
-}
 
 
 
 
 //
 //
-//message handler
+//message handlers
 //
 //
 
-
-if(webrtc != null){
+if(star.userInRoom){
     socket.on('socket_message', function(data) {
-    
-        // notify other that user has joined
         if(data.event == "speaking"){
             if(data != undefined){
                 
@@ -766,6 +687,7 @@ if(webrtc != null){
         }    
     });
     
+    
     socket.on('user_disconnect', function(data) {
         var peerId = JSON.parse(data).peer;
         var peer = getPeerById(peerId);
@@ -774,30 +696,17 @@ if(webrtc != null){
             var video = $(peer.videoEl);
             if(video != null){
                 video.remove();
-                //$("#"+peer.id+"_video_incoming").remove();
                 $("#video-element-"+peer.id).remove();
             }
         }
     });
     
+    
     socket.on('user_update', function(data) {
         usersRender(data);
     });
     
-    
-    
-} else {
-    socket.on('user_update', function(data) {
-        usersChatRender(data);
-    });
-    socket.on('socket_message', function(data) {
-    });
-    // if webrtc is null
-    socket.on('user_disconnect', function(data) {
-        data =  JSON.parse(data);
-        $(".avatar_"+data.client).remove();
-    });
-}
+} 
 
 
 
@@ -805,7 +714,7 @@ if(webrtc != null){
 
 //
 //
-// universal handlers
+// universal socket handlers
 //
 //
 
@@ -852,207 +761,502 @@ function send_chat(message, usr){
 
 
 
-// canvas
-var canvas = {};
-canvas.canvas = null;
-canvas.ctx; 
-canvas.flag = false, 
-canvas.prevX = 0; 
-canvas.currX = 0; 
-canvas.prevY = 0; 
-canvas.currY = 0, 
-canvas.dot_flag = false;
-canvas.x = "black"; 
-canvas.y = 10;
-
-canvas.init = function() {
-    canvas.canvas = $(".canvas-paper")[0];
-    canvas.ctx = canvas.canvas.getContext("2d");
-    canvas.w = canvas.canvas.width;
-    canvas.h = canvas.canvas.height;
-
-    canvas.canvas.addEventListener("mousemove", function (e) {
-        canvas.findxy('move', e)
-    }, false);
-    canvas.canvas.addEventListener("mousedown", function (e) {
-        canvas.findxy('down', e)
-    }, false);
-    canvas.canvas.addEventListener("mouseup", function (e) {
-        canvas.findxy('up', e)
-    }, false);
-    canvas.canvas.addEventListener("mouseout", function (e) {
-        canvas.findxy('out', e)
-    }, false);
-}
-
-canvas.draw = function() {
-    canvas.ctx.beginPath();
-    canvas.ctx.moveTo(canvas.prevX, canvas.prevY);
-    canvas.ctx.lineTo(canvas.currX, canvas.currY);
-    canvas.ctx.lineCap="round";
-    canvas.ctx.strokeStyle = canvas.x;
-    canvas.ctx.lineWidth = canvas.y;
-    canvas.ctx.stroke();
-    canvas.ctx.closePath();
+// 
+//
+// Canvas drawing
+//
+//
+if(star.userInRoom){
+    var canvas = {};
+    canvas.type = "pen";
+    canvas.canvas = null;
+    canvas.ctx; 
+    canvas.flag = false, 
+    canvas.prevX = 0; 
+    canvas.currX = 0; 
+    canvas.prevY = 0; 
+    canvas.currY = 0, 
+    canvas.dot_flag = false;
+    canvas.x = "rgba(255, 255, 255, 0.95)"; 
+    canvas.y = 2;
+    canvas.history = [];
     
-    var data = {};
-    data.prevX = canvas.prevX;
-    data.prevY = canvas.prevY;
-    data.currX = canvas.currX;
-    data.currY = canvas.currY;
-    socket_message_broadcast("canvas-draw", data);
-}
-
-canvas.drawMessage = function(data){
-    canvas.ctx.beginPath();
-    canvas.ctx.moveTo(data.prevX, data.prevY);
-    canvas.ctx.lineTo(data.currX, data.currY);
-    canvas.ctx.lineCap="round";
-    canvas.ctx.strokeStyle = canvas.x;
-    canvas.ctx.lineWidth = canvas.y;
-    canvas.ctx.stroke();
-    canvas.ctx.closePath();
-}
-
-canvas.eraseMessage = function(){
-    canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
-    document.getElementById("canvasimg").style.display = "none";
-}
-
-canvas.erase = function() {
-    canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
-    document.getElementById("canvasimg").style.display = "none";
-    var data = {};
-    socket_message_broadcast("canvas-erase", data);
-}
-
-canvas.save = function() {
-    var dataURL = canvas.canvas.toDataURL();
-    document.getElementById("canvasimg").src = dataURL;
-    document.getElementById("canvasimg").style.display = "inline";
-}
-
-canvas.findxy = function(res, e) {
-    if (res == 'down') {
-        canvas.prevX = canvas.currX;
-        canvas.prevY = canvas.currY;
-        canvas.currX = e.clientX - $(canvas.canvas).offset().left;
-        canvas.currY = e.clientY - $(canvas.canvas).offset().top;
-
-        canvas.flag = true;
-        canvas.dot_flag = true;
-        if (canvas.dot_flag) {
-            canvas.ctx.beginPath();
-            canvas.ctx.moveTo(data.currX, data.prevY);
-            canvas.ctx.lineTo(data.currX, data.currY);
+    canvas.init = function() {
+        canvas.canvas = $(".canvas-paper")[0];
+        canvas.ctx = canvas.canvas.getContext("2d");
+        canvas.w = canvas.canvas.width;
+        canvas.h = canvas.canvas.height;
+    
+        canvas.canvas.addEventListener("mousemove", function (e) {
+            canvas.findxy('move', e);
+        }, false);
+        canvas.canvas.addEventListener("mousedown", function (e) {
+            canvas.findxy('down', e);
+        }, false);
+        canvas.canvas.addEventListener("mouseup", function (e) {
+            canvas.findxy('up', e);
+            if(canvas.history.length >= 11)
+                canvas.history.shift();
+            canvas.history.push(canvas.canvas.toDataURL());
+        }, false);
+        canvas.canvas.addEventListener("mouseout", function (e) {
+            canvas.findxy('out', e);
+        }, false);
+    
+    }
+    
+    
+    canvas.mode = function(style){
+        if(style == 'pen'){
+            canvas.type = "pen";
+            $("#mode-eraser").removeClass("active");
+        } else {
+            canvas.type = "eraser";
+            $("#mode-pen").removeClass("active");
+            $("#mode-eraser").addClass("active");
+        }
+    }
+    
+    
+    canvas.undo = function() {
+        if(canvas.history.length > 0){
+            var undo =  canvas.history.pop();
+            var image = new Image;
+            image.src = undo;
+            canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+            canvas.ctx.drawImage(image,0, 0);
+            console.log("undo " + canvas.history.length);
+            
+            var data = {};
+            data.image = canvas.canvas.toDataURL();
+            socket_message_broadcast("canvas-undo", data);
+        }
+    }
+    
+    
+    canvas.undoMessage = function(data){
+        var image = new Image;
+            image.src = data.image;
+            canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+            canvas.ctx.drawImage(image,0, 0);
+    }
+    
+    
+    canvas.draw = function() {
+        canvas.ctx.beginPath();
+        
+        if(canvas.type == "pen"){
+            canvas.ctx.globalCompositeOperation="source-over";
+            canvas.ctx.moveTo(canvas.prevX, canvas.prevY);
+            canvas.ctx.lineTo(canvas.currX, canvas.currY);
             canvas.ctx.lineCap="round";
             canvas.ctx.strokeStyle = canvas.x;
             canvas.ctx.lineWidth = canvas.y;
             canvas.ctx.stroke();
             canvas.ctx.closePath();
+        } else {
+            canvas.ctx.globalCompositeOperation="destination-out";
+            canvas.ctx.arc(canvas.currX,canvas.currY,30,0,Math.PI*2,false);
+            canvas.ctx.fill();
+        }
+        
+        var data = {};
+        data.type = canvas.type;
+        data.prevX = canvas.prevX;
+        data.prevY = canvas.prevY;
+        data.currX = canvas.currX;
+        data.currY = canvas.currY;
+        socket_message_broadcast("canvas-draw", data);
+    }
+    
+    
+    canvas.drawMessage = function(data){
+        if(data != undefined){
+            canvas.ctx.beginPath();
+            if(data.type == "pen"){
+                canvas.ctx.globalCompositeOperation="source-over";
+                canvas.ctx.moveTo(data.prevX, data.prevY);
+                canvas.ctx.lineTo(data.currX, data.currY);
+                canvas.ctx.lineCap="round";
+                canvas.ctx.strokeStyle = canvas.x;
+                canvas.ctx.lineWidth = canvas.y;
+                canvas.ctx.stroke();
+                canvas.ctx.closePath();
+            } else {
+                canvas.ctx.globalCompositeOperation="destination-out";
+                canvas.ctx.arc(data.currX,data.currY,30,0,Math.PI*2,false);
+                canvas.ctx.fill();            
+            }
         }
     }
-    if (res == 'up' || res == "out") {
-        canvas.flag = false;
+    
+    
+    canvas.resize = function(){
+        $(canvas.canvas).attr({ width: canvas.w, height: canvas.h });
+        var image = new Image;
+        if(canvas.history != undefined && canvas.history.length > 0){
+            image.src = canvas.history[canvas.history.length-1];
+            canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+            canvas.ctx.drawImage(image,0, 0);
+        }
+        var data = {};
+        data.width = canvas.w;
+        data.height = canvas.h;
+        data.image = canvas.canvas.toDataURL();
+        socket_message_broadcast("canvas-resize", data);
     }
-    if (res == 'move') {
-        if (canvas.flag) {
+    
+    
+    canvas.resizeMessage = function(data){
+        $(".canvas-container").show();
+        
+        canvas.w = data.width;
+        canvas.h = data.height;
+        $(canvas.canvas).height(data.height);
+        $(canvas.canvas).width(data.width);
+        $(canvas.canvas).attr({ width: data.width, height: data.height });
+        $(".ui-wrapper").height(data.height);
+        $(".ui-wrapper").width(data.width);
+        
+        //redraw image
+        var image = new Image;
+        image.src = data.image;
+        canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+        canvas.ctx.drawImage(image,0, 0);
+        
+        // activate button
+        star.drawing = true;
+        $("#canvas-open").removeClass("btn-dark");
+        $("#canvas-open").addClass("btn-success");
+        $(".canvas-container").show();
+    }
+    
+    
+    canvas.erase = function() {
+        canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+        var data = {};
+        socket_message_broadcast("canvas-erase", data);
+    }
+    
+    
+    canvas.eraseMessage = function(){
+        canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+    }
+    
+    
+    canvas.save = function() {
+        // draw patter on background
+        var img = new Image();
+        img.src = '../images/canvas_pattern_0.jpg';
+        canvas.ctx.globalCompositeOperation="destination-over";
+        var ptrn = canvas.ctx.createPattern(img,'repeat');
+        canvas.ctx.fillStyle = ptrn;
+        canvas.ctx.fillRect(0,0,canvas.w,canvas.h);
+    
+        var dataURL = canvas.canvas.toDataURL("image/png");
+    
+        // upload the image
+        var blob = canvas.dataURItoBlob(dataURL);
+        blob.name = "canvas.png";
+        blob.lastModifiedDate = new Date();
+        blob.lastModified = blob.lastModifiedDate.getTime();
+        var files = [];
+        files.push(blob)
+        var params = "";
+        var temp = star.utils.uuid();
+        params = "temp="+temp;
+        star.utils.uploadFiles('/fileupload?'+star.token+'&'+params, files, function(json){
+            var response = JSON.parse(json);
+            console.log(response);
+            
+            // save comment
+            var data = {};
+            data.uuid = star.room;
+            data.type = "file";
+            data.objectType = "event";
+            data.comment = "canvas.jpg";
+            data.tempId = temp;
+            
+            canvas.erase();
+    
+            starServices.addComment(data, function(){
+                star.loadComments(star.params, star.dashboard);
+            });        
+        });
+    }
+    
+    
+    canvas.dataURItoBlob = function(dataURI) {
+        dataURI = dataURI.split(',');
+        var type = dataURI[0].split(':')[1].split(';')[0],
+            byteString = atob(dataURI[1]),
+            byteStringLength = byteString.length,
+            arrayBuffer = new ArrayBuffer(byteStringLength),
+            intArray = new Uint8Array(arrayBuffer);
+        for (var i = 0; i < byteStringLength; i++) {
+            intArray[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([intArray], {
+            type: type
+        });
+    }
+    
+    
+    canvas.findxy = function(res, e) {
+        if(e.type == "touchmove"){
+            canvas.prevX = canvas.currX;
+            canvas.prevY = canvas.currY;
+            canvas.currX = e.changedTouches[0].clientX - $(canvas.canvas).offset().left;
+            canvas.currY = e.changedTouches[0].clientY - $(canvas.canvas).offset().top;
+            if(isNaN(canvas.prevX)){
+                canvas.prevX = canvas.currX;
+                canvas.prevY = canvas.currY;
+            }
+        } else {
             canvas.prevX = canvas.currX;
             canvas.prevY = canvas.currY;
             canvas.currX = e.clientX - $(canvas.canvas).offset().left;
             canvas.currY = e.clientY - $(canvas.canvas).offset().top;
-            canvas.draw();
         }
-    }
-}
-
-$(document).ready(function(){
-    $(".canvas-container").css('position','fixed');
-    $(".canvas-container").css("left", ($(window).width()/2-$('.canvas-container').width()/2) + "px");
-    $(".canvas-container").css("top", ($(window).height()/2-$('.canvas-container').height()/2) + "px");
-    $(".canvas-container").show();
-
-    $(".canvas-container").draggable({handle:"#canvas-slider"});
-    $(".canvas-paper").resizable({
-        minHeight: 200,
-        minWidth: 200,
-        stop: function(event, ui) {
-              canvas.erase();
-              canvas.w = ui.size.width;
-              canvas.h = ui.size.height;
-              $(canvas.canvas).attr({ width: ui.size.width, height: ui.size.height });
-//            $("canvas", this).each(function() { 
-//                $(this).attr({ width: ui.size.width, height: ui.size.height });
-//            });
+    
+        if (res == 'down') {
+            canvas.flag = true;
+            canvas.dot_flag = true;
+            if (canvas.dot_flag) {
+                canvas.ctx.beginPath();
+                canvas.ctx.moveTo(canvas.currX-1, canvas.currY);
+                canvas.ctx.lineTo(canvas.currX, canvas.currY);
+                canvas.ctx.lineCap="round";
+                canvas.ctx.strokeStyle = canvas.x;
+                canvas.ctx.lineWidth = canvas.y;
+                canvas.ctx.stroke();
+                canvas.ctx.closePath();
+                
+                var data = {};
+                data.type = canvas.type;
+                data.prevX = canvas.currX-1;
+                data.prevY = canvas.currY;
+                data.currX = canvas.currX;
+                data.currY = canvas.currY;
+                socket_message_broadcast("canvas-draw", data);
+            }
         }
-    });
-    
-    
-    canvas.init(); 
-});
-
-
-
-
-
-//
-//
-// helpers
-//
-//
-
-function usersRefresh(){
-    socket.emit("user_refresh", {});
-}
-
-
-function getPeerId(){
-    //return socket.socket.sessionid;
-    return webrtc.connection.socket.sessionid;
-}
-
-function getPeerById(id){
-    var peers = webrtc.webrtc.peers;
-    if(peers != undefined){
-        for(var i = 0; i < peers.length; i++){
-            if(peers[i].id == id){
-                return peers[i];
+        if (res == 'up' || res == "out") {
+            canvas.flag = false;
+        }
+        if (res == 'move') {
+            if (canvas.flag) {
+                canvas.draw();
             }
         }
     }
-    return null;
-}
-
-function peerRemoveCurrent(){
-    var peer = getPeerById(getPeerId());
-    if(peer != null)
-        peer.end();
-}
-
-function getUserById(id){
-    for(var i = 0; i < users.length; i++){
-        if(users[i].id == id){
-            return users[i];
+    
+    canvas.share = function(elm){
+        var data = {};
+        data.width = canvas.w;
+        data.height = canvas.h;
+        data.image = canvas.canvas.toDataURL();
+        socket_message_broadcast("canvas-resize", data);
+        $(elm).addClass("btn-primary");
+    }
+    
+    canvas.close = function(){
+        star.drawing = false;
+        $(".canvas-container").hide();
+        $("#canvas-open").addClass("btn-dark");
+        $("#canvas-open").removeClass("btn-success");    
+    }
+    
+    canvas.commentsClose = function(){
+        star.commentsDialog = false;
+        $(".comments-resize").hide();
+        $("#comments-open").addClass("btn-dark");
+        $("#comments-open").removeClass("btn-success");    
+    }
+    
+    $(document).ready(function(){
+        document.addEventListener("touchstart", canvas.touchHandler, true);
+        document.addEventListener("touchmove", canvas.touchHandler, true);
+        document.addEventListener("touchend", canvas.touchHandler, true);
+        document.addEventListener("touchcancel", canvas.touchHandler, true);        
+        
+        $("#canvas-open").click(function(e){
+            if(star.drawing == false){
+                star.drawing = true;
+                $("#canvas-open").removeClass("btn-dark");
+                $("#canvas-open").addClass("btn-success");
+                $(".canvas-container").show();
+            } else {
+                star.drawing = false;
+                $(".canvas-container").hide();
+                $("#canvas-open").addClass("btn-dark");
+                $("#canvas-open").removeClass("btn-success");             
+            }
+        });
+    
+        $("#comments-open").click(function(e){
+            if(star.commentsDialog == false){
+                star.commentsDialog = true;
+                $("#comments-open").removeClass("btn-dark");
+                $("#comments-open").addClass("btn-success");
+                $(".comments-resize").show();
+            } else {
+                star.commentsDialog = false;
+                $(".comments-resize").hide();
+                $("#comments-open").addClass("btn-dark");
+                $("#comments-open").removeClass("btn-success");             
+            }
+        });
+        
+        if($(".canvas-container")[0] != undefined){
+            $(".canvas-container").css('position','fixed');
+            $(".canvas-container").css("left", ($(window).width()/2-$('.canvas-container').width()/2) + "px");
+            $(".canvas-container").css("top", ($(window).height()/2-$('.canvas-container').height()/2) + "px");
+            $(".canvas-container").draggable({handle:"#canvas-slider"});
+            $(".canvas-container").show();
+            $(".canvas-paper").resizable({
+                minHeight: 300,
+                minWidth: 340,
+                stop: function(event, ui) {
+                      canvas.w = ui.size.width;
+                      canvas.h = ui.size.height;
+                      canvas.resize();
+                }
+            });
+    
+            canvas.init(); 
+            $(".canvas-container").hide();
+    
+            $(".comments-resize").draggable({handle:"#comments-slider"});
+            $(".comments-resize-2").resizable({
+                minHeight: 400,
+                minWidth: 400
+            });
         }
+    });
+    
+    socket.on('socket_message', function(data) {
+        if(data.event == "canvas-draw"){
+            canvas.drawMessage(data.data);
+        }     
+        if(data.event == "canvas-undo"){
+            canvas.undoMessage(data.data);
+        }     
+        if(data.event == "canvas-resize"){
+            canvas.resizeMessage(data.data);
+        }     
+        if(data.event == "canvas-erase"){
+            canvas.eraseMessage();
+        }     
+        if(data.event == "canvas-save"){
+        }     
+     });
+    
+    
+    canvas.touchHandler = function(event) {
+        var touch = event.changedTouches[0];
+        
+        var simulatedEvent = document.createEvent("MouseEvent");
+            simulatedEvent.initMouseEvent({
+            touchstart: "mousedown",
+            touchmove: "mousemove",
+            touchend: "mouseup"
+        }[event.type], true, true, window, 1,
+            touch.screenX, touch.screenY,
+            touch.clientX, touch.clientY, false,
+            false, false, false, 0, null);
+    
+        touch.target.dispatchEvent(simulatedEvent);
     }
 }
 
-function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-};
 
-function uuid() {
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-           s4() + '-' + s4() + s4() + s4();
+
+
+
+//
+//
+// Chat services
+//
+//
+
+star.chatroomusers = [];
+if(webrtc == null){
+    var usr = {};
+    usr.user = star.user;
+    usr.room = star.chatRoom;
+    usr.avatar = star.avatar;
+    usr.admin = star.isOwner;
+    if(webrtc == null)
+        socket.emit('chatroom_joined', usr);    
+    
+    socket.on('user_update', function(data) {
+        star.users = JSON.parse(data)[star.room];
+        usersChatRender(".chat-avatars", data);
+    });
+
+    socket.on('chatroom_update', function(data) {
+        star.chatroomusers = JSON.parse(data)[star.chatRoom];
+        var html = "";
+        for(var i = 0; i < star.chatroomusers.length; i++){
+            if(star.chatroomusers[i].user != star.user){
+                if(star.chatroomusers[i].avatar != null)
+                    html += '<a href="#" data-id="'+star.chatroomusers[i].client+'" data-avatar="'+star.chatroomusers[i].avatar+'" data-name="'+star.chatroomusers[i].user+'" class="chatroom-user"><img class="avatar16" style="margin:1px;" src="/'+star.chatroomusers[i].avatar+'_32x32">' + star.chatroomusers[i].user+ '</a>';
+                else
+                    html += '<a href="#" data-id="'+star.chatroomusers[i].client+'" data-avatar="public/images/avatar" data-name="'+star.chatroomusers[i].user+'" class="chatroom-user"><img class="avatar16" style="margin:1px;" src="/images/avatar_32x32">' + star.chatroomusers[i].user+ '</a>';
+            }
+        }
+        $(".chat-avatars2").html(html);
+    });
+    
+    socket.on('user_disconnect', function(data) {
+        data =  JSON.parse(data);
+        $(".avatar_"+data.client).remove();
+    });
+    
+    socket.on('chatRoom-message-render', function(data) {
+        if (data.message) {
+            var html = '';
+            if(data.avatar != undefined)
+                html += "<img class='avatar16' src='/"+data.avatar+"_32x32'> ";
+            else
+                html += "<img class='avatar16' src='/public/images/avatar_32x32'> ";
+            html += '<a href="#" data-id="'+data.client+'" data-name="'+data.user+'" data-avatar="'+data.avatar+'" class="chatroom-user" >' + data.user.replace(/>/g, '&gt;') + '</a> ';
+            if(data.recipientName != undefined && data.recipientName != null)
+                html += " &gt; " + data.recipientName + " ";
+            html += " : ";
+            var message = linkify(data.message);
+            html += message + '<br/>';
+            $("#content2").append(html);
+        }
+        $("#content2")[0].scrollTop =  $("#content2")[0].scrollHeight;
+        
+        if ($(".style-switcher.closed").length>0) 
+            $('.style-switcher .trigger').click();
+    });
+    
+    socket.on('message', function(data) {
+        if (data.message) {
+            var html = '';
+            if(data.username != undefined)
+                html += '<strong>' + data.username.replace(/>/g, '&gt;') + '</strong>: ';
+            var message = linkify(data.message);
+            html += message + '<br/>';
+            $("#content").append(html);
+            var elm = $("#chat-container");
+            if(star.chatMimized){
+                elm.animate({right:'0px'},100);
+                star.chatMimized = false;
+            }
+        }
+        $("#content").scrollTop[0] = content.scrollHeight;
+    });
 }
 
-function peers(){
-    return webrtc.webrtc.peers;
-}
 
-
-// chat services
 $(document).ready(function(){
+    $(".style-switcher").show();
+    
     $("#chat-slider").click(function() {
         var elm = $("#chat-container");
         if(star.chatMimized){
@@ -1064,43 +1268,77 @@ $(document).ready(function(){
         }
     });
     
-    $("#content").click(function() {
-        //$("#chat-text").focus();
+    $(".open-chat").click(function() {
+        if ($(".style-switcher.closed").length>0) 
+            $('.style-switcher .trigger').click();
     });
-
+    
     $("#chat-send").click(function() {
         var comment = $("#chat-text").val();
         send_chat(comment, $("#chat-name").val());
         $("#chat-text").val("");
+        var data = {};
+        data.uuid = star.room;
+        data.name = star.user;
+        data.comment = comment;
+        roomServices.saveFeed(data, function(){
+        });
         return false;
     });
-});
-
-socket.on('message', function(data) {
-    if (data.message) {
-        var html = '';
-        if(data.username)
-            html += '<strong>' + data.username.replace(/>/g, '&gt;') + '</strong>: ';
-        var message = linkify(data.message);
-        html += message + '<br/>';
-        $("#content").append(html);
-        var elm = $("#chat-container");
-        if(star.chatMimized){
-            elm.animate({right:'0px'},100);
-            star.chatMimized = false;
-        }
+    
+    
+    function chatSend2(){
+        var data = {};
+        data.client = getSessionId();
+        data.user = star.user;
+        data.avatar = star.avatar;
+        data.message = $("#chat-text2").val();
+        data.room = star.chatRoom;
+        data.recipient = getRecipient(star.chatRoomRecipientUser);
+        data.recipientName = star.chatRoomRecipientUser;
+        data.recipientAvatar = star.chatRoomRecipientAvatar;
+        socket.emit('chatRoom-message', data);
+        $("#chat-text2").val("");
+        $("#chat-text2").focus();
+        return false;
     }
-    content.scrollTop = content.scrollHeight;
-});
-
-$("#chat-send").click(function(){
-    var data = {};
-    data.uuid = star.room;
-    data.name = star.user;
-    data.comment = $("#chat-text").val();
-    roomServices.saveFeed(data, function(){
+    
+    function getRecipient(name){
+        for(var i = 0; i < star.chatroomusers.length; i++){
+            if(star.chatroomusers[i].user == name)
+                return star.chatroomusers[i].id;
+        }
+        return null;
+    };
+    
+    $("#chat-send2").click(function(){
+        chatSend2();
+    });    
+    
+    $("#chat-text2").keyup(function(e){
+        if(e.keyCode == 13)
+            chatSend2();
+    });
+    
+    $(".chatroom-user-clear").click(function(){
+        $(this).hide();
+        $(".chatroom-user-select").html("");
+        star.chatRoomRecipient = null;
+        star.chatRoomRecipientUser = null;
+    });
+    
+    $(".style-switcher-container").on("click", ".chatroom-user", function(event){
+        var id = $(this).attr("data-id");
+        var user = $(this).attr("data-name");
+        var avatar = $(this).attr("data-avatar");
+        star.chatRoomRecipient = id;
+        star.chatRoomRecipientUser = user;
+        star.chatRoomRecipientAvatar = avatar;
+        $(".chatroom-user-select").html("<img class='avatar16' src='/"+avatar+"_32x32'> "+user);
+        $(".chatroom-user-clear").show();
     });
 });
+
 
 var roomServices = {};
 roomServices.saveFeed = function(data, success, error){
@@ -1114,6 +1352,7 @@ roomServices.saveFeed = function(data, success, error){
  });
 };
 
+
 roomServices.getFeeds = function(params, success, error){
  $.ajax({
      type: "GET",
@@ -1124,10 +1363,10 @@ roomServices.getFeeds = function(params, success, error){
  });
 };
 
+
 $(document).ready(function(){
     roomServices.getFeeds("event="+star.room, function(data){
         var html = "";
-        
         for(var i = data.length-1; i >= 0; i--){
             var date = new Date(data[i].created).toLocaleString();
             html += "<b title='"+date+"' >"+data[i].name+": </b>"+linkify(data[i].comment)+"<br/>";
@@ -1137,34 +1376,142 @@ $(document).ready(function(){
 });
 
 
+function usersChatRender(container, data){
+    data = JSON.parse(data);
+    var html = "";
+    users = [];
+    for ( var index in data) {
+        var row = data[index];
+        var avatars = [];
+        for ( var usr in row) {
+            if(row[usr].room == star.room && $.inArray(row[usr].avatar, avatars) == -1 && row[usr].avatar != undefined){
+                html += "<img src='/"+row[usr].avatar+"_32x32' id="+row[usr].avatar+" class='avatar22 avatar_"+row[usr].id+"' title='"+row[usr].user+"' style='margin-right:1px'>";
+                avatars.push(row[usr].avatar);
+            }
+        }
+    }
+    $(container).html(html);
+}
+
+
+
+
+
+
+//
+//
+// helper functions
+//
+//
+
+function usersRefresh(){
+    socket.emit("user_refresh", {});
+}
+
+
+function getPeerId(){
+    //return socket.socket.sessionid;
+    return webrtc.connection.socket.sessionid;
+}
+
+
+function getSessionId(){
+    return socket.socket.sessionid;
+}
+
+
+function getPeerById(id){
+    var peers = webrtc.webrtc.peers;
+    if(peers != undefined){
+        for(var i = 0; i < peers.length; i++){
+            if(peers[i].id == id){
+                return peers[i];
+            }
+        }
+    }
+    return null;
+}
+
+
+function peerRemoveCurrent(){
+    var peer = getPeerById(getPeerId());
+    if(peer != null)
+        peer.end();
+}
+
+
+function getUserById(id){
+    for(var i = 0; i < users.length; i++){
+        if(users[i].id == id){
+            return users[i];
+        }
+    }
+}
+
+
+function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+};
+
+
+function uuid() {
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+           s4() + '-' + s4() + s4() + s4();
+}
+
+
+function peers(){
+    return webrtc.webrtc.peers;
+}
+
+
+function joinRoomCallback(err, r){
+    $(".controls").show();
+}
+
+
+function joinRoom(room, joinRoomCallback){
+    var isInRoom = false;
+    for(var i = 0; i < webrtc.webrtc.peers.length; i++){
+        if(webrtc.webrtc.peers[i].id == getPeerId()){
+            isInRoom = true;
+        }
+    }
+    if(!isInRoom){
+        webrtc.joinRoom(room , joinRoomCallback);
+    } else {
+    }
+}
+
+
+function showVolume(el, volume) {
+    $(el).show();
+    $(el).css("opacity", "1");
+    if (!el) return;
+    if (volume < -45) { // vary between -45 and -20
+        el.style.height = '0px';
+    } else if (volume > -20) {
+        el.style.height = '100%';
+    } else {
+        el.style.height = '' + Math.floor((volume + 100) * 100 / 25 - 220) + '%';
+    }
+    $(el).fadeOut();
+}
+
+
 function linkify(inputText) {
     var replacedText, replacePattern1, replacePattern2, replacePattern3;
-
-    //URLs starting with http://, https://, or ftp://
     replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
     replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
-
-    //URLs starting with "www." (without // before it, or it'd re-link the ones done above).
     replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
     replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
-
-    //Change email addresses to mailto:: links.
     replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
     replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
-
     return replacedText;
 }
 
 
 (function ($) {
-    /**
-    * @function
-    * @property {object} jQuery plugin which runs handler function once specified element is inserted into the DOM
-    * @param {function} handler A function to execute at the time when the element is inserted
-    * @param {bool} shouldRunHandlerOnce Optional: if true, handler is unbound after its first invocation
-    * @example $(selector).waitUntilExists(function);
-    */
-
     $.fn.waitUntilExists    = function (handler, shouldRunHandlerOnce, isChild) {
         var found       = 'found';
         var $this       = $(this.selector);
@@ -1183,5 +1530,4 @@ function linkify(inputText) {
 
         return $this;
     }
-
-    }(jQuery));
+}(jQuery));

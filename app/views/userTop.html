@@ -15,15 +15,7 @@
 		
 		<div class="col-lg-6 col-sm-6">
 						
-			<h3 class="margin-clear">
-				<span style="font-size:0.6em">
-		  		#{if usr.isOnline()}
-		  			<i class="text-default icon-record"></i>
-				#{/if}
-				#{else}
-		  			<i style="color:gray" class="icon-record"></i>
-				#{/else}		
-				</span>
+			<h3 class="margin-top-clear">
 				<a class="anchor" href="/user/${usr.login}">${usr.fullName}</a>
 						
 		    	#{if userProfile}
@@ -49,15 +41,14 @@
 					<li><i class="fa fa-clock-o"></i> &{'offline'} - &{'last-online'} #{if usr.lastOnlineTime} ${usr.lastOnlineTime.format("dd MMM, yyyy")} #{time time:usr.lastOnlineTime/} #{/if}</li>
 				#{/if}
 				#{else}
-				<li><i class="fa fa-clock-o"></i> &{'online'}
+					<i class=" icon-record" style="color:#5cb85c;"></i>
+					&{'online'}
 				#{/else}
 				
-				<li><i class="fa fa-calendar pr-5"></i><a href="/user/${usr.login}/calendar/public" class="link">&{'public-calendar'}</a></li>
-				<li>
-					<i class="fa fa-envelope pr-5"></i><a href="/mail?action=new&to=${usr.login}" class="link">&{'write-message-for'} ${usr.firstName}</a>
-				</li>
+				<li><i class="fa fa-envelope pr-5"></i><a href="/mail?action=new&to=${usr.login}" class="">&{'write-message-for'} ${usr.firstName}</a></li>
+				<li><i class="fa fa-calendar pr-5"></i><a href="/user/${usr.login}/calendar/public" class="">&{'public-calendar'}</a></li>
 				#{if user && user.isPublisher()}
-					<li><i class="fa fa-bar-chart-o pr-5"></i><a href="/payments?sender=${usr.login}" class="link">&{'payments-receivedPayments-for-this-user'} ${usr.fullName}</a></li>
+					<li><i class="fa fa-bar-chart-o pr-5"></i><a href="/payments?sender=${usr.login}" class="">&{'payments-receivedPayments-for-this-user'} ${usr.firstName}</a></li>
 				#{/if}
 			</ul>
 						<ul class="social-links colored clearfix">

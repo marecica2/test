@@ -176,6 +176,7 @@ $(document).ready(function() {
             },
             eventAfterAllRender: function(view){
                 starCalendar.drawLine(view);
+                FB.Canvas.setSize({ width: 640, height: $(window.document).height() });
             }
     };
     
@@ -224,7 +225,6 @@ starCalendar.drawLine = function(view){
     var topLoc = Math.floor(parentDiv.height() * percentOfDay);
 
     timeline.css("top", topLoc + "px");
-
     if (curCalView.name == "agendaWeek") { //week view, don't want the timeline to go the whole way across
         var dayCol = $(".fc-today:visible");
         var left = dayCol.position().left + 1;
@@ -256,9 +256,6 @@ starCalendar.decorateEvent = function(event, element, view){
     }
 };
 
-
-
-
     
 starCalendar.syncGoogle = function(){
     $.get("/event-sync-google?"+star.token+"&uuid="+starCalendar.selectedEvent.uuid);
@@ -266,9 +263,11 @@ starCalendar.syncGoogle = function(){
     $('#myPopover').modal('hide');
 }
 
+
 starCalendar.popupSaveNewEventPropose = function(){
     starCalendar.popupSaveNewEvent(true);
 }
+
 
 // popup save is clicked
 starCalendar.popupSaveNewEvent = function(proposal){

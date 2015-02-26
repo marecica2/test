@@ -1,9 +1,3 @@
-#{if !isOwner && mail}
-<br/>
-<a href="/mail?action=new&to=${usr.login}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-block"><i class="fa fa-envelope"></i> &{'write-message-for'} ${usr.firstName}</a>
-<br/>
-#{/if}
-
 <h2>&{'tips-for-first-timers'}</h2>
 <div class="separator-2"></div>
 
@@ -22,3 +16,9 @@
 	<li><a href="">How to create a channel</a>
 </ul>
 <br/>
+
+#{if !isOwner && mail}
+<br/>
+<a href="/mail?action=new&to=${usr.login}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-block"><i class="fa fa-envelope"></i> &{'write-message-for'} ${usr.firstName}</a>
+<br/>
+#{/if}

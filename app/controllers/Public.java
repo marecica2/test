@@ -16,7 +16,9 @@ import models.User;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import play.i18n.Lang;
+import play.i18n.Messages;
 import utils.JsonUtils;
+import utils.RandomUtil;
 
 import com.google.gson.JsonObject;
 
@@ -128,8 +130,13 @@ public class Public extends BaseController
         final List<Listing> listings = Listing.getForUser(usr);
         final Map<String, Object> stats = Rating.calculateStats(ratings);
 
+        final String name = user != null ? user.getFullName() : Messages.get("anonymous") + RandomUtil.getRandomDigits(5);
+        final String room = usr != null ? usr.uuid : null;
+        final String rmtp = getProperty(CONFIG_RMTP_PATH);
+        final String socketIo = getProperty(CONFIG_SOCKET_IO);
+
         render(user, usr, userProfile, isOwner, listings, followees,
-                followers, follow, ratings, stats, contact);
+                followers, follow, ratings, stats, contact, name, room, rmtp, socketIo);
     }
 
     public static void wiki()

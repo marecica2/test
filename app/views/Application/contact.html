@@ -1,0 +1,96 @@
+#{extends 'main.html' /}
+#{set 'title'}
+	&{'contact-us'}
+#{/set}
+
+#{set 'moreScripts'}
+#{/set}
+
+#{set 'moreStyles'}
+#{/set}
+
+
+<!-- footer start (Add "light" class to #footer in order to enable light footer) -->
+<!-- ================ -->
+<a id="contact"></a>
+<footer id="footer" class="light object-non-visible" data-animation-effect="fadeIn" data-effect-delay="300">
+	<!-- .footer start -->
+	<!-- ================ -->
+	<div class="footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="footer-content object-non-visible" data-animation-effect="fadeInLeftSmall" data-effect-delay="300">
+						<div class="logo-footer"><img id="logo-footer" src="images/logo_purple.png" alt=""></div>
+						<p>
+						&{'contact-us-text'}
+						</p>
+						<div class="row">
+							<div class="col-md-6">
+								<ul class="list-icons">
+									*{
+									<li><i class="fa fa-map-marker pr-10"></i> One infinity loop, 54100</li>
+									<li><i class="fa fa-phone pr-10"></i> +00 1234567890</li>
+									}*
+									<li><i class="fa fa-envelope-o pr-10"></i> info@wid.gr</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="object-non-visible" data-animation-effect="fadeInRightSmall" data-effect-delay="300">
+						<h2>Contact Us</h2>
+						<form action="/contact-us" method="POST">
+							
+							#{if user == null}							
+							<div class="error">#{error 'name' /}</div>
+							<div class="form-group has-feedback">
+								<label class="sr-only" for="name">&{'name'}</label>
+								<input type="text" class="form-control" id="email" placeholder="&{'name'}" value="${params.name}" name="name">
+								<i class="fa fa-user form-control-feedback"></i>
+							</div>
+
+							<div class="error">#{error 'email' /}</div>
+							<div class="form-group has-feedback">
+								<label class="sr-only" for="email">&{'email-address'}</label>
+								<input type="email" class="form-control" id="email" placeholder="&{'email-address'}" value="${params.email}" name="email">
+								<i class="fa fa-envelope form-control-feedback"></i>
+							</div>
+							#{/if}
+							<div class="error">#{error 'subject' /}</div>
+							<div class="form-group has-feedback">
+								<label class="sr-only" for="name">&{'subject'}</label>
+								<input type="text" class="form-control" id="name" placeholder="&{'subject'}" value="${params.subject}" name="subject">
+								<i class="fa fa-pencil form-control-feedback"></i>
+							</div>
+
+							<div class="error">#{error 'message' /}</div>
+							<div class="form-group has-feedback">
+								<label class="sr-only" for="message">&{'message'}</label>
+								<textarea class="form-control" rows="4" id="message" placeholder="&{'message'}" value="${params.message}" name="message">${params.message}</textarea>
+								<i class="fa fa-pencil form-control-feedback"></i>
+							</div>
+
+							<div class="error">#{error 'captcha' /}</div>
+							<div class="form-group has-feedback">
+								<input type="hidden" value="${params.uuid}" name="uuid" />
+								<input type="text" placeholder="&{'captcha'}" class="form-control" style="display:inline !important;width:20%" name="captcha"/>
+								<img src="/captcha?uuid=${params.uuid}">							
+								<input type="submit" value="&{'send'}" class="btn btn-default pull-right">
+								<div class="clearfix"></div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- .footer end -->
+
+
+
+</footer>
+<!-- footer end -->
+
+

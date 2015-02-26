@@ -2,10 +2,14 @@ GET     /										Application.home
 GET     /home									Application.home
 GET     /search									Application.search
 GET     /dashboard			                    Application.dashboard
+GET     /upcoming		                    	Application.upcoming
+GET     /past				                    Application.past
+GET     /approvements		                    Application.approvements
 GET     /calendar                               Application.calendar
 GET     /user/{login}/calendar		      		Application.calendarUser
 GET     /user/{login}/calendar/{public}    		Application.calendarUser
 GET     /channels								Application.channels
+GET     /manage-channels						Application.manageChannels
 *	    /facebook								Application.facebook
 *	    /facebook/edit							Application.facebook
 POST    /facebook-save							Application.facebookPost
@@ -13,6 +17,7 @@ GET     /privacy								Application.privacy
 GET     /terms									Application.terms
 GET     /help									Application.help
 GET 	/about									Application.about
+GET 	/contact								Application.contact
 POST 	/contact-us								Application.contactUs
 
 GET		/login									Secure.login

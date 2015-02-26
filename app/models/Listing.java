@@ -241,7 +241,7 @@ public class Listing extends Model
 
     public boolean isAvailable()
     {
-        if (this.availableNow != null)
+        if (this.user.available != null && this.user.available)
             return true;
         return false;
     }

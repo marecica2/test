@@ -40,12 +40,8 @@
         </style>
 #{/set}
 #{set 'moreScripts'}
-	<!-- 
-	<script src="//cdn.firebase.com/v0/firebase.js"></script>
-	<script src="//cdn.webrtc-experiment.com/screen.js"></script>
-	 -->
-
 	<script src="@{'/public/javascripts/lib/jquery-ui.custom.min.js'}" type="text/javascript" ></script>
+	<script src="@{'/public/javascripts/lib/jquery.ui.touch.js'}" type="text/javascript"></script>	
 	<script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>	
 	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	 
 	<script src="@{'/public/javascripts/lib/getScreenId.js'}" type="text/javascript"></script>	
@@ -57,50 +53,77 @@
 
 <!-- Chat box -->
 <div>
-	<div id="chat-container" style="right:-325px;z-index: 9999;height:100%">
+	<div id="chat-container" style="background: none; right:-325px;z-index: 1001;height:100%">
 		<div class="color-link-light" id="chat-slider" style="display:table;position:absolute;left:6px;top:0px;height:100%;">
 			<div style="height:100%; display:table-cell; vertical-align:middle;">
-			<i class="fa fa-chevron-left" style=""></i>
+				<button class="btn btn-dark btn-short" style="position:relative; left: -20px; border-radius: 5px; color: white; border: 0px; background: rgba(0,0,0,0.4)">
+					<i class="fa fa-chevron-left"></i>
+				</button>
 			</div>
 		</div>
 		<div style="height:100%">
-			<div id="content" class="form-control shadow-outset" style="background:rgba(0, 0, 0, 0.6);font-size:0.8em;color:white;height: 90%; overflow-y: scroll; border: 0px;"></div>
-			<div class="controls">
-				<form onsubmit="return false;">
-					<div class="input-group">
-						<input id="chat-text" class="form-control" style="color:white; border:0px; background: rgba(13, 13, 13, 0.6)" placeholder="&{'enter-your-message'}"> 
-						<input id="chat-name" type="hidden" value="${name}"> 
-						<span class="input-group-btn">
-							<button id="chat-send" class="btn btn-default btn-short margin-clear" style="height:40px;">&{'send'}</button>
-						</span>
-					</div>
-				</form>
-			</div>
+			<div id="content" class="form-control shadow-small" style="background:rgba(20, 20, 20, 1);font-size:0.8em;color:white;height: 90%; overflow-y: scroll; border: 0px;"></div>
+			<form onsubmit="return false;">
+				<div class="input-group shadow-small">
+					<input id="chat-text" class="form-control" style="color:white; border:0px; background: rgba(20, 20, 20, 1)" placeholder="&{'enter-your-message'}"> 
+					<input id="chat-name" type="hidden" value="${name}"> 
+					<span class="input-group-btn">
+						<button id="chat-send" class="btn btn-default btn-short margin-clear" style="height:40px;">&{'send'}</button>
+					</span>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
 
 
 <!-- Canvas -->
-<div class="well canvas-container ui-widget-content shadow-outset" style="background: #efefef; position:fixed;display:none;z-index: 9999" >
-	<span id="canvas-slider" class="canvas-slider btn btn-light-gray btn-block btn-sm margin-top-clear">Sketch</span>
-    <div></div>
-    <canvas class="canvas-paper" width="200px" height="200px" style="background: white;"></canvas>
-    <input class="btn btn-default btn-sm margin-bottom-clear" type="button" value="save" id="btn" size="30" onclick="canvas.save()" >
-    <input class="btn btn-default btn-sm margin-bottom-clear" type="button" value="clear" id="clr" size="23" onclick="canvas.erase()">
-    <img id="canvasimg" style="display:none;">
+<div class="canvas-container ui-widget-content shadow-small modal-content" style="background: #fafafa; display: none; position:fixed;z-index: 999;" >
+	<div class="modal-header" id="canvas-slider">
+    	<button type="button" class="close" onclick="canvas.close()"><span>&times;</span><span class="sr-only">Cancel</span></button>
+    	<h3 class="modal-title" id="myModalLabel"><i class="fa fa-paint-brush"></i> &{'canvas'}</h3>
+    </div>
+    <div style="padding:0px 10px">
+	    <button class="btn btn-light-gray btn-short " id="mode-pen" onclick="canvas.mode('pen')" rel="tooltip" data-original-title="&{'paint'}"><i class="fa fa-paint-brush"></i></button>
+	    <button class="btn btn-light-gray btn-short " id="mode-eraser" onclick="canvas.mode('eraser')" rel="tooltip" data-original-title="&{'eraser'}"><i class="fa fa-eraser"></i></button>
+	    <button class="btn btn-light-gray btn-short " id="undo" onclick="canvas.undo()" rel="tooltip" data-original-title="&{'undo'}"><i class="fa fa-undo"></i></button>
+	    <button class="btn btn-light-gray btn-short " id="clr" onclick="canvas.erase()" rel="tooltip" data-original-title="&{'clear'}"><i class="fa fa-trash"></i></button>
+	    <button class="btn btn-light-gray btn-short " id="btn" onclick="canvas.share(this)" rel="tooltip" data-original-title="&{'share'}" ><i class="fa fa-share-alt"></i></button>
+	    #{if event}
+	    <button class="btn btn-light-gray btn-short " id="btn" onclick="canvas.save()" rel="tooltip" data-original-title="&{'save-painting'}"><i class="fa fa-upload"></i></button>
+	    #{/if}
+    </div>
+    <canvas class="canvas-paper" width="340" height="300" style="background-image: url('../images/canvas_pattern_0.jpg');background-repeat: repeat;background-position: 0 0;"></canvas>
 </div>
 
 
 
+<!-- comments -->
+#{if event}
+<div class="comments-resize modal-content ui-widget-shadow-small shadow-small" style="display:none; background: white; position:fixed;z-index: 999;border:1px solid silver">
+	<div class="modal-header" id="comments-slider">
+    	<button type="button" class="close" onclick="canvas.commentsClose()"><span>&times;</span><span class="sr-only">Cancel</span></button>
+    	<h3 class="modal-title" id="myModalLabel"><i class="icon-docs"></i> &{'posts-and-uploads'}</h3>
+    </div>
+	<div class="comments-resize-2" style="height:400px; width: 400px; padding:10px; padding-top:0px; margin:10px; background: white">
+		<div style="overflow-y: scroll; overflow-x:hidden; height:100%;padding:15px">
+		#{set objectType:"event" /}
+		#{set object:event /}
+		#{include 'comments.html' /}
+		</div>
+	</div>			
+</div>	
+#{/if}
+
+
 #{if user}
-<div class="logo" style="position:fixed;top:25px;right:50px; z-index: 100">
+<div class="logo small-hide" style="position:fixed;top:25px;right:50px; z-index: 100">
 	<a href="/dashboard"><img class="img-circle" style="border:1px solid #333" src="${user.avatarUrl}_32x32"></a>
 </div>
 #{/if}	
 
 
-<div class="logo" style="position:fixed;top:20px;left:20px;opacity: 0.7;"><img style="height:40px" src="/public/images/logo_purple_footer.png"></div>
+<div class="logo small-hide" style="position:fixed;top:20px;left:20px;opacity: 0.7;"><img style="height:30px" src="/public/images/logo_purple_footer.png"></div>
 
 <!-- Install extension modal -->
 <div class="modal" id="extensionModal" tabindex="-1" role="dialog" aria-labelledby="extensionModal" aria-hidden="true">
@@ -155,7 +178,7 @@
       <div class="modal-body">
 	    <div class="form-group">
 	    	<label for="share-link">&{'share-via-link'}</label>
-	      	<input id="share-link" type="text" class="form-control" value="${baseUrl + request.url}" onclick="javascript:$(this).select();">
+	      	<input id="share-link" type="text" class="form-control" value="${baseUrl}/room?id=${room}" onclick="javascript:$(this).select();">
 	    </div>
 	    <div class="form-group">
 	    	<label for="share-link">&{'send-notification'}</label>
@@ -234,6 +257,8 @@
 			<button type="button" id="controls-mute" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'mute'}"><i class="icon-sound"></i></button>
 			<button type="button" id="controls-camera" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'turn-camera-off'}"><i class="fa fa-eye-slash"></i></button>
 			<button type="button" id="screenShareButton" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'share-your-screen'}"><i class="fa fa-desktop"></i></button>
+			<button type="button" id="canvas-open" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'open-canvas'}"><i class="fa fa-paint-brush"></i></button>
+			<button type="button" id="comments-open" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'open-canvas'}"><i class="icon-docs"></i></button>
 			<button class="controls btn btn-dark btn-medium" data-toggle="modal" data-target="#myModal" rel="tooltip" data-placement="bottom" data-original-title="&{'share-with-more'}"><i class="icon-user-add"></i></button>
 			<a href="${request.url}" class="btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'refresh'}"><i class="fa fa-refresh"></i></a>
 			<button type="button" id="controls-hangup" class="controls btn btn-danger btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'hang-up'}"><i class="fa fa-phone"></i></button>

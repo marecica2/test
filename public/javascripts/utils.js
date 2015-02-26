@@ -48,13 +48,25 @@ star.utils.trimTo = function(input, len) {
     return input;
 }
 
+star.utils.uuid = function() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
+  }
+
 star.utils.uploadFiles = function(url, files, clbk) {
     for (var i = 0; i < files.length; i++) {
       var formData = new FormData();
       var file = files[i];
+      console.log(file.name);
       formData.append("attachment", file);
       formData.append("contentType", file.type);
       formData.append("size", file.size);
+      formData.append("name", file.name);
+      console.log(formData);
       
       $("#progresses").append("<div class='progress' id='progressContainer"+i+"'><div class='progress-bar progress-bar-striped active' id='progress"+i+"' role='progressbar' aria-valuenow='45' aria-valuemin='0' aria-valuemax='100'></div></div>");
       var xhr = new XMLHttpRequest();
@@ -83,6 +95,46 @@ star.utils.uploadFiles = function(url, files, clbk) {
       xhr.send(formData);
     }
 };   
+
+//fileupload for event edit
+$(document).ready(function(){
+    $("#upload-button").click(function(){
+        $("#upload").click();
+    });
+    $("#upload").change(function(){
+        var params = "";
+        params = "temp="+starCalendar.temp;
+        params += "&avatar=true";
+        
+        star.utils.uploadFiles('/fileupload?'+star.token+'&'+params, this.files, function(json){
+            var resp = JSON.parse(json);
+            $(".avatar-container").addClass("eg-wrapper");
+            $(".eg-preview").show();
+            $("#crop-button").show();
+            $("#upload-button").hide();
+            $("#image").attr("style", "");
+            $("#image").attr("src", "../public/uploads/"+resp.url);
+            $("#imageUrl").val("public/uploads/"+resp.url+"");
+            $("#imageId").val(resp.uuid);
+
+            $(".avatar-container > img").cropper({
+                aspectRatio : starCalendar.aspectRatio,
+                preview: ".avatar-preview",
+                done : function(data) {
+                    $("#x1").val(Math.round(data.x));
+                    $("#y1").val(Math.round(data.y));
+                    $("#x2").val(Math.round(data.x + data.width));
+                    $("#y2").val(Math.round(data.y + data.height));
+                    $("#imageIdCrop").val($("#imageId").val());
+                }
+            });
+        });
+    });
+    $("#crop-button").click(function(){
+        $("#cropForm").submit();
+    });
+    
+});
 
 star.utils.setCookie = function(name,value,days) {
     if (days) {

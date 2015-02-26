@@ -33,13 +33,13 @@
 	  	<div class="col-md-12">
 	  	
 			#{if plan && planLast != null && planLast.id != plan.id}
-				<div class="shadow alert alert-info alert-dismissible" role="alert">
+				<div class="alert alert-info alert-dismissible" role="alert">
 					&{'account-will-be-valid'} <strong>&{planLast.type}</strong> &{'account-will-be-valid-2'}  ${planLast.validFrom.format("dd MMM yyyy")}, #{time time:planLast.validFrom/}
 				</div>
 			#{/if}	
 
 			#{if plan && planLast != null && planLast.id != plan.id && planLast.type != "standard" && planLast.profile == null}
-				<div class="shadow alert alert-info alert-dismissible" role="alert">
+				<div class="alert alert-info alert-dismissible" role="alert">
 					&{'your-subscription-not-activated', messages.get(plan.type)}
 					&{'PayPal-payment-message'}
 					<img style="cursor:pointer" class="paypal-subscription pull-right" src="//www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" border="0" data-id="${planLast.id}" align="top" alt="&{'subscribe-with-paypal'}"/>
@@ -47,7 +47,7 @@
 			#{/if}	
 			
 			#{if plan != null && !plan.isStandard() && plan.paid == null}
-				<div class="shadow alert alert-info alert-dismissible" role="alert">
+				<div class="alert alert-info alert-dismissible" role="alert">
 					&{'your-subscription-not-activated', messages.get(plan.type)}
 					<br/>
 					&{'total'}: <strong>${plan.account.getPlanPrice()} USD &{'monthly'}</strong>
@@ -68,7 +68,7 @@
 			</script>	  	
 	  	
 			<h2 class="btn-margin">
-				&{'settings'}
+				<i class="fa fa-cog"></i> &{'settings'}
 				<span class="">
 					#{if !edit}
 						<a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true"><i class="fa fa-pencil"></i> &{'edit'}</a>
@@ -108,7 +108,7 @@
 				<div id="progresses" style='margin-top:10px'>
 				</div>
 				<div class="clearfix"></div>
-				<script src="@{'/public/javascripts/upload.js'}" type="text/javascript"></script>	
+				<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
 			</div>
 			<!-- Fileupload -->		
 			
@@ -190,7 +190,6 @@
 			</dl>
 			#{/if}
 			#{else}
-			
 			<div class="form-group">
 				<label for="name" class="col-sm-2 control-label">&{'account-name'}</label>
 			    <div class="col-sm-10">
@@ -199,7 +198,64 @@
 			    </div>
 			</div>
 			#{/else}
+			<br/>
+			
+			
+			
+			
 
+			#{if user.account.type == "publisher"}
+			<a id="paypal"></a>
+			<h3>&{'paypal-account'}</h3>
+			<div class="separator-2"></div>
+			#{if !edit}
+			<dl class="dl-horizontal">
+				<dt>&{'paypal-account'}</dt>
+				<dd>
+					${user.account.paypalAccount}
+					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'paypal-info'}"></i>
+				</dd>
+				<dt>&{'account.currency'}</dt>
+				<dd>${user.account.currency} &nbsp;</dd>
+			</dl>
+			#{/if}
+			#{else}
+			<div class="form-group">
+				<label for="paypal" class="col-sm-2 control-label">&{'paypal-account'}</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="paypal" placeholder="&{'paypal-account'}" name="paypal" value="${params.paypal}">
+			      <div class="error">#{error 'paypal' /}</div>
+			    </div>
+			</div>
+			<div class="form-group">
+				<label for="currency" class="col-sm-2 control-label">&{'default-currency'}</label>
+			    <div class="col-sm-10">
+					<select class="form-control" name="currency" id="currency">
+						<option #{if params.currency == "USD"}selected='selected'#{/if} value="USD">USD</option>
+						<option #{if params.currency == "EUR"}selected='selected'#{/if} value="EUR">EUR</option>
+						<option #{if params.currency == "CHF"}selected='selected'#{/if} value="SEK">CHF</option>
+						<option #{if params.currency == "GBP"}selected='selected'#{/if} value="GBP">GBP</option>
+						<option #{if params.currency == "AUD"}selected='selected'#{/if} value="AUD">AUD</option>
+						<option #{if params.currency == "CAD"}selected='selected'#{/if} value="CAD">CAD</option>
+						<option #{if params.currency == "JPY"}selected='selected'#{/if} value="JPY">JPY</option>
+						<option #{if params.currency == "CZK"}selected='selected'#{/if} value="CZK">CZK</option>
+						<option #{if params.currency == "BRL"}selected='selected'#{/if} value="BRL">BRL</option>
+						<option #{if params.currency == "DKK"}selected='selected'#{/if} value="DKK">DKK</option>
+						<option #{if params.currency == "NOK"}selected='selected'#{/if} value="NOK">NOK</option>
+						<option #{if params.currency == "NZD"}selected='selected'#{/if} value="NZD">NZD</option>
+						<option #{if params.currency == "PLN"}selected='selected'#{/if} value="SEK">PLN</option>
+						<option #{if params.currency == "SEK"}selected='selected'#{/if} value="SEK">SEK</option>
+					</select>
+					<div class="error">#{error 'currency' /}</div>
+			    </div>
+			</div>			
+			#{/else}
+			<br/>
+			#{/if}			
+			
+			
+			
+			
 			<h3>&{'user-preferences'}</h3>
 			<div class="separator-2"></div>
 			#{if !edit}
@@ -328,10 +384,11 @@
 				</label>
 			</div>				
 			</div>						
-			#{/else}			
+			#{/else}
+			<br/>			
 			
-			
-			
+
+
 
 
 			<h3>&{'your-calendar'}</h3>
@@ -479,60 +536,6 @@
 
 
 
-
-			#{if user.account.type == "publisher"}
-			<br/>
-			<a id="paypal"></a>
-			<h3>&{'paypal-account'}</h3>
-			<div class="separator-2"></div>
-			#{if !edit}
-			<dl class="dl-horizontal">
-				<dt>&{'paypal-account'}</dt>
-				<dd>
-					${user.account.paypalAccount}
-					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'paypal-info'}"></i>
-				</dd>
-				<dt>&{'account.currency'}</dt>
-				<dd>${user.account.currency} &nbsp;</dd>
-			</dl>
-			#{/if}
-			#{else}
-			<div class="form-group">
-				<label for="paypal" class="col-sm-2 control-label">&{'paypal-account'}</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="paypal" placeholder="&{'paypal-account'}" name="paypal" value="${params.paypal}">
-			      <div class="error">#{error 'paypal' /}</div>
-			    </div>
-			</div>
-			<div class="form-group">
-				<label for="currency" class="col-sm-2 control-label">&{'currency'}</label>
-			    <div class="col-sm-10">
-					<select class="form-control" name="currency" id="currency">
-						<option #{if params.currency == "USD"}selected='selected'#{/if} value="USD">USD</option>
-						<option #{if params.currency == "EUR"}selected='selected'#{/if} value="EUR">EUR</option>
-						<option #{if params.currency == "CHF"}selected='selected'#{/if} value="SEK">CHF</option>
-						<option #{if params.currency == "GBP"}selected='selected'#{/if} value="GBP">GBP</option>
-						<option #{if params.currency == "AUD"}selected='selected'#{/if} value="AUD">AUD</option>
-						<option #{if params.currency == "CAD"}selected='selected'#{/if} value="CAD">CAD</option>
-						<option #{if params.currency == "JPY"}selected='selected'#{/if} value="JPY">JPY</option>
-						<option #{if params.currency == "CZK"}selected='selected'#{/if} value="CZK">CZK</option>
-						<option #{if params.currency == "BRL"}selected='selected'#{/if} value="BRL">BRL</option>
-						<option #{if params.currency == "DKK"}selected='selected'#{/if} value="DKK">DKK</option>
-						<option #{if params.currency == "NOK"}selected='selected'#{/if} value="NOK">NOK</option>
-						<option #{if params.currency == "NZD"}selected='selected'#{/if} value="NZD">NZD</option>
-						<option #{if params.currency == "PLN"}selected='selected'#{/if} value="SEK">PLN</option>
-						<option #{if params.currency == "SEK"}selected='selected'#{/if} value="SEK">SEK</option>
-					</select>
-					<div class="error">#{error 'currency' /}</div>
-			    </div>
-			</div>			
-			#{/else}
-			#{/if}
-			
-
-
-			
-			
 			<br/>
 			<h3>&{'About You'}</h3>
 			<div class="separator-2"></div>

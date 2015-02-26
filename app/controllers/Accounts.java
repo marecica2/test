@@ -122,18 +122,11 @@ public class Accounts extends BaseController
         if (!validation.hasErrors())
         {
             account.name = accName;
-            account.url = url;
-            account.smtpHost = smtpHost;
-            account.smtpPort = smtpPort;
-            account.smtpAccount = smtpAccount;
-            account.smtpPassword = smtpPassword;
-            account.smtpProtocol = smtpProtocol;
             account.paypalAccount = paypal;
             account.currency = currency;
+            account.url = url;
             account.save();
 
-            user.facebookId = facebookId;
-            user.facebookName = facebookName;
             user.timezone = timezone;
             user.firstName = firstName;
             user.lastName = lastName;
@@ -193,6 +186,7 @@ public class Accounts extends BaseController
             user.save();
         }
 
+        clearUserFromCache();
         flash.keep();
         account();
     }

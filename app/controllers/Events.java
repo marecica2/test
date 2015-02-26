@@ -220,7 +220,7 @@ public class Events extends BaseController
         params.put("temp", temp);
         params.flash();
 
-        final String name = user != null ? user.getFullName() : null;
+        final String name = user != null ? user.getFullName() : Messages.get("anonymous") + RandomUtil.getRandomDigits(5);
         String room = event != null ? event.uuid : null;
         if (event != null && event.privateRoom != null && event.privateRoom)
             room = event.roomSecret;

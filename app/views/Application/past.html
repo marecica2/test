@@ -1,0 +1,39 @@
+#{extends 'main.html' /} 
+#{set 'title'}
+	&{'dashboard'}
+#{/set}
+
+#{set 'moreScripts'}
+	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
+	<script src="@{'/public/javascripts/dashboard.js'}" type="text/javascript"></script>	
+	<script>
+	    star.dashboard = true;
+		#{if user}
+	   		star.user = "${user.uuid}";	
+		#{/if}
+		starCalendar.comments = true;
+	</script>
+#{/set}
+
+<div class="padding container container-xs-height">
+	<div class="row row-xs-height">
+	
+		<div class="col-md-3 col-md-push-9 col-xs-height col-top" style="background: #fdfdfd;" >
+			#{include 'activities.html' /}
+		</div>		
+
+		<div class="col-md-9 col-md-pull-3 col-xs-height col-top">
+		
+			<h3><i class="icon-back-in-time"></i> &{'previous-events'}</h3>
+			<div class="separator-2"></div>
+			<div id="itemsListPrevious" class="full-widthd"></div>
+			<div class="spinner-container1">
+				<div class="spinner-container">
+					<div id="spinnerPrevious" class="spinner-load"></div>
+					<a id="moreResultsPrevious" class="spinner-more"><i class=" icon-plus-circled"></i></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
