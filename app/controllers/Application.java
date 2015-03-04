@@ -167,9 +167,6 @@ public class Application extends BaseController
     {
         final User user = getLoggedUser();
         Map<String, Object> ratings = initRatings();
-
-        if (user != null && user.isStandard() && user.hideInfoPublisher == null && user.hideInfoPublisher == null)
-            flash.success(Messages.get("start-helping-others"));
         render(user, ratings);
     }
 
@@ -210,10 +207,6 @@ public class Application extends BaseController
         final List<Contact> contacts = Contact.getContacts(user);
 
         final List<Comment> comments = Comment.getByFollower(user, 0, 200);
-
-        if (user != null && user.isStandard() && user.hideInfoPublisher == null)
-            flash.success(Messages.get("start-helping-others"));
-
         //Http.Cookie c = new Http.Cookie();
         //c.name = "timezone";
         //c.value = user.timezone.toString();

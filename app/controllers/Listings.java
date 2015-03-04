@@ -215,6 +215,7 @@ public class Listings extends BaseController
             redirectTo(url);
         }
         params.flash();
+        flash.error(Messages.get("invalid-channel-data"));
         render("Listings/listing.html", user, edit, listing);
     }
 
@@ -240,14 +241,15 @@ public class Listings extends BaseController
         user.available = true;
         user.save();
 
-        final Listing l = Listing.get(id);
-        if (user == null)
-            forbidden();
-        if (!l.user.equals(user))
-            forbidden();
+        //        final Listing l = Listing.get(id);
+        //        if (user == null)
+        //            forbidden();
+        //        if (!l.user.equals(user))
+        //            forbidden();
+        //        l.availableNow = new Date();
+        //        l.save();
 
-        l.availableNow = new Date();
-        l.save();
+        clearUserFromCache();
         redirectTo(url);
     }
 
@@ -258,14 +260,14 @@ public class Listings extends BaseController
         user.available = null;
         user.save();
 
-        final Listing l = Listing.get(id);
-        if (user == null)
-            forbidden();
-        if (!l.user.equals(user))
-            forbidden();
-
-        l.availableNow = null;
-        l.save();
+        //        final Listing l = Listing.get(id);
+        //        if (user == null)
+        //            forbidden();
+        //        if (!l.user.equals(user))
+        //            forbidden();
+        //        l.availableNow = null;
+        //        l.save();
+        clearUserFromCache();
         redirectTo(url);
     }
 

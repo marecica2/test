@@ -23,7 +23,7 @@
 			</p>
 			
 			<h4 class="margin-clear">${item.title.trimDot(90)}
-			#{if user && item.isAvailable() != null && item.user.uuid == user.uuid}
+			#{if user && item.isAvailable() && item.user.uuid == user.uuid}
 				<small class="label label-success pull-right" style="font-size:0.6em">&{'available-activated'}</small>
 			#{/if}			
 			</h4>
@@ -52,7 +52,6 @@
        			#{/else}
 			#{/list}
             ${item.ratingStars} &{'reviews'}   	
-           
            	
 			#{if isOwner && user && user.account.type == "publisher"}
 				<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&listingId=${item.uuid}" class="btn btn-gray btn-sm btn-margin pull-right"><i class="fa fa-plus"></i> &{'create-event'}</a>

@@ -12,7 +12,7 @@ publisher-request-declined-subject=Your request for publisher was declined
 publisher-request-declined-message=h3. Your request for publisher was declined \nPlease complete your personal information and channels and try again. Remember you can always ask us what needs to be corrected in order to be later successfully approved. [Ask a question|%s]
 
 #Application.java
-start-helping-others=Start helping others and become Publisher. <a href='/settings/request-publisher'>Request for publisher account here</a> or <a href='/settings/publisherinfo'>dismiss</a>.
+start-helping-others=Start helping others and become Publisher. <a href='/settings/request-publisher?authenticityToken=%s'>Request for publisher account here</a>.
 click-and-drag-to-create-event=Select a free time slot and start dragging to create a request for a new session. <br/><span style='opacity:0.5'>Session marked with solid black color means, that this time slot is already reserved.</span>
 
 #Attendances.java
@@ -66,6 +66,7 @@ invitation-to-video-call-subject=Invitation to video call
 invitation-to-video-call-message=h3. %s invited you to video call. \n[Click here to join this video call|%s]
 
 #Listings.java
+invalid-channel-data=Invalid data provided. Please review and correct all inputs.
 
 #Notifications.java
 message-sent-error=Message has not been sent, please correct input first
@@ -246,7 +247,7 @@ account.account=Account
 account-name=Account name
 account-plan=Account plan
 account-type=Account type
-waiting-for-approvement=Session requests
+waiting-for-approvement=Session requested
 become-a-publisher=Become a publisher
 account.accountName=Account.accountName
 Account Plan=Account Plan
@@ -351,18 +352,20 @@ about-2=Widgr is a place where you can find people offering help on a wide varie
 about-3=With Widgr you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.<br/>You can choose who to get help from based on qualifications, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. While some sessions are free, you'll need to pay for some. Paying is easy using PayPal.
 why-choose-widgr=Features
 why-choose-widgr-text=Why choose widgr?
-widgr-feature-1=Online Video Calls
+widgr-feature-1=Live interactive video
+widgr-feature-1-text=Widgr sessions are conducted through live video calls. During the session, you can point your camera to show what you need help with, upload and share files, interactive drawings, If you don't want the Publisher to see you, you can always turn off your camera. <a href="/instant" target="_blank">Try it now</a>.
 widgr-feature-2=Scheduling flexibility
+widgr-feature-2-text=There are two ways to create join session -- instant and scheduled. If a publisher's channel has a green "Available now" icon, you are just a few clicks away from getting help instantly. Before taking Session you can use interactive chat box to get more information about provided Channel from Publisher. Otherwise, you can see when publishers are available in their calendar and pick a time slot or send a message to request a different time.
 widgr-feature-3=Pricing options
+widgr-feature-3-text=Sessions that are free don't require a PayPal account. Prices are set by the publishers and can be free or charged by the session. Some publishers might offer the first session for free. All you need for paying a session is a valid PayPal account.
 widgr-feature-4=Easy payments and refunds with PayPal
+widgr-feature-4-text=All payments are currently done through PayPal with easy refundantion policy. If you as a Customer will not be satisfied with the session, you can ask for a refund with just few clicks.<br/><br/>If you plan to use Widgr as a Publisher and offer paid Sessions, you'll need to have a verified Premier or Business account to be able to receive money through PayPal.
 widgr-feature-5=Integration with Facebook
+widgr-feature-5-text=You can easily integrate your Widgr account with existing Facebook page, that your account will be more accesible to your Facebook community. If you own a Facebook page, you can install Widgr app to custom tab. With this option, your potential customers are just few clicks away using your services. <br/><a href="https://www.facebook.com/add.php?api_key=731388346951866&pages">Click here to add Widgr app to your Facebook page</a> or <a href="/help#facebook">learn more</a> about this feature.
 widgr-feature-6=Integration with Google Calendar
-widgr-feature-1-text=Widgr sessions are conducted through live video calls. During the session, you can point your camera to show what you need help with, If you don't want the Publisher to see you, you can always turn off your camera. 
-widgr-feature-2-text=There are two ways to create join session -- instantly and scheduled. If a publisher's channel has a purple "Available now" icon, you are just a few clicks away from getting help instantly. Otherwise, you can see when publishers are available in their calendar and pick a time slot or send a message to request a different time.
-widgr-feature-3-text=Sessions that are free don't require a PayPal account. Prices are set by the publishers and can be free or charged by the session. Some publishers might offer the first session for free.
-widgr-feature-4-text=All payments are currently done through PayPal with easy refundantion policy. If you as a User will not be satisfied with the session, you can ask for a refund with one click.<br/><br/>If you plan to use Widgr as a Publisher and offer paid Sessions, you'll need to have a verified Premier or Business account to be able to receive money through PayPal.
-widgr-feature-5-text=You can easily integrate your Widgr account with existing Facebook page, that your account will be more accesible to your Facebook community. If you own a Facebook page, you can install Widgr app to custom tab. With this option, your potential customers are just few clicks away using your services. <br/><a href="https://www.facebook.com/add.php?api_key=731388346951866&pages">Click here to add Widgr app to your Facebook page</a>
 widgr-feature-6-text=You can easily connect your Widgr account with Google Calendar. With Google calendar you can schedule and manage and be notified about your sessions on every device you use.
+widgr-feature-7=Integration with Google Calendar
+widgr-feature-7-text=You can easily connect your Widgr account with Google Calendar. With Google calendar you can schedule and manage and be notified about your sessions on every device you use.
 pricing=Pricing
 basic=Basic
 free=Free
@@ -525,7 +528,7 @@ refresh=Reload call
 hang-up=End&nbsp;call
 
 #header.html
-manage-channels=Manage channels
+manage-channels=Channels
 share-your-knowledge=Share your knowledge
 toggle-navigation=Toggle navigation
 received-new-message=Received new message
@@ -555,6 +558,11 @@ setup-camera-description=Wigdr sessions happen over video conferencing, so be su
 checkout-tutorials=Check out tutorials
 write-message-for=Write message for
 tips-for-first-timers=Tips for first timers
+get-a-modern-browser=Get a modern browser
+full-experience=To get correct user experience please update your browser to latest. Recommended browsers are <a href="http://www.google.com/chrome/">Google Chrome</a>, <a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a> and <a href="http://www.opera.com/">Opera</a>. Otherwise you can <a href="/about#compatibility">check compatibility of your browser here</a>. 
+set-up-your-camera=Set up your camera
+set-up-your-camera-desc=Wigdr sessions happen over video conferencing, so be sure that yours works properly. You can test your camera by running a <a target="_blank" href="/instant">Test video call</a>. You should be able to see and hear yourself.
+video-tutorials=Video tutorials
 
 #edit.html
 video-recorder-directly=Create Introductory video using Youtube widget
@@ -621,8 +629,9 @@ this-channel-is-free=Free
 media=Media
 add-more-people=Invite more people to this session
 invite-press=Check selected users and press to submit an invitation to this Session
-check-me-as-available=Activate Available now
-uncheck-me-as-available=Deactivate Available now
+check-me-as-available=Activate Available
+uncheck-me-as-available=Deactivate Available
+available-description=With this option enabled, customers can write you live messages using simple chat application
 paid-on=Paid on
 refundation=Refundation
 request-refund=Request refund
@@ -636,8 +645,8 @@ create-new-channel=Create new channel
 play-introduction=Play&nbsp;introduction
 total-price=Total price
 min=Min
-request-for-event=Schedule Session
-request-for-event-instant=Take session now
+request-for-event=Schedule a Session
+request-for-event-instant=Take a Session
 guests=Guests
 add-to-watchlist=Add to watchlist
 remove-from-watchlist=Remove from watchlist
@@ -651,7 +660,7 @@ enter-your-message=Write message
 
 #stream.html
 send=Send
-chat-box=Public Chat
+chat-box=Chat
 
 #listingsList.html
 anonymous=Guest
@@ -661,9 +670,10 @@ create-event=New session
 request-event=Schedule session
 
 #main.html
+online-users=Online Users
 recipient=Message to
 all=All
-chat=Chat box
+chat=Chat with 
 follow-us=Follow us on
 select-page-to-display=Select page to display
 channel=Channel

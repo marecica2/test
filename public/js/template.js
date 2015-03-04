@@ -967,7 +967,7 @@
 
 		// Parallax section
 		//-----------------------------------------------
-		if (($(".parallax").length>0)  && !Modernizr.touch ){
+		if (($(".parallax").length>0)  ){
 			$(".parallax").parallax("50%", 0.2, false);
 		};
 

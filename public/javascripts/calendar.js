@@ -33,7 +33,7 @@ $(document).ready(function() {
             var data = {};
             data.type = cal;
             star.utils.deleteCookie("agenda");
-            document.cookie="agenda="+cal;
+            star.utils.setCookie("agenda", cal);
         }
     });    
 
@@ -103,20 +103,18 @@ $(document).ready(function() {
     
     if(starCalendar.defaultView == "")
         starCalendar.defaultView = "agendaWeek";
- 
     
     // sync with gcal
     var gcal = star.utils.getCookie("gcal");
     if(gcal != undefined && gcal == "true"){
         $("#google-checkbox").prop('checked', true);    
-        document.cookie="gcal=true";
     } 
     $("#google-checkbox").change(function(){
         if($(this).is(":checked")){
-            document.cookie="gcal=true";
+            star.utils.setCookie("gcal", "true");
             starCalendar.calendar.fullCalendar( 'refetchEvents' );
         } else {
-            document.cookie="gcal=false";
+            star.utils.setCookie("gcal", "false");
             starCalendar.calendar.fullCalendar( 'refetchEvents' );
         }
     })
@@ -176,7 +174,8 @@ $(document).ready(function() {
             },
             eventAfterAllRender: function(view){
                 starCalendar.drawLine(view);
-                FB.Canvas.setSize({ width: 640, height: $(window.document).height() });
+                if(typeof FB != "undefined")
+                    FB.Canvas.setSize({ width: 640, height: $(window.document).height() });
             }
     };
     

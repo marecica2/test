@@ -160,6 +160,10 @@ public class Secure extends BaseController
 
     public static void logout() throws Throwable
     {
+        User user = getLoggedUserNotCache();
+        user.available = null;
+        user.save();
+
         Security.invoke("onDisconnect");
         session.clear();
         Security.invoke("onDisconnected");

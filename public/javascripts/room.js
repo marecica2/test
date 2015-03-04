@@ -1187,6 +1187,7 @@ if(webrtc == null){
     usr.room = star.chatRoom;
     usr.avatar = star.avatar;
     usr.admin = star.isOwner;
+    star.chatRoomRecipientUser = star.ownerName;
     if(webrtc == null)
         socket.emit('chatroom_joined', usr);    
     
@@ -1196,9 +1197,14 @@ if(webrtc == null){
     });
 
     socket.on('chatroom_update', function(data) {
+        var isAdminOnline = false;
         star.chatroomusers = JSON.parse(data)[star.chatRoom];
         var html = "";
         for(var i = 0; i < star.chatroomusers.length; i++){
+            if(star.chatroomusers[i].admin == true){
+                isAdminOnline = true;
+            }
+
             if(star.chatroomusers[i].user != star.user){
                 if(star.chatroomusers[i].avatar != null)
                     html += '<a href="#" data-id="'+star.chatroomusers[i].client+'" data-avatar="'+star.chatroomusers[i].avatar+'" data-name="'+star.chatroomusers[i].user+'" class="chatroom-user"><img class="avatar16" style="margin:1px;" src="/'+star.chatroomusers[i].avatar+'_32x32">' + star.chatroomusers[i].user+ '</a>';
@@ -1206,7 +1212,14 @@ if(webrtc == null){
                     html += '<a href="#" data-id="'+star.chatroomusers[i].client+'" data-avatar="public/images/avatar" data-name="'+star.chatroomusers[i].user+'" class="chatroom-user"><img class="avatar16" style="margin:1px;" src="/images/avatar_32x32">' + star.chatroomusers[i].user+ '</a>';
             }
         }
-        $(".chat-avatars2").html(html);
+        if(isAdminOnline)
+            $(".style-switcher").removeClass("hidden");
+        else
+            $(".style-switcher").addClass("hidden");
+        
+        if(star.isOwner){
+            $(".chat-avatars2").html(html);
+        }
     });
     
     socket.on('user_disconnect', function(data) {
@@ -1222,9 +1235,9 @@ if(webrtc == null){
             else
                 html += "<img class='avatar16' src='/public/images/avatar_32x32'> ";
             html += '<a href="#" data-id="'+data.client+'" data-name="'+data.user+'" data-avatar="'+data.avatar+'" class="chatroom-user" >' + data.user.replace(/>/g, '&gt;') + '</a> ';
-            if(data.recipientName != undefined && data.recipientName != null)
+            if(star.isOwner && data.recipientName != undefined && data.recipientName != null)
                 html += " &gt; " + data.recipientName + " ";
-            html += " : ";
+            html += " ";
             var message = linkify(data.message);
             html += message + '<br/>';
             $("#content2").append(html);
@@ -1233,6 +1246,9 @@ if(webrtc == null){
         
         if ($(".style-switcher.closed").length>0) 
             $('.style-switcher .trigger').click();
+        
+        var audio = new Audio('/public/images/ring.mp3');
+        audio.play();
     });
     
     socket.on('message', function(data) {
@@ -1328,14 +1344,17 @@ $(document).ready(function(){
     });
     
     $(".style-switcher-container").on("click", ".chatroom-user", function(event){
-        var id = $(this).attr("data-id");
-        var user = $(this).attr("data-name");
-        var avatar = $(this).attr("data-avatar");
-        star.chatRoomRecipient = id;
-        star.chatRoomRecipientUser = user;
-        star.chatRoomRecipientAvatar = avatar;
-        $(".chatroom-user-select").html("<img class='avatar16' src='/"+avatar+"_32x32'> "+user);
-        $(".chatroom-user-clear").show();
+        if(star.isOwner){
+            var id = $(this).attr("data-id");
+            var user = $(this).attr("data-name");
+            var avatar = $(this).attr("data-avatar");
+            star.chatRoomRecipient = id;
+            star.chatRoomRecipientUser = user;
+            star.chatRoomRecipientAvatar = avatar;
+            
+            $(".chatroom-user-select").html("<img class='avatar16' src='/"+avatar+"_32x32'> "+user);
+            $(".chatroom-user-clear").show();
+        }
     });
 });
 

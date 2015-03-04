@@ -52,7 +52,6 @@ public class Hangout extends BaseController
         if (user != null && event != null && !user.isOwner(event))
         {
             List<Rating> ratings = Rating.getByObjectUser(event.listing.uuid, user);
-            System.err.println(ratings);
             if (ratings.size() == 0)
             {
                 final String subject = Messages.getMessage(user.locale, "please-rating-subject");
@@ -66,6 +65,7 @@ public class Hangout extends BaseController
         final String room = id;
         final String baseUrl = getBaseUrl().substring(0, getBaseUrl().length() - 1);
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
+
         render(user, name, room, socketIo, baseUrl, event, isOwner);
     }
 

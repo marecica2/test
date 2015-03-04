@@ -129,7 +129,8 @@
 					#{/if}
 					#{elseif user && user.account.type == "standard"}
 						<span class="label label-default">&{user.account.type}</span><br/>
-						<a href="/settings/request-publisher?url=${request.url.urlEncode()}&#{token /}">&{'become-a-publisher'}</a>
+						<a href="/settings/request-publisher?url=${request.url.urlEncode()}&#{token /}">&{'become-a-publisher'}</a> &middot;
+						<a href="/help#publisher">&{'learn-more'}</a>
 					#{/elseif}
 					#{else}
 						<span class="label default-bg">&{user.account.type}</span>
@@ -295,7 +296,7 @@
 						<a href="/facebook/clear?${request.url.urlEncode()}&#{token /}">&{'clear-facebook-id'}</a> &middot;
 					#{/if}				
 					<a target="_blank" href="https://www.facebook.com/add.php?api_key=731388346951866&pages">&{'install-widgr-app-to-your-facebook-page'}</a> &middot;
-					<a href="/help">&{'learn-more'}</a>
+					<a href="/help#facebook">&{'learn-more'}</a>
 				  	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
 					<script>
 					  star.fbClbck = function() {
@@ -420,8 +421,10 @@
 					<br/>
 					<span><a href="/google?url=${request.url.urlEncode()}&#{token /}">&{'enable-google-calendar-sync'}</a></span> &middot; 
 					#{if user.googleTokenExpires}
-						<span><a href="/google/clear?url=${request.url.urlEncode()}&#{token /}">&{'disable-google-calendar-sync'}</a></span>
+						<span><a href="/google/clear?url=${request.url.urlEncode()}&#{token /}">&{'disable-google-calendar-sync'}</a></span> &middot;
 					#{/if}
+					
+					<a href="/help#gcal">&{'learn-more'}</a>
 				</dd>
 			</dl>
 			

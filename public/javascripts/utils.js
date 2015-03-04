@@ -96,11 +96,11 @@ star.utils.uploadFiles = function(url, files, clbk) {
     }
 };   
 
-//fileupload for event edit
 $(document).ready(function(){
     $("#upload-button").click(function(){
         $("#upload").click();
     });
+    
     $("#upload").change(function(){
         var params = "";
         params = "temp="+starCalendar.temp;
@@ -137,13 +137,10 @@ $(document).ready(function(){
 });
 
 star.utils.setCookie = function(name,value,days) {
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime()+(days*24*60*60*1000));
-        var expires = "; expires="+date.toGMTString();
-    }
-    else var expires = "";
-    document.cookie = name+"="+value+expires+"; path=/";
+    var date = new Date();
+    date.setTime(date.getTime()+(9999*24*60*60*1000));
+    var expires = "; Expires="+date.toGMTString();
+    document.cookie = name+"="+value+expires+"; Path=/";
 }
 
 star.utils.getCookie = function(cname) {
@@ -157,8 +154,14 @@ star.utils.getCookie = function(cname) {
     return "";
 }
 
+
+star.utils.dismiss = function(name){
+    star.utils.setCookie(name, "true");
+}
+
 star.utils.deleteCookie = function(cname) {
-    document.cookie = name + '=; Max-Age=0'
+    var date = new Date();
+    document.cookie = name + "=; Expires="+date.toGMTString()+"; Path=/";
     return "";
 }
 

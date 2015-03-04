@@ -258,7 +258,9 @@
 			<button type="button" id="controls-camera" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'turn-camera-off'}"><i class="fa fa-eye-slash"></i></button>
 			<button type="button" id="screenShareButton" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'share-your-screen'}"><i class="fa fa-desktop"></i></button>
 			<button type="button" id="canvas-open" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'open-canvas'}"><i class="fa fa-paint-brush"></i></button>
+			#{if event}
 			<button type="button" id="comments-open" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'open-canvas'}"><i class="icon-docs"></i></button>
+			#{/if}
 			<button class="controls btn btn-dark btn-medium" data-toggle="modal" data-target="#myModal" rel="tooltip" data-placement="bottom" data-original-title="&{'share-with-more'}"><i class="icon-user-add"></i></button>
 			<a href="${request.url}" class="btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'refresh'}"><i class="fa fa-refresh"></i></a>
 			<button type="button" id="controls-hangup" class="controls btn btn-danger btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'hang-up'}"><i class="fa fa-phone"></i></button>

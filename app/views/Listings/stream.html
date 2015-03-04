@@ -66,6 +66,9 @@
 
 <div id="image" class="listing-image" style="position:relative; overflow:hidden; width:100%; background: #{if displayBackground}url(/${listing.imageUrl}) #{/if} black center; background-size: cover;text-align:center">
 	<div class="shadow-inset" style="height:110%; width:100%; top:-5%; position:absolute;">
+		#{if listing && listing.video}
+			<a class="popup-iframe text-shadow medium-hide" style="position:absolute;top:40%;left:45%;font-size:3em;z-index: 1000" href="${listing.video}" rel="tooltip" data-original-title="&{'play-introduction'}"><i class="fa fa-youtube-play"></i></a>
+		#{/if}	
 	</div>
 	
 
@@ -74,6 +77,9 @@
 			<div class="col-md-12">
 			
 				<div class="row">
+				
+
+				
 					#{if (obj.type == 'broadcast' || obj.type == 'instant') && isOwner && obj.started}
 						<div class="col-md-${cols}" style="padding:0px;">
 							 <object class="" style="height:500px; background:black; width:100%;" type="application/x-shockwave-flash" id="applicationID" data="/public/images/upstream.swf">

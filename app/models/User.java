@@ -273,7 +273,7 @@ public class User extends Model
 
     public Boolean isAvailable()
     {
-        if (this.available != null && this.available)
+        if (this.isOnline() && this.available != null && this.available)
             return true;
         return false;
     }
