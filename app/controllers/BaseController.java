@@ -11,6 +11,7 @@ import play.cache.Cache;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Http.Header;
+import utils.NumberUtils;
 import utils.UriUtils;
 
 public class BaseController extends Controller
@@ -52,6 +53,13 @@ public class BaseController extends Controller
     public static String getBaseUrl()
     {
         return getProperty(CONFIG_BASE_URL);
+    }
+
+    public static Integer getTimezoneOffset()
+    {
+        if (getLoggedUser() != null && getLoggedUser().timezone != null)
+            return getLoggedUser().timezone;
+        return NumberUtils.parseInt(request.cookies.get("timezoneJs") != null ? request.cookies.get("timezoneJs").value : "0");
     }
 
     public static String getBaseUrlWithoutSlash()

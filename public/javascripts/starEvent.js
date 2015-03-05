@@ -106,8 +106,6 @@ star.renderComments = function(data, dashboard){
         
         html += "       <div class='black'>"+item.comment+"</div>"; 
         
-        //if(item.commentRaw.indexOf("https://docs.google.com") > -1)
-        //    html += "       <iframe src='"+item.commentRaw+"?embedded=true' style='width:100%; height:500px;' frameborder='0'></iframe>";
         
         if(item.attachments.length > 0){
             html += "           <strong>"+i18n('attachments')+"</strong>";
@@ -173,8 +171,8 @@ star.initItems = function(prefix, urlParams){
         params.prefix = prefix;
 
         starServices.getItems(prefix, params, function(data){
-            $("#spinner"+prefix).show();
             $("#moreResults"+prefix).hide();
+            $("#spinner"+prefix).show();
             var html = star.renderItems(data, prefix);
             var f = function(html){
                 $(html).hide().appendTo($("#itemsList"+prefix)).fadeIn(500);
@@ -185,7 +183,7 @@ star.initItems = function(prefix, urlParams){
             }
             setTimeout(function(){
                 f(html);
-            }, 250);
+            }, 50);
         });
 
         // append elements        
@@ -211,8 +209,8 @@ star.initItems = function(prefix, urlParams){
 };
 
 star.loadItems = function(prefix, urlParams){
-    $("#spinner"+prefix).show();
     $("#moreResults"+prefix).hide();
+    $("#spinner"+prefix).show();
     starServices.getItems(prefix, urlParams, function(data){
         var html = star.renderItems(data, urlParams.prefix);
            var f = function(html){
@@ -243,10 +241,14 @@ star.renderItems = function(data, prefix){
         if(!item.invisible)
             $(".container"+prefix).show();
         if(prefix.indexOf("Listing") >= 0){
-            html += "<div class='event-box shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
+            html += "<div class='event-box2 shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
             html += "   <div class='overlay-container'>";
-            html += "       <mark style='position:absolute;bottom:0px;padding:5px' class='title'><img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/"+item.createdByAvatarUrl+"_32x32'>"+item.createdByName+" </mark>";
-            html += "       <img src='/"+item.imageUrl+"_128x128' style='width:100%' alt=''>";
+            html += "       <mark style='position:absolute;bottom:0px;padding:5px' class='title'>";
+            if(item.available)
+                html += "       <div style='display:inline-block;width:10px; height:10px; border-radius:10px' class='label-success'></div>";
+            html += "           <img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/"+item.createdByAvatarUrl+"_32x32'>"+item.createdByName;
+            html += "       </mark>";
+            html += "       <img src='/"+item.imageUrl+"_128x128' style='width:100%'>";
             html += "       <div class='overlay'>";
             html += "           <div class='overlay-links'>";
             html += "               <a href='/channel/"+item.uuid+"'><i class='fa fa-link'></i></a>";
@@ -255,10 +257,10 @@ star.renderItems = function(data, prefix){
             html += "       </div>";
             html += "   </div>";
             html += "   <div class='image-box-body'>";
-            html += "   <div style='height:45px;opacity:0.7'><small>"+i18n(item.category)+" &middot; "+i18n(item.type)+"</small></div> ";
+            html += "   <div style='height:35px;opacity:0.7'><small>"+i18n(item.category)+" &middot; "+i18n(item.type)+"</small></div> ";
 
-            html += "   <span style='font-weight:bold'><a href='/channel/"+item.uuid+"' class='link-left'>"+star.utils.trimTo(item.title, 40)+"</a></span><br/>";
-            
+            html += "   <span style=''><a href='/channel/"+item.uuid+"' class='link-left'>"+star.utils.trimTo(item.title, 40)+"</a></span><br/>";
+            html += "   <span style='font-size:0.9em'>" + star.utils.trimTo(item.description, 90) + "</span>";
             
             html += "   <div style='position:absolute;bottom:15px;'>";
                 if(item.charging == 'free'){
@@ -270,10 +272,9 @@ star.renderItems = function(data, prefix){
                         html += " <small class='label default-bg'>First free</small>";
                     }       
                 }    
-     
                 html += "   <div style='margin-top:10px;'>";            
                 for(var j = 0; j < 5; j++){
-                    if(j < item.ratingAvg)
+                    if(j < Math.round(item.ratingAvg))
                         html += "<i class='fa fa-star' data-value='1'></i>";
                     else
                         html += "<i class='fa fa-star-o' data-value='1'></i>";
@@ -288,6 +289,8 @@ star.renderItems = function(data, prefix){
             
             
         } else {
+            console.log(new Date(data[i].eventStart).toUTCString());
+            
             var end = data[i].eventStart;
             var distance = end - now;
             var before = distance > 0 ? false : true;
@@ -309,7 +312,7 @@ star.renderItems = function(data, prefix){
                 html += "<div class='event-box2 shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
                 html += "   <div class='overlay-container'>";
                 html += "       <mark style='position:absolute;bottom:0px;padding:5px' class='title'><img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/"+item.createdByAvatarUrl+"_32x32'>"+item.createdByName+" </mark>";
-                html += "       <img src='/"+item.imageUrl+"' alt=''>";
+                html += "       <img src='/"+item.imageUrl+"_128x128' style='width:100%'>";
                 html += "       <div class='overlay'>";
                 html += "           <div class='overlay-links'>";
                 html += "               <a href='/event/"+item.uuid+"'><i class='fa fa-link'></i></a>";
@@ -841,84 +844,3 @@ starServices.hangoutInvite = function(data, success, error){
 };
 
 
-//
-//star utils
-//
-var starUtils = {};
-starUtils.s4 = function() {
- return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-};
-
-starUtils.getRadio = function(name) {
-    return $("input:radio[name='"+name+"']:checked").val();
-};
-
-starUtils.setRadio = function(name, value) {
-    $("input:radio[name='"+name+"'][value='" + value + "']").prop('checked', true);
-};
-
-starUtils.uuid = function() {
- return starUtils.s4() + starUtils.s4() + '-' + starUtils.s4() + '-' + starUtils.s4() + '-' +
- starUtils.s4() + '-' + starUtils.s4() + starUtils.s4() + starUtils.s4();
-};
-
-starUtils.formatFilesize = function(fileSizeInBytes) {
-    var i = -1;
-    var byteUnits = [' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
-    do {
-        fileSizeInBytes = fileSizeInBytes / 1024;
-        i++;
-    } while (fileSizeInBytes > 1024);
-    return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];    
-};
-
-starUtils.formatDateTime = function(long) {
-    var d = new Date()
-    var diff = d.getTimezoneOffset();
-    var s = new Date();
-    s.setTime(long + (diff*60000));
-    return s.toLocaleDateString() + " " + s.toLocaleTimeString();
-};
-
-starUtils.formatDate = function(long) {
-    return dateFormat(long, dateFormat.masks.mediumDate);
-};
-
-starUtils.formatTime = function(long) {
-    return dateFormat(long, dateFormat.masks.shortTime);
-};
-
-starUtils.formatDateTime = function(date) {
-    date = new Date(date)
-    if(date != undefined)
-        return dateFormat(date, dateFormat.masks.mediumDate) + " " + dateFormat(date, dateFormat.masks.shortTime);
-    return null;
-};
-
-starUtils.getParameterByName = function(name) {
-    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(document.URL);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-};
-
-
-starUtils.getCookie = function(cname)
-{
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0; i<ca.length; i++) {
-      var c = ca[i].trim();
-      if (c.indexOf(name)==0) return c.substring(name.length,c.length);
-    }
-    return "";
-}
-
-starUtils.facebook = function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=117287758301883";
-    fjs.parentNode.insertBefore(js, fjs);
-}
-//(document, 'script', 'facebook-jssdk'));

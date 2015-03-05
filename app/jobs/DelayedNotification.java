@@ -4,13 +4,13 @@ import models.Message;
 import models.User;
 import play.jobs.Job;
 
-public class ScheduledNotification extends Job
+public class DelayedNotification extends Job
 {
     private final String subject;
     private final String message;
     private User user;
 
-    public ScheduledNotification(User user, String subject, String message)
+    public DelayedNotification(User user, String subject, String message)
     {
         this.user = user;
         this.subject = subject;

@@ -1,5 +1,7 @@
 package email;
 
+import java.util.List;
+
 import models.Attendance;
 import models.Event;
 import models.User;
@@ -91,9 +93,28 @@ public class EmailNotificationBuilder
         if (to == null || to.emailNotification)
         {
             final VelocityContext ctx = VelocityTemplate.createBasicTemplate(this.to, locale, baseUrl, subject, message);
-            final String body = VelocityTemplate.generateTemplate(ctx, VelocityTemplate.getTemplate(VelocityTemplate.DEFAULT_TEMPLATE));
-            new EmailNotification(ep, "Widgr - " + subject, recipient, body).execute();
+            final String template = VelocityTemplate.getTemplate(VelocityTemplate.DEFAULT_TEMPLATE);
+            final String body = VelocityTemplate.generateTemplate(ctx, template);
+            new EmailNotificationRunner(ep, "Widgr - " + subject, recipient, body).execute();
         }
+    }
+
+    public void sendMultiple(List<EmailContainer> emails)
+    {
+        final EmailProvider ep = new EmailProvider();
+        final String baseUrl = BaseController.getProperty(BaseController.CONFIG_BASE_URL);
+        for (EmailContainer email : emails)
+        {
+            if (to == null || to.emailNotification)
+            {
+                final String locale = email.locale != null ? email.locale : "en";
+                final VelocityContext ctx = VelocityTemplate.createBasicTemplate(new User(), locale, baseUrl, subject, message);
+                final String template = VelocityTemplate.getTemplate(VelocityTemplate.DEFAULT_TEMPLATE);
+                final String body = VelocityTemplate.generateTemplate(ctx, template);
+                email.body = body;
+            }
+        }
+        new EmailNotificationRunner(ep, emails).execute();
     }
 
     public void sendInvitation()
@@ -106,14 +127,14 @@ public class EmailNotificationBuilder
 
         if (to == null || to.emailNotification)
         {
-            final VelocityContext ctx = VelocityTemplate.createInvitationTemplate(locale, recipient, from, to, event, baseUrl, att);
+            final VelocityContext ctx = VelocityTemplate.createInvitationTemplate(locale, recipient, from, to, event, baseUrl, att, message);
             if (message != null && message.length() > 0)
             {
                 ctx.put("notification", message);
                 ctx.put("notificationLabel", from.firstName + ":");
             }
             final String body = VelocityTemplate.generateTemplate(ctx, VelocityTemplate.getTemplate(VelocityTemplate.DEFAULT_TEMPLATE));
-            new EmailNotification(ep, "Widgr - " + subject, recipient, body).execute();
+            new EmailNotificationRunner(ep, "Widgr - " + subject, recipient, body).execute();
         }
     }
 

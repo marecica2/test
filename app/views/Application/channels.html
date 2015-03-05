@@ -16,7 +16,7 @@
 
 	<div class="container">
 		<div class="row">
-			<div class="col-md-12">
+			<div class="col-md-12" style="min-height: 60vh">
 
 				<form class="form-inline" role="form">
 				    <div class="form-group">
@@ -44,6 +44,7 @@
 					    <select class="form-control" name="sort" id="sort">
 					    	<option #{if request.params.sort == 'reviews'} selected="selected" #{/if} value="reviews"> &{'sort-by-reviews'}</option>
 					    	<option #{if request.params.sort == 'match'} selected="selected" #{/if} value="match"> &{'sort-by-best-match'}</option>
+					    	<option #{if request.params.sort == 'availability'} selected="selected" #{/if} value="availability"> &{'by-availability'}</option>
 					    </select>
 					</div>	
 					<div class="form-group">

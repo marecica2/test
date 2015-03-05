@@ -3,7 +3,7 @@ package controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import jobs.ScheduledNotification;
+import jobs.DelayedNotification;
 import models.Event;
 import models.Message;
 import models.Rating;
@@ -49,15 +49,16 @@ public class Hangout extends BaseController
             checkPayment(e, request.url);
 
         // send rating request if user has not rated this channel
-        if (user != null && event != null && !user.isOwner(event))
+        if (user != null && event != null && !user.isOwner(event) && request.cookies.get(e.uuid) == null)
         {
             List<Rating> ratings = Rating.getByObjectUser(event.listing.uuid, user);
             if (ratings.size() == 0)
             {
                 final String subject = Messages.getMessage(user.locale, "please-rating-subject");
                 final String message = Messages.getMessage(user.locale, "please-rating-message", event.listing.title, getBaseUrl() + "event/" + event.uuid + "#ratings");
-                ScheduledNotification scheduledNotification = new ScheduledNotification(user, subject, message);
-                scheduledNotification.in(300);
+                DelayedNotification delayedNotification = new DelayedNotification(user, subject, message);
+                delayedNotification.in(300);
+                response.setCookie(e.uuid + "", e.uuid + "", "1h");
             }
         }
 

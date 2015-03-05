@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import jobs.QuartzServise;
 import models.Activity;
 import models.Attendance;
 import models.Contact;
@@ -88,6 +89,8 @@ public class Attendances extends BaseController
                 a.name = email;
             }
             a.saveAttendance();
+
+            QuartzServise.scheduleAttendance(a);
 
             final Activity act = new Activity();
             act.type = Activity.ACTIVITY_EVENT_INVITED;

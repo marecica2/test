@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jobs.QuartzServise;
 import models.Account;
 import models.Activity;
 import models.Attendance;
@@ -163,7 +164,7 @@ public class Events extends BaseController
         if (event != null)
         {
             DateTimeUtils dt = new DateTimeUtils();
-            final Integer offset = NumberUtils.parseInt(request.cookies.get("timezoneJs") != null ? request.cookies.get("timezoneJs").value : "0");
+            final Integer offset = getTimezoneOffset();
             final Date eventStartOffset = DateTimeUtils.applyOffset(event.eventStart, offset);
             final Date eventEndOffset = DateTimeUtils.applyOffset(event.eventEnd, offset);
             final String eventStart = dt.formatDate(eventStartOffset, new SimpleDateFormat("HH:mm"));
@@ -335,6 +336,8 @@ public class Events extends BaseController
             {
                 create = false;
             }
+
+            Date eventStartLast = event.eventStart;
             event.eventStart = eventSt;
             event.eventEnd = eventEn;
             event.privacy = privacy;
@@ -348,24 +351,24 @@ public class Events extends BaseController
             event.lastModified = new Date();
             event = event.save();
 
-            // mark file upload as stored
-            if (imageId != null)
-            {
-                List<FileUpload> fu = FileUpload.getByObject(event.uuid);
-                for (FileUpload fileUpload : fu)
-                {
-                    fileUpload.stored = true;
-                    fileUpload.save();
-                }
-            }
-
+            // check available events
             if (availableEvents < 20)
                 flash.success(Messages.get("events-left") + ": " + (availableEvents - 1));
 
+            // create default attendances
             Attendance.createDefaultAttendances(user, null, event, create, false);
+
+            // scheduler update
+            if (eventStartLast == null || eventStartLast.compareTo(eventSt) != 0)
+            {
+                event = event.refresh();
+                QuartzServise.scheduleEvent(event);
+            }
+
             redirect("/event/" + event.uuid);
         }
         params.flash();
+        flash.error(Messages.get("invalid-channel-data"));
         render("Listings/listing.html", user, isOwner, edit, event, url, errs, type, listing, fromEvent);
     }
 
@@ -409,7 +412,8 @@ public class Events extends BaseController
 
         // create event
         Event event = new Event();
-        event = eventFromJson(time, jo, event);
+        event.eventStart = time.fromJson(jo.get("eventStart").getAsString());
+        event.eventEnd = time.fromJson(jo.get("eventEnd").getAsString());
         event.listing = listing;
         event.googleId = googleId;
         event.listing_uuid = listing.uuid;
@@ -478,6 +482,11 @@ public class Events extends BaseController
         // google event sync
 
         Attendance.createDefaultAttendances(userTo, customer, event, true, proposal);
+
+        // schedule 
+        event = event.refresh();
+        QuartzServise.scheduleEvent(event);
+
         renderJSON(EventDTO.convert(event, user));
     }
 
@@ -511,9 +520,17 @@ public class Events extends BaseController
         if (!event.isEditable(user))
             forbidden();
 
-        event = eventFromJson(time, jo, event);
+        Date eventStartLast = event.eventStart;
+        event.eventStart = time.fromJson(jo.get("eventStart").getAsString());
+        event.eventEnd = time.fromJson(jo.get("eventEnd").getAsString());
         event.lastModified = new Date();
         event = event.save();
+
+        // scheduler update
+        if (eventStartLast == null || eventStartLast.compareTo(event.eventStart) != 0)
+        {
+            QuartzServise.scheduleEvent(event);
+        }
 
         // create activity
         final Activity act = new Activity();
@@ -542,6 +559,7 @@ public class Events extends BaseController
         if (!event.isEditable(user))
             forbidden();
 
+        QuartzServise.unScheduleEvent(event);
         event.deleteEvent();
 
         // google event sync
@@ -562,7 +580,10 @@ public class Events extends BaseController
             forbidden();
 
         if (event != null)
+        {
+            QuartzServise.unScheduleEvent(event);
             event.deleteEvent();
+        }
         redirectTo(url);
     }
 
@@ -729,13 +750,6 @@ public class Events extends BaseController
             }
         }
         redirectTo(url);
-    }
-
-    private static Event eventFromJson(DateTimeUtils time, final JsonObject jo, Event event)
-    {
-        event.eventStart = time.fromJson(jo.get("eventStart").getAsString());
-        event.eventEnd = time.fromJson(jo.get("eventEnd").getAsString());
-        return event;
     }
 
 }

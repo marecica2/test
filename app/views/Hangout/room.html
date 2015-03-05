@@ -52,27 +52,25 @@
 
 
 <!-- Chat box -->
-<div>
-	<div id="chat-container" style="background: none; right:-325px;z-index: 1001;height:100%">
-		<div class="color-link-light" id="chat-slider" style="display:table;position:absolute;left:6px;top:0px;height:100%;">
-			<div style="height:100%; display:table-cell; vertical-align:middle;">
-				<button class="btn btn-dark btn-short" style="position:relative; left: -20px; border-radius: 5px; color: white; border: 0px; background: rgba(0,0,0,0.4)">
-					<i class="fa fa-chevron-left"></i>
-				</button>
+<div id="chat-container" style="background: none; right:-330px;z-index: 1001;  display: flex; flex-flow: column; height: 100%;">
+	<div class="color-link-light" id="chat-slider" style="display:table;position:absolute;left:6px;top:0px;height:100%;">
+		<div style="height:100%; display:table-cell; vertical-align:middle;">
+			<button class="btn btn-dark btn-short" style="position:relative; left: -20px; border-radius: 5px; color: white; border: 0px; background: rgba(0,0,0,0.4)">
+				<i class="fa fa-chevron-left"></i>
+			</button>
+		</div>
+	</div>
+	<div style="display: flex; flex-flow: column; height: 100%;">
+		<div id="content" class="form-control shadow-small" style="flex: 1 1 auto; background:rgba(20, 20, 20, 1);font-size:0.8em;color:white; overflow-y: auto; border: 0px;"></div>
+		<form onsubmit="return false;" style="margin:0px; background: black; flex: 0 1 80px;">
+			<div class="shadow-small">
+				<input id="chat-text" class="form-control" style="color:white; border:0px; background: rgba(20, 20, 20, 1)" placeholder="&{'enter-your-message'}"> 
+				<input id="chat-name" type="hidden" value="${name}"> 
+				<span class="input-group-btn">
+					<button id="chat-send" class="btn btn-default btn-short margin-clear btn-block" style="height:40px;">&{'send'}</button>
+				</span>
 			</div>
-		</div>
-		<div style="height:100%">
-			<div id="content" class="form-control shadow-small" style="background:rgba(20, 20, 20, 1);font-size:0.8em;color:white;height: 90%; overflow-y: scroll; border: 0px;"></div>
-			<form onsubmit="return false;">
-				<div class="input-group shadow-small">
-					<input id="chat-text" class="form-control" style="color:white; border:0px; background: rgba(20, 20, 20, 1)" placeholder="&{'enter-your-message'}"> 
-					<input id="chat-name" type="hidden" value="${name}"> 
-					<span class="input-group-btn">
-						<button id="chat-send" class="btn btn-default btn-short margin-clear" style="height:40px;">&{'send'}</button>
-					</span>
-				</div>
-			</form>
-		</div>
+		</form>
 	</div>
 </div>
 

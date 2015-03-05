@@ -15,10 +15,11 @@ import models.Attendance;
 import models.Listing;
 import models.User;
 import play.cache.Cache;
-import play.i18n.Lang;
 import play.i18n.Messages;
+import play.mvc.Http.Cookie;
 import play.mvc.With;
 import utils.DateTimeUtils;
+import utils.NumberUtils;
 import utils.StringUtils;
 
 import com.google.api.services.calendar.model.CalendarListEntry;
@@ -47,6 +48,8 @@ public class Accounts extends BaseController
             params.put("lastName", user.lastName);
             params.put("locale", user.locale);
             params.put("emailNotification", user.emailNotification + "");
+            params.put("reminder", user.reminder + "");
+            params.put("reminderMinutes", user.reminderMinutes != null ? user.reminderMinutes.toString() : null);
             params.put("timezone", user.timezone + "");
             params.put("facebookId", user.facebookId);
             params.put("facebookName", user.facebookName);
@@ -72,14 +75,6 @@ public class Accounts extends BaseController
             params.put("paypal", account.paypalAccount);
             params.put("currency", account.currency);
 
-            // email
-            params.put("smtpHost", account.smtpHost);
-            params.put("smtpPort", account.smtpPort);
-            params.put("smtpProtocol", account.smtpProtocol);
-            params.put("smtpAccount", account.smtpAccount);
-            params.put("smtpPassword", account.smtpPassword);
-            params.put("smtpProtocol", account.smtpProtocol);
-
             if (user.googleTokenExpires != null)
                 calendars = GoogleCalendarClient.getCalendars(user);
 
@@ -102,7 +97,7 @@ public class Accounts extends BaseController
         String accPlan,
         String userAbout, String userExperiences, String userEducation,
         String skype, String googlePlus, String linkedIn, String twitter, String facebook, String facebookName,
-        String url, String locale, String accName, Boolean emailNotification, String facebookId,
+        String url, String locale, String accName, Boolean emailNotification, Boolean reminder, String reminderMinutes, String facebookId,
         String paypal, String currency,
         String firstName, String lastName, String smtpHost, String smtpPort,
         String smtpAccount, String smtpPassword, String smtpProtocol,
@@ -118,6 +113,17 @@ public class Accounts extends BaseController
         final String baseUrl = request.getBase();
         validation.required(firstName);
         validation.required(lastName);
+        if (reminder && reminderMinutes == null)
+            validation.required(reminderMinutes);
+
+        if (reminder != null && reminder && reminderMinutes != null)
+        {
+            Integer minutes = NumberUtils.parseInt(reminderMinutes);
+            if (minutes == null)
+                validation.addError("reminderMinutes", Messages.get("invalid-value"));
+            if (minutes != null && minutes < 0)
+                validation.addError("reminderMinutes", Messages.get("invalid-value"));
+        }
 
         if (!validation.hasErrors())
         {
@@ -127,11 +133,17 @@ public class Accounts extends BaseController
             account.url = url;
             account.save();
 
-            user.timezone = timezone;
+            final Cookie cookie = request.cookies.get("timezoneJs");
+            if (cookie != null)
+            {
+                user.timezone = NumberUtils.parseInt(cookie.value);
+            }
+
             user.firstName = firstName;
             user.lastName = lastName;
-            user.locale = locale;
             user.emailNotification = emailNotification;
+            user.reminder = reminder;
+            user.reminderMinutes = NumberUtils.parseInt(reminderMinutes);
             user.userAbout = StringUtils.htmlEscape(userAbout);
             user.userEducation = StringUtils.htmlEscape(userEducation);
             user.userExperiences = StringUtils.htmlEscape(userExperiences);
@@ -154,15 +166,12 @@ public class Accounts extends BaseController
             if (hiddenDays != null)
             {
                 for (int i = 0; i < hiddenDays.length; i++)
-                {
                     hidden += hiddenDays[i] + (i == (hiddenDays.length - 1) ? "" : ",");
-                }
             }
             user.hiddenDays = hidden;
 
             user.save(account);
             Cache.delete(user.login);
-            Lang.change(locale);
             redirect("/settings");
         } else
         {

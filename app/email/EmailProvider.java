@@ -1,9 +1,9 @@
 package email;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
-import javax.activation.MailcapCommandMap;
-import javax.activation.MimetypesFileTypeMap;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -20,6 +20,7 @@ import utils.Constants;
 
 public class EmailProvider
 {
+    public static final String EMAIL_SENDER = "info@wid.gr";
     public static final String PROTOCOL_SMTP = "smtp";
     public static final String PROTOCOL_SMTPS = "smtps";
 
@@ -108,64 +109,73 @@ public class EmailProvider
         //session.setDebug(true);
     }
 
-    public boolean sendMessage(String toEmail, String subject, String msg) throws Exception
-    {
-        return sendMessage(toEmail, null, subject, msg);
-    }
-
-    public boolean sendMessage(String toEmail, String[] ccs, String subject, String msg) throws Exception
-    {
-        Transport t = session.getTransport(protocol);
-        try
-        {
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(this.username));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
-            if (ccs != null)
-            {
-                for (int i = 0; i < ccs.length; i++)
-                {
-                    message.addRecipient(Message.RecipientType.CC, new InternetAddress(ccs[i]));
-                }
-            }
-            message.setSubject(subject);
-            message.setContent(msg, "text/html; charset=UTF-8");
-
-            t.connect(username, password);
-            t.sendMessage(message, message.getAllRecipients());
-            return true;
-
-        } catch (Exception e)
-        {
-            throw new Exception(e);
-        } finally
-        {
-            t.close();
-        }
-    }
+    //    public boolean sendMessage(String toEmail, String subject, String msg) throws Exception
+    //    {
+    //        return sendMessage(toEmail, null, subject, msg);
+    //    }
+    //
+    //    public boolean sendMessage(String toEmail, String[] ccs, String subject, String msg) throws Exception
+    //    {
+    //        Transport t = session.getTransport(protocol);
+    //        try
+    //        {
+    //            MimeMessage message = new MimeMessage(session);
+    //            message.setFrom(new InternetAddress(this.username));
+    //            message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
+    //            if (ccs != null)
+    //            {
+    //                for (int i = 0; i < ccs.length; i++)
+    //                {
+    //                    message.addRecipient(Message.RecipientType.CC, new InternetAddress(ccs[i]));
+    //                }
+    //            }
+    //            message.setSubject(subject);
+    //            message.setContent(msg, "text/html; charset=UTF-8");
+    //
+    //            t.connect(username, password);
+    //            t.sendMessage(message, message.getAllRecipients());
+    //            return true;
+    //
+    //        } catch (Exception e)
+    //        {
+    //            throw new Exception(e);
+    //        } finally
+    //        {
+    //            t.close();
+    //        }
+    //    }
 
     public void sendEmail(String subject, String recipient, String htmlPart) throws Exception
     {
-        MimetypesFileTypeMap mimetypes = (MimetypesFileTypeMap) MimetypesFileTypeMap.getDefaultFileTypeMap();
-        mimetypes.addMimeTypes("text/calendar ics ICS");
+        EmailContainer ec = new EmailContainer();
+        ec.subject = subject;
+        ec.recipient = recipient;
+        ec.body = htmlPart;
 
-        MailcapCommandMap mailcap = (MailcapCommandMap) MailcapCommandMap.getDefaultCommandMap();
-        mailcap.addMailcap("text/calendar;; x-java-content-handler=com.sun.mail.handlers.text_plain");
+        List<EmailContainer> list = new ArrayList<EmailContainer>();
+        list.add(ec);
+        sendEmails(list);
+    }
 
-        MimeMessage message = new MimeMessage(session);
-        message.setFrom(new InternetAddress("info@wid.gr"));
-        message.setSubject(subject);
-        message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
-
-        Multipart multipart = new MimeMultipart("alternative");
-
-        BodyPart messageBodyPart = buildHtmlTextPart(htmlPart);
-        multipart.addBodyPart(messageBodyPart);
-        message.setContent(multipart);
-
+    public void sendEmails(List<EmailContainer> emails) throws Exception
+    {
         Transport transport = session.getTransport(protocol);
         transport.connect(username, password);
-        transport.sendMessage(message, message.getAllRecipients());
+
+        for (EmailContainer email : emails)
+        {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(EMAIL_SENDER));
+            message.setSubject(email.subject);
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(email.recipient));
+
+            Multipart multipart = new MimeMultipart("alternative");
+            BodyPart messageBodyPart = buildHtmlTextPart(email.body);
+            multipart.addBodyPart(messageBodyPart);
+            message.setContent(multipart);
+
+            transport.sendMessage(message, message.getAllRecipients());
+        }
         transport.close();
     }
 

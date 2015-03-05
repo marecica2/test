@@ -46,9 +46,6 @@ public class Ratings extends BaseController
         {
             List<Rating> ratings = Rating.getByObject(r.objectUuid);
             Map<String, Object> stats = Rating.calculateStats(ratings);
-            listing.ratingAvg = (Long) stats.get("avgStars");
-            listing.ratingStars = (Integer) stats.get("totalStars");
-            listing.save();
         }
         redirectTo(url);
     }
@@ -67,10 +64,6 @@ public class Ratings extends BaseController
         {
             List<Rating> ratings = Rating.getByObject(r.objectUuid);
             Map<String, Object> stats = Rating.calculateStats(ratings);
-            Listing listing = Listing.get(r.objectUuid);
-            listing.ratingAvg = (Long) stats.get("avgStars");
-            listing.ratingStars = (Integer) stats.get("totalStars");
-            listing.save();
         }
         redirectTo(url);
     }

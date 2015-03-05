@@ -83,8 +83,9 @@
 				<div style="width:100%; text-align:center"><img src="${logo}" alt="widgr">
 					<div style="font-size:1.2em;">
 						<a style="text-decoration: none; color:darkgray" href="${baseUrl}help">${help}</a>&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;
-						<a style="text-decoration: none; color:darkgray" href="${baseUrl}about#contact">${contact}</a>&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;	
-						<a style="text-decoration: none; color:darkgray" href="${baseUrl}privacy">${security}</a>	
+						<a style="text-decoration: none; color:darkgray" href="${baseUrl}contact">${contact}</a>&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;	
+						<a style="text-decoration: none; color:darkgray" href="${baseUrl}privacy">${security}</a>&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;	
+						<a style="text-decoration: none; color:darkgray" href="${baseUrl}terms">${terms}</a>	
 					</div>
 				</div>
 

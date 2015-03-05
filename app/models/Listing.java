@@ -1,6 +1,7 @@
 package models;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,7 +78,7 @@ public class Listing extends Model
 
     public String privacy;
 
-    public Long ratingAvg;
+    public Double ratingAvg;
 
     public Integer ratingStars;
 
@@ -93,7 +94,7 @@ public class Listing extends Model
 
     public Date started;
 
-    public Date availableNow;
+    public Boolean available;
 
     public Date ended;
 
@@ -123,10 +124,11 @@ public class Listing extends Model
     {
 
         String query = "";
-        query += " SELECT uuid, title, firstname, lastname, avatarUrl, "
-                + "category, privacy, charging, price, currency, imageUrl, "
-                + "tags, type, ratingStars, ratingAvg, login, firstFree ";
-        query += " FROM search_index ";
+        query += " SELECT s.uuid, title, s.firstname, s.lastname, s.avatarUrl, "
+                + "s.category, s.privacy, s.charging, s.price, s.currency, s.imageUrl, "
+                + "s.tags, s.type, s.ratingStars, s.ratingAvg, s.login, firstFree, u.available, s.description ";
+        query += " FROM search_index s ";
+        query += " JOIN users u ON u.login = s.login ";
         query += " WHERE 1 = 1 ";
 
         if (filter.category != null)
@@ -146,8 +148,14 @@ public class Listing extends Model
         {
             query += " ORDER BY ts_rank(document, to_tsquery('english', :search)) DESC, ";
             query += " (ratingStars * ratingAvg) DESC NULLS LAST ";
+        } else if (filter.sort != null && filter.sort.equals("availability"))
+        {
+            System.err.println("sss");
+            query += " ORDER BY u.available DESC NULLS LAST, (ratingStars * ratingAvg) DESC NULLS LAST";
         } else
+        {
             query += " ORDER BY (ratingStars * ratingAvg) DESC NULLS LAST ";
+        }
 
         Query q = Listing.em().createNativeQuery(query);
         if (filter.search != null)
@@ -177,11 +185,20 @@ public class Listing extends Model
             l.imageUrl = (String) item[10];
             l.tags = (String) item[11];
             l.type = (String) item[12];
-            l.ratingStars = (Integer) item[13];
-            l.ratingAvg = item[14] != null ? new Long(item[14].toString()) : null;
+            final BigInteger stars = (BigInteger) item[13];
+            l.ratingStars = stars != null ? stars.intValue() : null;
+
+            if (item[14] != null && item[14].toString() != null)
+            {
+                BigDecimal avg = new BigDecimal(item[14].toString());
+                l.ratingAvg = avg.doubleValue();
+            }
+
             u.login = (String) item[15];
             l.firstFree = (Boolean) item[16];
             l.user = u;
+            l.available = item[17] != null ? true : false;
+            l.description = (String) item[18];
             listings.add(l);
         }
         return listings;
@@ -230,13 +247,6 @@ public class Listing extends Model
     public String getDescriptionHtml()
     {
         return WikiUtils.parseToHtml(this.description);
-    }
-
-    public Long getRatingAvg()
-    {
-        if (ratingAvg == null)
-            return 0L;
-        return ratingAvg;
     }
 
     public boolean isAvailable()

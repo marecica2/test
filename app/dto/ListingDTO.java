@@ -47,11 +47,13 @@ public class ListingDTO
 
     public String category;
 
-    public Long ratingAvg;
+    public Double ratingAvg;
 
     public Integer ratingCount;
 
     public boolean firstFree;
+
+    private Boolean available;
 
     public static ListingDTO convert(Listing listing, User user)
     {
@@ -71,6 +73,7 @@ public class ListingDTO
         l.type = listing.type;
         l.privacy = listing.privacy;
         l.uuid = listing.uuid;
+        l.available = listing.available;
         if (listing.firstFree != null && listing.firstFree)
             l.firstFree = listing.firstFree;
         else

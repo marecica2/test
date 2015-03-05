@@ -85,97 +85,77 @@
 
 <!-- facebook init -->
 <div id="fb-root"></div>
-  <!--
- <script>
-   window.fbAsyncInit = function() {
-     FB.init({
-       appId      : '117287758301883',
-       status     : true,
-       xfbml      : true,
-       channelUrl: window.location.origin+'/channel.html'
-     });
-   };
-   
-   (function(d, s, id){
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {return;}
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/en_US/all.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
- </script>
--->    
 	
-	
-	#{if listing}
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<!-- include from listings list -->
-				<script>
-					$(document).ready(function(){
-					    $(".anchorLink").click(function(){
-					        document.location = $(this).attr("data-href");
-					    });
-					});
-				</script>				
-				
-				#{set item: listing /}
-				#{set usr: userDisplayed /}
-				<br/>
-				<div class="anchorLink shadow-blur" data-href="/channel/${item.uuid}" style="cursor:pointer;text-align:left;width:100%; background: #fafafa; width:100%; margin:0 0 20px 0;">
-				   		
-			   		<div class="listing-item-top" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
-			   		</div>
+#{if listing}
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<!-- include from listings list -->
+			<script>
+				$(document).ready(function(){
+				    $(".anchorLink").click(function(){
+				        document.location = $(this).attr("data-href");
+				    });
+				});
+			</script>				
 			
-			   		<div class="listing-item" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
-			   		</div>				   		
+			#{set item: listing /}
+			#{set usr: userDisplayed /}
+			<br/>
+			<div class="anchorLink shadow-blur" data-href="/channel/${item.uuid}" style="cursor:pointer;text-align:left;width:100%; background: #fafafa; width:100%; margin:0 0 20px 0;">
 			   		
-			   		<div style="display:table-cell;vertical-align:top;padding:15px;position:relative;">
-						<p>
-							<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
-							<strong>${item.user.fullName}</strong>  &middot; 
-							&{item.category} 
-						</p>
-						<h4>${item.title}</h4>
-						
-						<span class="truncate">${item.getDescriptionHtml().trimDot(140).raw()}</span>
-			   			<p>
-			   			#{if item.charging != 'free'}
-			   				<strong>&{'from'} ${item.price} <small>${item.currency}</small></strong>
-				   			<nobr>&{'for'} 15</nobr> &{'minutes'}
-			   			#{/if}
-			   			#{else}
-			   				<strong class="">&{'free'}</strong>
-			   			#{/else}
-			   			#{if item.firstFree}
-			   				<span class="label default-bg">&{'first-free'}</span>
-			   			#{/if}
-			   			
-			   			</p>
-			      		#{list items:1..5, as:'i'} 
-			       			#{if i <= item.ratingAvg} 
-							    <i class="fa fa-star text-default" data-value="1"></i>
-			       			#{/if}
-			       			#{else}
-							    <i class="fa fa-star-o" data-value="1"></i>
-			       			#{/else}
-						#{/list}
-			            ${item.ratingStars} &{'reviews'}   					   			
-			   		</div>
-				</div>
-
+		   		<div class="listing-item-top" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
+		   		</div>
+		
+		   		<div class="listing-item" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
+		   		</div>				   		
+		   		
+		   		<div style="display:table-cell;vertical-align:top;padding:15px;position:relative;">
+					<p>
+						<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
+						<strong>${item.user.fullName}</strong>  &middot; 
+						&{item.category} 
+					</p>
+					<h4>${item.title}</h4>
+					
+					<span class="truncate">${item.getDescriptionHtml().trimDot(140).raw()}</span>
+		   			<p>
+		   			#{if item.charging != 'free'}
+		   				<strong>&{'from'} ${item.price} <small>${item.currency}</small></strong>
+			   			<nobr>&{'for'} 15</nobr> &{'minutes'}
+		   			#{/if}
+		   			#{else}
+		   				<strong class="">&{'free'}</strong>
+		   			#{/else}
+		   			#{if item.firstFree}
+		   				<span class="label default-bg">&{'first-free'}</span>
+		   			#{/if}
+		   			
+		   			</p>
+		      		#{list items:1..5, as:'i'} 
+		       			#{if i <= item.ratingAvg} 
+						    <i class="fa fa-star text-default" data-value="1"></i>
+		       			#{/if}
+		       			#{else}
+						    <i class="fa fa-star-o" data-value="1"></i>
+		       			#{/else}
+					#{/list}
+		            ${item.ratingStars} &{'reviews'}   					   			
+		   		</div>
 			</div>
-		</div>	
-	</div>
-	<br/>
-	#{/if}	
+
+		</div>
+	</div>	
+</div>
+<br/>
+#{/if}	
+
+#{elseif userDisplayed}
+	#{set usr: userDisplayed/}
+	#{include 'userTop.html' /}
+#{/elseif}	
 	
-	#{elseif userDisplayed}
-		#{set usr: userDisplayed/}
-		#{include 'userTop.html' /}
-	#{/elseif}	
-	
+<!-- Calendar container -->
 <section class="main-container" >	
 <div class="container" style="min-height:60%;">
 	<div class="row">
@@ -192,8 +172,7 @@
 </section>
 
 
-
-
+<!-- Event detail Modal -->
 #{set 'moreHtml'}
 <div class="modal " id="myPopover" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
 	<div class="modal-dialog">
@@ -311,7 +290,6 @@
 		</div>
 	</div>
 </div>
-
 #{/set}
 
 

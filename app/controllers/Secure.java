@@ -16,7 +16,9 @@ import play.libs.Crypto;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Http;
+import play.mvc.Http.Cookie;
 import play.utils.Java;
+import utils.NumberUtils;
 
 public class Secure extends BaseController
 {
@@ -245,6 +247,9 @@ public class Secure extends BaseController
             {
                 user.lastLoginTime = new Date();
                 user.lastOnlineTime = new Date();
+                final Cookie cookie = request.cookies.get("timezoneJs");
+                if (cookie != null)
+                    user.timezone = NumberUtils.parseInt(cookie.value);
                 user.save();
                 return true;
             }

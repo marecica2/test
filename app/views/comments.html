@@ -138,6 +138,11 @@
 		        var tmp = star.utils.uuid()
 		        $('#comment').val(tmp);
 		        starCalendar.temp = tmp;
+		        
+		        if(webrtc != undefined && webrtc != null){
+    		        var d = {};
+                    socket_message_broadcast("files-reload", d);
+		        }		        
 	        });
 	    });
 	    
@@ -145,6 +150,8 @@
 	        if(confirm(i18n("delete-selected-item"))){
 		        $.get($(this).attr("data-href"), function(){
 			        star.loadComments(params, star.dashboard);
+    		        var d = {};
+                    socket_message_broadcast("files-reload", d);
 		        });
 	        }
 	    });

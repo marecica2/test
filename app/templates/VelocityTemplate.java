@@ -12,6 +12,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
 import play.Logger;
+import play.cache.Cache;
 import play.i18n.Messages;
 import utils.DateTimeUtils;
 import controllers.Application;
@@ -24,8 +25,16 @@ public class VelocityTemplate
     {
         try
         {
-            String templateContent;
-            templateContent = IOUtils.toString(Application.class.getResourceAsStream(templatePath));
+            final Object object = Cache.get(templatePath);
+            String templateContent = null;
+            if (object != null)
+            {
+                templateContent = (String) object;
+                Cache.add(templatePath, templateContent, "24h");
+            } else
+            {
+                templateContent = IOUtils.toString(Application.class.getResourceAsStream(templatePath));
+            }
             return templateContent;
         } catch (IOException e)
         {
@@ -49,7 +58,7 @@ public class VelocityTemplate
         return null;
     }
 
-    public static VelocityContext createInvitationTemplate(String locale, String email, User from, User to, Event event, String baseUrl, String attendance)
+    public static VelocityContext createInvitationTemplate(String locale, String email, User from, User to, Event event, String baseUrl, String attendance, String message)
     {
         VelocityContext ctx = new VelocityContext();
         ctx.put("color0", "#BF94D1");
@@ -75,11 +84,15 @@ public class VelocityTemplate
 
         ctx.put("contact", Messages.getMessage(locale, "contact"));
         ctx.put("help", Messages.getMessage(locale, "help"));
+        ctx.put("terms", Messages.getMessage(locale, "terms"));
         ctx.put("security", Messages.getMessage(locale, "security"));
         ctx.put("regards", Messages.getMessage(locale, "regards-html"));
         ctx.put("whatIsWidgr", Messages.getMessage(locale, "email-what-is-widgr", baseUrl));
         ctx.put("urlLabel", Messages.getMessage(locale, "register-now"));
         ctx.put("footer", Messages.getMessage(locale, "email-footer"));
+
+        if (message != null)
+            ctx.put("message", message);
 
         if (event != null)
         {
@@ -122,6 +135,7 @@ public class VelocityTemplate
         ctx.put("help", Messages.getMessage(locale, "help"));
         ctx.put("security", Messages.getMessage(locale, "security"));
         ctx.put("footer", Messages.getMessage(locale, "email-footer"));
+        ctx.put("terms", Messages.getMessage(locale, "terms"));
         return ctx;
     }
 }

@@ -320,6 +320,8 @@ public class Registration extends BaseController
         user.registrationToken = token;
         user.timezone = offset;
         user.locale = Lang.get();
+        user.reminder = false;
+        user.reminderMinutes = 10;
 
         user.uuid = RandomUtil.getUUID();
         user.referrerToken = RandomUtil.getUUID();
@@ -329,6 +331,7 @@ public class Registration extends BaseController
         user.workingHourStart = "8";
         user.workingHourEnd = "16";
         user.emailNotification = true;
+        user.emailNotification = false;
         return user;
     }
 

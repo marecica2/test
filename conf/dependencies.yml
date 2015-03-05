@@ -5,3 +5,4 @@ require:
     - org.apache.httpcomponents -> httpclient 4.3.4
     - org.apache.velocity -> velocity 1.7
     - com.google.apis -> google-api-services-calendar v3-rev111-1.19.0
+    - org.quartz-scheduler -> quartz 2.2.1

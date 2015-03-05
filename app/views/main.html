@@ -66,6 +66,7 @@
 	    	var d = new Date();
 	    	var timezoneOffset = d.getTimezoneOffset();
 	    	star.token = "#{token /}";
+	    	star.timezone = timezoneOffset;
 			star.baseUrl = "${baseUrl}";	
 	    </script>
 		<script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>
@@ -75,7 +76,7 @@
 	    	if(tz != undefined){
 	    	    star.utils.setCookie("timezoneJs", timezoneOffset);
 	    	}
-	    	
+			
 	    	$(document).ready(function(){
 	    	    // if running in iframe
 		    	if(window.self !== window.top){
@@ -144,7 +145,7 @@
 			"pattern-1 ... pattern-9": background patterns for boxed layout mode e.g. <body class="boxed pattern-1"> 
 	-->
 
-	<body class="wide pattern-8 ${switcherBody}">
+	<body class="wide *{pattern-8}* ${switcherBody}">
 	
 
 		<!-- scrollToTop -->
@@ -158,17 +159,17 @@
 
 			<!-- facebook header -->
 			#{if session && session.facebookTab && user}
-			<span class="hidden">${session.remove('facebookTab')}</span>
-			<div class="section clearfix" id="facebook-tab-manager" style="display:none">
+			*{<span class="hidden">${session.remove('facebookTab')}</span>}*
+			<div class="section clearfix " id="facebook-tab-manager" style="display:none">
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
-							<form action="/facebook-save" method="post" role="form" class="well">
+							<form action="/facebook-save" method="post" role="form" class="form-inline">
 								<input type="hidden" name="id" value="${user.uuid}">
 								<div class="form-group">
-									<label>&{'select-page-to-display'}</label>
 									<div class="row">
 										<div class="col-lg-12">
+											<label>&{'select-page-to-display'}</label>
 											<select name="type" class="form-control">
 												<option #{if user && user.facebookPageType =='calendar'} selected #{/if} value="calendar">&{'calendar'}</option>
 												<option #{if user && user.facebookPageType =='profile'} selected #{/if}  value="profile">&{'profile'}</option>
@@ -178,10 +179,10 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label>&{'select channel'}</label>
 									<div class="row" >
 										<div class="col-lg-12">
-											<select name="channel" class="form-control">
+											<label>&nbsp;&nbsp;&nbsp; &{'select-channel'}</label>
+											<select name="channel" class="form-control" style="width:200px">
 												#{list items:listings, as:'item'}
 													<option value="${item.uuid}">${item.title}</option>
 												#{/list}
@@ -190,7 +191,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<button type="submit" class="btn btn-default margin-clear">&{'apply'}</button>
+									<button type="submit" class="btn btn-default margin-clear btn-short">&{'apply'}</button>
 								</div>
 							</form>
 						</div>

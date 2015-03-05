@@ -114,13 +114,13 @@
 			
 			<h3>&{'account.account'}</h3>
 			<div class="separator-2"></div>
+			
 			#{if !edit}
 			<dl class="dl-horizontal">
 				<dt>&{'login'}</dt>
 				<dd>${user.login} &nbsp;</dd>
 				<dt>&{'account-name'}</dt>
 				<dd>${user.account.name} &nbsp;</dd>
-
 				<dt>&{'account-type'}</dt>
 				<dd>
 					#{if user && user.account.type == "publisherReq"}
@@ -136,6 +136,7 @@
 						<span class="label default-bg">&{user.account.type}</span>
 					#{/else}
 				</dd>
+				
 				
 				#{if user.isPublisher()}
 				<dt>&{'account-plan'}</dt>
@@ -188,6 +189,71 @@
 					#{/if}
 				</dd>
 				#{/if}
+				
+				</br>
+				<dt>&{'display-name'}</dt>
+				<dd>
+					${user.firstName} ${user.lastName}
+				</dd>
+				<dt>&{'password'}</dt>
+				<dd>
+					<a href="/password">&{'change-your-password'}</a>
+				</dd>	
+				
+				*{			
+				<dt>&{'locale'}</dt>
+				<dd>
+					${user.locale}
+				</dd>
+				
+				<dt>&{'timezone'}</dt>
+				<dd>
+					#{if user.timezone} #{if user.timezone < 0} + #{/if} ${user.timezone / -60}:00 &{'hrs'} #{/if}
+				</dd>			
+				}*
+				
+				<dt>&{'email-notifications'}</dt>
+				<dd>
+					#{if user.emailNotification != null} &{user.emailNotification} #{/if}<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'enable-or-disable-email-notifications'}"></i>
+				</dd>	
+
+				<dt>&{'reminder'}</dt>
+				<dd>
+					#{if user.reminder != null} &{user.reminder} #{/if}<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'reminder-help'}"></i>
+				</dd>	
+				<dt>&{'reminder-minutes'}</dt>
+				<dd>
+					 ${user.reminderMinutes} &{'reminder-minutes-desc'} 
+				</dd>	
+				
+				<dt>&{'facebook-id'}</dt>
+				<dd>
+					${user.facebookName}
+					<div class="fb-login-button" data-max-rows="1" data-scope="public_profile" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
+					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'connect-with-your-facebook-account'}"></i><br/>
+					<br/>
+					#{if user.facebookId != null}
+						<a href="/facebook/clear?${request.url.urlEncode()}&#{token /}">&{'clear-facebook-id'}</a> &middot;
+					#{/if}				
+					<a target="_blank" href="https://www.facebook.com/add.php?api_key=731388346951866&pages">&{'install-widgr-app-to-your-facebook-page'}</a> &middot;
+					<a href="/help#facebook">&{'learn-more'}</a>
+				  	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
+					<script>
+					  star.fbClbck = function() {
+					      FB.api('/me', function(response) {
+					        $("#facebookId").val(response.id);
+					        $("#facebookName").val(response.name);
+					        $('<form>', {
+					            "html": '<input name="facebookId" value="' + response.id + '" /><input name="facebookName" value="' + response.name + '" />',
+					            "action": '/settings/facebook/add?#{token /}',
+					            "method": 'POST'
+					        }).appendTo(document.body).submit();
+					      });
+					  }
+					</script>		
+					<div id="fb-root"></div>				
+				</dd>				
+				
 			</dl>
 			#{/if}
 			#{else}
@@ -198,6 +264,54 @@
 			      <div class="error">#{error 'accName' /}</div>
 			    </div>
 			</div>
+			<div class="form-group">
+				<label for="firstName" class="col-sm-2 control-label">&{'first-name'}</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="firstName" placeholder="&{'first-name'}" name="firstName" value="${flash.firstName}">
+			      <div class="error">#{error 'firstName' /}</div>
+			    </div>
+			</div>
+			<div class="form-group">
+				<label for="lastName" class="col-sm-2 control-label">&{'last-name'}</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="lastName" placeholder="&{'last-name'}" name="lastName" value="${flash.lastName}">
+			      <div class="error">#{error 'lastName' /}</div>
+			    </div>
+			</div>	
+				
+			<div class="form-group">
+			<label for="locale" class="col-sm-2 control-label">&{'email-notification'}</label>
+			<div class="col-sm-10">
+				<label class="radio-inline">
+				  <input type="radio" name="emailNotification" id="inlineRadio1" value="true" #{if params.emailNotification == "null" || params.emailNotification == "true"} checked="checked" #{/if}> &{'enabled'}
+				</label>
+				<label class="radio-inline">
+				  <input type="radio" name="emailNotification" id="inlineRadio2" value="false" #{if params.emailNotification == 'false'} checked="checked" #{/if}> &{'disabled'}
+				</label>
+			</div>				
+			</div>				
+			<div class="form-group">
+			<label for="locale" class="col-sm-2 control-label">&{'reminder'}</label>
+			<div class="col-sm-10">
+				<label class="radio-inline">
+				  <input type="radio" name="reminder" id="inlineReminderRadio1" value="true" #{if params.reminder == "true"} checked="checked" #{/if}> &{'enabled'}
+				</label>
+				<label class="radio-inline">
+				  <input type="radio" name="reminder" id="inlineReminderRadio2" value="false" #{if params.reminder == "null" || params.reminder == 'false'} checked="checked" #{/if}> &{'disabled'}
+				</label>
+		      <div class="error">#{error 'reminder' /}</div>
+			</div>				
+			</div>
+			<div class="form-group">
+				<label for="name" class="col-sm-2 control-label">&{'reminder-minutes'}</label>
+			    <div class="col-sm-2">
+			      <input type="text" class="form-control" id="reminderMinutes" name="reminderMinutes" value="${params.reminderMinutes}">
+			      <div class="error">#{error 'reminderMinutes' /}</div>
+			    </div>
+			    <div class="col-sm-8 control-label" style="text-align: left">
+					&{'reminder-minutes-desc'}
+			    </div>
+			</div>							
 			#{/else}
 			<br/>
 			
@@ -256,138 +370,8 @@
 			
 			
 			
-			
-			<h3>&{'user-preferences'}</h3>
-			<div class="separator-2"></div>
-			#{if !edit}
-			<dl class="dl-horizontal">				
-				<dt>&{'display-name'}</dt>
-				<dd>
-					${user.firstName} ${user.lastName}
-				</dd>
-				
-				<dt>&{'password'}</dt>
-				<dd>
-					<a href="/password">&{'change-your-password'}</a>
-				</dd>
-				
-				<dt>&{'locale'}</dt>
-				<dd>
-					${user.locale}
-				</dd>
-				
-				<dt>&{'timezone'}</dt>
-				<dd>
-					#{if user.timezone} #{if user.timezone < 0} + #{/if} ${user.timezone / -60}:00 &{'hrs'} #{/if}
-				</dd>			
-				
-				<dt>&{'email-notifications'}</dt>
-				<dd>
-					&{user.emailNotification}<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'enable-or-disable-email-notifications'}"></i>
-				</dd>	
-				
-				<dt>&{'facebook-id'}</dt>
-				<dd>
-					${user.facebookName}
-					<div class="fb-login-button" data-max-rows="1" data-scope="public_profile" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
-					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'connect-with-your-facebook-account'}"></i><br/>
-					<br/>
-					#{if user.facebookId != null}
-						<a href="/facebook/clear?${request.url.urlEncode()}&#{token /}">&{'clear-facebook-id'}</a> &middot;
-					#{/if}				
-					<a target="_blank" href="https://www.facebook.com/add.php?api_key=731388346951866&pages">&{'install-widgr-app-to-your-facebook-page'}</a> &middot;
-					<a href="/help#facebook">&{'learn-more'}</a>
-				  	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
-					<script>
-					  star.fbClbck = function() {
-					      FB.api('/me', function(response) {
-					        $("#facebookId").val(response.id);
-					        $("#facebookName").val(response.name);
-					        $('<form>', {
-					            "html": '<input name="facebookId" value="' + response.id + '" /><input name="facebookName" value="' + response.name + '" />',
-					            "action": '/settings/facebook/add?#{token /}',
-					            "method": 'POST'
-					        }).appendTo(document.body).submit();
-					      });
-					  }
-					</script>		
-					<div id="fb-root"></div>				
-				
 
-				</dd>
-			</dl>
-			#{/if}
-			#{else}
-			<div class="form-group">
-				<label for="firstName" class="col-sm-2 control-label">&{'first-name'}</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="firstName" placeholder="&{'first-name'}" name="firstName" value="${flash.firstName}">
-			      <div class="error">#{error 'firstName' /}</div>
-			    </div>
-			</div>
-			<div class="form-group">
-				<label for="lastName" class="col-sm-2 control-label">&{'last-name'}</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="lastName" placeholder="&{'last-name'}" name="lastName" value="${flash.lastName}">
-			      <div class="error">#{error 'lastName' /}</div>
-			    </div>
-			</div>
-			<div class="form-group">
-				<label for="locale" class="col-sm-2 control-label">&{'language'}</label>
-			    <div class="col-sm-10">
-					<select class="form-control" name="locale" id="locale">
-						<option #{if flash.locale == "en"}selected='selected'#{/if} value="en">en</option>
-						<option #{if flash.locale == "de"}selected='selected'#{/if} value="de">de</option>
-					</select>
-					<div class="error">#{error 'locale' /}</div>
-			    </div>
-			</div>						
-			<div class="form-group">
-				<label for="locale" class="col-sm-2 control-label">&{'timezone'}</label>
-			    <div class="col-sm-10">
-					<select class="form-control" name="timezone" id="timezone">
-						<option #{if params.timezone == "-660"}  selected='selected'#{/if} value="-660">- 11:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-600"}  selected='selected'#{/if} value="-600">- 10:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-540"}  selected='selected'#{/if} value="-540">- 09:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-480"}  selected='selected'#{/if} value="-480">- 08:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-420"}  selected='selected'#{/if} value="-420">- 07:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-360"}  selected='selected'#{/if} value="-360">- 06:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-300"}  selected='selected'#{/if} value="-300">- 05:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-240"}  selected='selected'#{/if} value="-240">- 04:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-180"}  selected='selected'#{/if} value="-180">- 03:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-120"}  selected='selected'#{/if} value="-120">- 02:00 &{'hrs'}</option>
-						<option #{if params.timezone == "-60"}  selected='selected'#{/if} value="-60">- 01:00 &{'hrs'}</option>
-						<option #{if params.timezone == "0"} selected='selected'#{/if} value="0">&nbsp; 00:00 &{'hrs'}</option>
-						<option #{if params.timezone == "60"} selected='selected'#{/if} value="60">+ 01:00 &{'hrs'}</option>
-						<option #{if params.timezone == "120"}selected='selected'#{/if} value="120">+ 02:00 &{'hrs'}</option>
-						<option #{if params.timezone == "180"}selected='selected'#{/if} value="180">+ 03:00 &{'hrs'}</option>
-						<option #{if params.timezone == "240"}selected='selected'#{/if} value="240">+ 04:00 &{'hrs'}</option>
-						<option #{if params.timezone == "300"}selected='selected'#{/if} value="300">+ 05:00 &{'hrs'}</option>
-						<option #{if params.timezone == "360"}selected='selected'#{/if} value="360">+ 06:00 &{'hrs'}</option>
-						<option #{if params.timezone == "420"}selected='selected'#{/if} value="420">+ 07:00 &{'hrs'}</option>
-						<option #{if params.timezone == "480"}selected='selected'#{/if} value="480">+ 08:00 &{'hrs'}</option>
-						<option #{if params.timezone == "540"}selected='selected'#{/if} value="540">+ 09:00 &{'hrs'}</option>
-						<option #{if params.timezone == "600"}selected='selected'#{/if} value="600">+ 10:00 &{'hrs'}</option>
-						<option #{if params.timezone == "660"}selected='selected'#{/if} value="660">+ 11:00 &{'hrs'}</option>
-						<option #{if params.timezone == "720"}selected='selected'#{/if} value="720">+ 12:00 &{'hrs'}</option>
-					</select>
-					<div class="error">#{error 'locale' /}</div>
-			    </div>
-			</div>	
-			<div class="form-group">
-			<label for="locale" class="col-sm-2 control-label">&{'email-notification'}</label>
-			<div class="col-sm-10">
-				<label class="radio-inline">
-				  <input type="radio" name="emailNotification" id="inlineRadio1" value="true" #{if params.emailNotification == "null" || params.emailNotification == "true"} checked="checked" #{/if}> &{'enabled'}
-				</label>
-				<label class="radio-inline">
-				  <input type="radio" name="emailNotification" id="inlineRadio2" value="false" #{if params.emailNotification == 'false'} checked="checked" #{/if}> &{'disabled'}
-				</label>
-			</div>				
-			</div>						
-			#{/else}
-			<br/>			
-			
+
 
 
 

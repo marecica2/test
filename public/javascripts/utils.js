@@ -247,6 +247,101 @@ var dateFormat = function () {
     };
 }();
 
+
+var starUtils = {};
+starUtils.s4 = function() {
+ return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+};
+
+starUtils.getRadio = function(name) {
+    return $("input:radio[name='"+name+"']:checked").val();
+};
+
+starUtils.setRadio = function(name, value) {
+    $("input:radio[name='"+name+"'][value='" + value + "']").prop('checked', true);
+};
+
+starUtils.uuid = function() {
+ return starUtils.s4() + starUtils.s4() + '-' + starUtils.s4() + '-' + starUtils.s4() + '-' +
+ starUtils.s4() + '-' + starUtils.s4() + starUtils.s4() + starUtils.s4();
+};
+
+starUtils.formatFilesize = function(fileSizeInBytes) {
+    var i = -1;
+    var byteUnits = [' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
+    do {
+        fileSizeInBytes = fileSizeInBytes / 1024;
+        i++;
+    } while (fileSizeInBytes > 1024);
+    return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];    
+};
+
+starUtils.formatDateTime = function(long) {
+    var d = new Date()
+    var diff = d.getTimezoneOffset();
+    var s = new Date();
+    s.setTime(long + (diff*60000));
+    return s.toLocaleDateString() + " " + s.toLocaleTimeString();
+};
+
+starUtils.formatDate = function(long) {
+    var date = starUtils.getTimeZoneDate(long);
+    return dateFormat(date.getTime(), dateFormat.masks.mediumDate);
+};
+
+starUtils.formatTime = function(long) {
+    var date = starUtils.getTimeZoneDate(long);
+    return dateFormat(date.getTime(), dateFormat.masks.shortTime);
+};
+
+starUtils.formatDateTime = function(date) {
+    date = new Date(date);
+    if(date != undefined)
+        return dateFormat(date, dateFormat.masks.mediumDate) + " " + dateFormat(date, dateFormat.masks.shortTime);
+    return null;
+};
+
+starUtils.getParameterByName = function(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(document.URL);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+};
+
+starUtils.getTimeZoneDate = function(long)
+{
+    var date = new Date();
+    //date.setTime(long + (star.timezone * 60000));
+    date.setTime(long);
+    
+//    var timezoneJs = starUtils.getCookie("timezoneJs");
+//    if(timezoneJs != undefined){
+//        date.setTime(date.getTime() - (timezoneJs*60000));
+//        return date;
+//    }
+    return date;
+}
+
+starUtils.getCookie = function(cname)
+{
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+      var c = ca[i].trim();
+      if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+    }
+    return "";
+}
+
+starUtils.facebook = function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=117287758301883";
+    fjs.parentNode.insertBefore(js, fjs);
+}
+
+
 // Some common format strings
 dateFormat.masks = {
     "default":      "ddd mmm dd yyyy HH:MM:ss",

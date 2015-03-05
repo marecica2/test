@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TypedQuery;
 
+import play.db.jpa.JPA;
 import play.db.jpa.Model;
 import utils.RandomUtil;
 
@@ -130,6 +131,11 @@ public class Attendance extends Model
     public static Attendance get(String uuid)
     {
         return Attendance.find("byUuid", uuid).first();
+    }
+
+    public static List<Attendance> getById(String uuid)
+    {
+        return JPA.em().createQuery("from Attendance where uuid = :uuid ", Attendance.class).setParameter("uuid", uuid).getResultList();
     }
 
     public Attendance update()

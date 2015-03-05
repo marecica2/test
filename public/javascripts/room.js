@@ -310,9 +310,6 @@ if(webrtc != null){
                          data.id = getPeerId();
                          data.screenShare = true;
                          socket_message_broadcast("screenshare-broadcast", data);
-                         
-                         console.log("sss");
-                         console.log($(this));
                          $("#screenShareButton").removeClass("btn-dark");
                          $("#screenShareButton").addClass("btn-success");
                      }, function (error) {
@@ -980,9 +977,16 @@ if(star.userInRoom){
             canvas.erase();
     
             starServices.addComment(data, function(){
+                var d = {};
+                socket_message_broadcast("files-reload", d);
                 star.loadComments(star.params, star.dashboard);
             });        
         });
+    }
+    
+    canvas.filesReload = function(){
+        star.loadComments(star.params, star.dashboard);
+        canvas.commentsOpen();
     }
     
     
@@ -1073,6 +1077,13 @@ if(star.userInRoom){
         $("#comments-open").addClass("btn-dark");
         $("#comments-open").removeClass("btn-success");    
     }
+
+    canvas.commentsOpen = function(){
+        star.commentsDialog = true;
+        $(".comments-resize").show();
+        $("#comments-open").removeClass("btn-dark");
+        $("#comments-open").addClass("btn-success");    
+    }
     
     $(document).ready(function(){
         document.addEventListener("touchstart", canvas.touchHandler, true);
@@ -1149,6 +1160,9 @@ if(star.userInRoom){
             canvas.eraseMessage();
         }     
         if(data.event == "canvas-save"){
+        }     
+        if(data.event == "files-reload"){
+            canvas.filesReload();
         }     
      });
     
@@ -1250,24 +1264,24 @@ if(webrtc == null){
         var audio = new Audio('/public/images/ring.mp3');
         audio.play();
     });
-    
-    socket.on('message', function(data) {
-        if (data.message) {
-            var html = '';
-            if(data.username != undefined)
-                html += '<strong>' + data.username.replace(/>/g, '&gt;') + '</strong>: ';
-            var message = linkify(data.message);
-            html += message + '<br/>';
-            $("#content").append(html);
-            var elm = $("#chat-container");
-            if(star.chatMimized){
-                elm.animate({right:'0px'},100);
-                star.chatMimized = false;
-            }
-        }
-        $("#content").scrollTop[0] = content.scrollHeight;
-    });
 }
+
+socket.on('message', function(data) {
+    if (data.message) {
+        var html = '';
+        if(data.username != undefined)
+            html += '<strong>' + data.username.replace(/>/g, '&gt;') + '</strong>: ';
+        var message = linkify(data.message);
+        html += message + '<br/>';
+        $("#content").append(html);
+        var elm = $("#chat-container");
+        if(star.chatMimized){
+            elm.animate({right:'0px'},100);
+            star.chatMimized = false;
+        }
+    }
+    $("#content").scrollTop[0] = content.scrollHeight;
+});
 
 
 $(document).ready(function(){

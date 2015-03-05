@@ -1,5 +1,6 @@
 
 #Accounts.java
+invalid-value=Invalid value
 error-default-message=Something went wrong. Exception has been logged. Try again.
 you-need-at-least-one-listing=To become a Publisher You need at least one channel. <a href="/channel/new?action=edit&new=true">Click here to create one</a>
 please-fill-in-information-about-you=To become a Publisher please fill in information about you
@@ -10,6 +11,8 @@ publisher-request-approved-subject=Your request for publisher was approved
 publisher-request-approved-message=h3. Your request for publisher was approved \nFrom now all your channels are visible and you can make full use of your account.
 publisher-request-declined-subject=Your request for publisher was declined
 publisher-request-declined-message=h3. Your request for publisher was declined \nPlease complete your personal information and channels and try again. Remember you can always ask us what needs to be corrected in order to be later successfully approved. [Ask a question|%s]
+event-reminder-subject=Reminder for Session %s
+event-reminder-message=h3. Reminder for Session %s \nThis notification was sent to remind you that Session [%s|%sevent/%s] will start on %s. \nIf you do not wish to receive these notifications, log into to Widgr and go Settings page to disable notifications.
 
 #Application.java
 start-helping-others=Start helping others and become Publisher. <a href='/settings/request-publisher?authenticityToken=%s'>Request for publisher account here</a>.
@@ -61,7 +64,7 @@ oauth-error=Google Calendar authorization failed
 
 #Hangout.java
 please-rating-subject=Please leave a rating
-please-rating-message=Please leave a rating \nPlease help others to decide with giving rating for the session [%s|%s]
+please-rating-message=Please leave a rating \nPlease help others to decide by giving a rating for the visited session [%s|%s]
 invitation-to-video-call-subject=Invitation to video call
 invitation-to-video-call-message=h3. %s invited you to video call. \n[Click here to join this video call|%s]
 
@@ -216,6 +219,10 @@ contact=Contact
 #WikiUtils.java
 
 #account.html
+reminder-minutes=Notify me
+reminder-minutes-desc=minutes before my Session starts
+reminder=Session Notifications
+reminder-help=Enable or disable Email notification before Session starts
 default-currency=Default currency
 google-calendar-id=Google calendar Id
 valid-to=Valid to
@@ -262,7 +269,7 @@ locale=Locale
 timezone=Timezone
 hrs=Hrs
 email-notifications=Email notifications
-enable-or-disable-email-notifications=Enable or disable email notifications
+enable-or-disable-email-notifications=Enable or disable sending email notifications. (In-application notifications will be still enabled)
 facebook-id=Connect Facebook
 clear-facebook-id=Disconnect Facebook Account
 connect-with-your-facebook-account=Connect Widgr with your facebook account. You will be able to login to Widgr using your facebook account.
@@ -408,6 +415,7 @@ decline=Decline
 delete=Delete
 
 #channels.html
+by-availability=By availability
 search-channels=Search channels
 search-string=Search string
 category=Category
@@ -675,9 +683,9 @@ recipient=Message to
 all=All
 chat=Chat with 
 follow-us=Follow us on
-select-page-to-display=Select page to display
+select-page-to-display=Home page
 channel=Channel
-select channel=Select channel
+select-channel=Channel
 apply=Apply
 policy=Policy
 contact=Contact

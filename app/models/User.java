@@ -53,6 +53,10 @@ public class User extends Model
 
     public Boolean emailNotification;
 
+    public Boolean reminder;
+
+    public Integer reminderMinutes;
+
     public Boolean activated;
 
     public Boolean available;
