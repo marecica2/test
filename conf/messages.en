@@ -254,7 +254,7 @@ account.account=Account
 account-name=Account name
 account-plan=Account plan
 account-type=Account type
-waiting-for-approvement=Session requested
+publisher-waiting-for-approvement=Requested for Publisher account
 become-a-publisher=Become a publisher
 account.accountName=Account.accountName
 Account Plan=Account Plan
@@ -537,6 +537,7 @@ refresh=Reload call
 hang-up=End&nbsp;call
 
 #header.html
+waiting-for-approvement=Session requests
 manage-channels=Channels
 share-your-knowledge=Share your knowledge
 toggle-navigation=Toggle navigation

@@ -1,4 +1,5 @@
-#{extends 'raw.html' /} 
+#{extends 'main.html' /} 
+#{set raw: true /}
 
 #{set 'moreStyles'}
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
@@ -114,7 +115,7 @@
 		<div id="content" class="form-control shadow-small" style="flex: 1 1 auto; background:rgba(20, 20, 20, 1);font-size:0.8em;color:white; overflow-y: auto; border: 0px;"></div>
 		<form onsubmit="return false;" style="margin:0px; background: black; flex: 0 1 80px;">
 			<div class="shadow-small">
-				<input id="chat-text" class="form-control" style="color:white; border:0px; background: rgba(20, 20, 20, 1)" placeholder="&{'enter-your-message'}"> 
+				<input id="chat-text" class="form-control" style="color:white; border:0px; background: rgba(40, 40, 40, 1)" placeholder="&{'enter-your-message'}"> 
 				<input id="chat-name" type="hidden" value="${name}"> 
 				<span class="input-group-btn">
 					<button id="chat-send" class="btn btn-default btn-short margin-clear btn-block" style="height:40px;">&{'send'}</button>

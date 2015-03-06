@@ -125,7 +125,7 @@
 				<dd>
 					#{if user && user.account.type == "publisherReq"}
 						<span class="label label-default">&{user.account.type}</span><br/>
-						<span class="label label-success">&{'waiting-for-approvement'}</span>
+						<span class="label label-success">&{'publisher-waiting-for-approvement'}</span>
 					#{/if}
 					#{elseif user && user.account.type == "standard"}
 						<span class="label label-default">&{user.account.type}</span><br/>

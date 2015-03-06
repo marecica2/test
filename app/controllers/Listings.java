@@ -51,9 +51,6 @@ public class Listings extends BaseController
         if (!isNew && !isOwner && user != null && !listing.user.isPublisher() && !user.isAdmin())
             forbidden();
 
-        if (isOwner && !user.account.type.equals(Account.TYPE_PUBLISHER))
-            flash.success(Messages.get("start-helping-others"));
-
         if (edit && !isOwner && !isNew)
             forbidden();
 

@@ -146,13 +146,17 @@
 	        #{get 'moreScripts' /}       
 	</head>
 
+
+#{if raw}	
+	<body class="body" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">
+		#{doLayout /}
+#{/if}	
+#{else}	
 	<!-- body classes: 
 			"boxed": boxed layout mode e.g. <body class="boxed">
 			"pattern-1 ... pattern-9": background patterns for boxed layout mode e.g. <body class="boxed pattern-1"> 
 	-->
-
 	<body class="wide *{pattern-8}* ${switcherBody}">
-	
 
 		<!-- scrollToTop -->
 		<!-- ================ -->
@@ -363,6 +367,9 @@
 			
 		</div>
 		<!-- page-wrapper end -->	
+
+
+#{/else}	
 	
 		<!-- JavaScript files placed at the end of the document so the pages load faster
 		================================================== -->

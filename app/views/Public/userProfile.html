@@ -15,7 +15,7 @@
 <div class="container" >				
 	<div class="row">
 		<div class="col-md-8">
-			#{if listings && usr.isPublisher()}
+			#{if listings && (usr.isPublisher()) || (user != null  && user.isAdmin()) }
 				<h2>&{'all-channels-from'} ${usr.firstName}</h2>
 				<div class="separator-2"></div>
 				#{set items:listings /}

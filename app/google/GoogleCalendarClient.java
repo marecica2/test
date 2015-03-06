@@ -15,6 +15,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.CalendarRequestInitializer;
 import com.google.api.services.calendar.model.CalendarList;
 import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.Event;
@@ -73,8 +74,8 @@ public class GoogleCalendarClient
                 .setAccessToken(GoogleOAuth.getAccessToken())
                 .setRefreshToken(user.googleRefreshToken)
                 .setExpirationTimeMilliseconds(user.googleTokenExpires.getTime());
-
-        Calendar service = new Calendar.Builder(httpTransport, jsonFactory, credential).setApplicationName("widgr").build();
+        final CalendarRequestInitializer calendarRequestInitializer = new CalendarRequestInitializer(GoogleOAuth.CLIENT_ID);
+        Calendar service = new Calendar.Builder(httpTransport, jsonFactory, credential).setCalendarRequestInitializer(calendarRequestInitializer).setApplicationName("widgr").build();
         return service;
     }
 
