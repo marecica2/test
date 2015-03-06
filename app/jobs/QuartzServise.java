@@ -33,7 +33,6 @@ public class QuartzServise extends Job
     @Override
     public void doJob() throws Exception
     {
-        Logger.info("Quartz has been initialized");
         try
         {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
@@ -47,6 +46,7 @@ public class QuartzServise extends Job
                     Logger.info("Found persistent scheduled job: " + jobKey);
                 }
             }
+            Logger.info("Quartz has been initialized");
         } catch (SchedulerException se)
         {
             Logger.error(se, "Error in Quartz");

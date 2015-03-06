@@ -205,13 +205,14 @@ public class Application extends BaseController
         final List<Event> approved = user != null ? Event.getApprovement(user) : null;
         final List<Listing> listings = user != null ? Listing.getForUser(user) : null;
         final List<Contact> contacts = Contact.getContacts(user);
+        final String baseUrl = getBaseUrlWithoutSlash();
 
         final List<Comment> comments = Comment.getByFollower(user, 0, 200);
         //Http.Cookie c = new Http.Cookie();
         //c.name = "timezone";
         //c.value = user.timezone.toString();
         //request.cookies.put("timezone", c);
-        render(user, watchList, listings, approved, type, isOwner, contacts, comments, temp, commentTemp, results, dashboard);
+        render(user, watchList, listings, approved, type, isOwner, contacts, comments, temp, commentTemp, results, dashboard, baseUrl);
     }
 
     public static void manageChannels()

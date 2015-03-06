@@ -201,6 +201,7 @@ public class Attendance extends Model
                 a1.email = customer.login;
                 a1.name = customer.getFullName();
                 a1.customer = customer;
+                a1.user = user;
                 a1.event = event;
                 a1.result = Attendance.ATTENDANCE_RESULT_ACCEPTED;
                 a1.isForUser = false;

@@ -4,7 +4,6 @@
 #{/set}
 
 #{set 'moreScripts'}
-	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
 	<script>
 		var now = (new Date(new Date().getTime())).toJSON();
 		var params = "&start="+now+"&end="+now+"&direction=upcoming&type=dashboard";
@@ -18,11 +17,11 @@
 	</script>
 #{/set}
 
-<div class="padding container container-xs-height">
-	<div class="row row-xs-height">
+<div class="container">
+	<div class="row">
 	
 
-		<div class="col-md-12 col-xs-height col-top">
+		<div class="col-md-12">
 			<h3><i class="icon-clock"></i> &{'upcoming-events'}</h3>
 			<div class="separator-2"></div>		
 			<div id="itemsListUpcoming"></div>

@@ -4,7 +4,36 @@
 #{/set}
 
 #{set 'moreScripts'}
-	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
+	<script>
+		$(document).ready(function(){
+			$(".reply-button").click(function(){
+			    $(this).hide();
+			    $(".reply-form").removeClass("hidden");
+			});		    
+		    
+		  	$(".typeahead").typeahead(
+			  	{
+			  	    minLength : 2, 
+			  	    source : function(value, process){
+						  	    $.get("/invites?str="+value, function(data){
+						  	        var list = [];
+							  	    for(var i in data){
+							  	        var item = data[i].name + " ("+data[i].login + ")";
+							  	        list.push(item);
+							  	    }
+						  	        process(list);
+						  	    });
+			  				},
+			  		updater : function(item){
+			  		    return item;
+			  		}, 
+			  		matcher : function(item){
+			  		    return true;
+			  		}
+			  	}
+		  	);
+		});
+	</script>
 #{/set}
 
 <div class="container" style="min-height:50vh">
@@ -71,12 +100,6 @@
 				</table>
 				
 				<button type="button" class="reply-button btn btn-default pull-right ">&{'write-reply'}</button>
-				<script>
-					$(".reply-button").click(function(){
-					    $(this).hide();
-					    $(".reply-form").removeClass("hidden");
-					});
-				</script>
 
 				<div class="clearfix"></div>
  				<form action="/mail-new" role="form" method="post" class="reply-form hidden">
@@ -215,30 +238,6 @@
 					#{/else}
 				</div>
 				#{/elseif}
-				
-				<script>
-				  	$(".typeahead").typeahead(
-					  	{
-					  	    minLength : 2, 
-					  	    source : function(value, process){
-								  	    $.get("/invites?str="+value, function(data){
-								  	        var list = [];
-									  	    for(var i in data){
-									  	        var item = data[i].name + " ("+data[i].login + ")";
-									  	        list.push(item);
-									  	    }
-								  	        process(list);
-								  	    });
-					  				},
-					  		updater : function(item){
-					  		    return item;
-					  		}, 
-					  		matcher : function(item){
-					  		    return true;
-					  		}
-					  	}
-				  	);
-				</script>					
 			</div>
 		</div>
 	</div>

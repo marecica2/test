@@ -432,7 +432,6 @@ public class Events extends BaseController
 
         if (proposal)
         {
-            //TODO change this when this could be paid
             event.charging = listing.charging;
             event.price = listing.price;
             event.currency = listing.currency;

@@ -1,9 +1,9 @@
 $(document).ready(function() {
     var lang = starUtils.getCookie("PLAY_LANG");
-        
-    if (window!=window.top) {
-        $(".button-fullscreen").show();
-    }
+
+    $(".anchorLink").click(function(){
+        document.location = $(this).attr("data-href");
+    });
     
     $(".event-dialog-save").click(starEvent.saveEventDialog);
     $(".event-dialog-save-notify").click(starCalendar.saveNotifyEventDialog);
@@ -14,6 +14,25 @@ $(document).ready(function() {
     $(document).on("click", ".dialog-invite-accept", starEvent.inviteAccept);
     $(document).on("click", ".dialog-invite-decline", starEvent.inviteDecline);
 
+    $('#timepicker1').timepicker({
+        appendWidgetTo: 'body',
+        showMeridian: false
+    });
+    $('#timepicker2').timepicker({
+        appendWidgetTo: 'body',
+        showMeridian: false 
+    });
+    
+    $('#timepicker1').timepicker().on('changeTime.timepicker', function(e) {
+        starCalendar.start.setHours(e.time.hours);
+        starCalendar.start.setMinutes(e.time.minutes);
+    });
+    
+    $('#timepicker2').timepicker().on('changeTime.timepicker', function(e) {
+        starCalendar.end.setHours(e.time.hours);
+        starCalendar.end.setMinutes(e.time.minutes);
+    });    
+    
     $(document).on("click", ".fc-button", function(){
         var cal = "";
         var click = false;

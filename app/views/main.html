@@ -78,6 +78,11 @@
 	    	}
 			
 	    	$(document).ready(function(){
+
+	    	    $(".anchorLink").click(function(){
+	    	        document.location = $(this).attr("data-href");
+	    	    });
+	    	    
 	    	    // if running in iframe
 		    	if(window.self !== window.top){
 		    	    $(".logo-header").hide();
@@ -136,6 +141,7 @@
     	    	
 	    	});		
 			</script>
+			<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
 			#{i18n /}
 	        #{get 'moreScripts' /}       
 	</head>

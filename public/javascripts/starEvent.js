@@ -136,7 +136,7 @@ star.renderComments = function(data, dashboard){
                 html += "<div class='padding-bottom'>";
                 html += "   <img class='avatar16' src='/"+r.createdByAvatarUrl+"_32x32'> ";
                 html += "   <a href=''>"+r.createdByName+"</a> <span class='opacity'>" + starUtils.formatDate(r.created) + " " + starUtils.formatTime(r.created) + "</span><br/>";
-                html +=     r.comment;
+                html +=     linkify(r.comment);
                 html += "</div>";
             }
             html += "</div>";
@@ -169,21 +169,20 @@ star.initItems = function(prefix, urlParams){
         var params = {};
         params.url = url;
         params.prefix = prefix;
+        $("#moreResults"+prefix).hide();
 
         starServices.getItems(prefix, params, function(data){
             $("#moreResults"+prefix).hide();
             $("#spinner"+prefix).show();
             var html = star.renderItems(data, prefix);
             var f = function(html){
-                $(html).hide().appendTo($("#itemsList"+prefix)).fadeIn(500);
                 $("#spinner"+prefix).hide();
+                $(html).hide().appendTo($("#itemsList"+prefix)).fadeIn(500);
                 $("#moreResults"+prefix).show();
                 if(typeof(FB) !== "undefined")
                     FB.Canvas.setSize();
             }
-            setTimeout(function(){
-                f(html);
-            }, 50);
+            f(html);
         });
 
         // append elements        
@@ -214,15 +213,11 @@ star.loadItems = function(prefix, urlParams){
     starServices.getItems(prefix, urlParams, function(data){
         var html = star.renderItems(data, urlParams.prefix);
            var f = function(html){
-                $(html).hide().appendTo($("#itemsList"+urlParams.prefix)).fadeIn(500);
+                $(html).hide().appendTo($("#itemsList"+urlParams.prefix)).fadeIn(100);
                 $("#spinner"+urlParams.prefix).hide();
                 $("#moreResults"+urlParams.prefix).show();
-                if(typeof(FB) !== "undefined")
-                    FB.Canvas.setSize();
            }
-        setTimeout(function(){
-                f(html);
-          }, 250);
+           f(html);
     });
 };
 

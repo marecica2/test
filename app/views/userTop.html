@@ -1,92 +1,84 @@
-
 <div class="section gray-bg-lighter ">
-<div class="container">
-	
-	<div class="row">
-		<div class="col-lg-3 col-sm-3">
-			<div class="box-style-1 gray-bg team-member">
-				<div class="overlay-container">
-					<img src="/${usr.avatarUrl}" style="width:100%s">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-3 col-sm-3">
+				<div class="box-style-1 gray-bg team-member">
+					<div class="overlay-container">
+						<img src="/${usr.avatarUrl}" style="width:100%s">
+					</div>
 				</div>
 			</div>
-		</div>
-		
-
-		
-		<div class="col-lg-6 col-sm-6">
-						
-			<h3 class="margin-top-clear">
-				<a class="anchor" href="/user/${usr.login}">${usr.fullName}</a>
-						
-		    	#{if userProfile}
-					<span>
-				    	#{if user && isOwner}
-				    		<a href="/settings?edit=true" class="btn btn-light-gray btn-sm controls"><i class="fa fa-pencil"></i> &{'edit-profile'}</a> 
-				    	#{/if}			
-						#{if user && !isOwner}
+			
+			<div class="col-lg-6 col-sm-6">
+				<h3 class="margin-top-clear">
+					<a class="anchor" href="/user/${usr.login}">${usr.fullName}</a>
+							
+			    	#{if userProfile}
 						<span>
-							#{if follow && follow.following == true}
-								<a href="/contact-unfollow?uuid=${follow.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-minus"></i> &{'unfollow'}</a> 
-							#{/if}
-							#{else}
-								<a href="/contact-follow?uuid=${follow}&usr=${usr.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-plus"></i> &{'follow'}</a> 
-							#{/else}
+					    	#{if user && isOwner}
+					    		<a href="/settings?edit=true" class="btn btn-light-gray btn-sm controls"><i class="fa fa-pencil"></i> &{'edit-profile'}</a> 
+					    	#{/if}			
+							#{if user && !isOwner}
+							<span>
+								#{if follow && follow.following == true}
+									<a href="/contact-unfollow?uuid=${follow.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-minus"></i> &{'unfollow'}</a> 
+								#{/if}
+								#{else}
+									<a href="/contact-follow?uuid=${follow}&usr=${usr.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-plus"></i> &{'follow'}</a> 
+								#{/else}
+							</span>
+							#{/if}	
 						</span>
-						#{/if}	
-					</span>
-				#{/if}				
-			</h3>
-			<ul class="list-icons">
-				#{if !usr.isOnline()}
-					<li><i class="fa fa-clock-o"></i> &{'offline'} - &{'last-online'} #{if usr.lastOnlineTime} ${usr.lastOnlineTime.format("dd MMM, yyyy")} #{time time:usr.lastOnlineTime/} #{/if}</li>
-				#{/if}
-				#{else}
-					<i class=" icon-record" style="color:#5cb85c;"></i>
-					&{'online'}
-				#{/else}
-				
-				<li><i class="fa fa-envelope pr-5"></i><a href="/mail?action=new&to=${usr.login}" class="">&{'write-message-for'} ${usr.firstName}</a></li>
-				<li><i class="fa fa-calendar pr-5"></i><a href="/user/${usr.login}/calendar/public" class="">&{'public-calendar'}</a></li>
-				#{if user && user.isPublisher()}
-					<li><i class="fa fa-bar-chart-o pr-5"></i><a href="/payments?sender=${usr.login}" class="">&{'payments-receivedPayments-for-this-user'} ${usr.firstName}</a></li>
-				#{/if}
-			</ul>
-						<ul class="social-links colored clearfix">
-						#{if usr.facebook}<li class="facebook"><a target="_blank" href="${usr.facebook}"><i class="fa fa-facebook"></i></a></li>#{/if}
-						#{if usr.twitter}<li class="twitter"><a target="_blank" href="${usr.twitter}"><i class="fa fa-twitter"></i></a></li>#{/if}
-						#{if usr.linkedIn}<li class="linkedin"><a target="_blank" href="${usr.linkedIn}"><i class="fa fa-linkedin"></i></a></li> #{/if}
-						#{if usr.googlePlus}<li class="googleplus"><a target="_blank" href="${usr.googlePlus}"><i class="fa fa-google-plus"></i></a></li>#{/if}
-						</ul>			
-		</div>
-
-		<div class="col-lg-3 col-sm-3 " style="height:100%">
-			<div class="vertical-divider-left-lg side">
-				<h5 class="title margin-clear">&{'followers'}</h5>
-				#{if followers}
-					<p>
-					#{list items:followers, as:'item'}
-			    		<a href="/user/${item.user.login}"><img class="pull-left" style="height:22px;margin:1px" src="/${item.user.avatarUrl}_32x32"></a>
-					#{/list}	
-					</p>						
-				#{/if}
-				<div class="clearfix"></div>
-				<br/>
-				
-				<h5 class="title margin-clear">&{'following'}</h5>
-				#{if followees}
-					<p>
-					#{list items:followees, as:'item'}
-			    		<a href="/user/${item.contact.login}"><img class="pull-left " style="height:22px;margin:1px" src="/${item.contact.avatarUrl}_32x32"></a>
-					#{/list}
-					</p>			
-				#{/if}	
-				<div class="clearfix"></div>
-				<br/>
+					#{/if}				
+				</h3>
+				<ul class="list-icons">
+					#{if !usr.isOnline()}
+						<li><i class="fa fa-clock-o"></i> &{'offline'} - &{'last-online'} #{if usr.lastOnlineTime} ${usr.lastOnlineTime.format("dd MMM, yyyy")} #{time time:usr.lastOnlineTime/} #{/if}</li>
+					#{/if}
+					#{else}
+						<i class=" icon-record" style="color:#5cb85c;"></i>
+						&{'online'}
+					#{/else}
+					
+					<li><i class="fa fa-envelope pr-5"></i><a href="/mail?action=new&to=${usr.login}" class="">&{'write-message-for'} ${usr.firstName}</a></li>
+					<li><i class="fa fa-calendar pr-5"></i><a href="/user/${usr.login}/calendar/public" class="">&{'public-calendar'}</a></li>
+					#{if user && user.isPublisher()}
+						<li><i class="fa fa-bar-chart-o pr-5"></i><a href="/payments?sender=${usr.login}" class="">&{'payments-receivedPayments-for-this-user'} ${usr.firstName}</a></li>
+					#{/if}
+				</ul>
+				<ul class="social-links colored clearfix">
+					#{if usr.facebook}<li class="facebook"><a target="_blank" href="${usr.facebook}"><i class="fa fa-facebook"></i></a></li>#{/if}
+					#{if usr.twitter}<li class="twitter"><a target="_blank" href="${usr.twitter}"><i class="fa fa-twitter"></i></a></li>#{/if}
+					#{if usr.linkedIn}<li class="linkedin"><a target="_blank" href="${usr.linkedIn}"><i class="fa fa-linkedin"></i></a></li> #{/if}
+					#{if usr.googlePlus}<li class="googleplus"><a target="_blank" href="${usr.googlePlus}"><i class="fa fa-google-plus"></i></a></li>#{/if}
+				</ul>			
 			</div>
-		</div>	
-		
+	
+			<div class="col-lg-3 col-sm-3 " style="height:100%">
+				<div class="vertical-divider-left-lg side">
+					<h5 class="title margin-clear">&{'followers'}</h5>
+					#{if followers}
+						<p>
+						#{list items:followers, as:'item'}
+				    		<a href="/user/${item.user.login}"><img class="pull-left" style="height:22px;margin:1px" src="/${item.user.avatarUrl}_32x32"></a>
+						#{/list}	
+						</p>						
+					#{/if}
+					<div class="clearfix"></div>
+					<br/>
+					
+					<h5 class="title margin-clear">&{'following'}</h5>
+					#{if followees}
+						<p>
+						#{list items:followees, as:'item'}
+				    		<a href="/user/${item.contact.login}"><img class="pull-left " style="height:22px;margin:1px" src="/${item.contact.avatarUrl}_32x32"></a>
+						#{/list}
+						</p>			
+					#{/if}	
+					<div class="clearfix"></div>
+					<br/>
+				</div>
+			</div>	
+		</div>
 	</div>
-
-
-</div>
 </div>

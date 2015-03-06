@@ -1,105 +1,3 @@
-#{if (!edit && isOwner) || (!edit && user && object && object.commentsEnabled)}
-<div class="row">
-<div class="col-md-12">
-	<form action="/event/comment?uuid=${object.uuid}&objectType=${objectType}&url=${request.url.urlEncode()}" id="comment-form" method="post">
-		<h2><img class="img-circle" style="float:left" src="/${user.avatarUrl}_32x32">&nbsp;&{'share-whats-new'}</h2>
-		<div class="separator-2"></div>
-    	<div class="form-group has-feedback">
-    		<div class="">
-    			<input type="hidden" name="objectType" value="${objectType}">
-				<input type="hidden" name="uuid" value="${object.uuid}">
-	    		<textarea rows="3" class="form-control" maxlength="1000" name="comment" id="dialog-comment-input"></textarea>
-    		</div>
-	   		#{include 'help.html' /}
-    	</div>
-    	
-  	    <button class="btn btn-light-gray pull-right margin-clear" id="comment-save" type="button">&{'submit'}</button>
-  	    
-		<div class="form-group">
-			<div class="btn-group pull-left" data-toggle="buttons">
-			  #{if isOwner}
-				  <label class="btn btn-light-gray active btn-short margin-clear" >
-				    <input type="radio" name="type" id="upload-buttonLink" checked="checked" value="text"><i class="fa fa-pencil"></i> &{'text'}
-				  </label>
-				  <label class="btn btn-light-gray btn-short margin-clear" id="upload-buttonComments">
-				    <input type="radio" name="type" id="upload-buttonComments1" value="file" ><i class="fa fa-upload"></i> &{'file'}
-				  </label>
-			  #{/if}
-			  #{else}
-				   <input type="hidden" name="type" id="upload-buttonLink" checked="checked" value="text">
-			  #{/else}
-			</div>	
-		</div>			
-		
-		#{if isOwner && fromEvent}
-			<label class="pull-left" style="margin:10px;font-weight:100;" rel="tooltip" data-original-title="&{'paid-comment-info'}"> 
-				<input type="checkbox" name="paidComment" value="paidComment"> &{'paid-comment'}
-			</label>
-			<div class="clearfix"></div>	
-		#{/if}
-				
-		<br/>
-		<br/>
-		
-		<!-- File upload -->
-		#{authenticityToken /}
-		<input type="file" id="uploadComments" name="upload" style="display:none" multiple="multiple">
-		<input type="hidden" id="comment" name="tempId" value="${commentTemp}">
-		<input type="hidden" id="fileUploadComments" name="fileUpload">
-		<script>
-			$(document).ready(function(){
-				$("#upload-buttonComments").click(function(){
-				    $("#uploadComments").click();
-				});
-				$("#uploadComments").change(function(){
-				    var params = "";
-				    params = "temp="+$("#comment").val();
-				    
-		    		star.utils.uploadFiles('/fileupload?'+star.token+'&'+params, this.files, function(json){
-		    		    var resp = JSON.parse(json);
-		    		    if(resp.extension.indexOf("image") != -1){
-			    		    $("#images").append("<img class='img-thumbnail' style='height:100px;margin-bottom:4px' src='/public/uploads/"+resp.url+"_thumb'>");
-		    		    } else {
-		    		        $("#images").append("<span class='label default_bg'><i class='fa fa-file'></i> "+resp.name+"</span><br/>");
-		    		    }
-	    		        $("#fileUploadComments").val(resp.uuid);
-	    		        $("#typeComments").val("file");
-		    		});
-				});
-			});
-		</script>
-		
-		<div id="progresses" >
-		</div>
-		<div id="images">
-			#{if files}
-				#{list items:files, as:'file'}
-					<div style="position:relative; float:left;">
-			        <img class="img-thumbnail" style="height:100px;margin-bottom:4px" src="/public/uploads/${file.url}_thumb" alt="${file.name}" title="${file.name}">
-						<a class="btn btn-default btn-xs" href="/remove-upload?uuid=${file.uuid}&url=${request.url.urlEncode()}" style=""><i class="fa fa-times"></i></a>
-					</div>
-				#{/list}
-			#{/if}
-		</div>	
-		<!-- File upload -->
-	</form>
-</div>    
-</div>    
-#{/if}	
-    
-    
-<div class="commentsContainer" style="display:none;margin-top:40px">
-	<div id="comments-container" class="image-boxes"></div>   
-	<div class="spinner-container2" style="display:table;width:100%">
-		<div class="spinner-container">
-			<div id="spinnerComments" class="spinner-load"></div>
-			<a id="moreResultsComments" class="spinner-more"><i class="icon-plus-circled"></i></a>
-		</div>
-	</div>
-</div>   
-
-
-
 <script>
 	$(document).ready(function(){
 	    var params = "";
@@ -176,5 +74,105 @@
 		        star.loadComments(params, star.dashboard);
 	        });
 	    });
-	})
-</script> 
+	
+		$("#upload-buttonComments").click(function(){
+		    $("#uploadComments").click();
+		});
+		
+		$("#uploadComments").change(function(){
+		    var params = "";
+		    params = "temp="+$("#comment").val();
+		    
+    		star.utils.uploadFiles('/fileupload?'+star.token+'&'+params, this.files, function(json){
+    		    var resp = JSON.parse(json);
+    		    if(resp.extension.indexOf("image") != -1){
+	    		    $("#images").append("<img class='img-thumbnail' style='height:100px;margin-bottom:4px' src='/public/uploads/"+resp.url+"_thumb'>");
+    		    } else {
+    		        $("#images").append("<span class='label default_bg'><i class='fa fa-file'></i> "+resp.name+"</span><br/>");
+    		    }
+   		        $("#fileUploadComments").val(resp.uuid);
+   		        $("#typeComments").val("file");
+    		});
+		});
+	});
+</script>
+
+#{if (!edit && isOwner) || (!edit && user && object && object.commentsEnabled)}
+<div class="row">
+<div class="col-md-12">
+	<form action="/event/comment?uuid=${object.uuid}&objectType=${objectType}&url=${request.url.urlEncode()}" id="comment-form" method="post">
+		<h2><img class="img-circle" style="float:left" src="/${user.avatarUrl}_32x32">&nbsp;&{'share-whats-new'}</h2>
+		<div class="separator-2"></div>
+    	<div class="form-group has-feedback">
+    		<div class="">
+    			<input type="hidden" name="objectType" value="${objectType}">
+				<input type="hidden" name="uuid" value="${object.uuid}">
+	    		<textarea rows="3" class="form-control" maxlength="1000" name="comment" id="dialog-comment-input"></textarea>
+    		</div>
+	   		#{include 'help.html' /}
+    	</div>
+    	
+  	    <button class="btn btn-light-gray pull-right margin-clear" id="comment-save" type="button">&{'submit'}</button>
+  	    
+		<div class="form-group">
+			<div class="btn-group pull-left" data-toggle="buttons">
+			  #{if isOwner}
+				  <label class="btn btn-light-gray active btn-short margin-clear" >
+				    <input type="radio" name="type" id="upload-buttonLink" checked="checked" value="text"><i class="fa fa-pencil"></i> &{'text'}
+				  </label>
+				  <label class="btn btn-light-gray btn-short margin-clear" id="upload-buttonComments">
+				    <input type="radio" name="type" id="upload-buttonComments1" value="file" ><i class="fa fa-upload"></i> &{'file'}
+				  </label>
+			  #{/if}
+			  #{else}
+				   <input type="hidden" name="type" id="upload-buttonLink" checked="checked" value="text">
+			  #{/else}
+			</div>	
+		</div>			
+		
+		#{if isOwner && fromEvent}
+			<label class="pull-left" style="margin:10px;font-weight:100;" rel="tooltip" data-original-title="&{'paid-comment-info'}"> 
+				<input type="checkbox" name="paidComment" value="paidComment"> &{'paid-comment'}
+			</label>
+			<div class="clearfix"></div>	
+		#{/if}
+				
+		<br/>
+		<br/>
+		
+		<!-- File upload -->
+		#{authenticityToken /}
+		<input type="file" id="uploadComments" name="upload" style="display:none" multiple="multiple">
+		<input type="hidden" id="comment" name="tempId" value="${commentTemp}">
+		<input type="hidden" id="fileUploadComments" name="fileUpload">
+		<div id="progresses" >
+		</div>
+		<div id="images">
+			#{if files}
+				#{list items:files, as:'file'}
+					<div style="position:relative; float:left;">
+			        <img class="img-thumbnail" style="height:100px;margin-bottom:4px" src="/public/uploads/${file.url}_thumb" alt="${file.name}" title="${file.name}">
+						<a class="btn btn-default btn-xs" href="/remove-upload?uuid=${file.uuid}&url=${request.url.urlEncode()}" style=""><i class="fa fa-times"></i></a>
+					</div>
+				#{/list}
+			#{/if}
+		</div>	
+		<!-- File upload -->
+	</form>
+</div>    
+</div>    
+#{/if}	
+    
+    
+<div class="commentsContainer" style="display:none;margin-top:40px">
+	<div id="comments-container" class="image-boxes"></div>   
+	<div class="spinner-container2" style="display:table;width:100%">
+		<div class="spinner-container">
+			<div id="spinnerComments" class="spinner-load"></div>
+			<a id="moreResultsComments" class="spinner-more"><i class="icon-plus-circled"></i></a>
+		</div>
+	</div>
+</div>   
+
+
+

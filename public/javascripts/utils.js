@@ -97,6 +97,38 @@ star.utils.uploadFiles = function(url, files, clbk) {
 };   
 
 $(document).ready(function(){
+    $("#query-search").typeahead({
+        minLength : 2, 
+        source : function(value, process){
+          var items = [];
+          items.push(value);    
+          var q = value.replace(/ /g, '+');
+          $.getJSON("https://suggestqueries.google.com/complete/search?callback=?",
+                  {
+                    //"hl":"de", // Language
+                    //"ds":"yt", // Restrict lookup to youtube
+                    "jsonp":"suggestCallBack", // jsonp callback function name
+                    "q":q, // query term
+                    "client":"chrome" // force youtube style response, i.e. jsonp
+                  }
+              );
+              suggestCallBack = function (data) {
+                  data = data[1];
+                  for(var i = 0; i < data.length; i++)
+                      items.push(data[i]);
+                  process(items);             
+              };    
+        },
+        updater : function(item){
+            //console.log("up " + item);
+            return item;
+        }, 
+        matcher : function(item){
+            //console.log("ma " + item);
+            return true;
+        }
+    });    
+    
     $("#upload-button").click(function(){
         $("#upload").click();
     });
@@ -341,6 +373,16 @@ starUtils.facebook = function(d, s, id) {
     fjs.parentNode.insertBefore(js, fjs);
 }
 
+function linkify(inputText) {
+    var replacedText, replacePattern1, replacePattern2, replacePattern3;
+    replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+    replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+    replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+    replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+    return replacedText;
+}
 
 // Some common format strings
 dateFormat.masks = {

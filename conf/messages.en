@@ -316,6 +316,7 @@ email.test.link=Send test email
 save=Save
 
 #payments.html
+payments=Payments
 payments.receivedPayments=Received payments
 payments.sentPayments=Sent payments
 payments-receivedPayments-for-this-user=Payments from 

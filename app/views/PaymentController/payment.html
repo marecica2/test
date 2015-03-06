@@ -1,6 +1,6 @@
 #{extends 'main.html' /} 
 #{set 'title'}
-&{'checkout'} - ${e.listing.title}
+	&{'checkout'} - ${e.listing.title}
 #{/set}
 
 
@@ -59,6 +59,14 @@
 				<small style="font-size:0.7em"><br/>&{'you-will-be-redirected-to-PayPal'}</small>
 				<div class="clearfix"></div>
 			</form>
+			<script>
+				function validate(){
+				    if($("#name").val().length > 2){
+				        return true;
+				    } 
+			        return true;
+				}
+			</script>			
 
    	   	   	<p style="font-size:0.7em">
    	   	   		<strong>&{'important'}!</strong>
@@ -77,12 +85,3 @@
 
 
 
-<script>
-	function validate(){
-	    if($("#name").val().length > 2){
-	        return true;
-	    } 
-        return true;
-	}
-	//document.getElementById("name").focus();
-</script>

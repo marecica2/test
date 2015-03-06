@@ -1,6 +1,9 @@
-#{extends 'main.html' /} #{set 'moreScripts'}
-<script type="text/javascript"
-	src="@{'/public/javascripts/facebook.js'}"></script>
+#{extends 'main.html' /} 
+#{set 'title'}
+	&{'registration'}
+#{/set}
+
+#{set 'moreScripts'}
 <script>
     $("#offset").val(timezoneOffset);
 
@@ -23,8 +26,6 @@
 #{/set}
 
 <div id="fb-root"></div>
-
-
 
 <div class="container">
 	<div class="row">

@@ -4,7 +4,27 @@
 #{/set}
 
 #{set 'moreScripts'}
-	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
+	<script>
+		$(document).ready(function(){
+			var params = "";
+			star.initItems("Listing", params);
+
+		    $(document).on("click", ".link", function(){
+		        document.location = $(this).attr("data-href");
+		    });
+		    
+		    $(".category").click(function(){
+		        $(".category").removeClass("black");    
+		    	var category = $(this).attr("data-category"); 
+		    	$(this).addClass("black");
+		    	
+		    	$("#itemsListListing").html("");
+				var params = "&category="+category;
+				star.Listing.first = 0;
+				star.initItems("Listing", params);
+		    });
+		});				
+	</script>
 #{/set}
 
 #{set 'moreStyles'}
@@ -368,7 +388,6 @@
 					<form class="form" role="form" method="get" action="/channels">
 					    <div class="input-group banner-search">
 					      	<input type="text" placeholder="Find Help with ..." class="form-control" autocomplete="off" size="30" maxlength="100" name="search" id="query-search" value="${request.params.search}" data-provide="typeahead">
-							<script src="@{'/public/javascripts/suggest.js'}" type="text/javascript"></script>						    
 						    <span class="input-group-btn">
 						    	<button class="btn btn-default btn-short btn-margin" style="height:40px;" id="dialog-invite-button" type="submit"><i style="font-size:1.3em" class="fa fa-search"></i></button>
 						    </span>
@@ -479,27 +498,6 @@
 						</div>
 					</div>
 				</div>		
-				<script>
-					$(document).ready(function(){
-						var params = "";
-						star.initItems("Listing", params);
-		
-					    $(document).on("click", ".link", function(){
-					        document.location = $(this).attr("data-href");
-					    });
-					    
-					    $(".category").click(function(){
-					        $(".category").removeClass("black");    
-					    	var category = $(this).attr("data-category"); 
-					    	$(this).addClass("black");
-					    	
-					    	$("#itemsListListing").html("");
-							var params = "&category="+category;
-							star.Listing.first = 0;
-							star.initItems("Listing", params);
-					    });
-					});				
-				</script>						
 			</div>
 		</div>
 	</div>

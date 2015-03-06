@@ -1,5 +1,8 @@
 #{extends 'main.html' /} 
-#{set title:'Login' /} 
+#{set 'title'}
+	&{'login'}
+#{/set}
+
 #{set 'moreScripts'}
 	<script>
 	  star.fbClbck = function(resp) {
@@ -10,7 +13,6 @@
 	      });
 	  }
 	</script>
-	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
 #{/set}
 
 

@@ -4,15 +4,6 @@
 #{/set}
 
 #{set 'moreScripts'}
-	<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
-	<script src="@{'/public/javascripts/dashboard.js'}" type="text/javascript"></script>	
-	<script>
-	    star.dashboard = true;
-		#{if user}
-	   		star.user = "${user.uuid}";	
-		#{/if}
-		starCalendar.comments = true;
-	</script>
 #{/set}
 
 <div class="padding container container-xs-height">

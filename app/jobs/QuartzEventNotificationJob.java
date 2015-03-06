@@ -24,23 +24,6 @@ public class QuartzEventNotificationJob extends play.jobs.Job implements Job
     {
         attendanceKey = context.getJobDetail().getKey().getName();
         now();
-
-        //            new Invoker.Invocation()
-        //            {
-        //                @Override
-        //                public InvocationContext getInvocationContext()
-        //                {
-        //                    return new InvocationContext(invocationType);
-        //                }
-        //
-        //                @Override
-        //                public void execute() throws Exception
-        //                {
-        //                    (Attendance.getById(attendanceKey)).getClass();
-        //
-        //                }
-        //            }.run();
-
     }
 
     @Override
@@ -74,7 +57,6 @@ public class QuartzEventNotificationJob extends play.jobs.Job implements Job
                 .setSubject(subject)
                 .setMessageWiki(body)
                 .sendInvitation();
-
         super.doJob();
     }
 }

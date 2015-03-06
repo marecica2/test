@@ -406,13 +406,14 @@
 					    $(".price-container").hide();
 					else
 					    $(".price-container").show();
+					
+					$(".event-charging").change(function(){
+						if($('input[name=charging]:checked', '.event-charging-container').val() == 'free')    
+						    $(".price-container").hide();
+						else
+						    $(".price-container").show();
+					});
 				})
-				$(".event-charging").change(function(){
-					if($('input[name=charging]:checked', '.event-charging-container').val() == 'free')    
-					    $(".price-container").hide();
-					else
-					    $(".price-container").show();
-				});
 			</script>
 
 			<div class="price-container">
