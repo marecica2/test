@@ -78,6 +78,8 @@ public class Listing extends Model
 
     public String privacy;
 
+    public String language;
+
     public Double ratingAvg;
 
     public Integer ratingStars;

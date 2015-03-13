@@ -14,8 +14,10 @@
 		<div class="col-md-12" style="min-height:40vh">
 			<h2>Database</h2>
 			<div class="separator-2"></div>
-			<a href="/admin/refresh?url=${request.url.urlEncode()}">refresh indexes</a>	<br/>		
+			<a href="/admin/refresh?url=${request.url.urlEncode()}">refresh indexes</a>	<br/>	
+			*{
 			<a href="/admin/delete?url=${request.url.urlEncode()}">delete data</a>			
+			}*	
 			
 			<h2>Users</h2>
 			<div class="separator-2"></div>
@@ -58,8 +60,12 @@
 						<td>
 							<a href="/payments?transaction=${item.login}&sent=true">sent</a> 
 							<a href="/payments?transaction=${item.login}">received</a>
-							<a href="/admin/approve?uuid=${item.uuid}&url=${request.url.urlEncode()}" class="btn btn-default btn-sm btn-short btn-margin">Unblock</a>
-							<a href="/admin/deny?uuid=${item.uuid}&url=${request.url.urlEncode()}" class="btn btn-white btn-sm btn-short btn-margin">Block</a>
+							#{if item.blocked}
+								<a href="/admin/unblock?uuid=${item.uuid}&url=${request.url.urlEncode()}" class="btn btn-default btn-sm btn-margin">Unblock</a>
+							#{/if}
+							#{if item.blocked == null}
+							<a href="/admin/block?uuid=${item.uuid}&url=${request.url.urlEncode()}" class="btn btn-white btn-sm btn-margin">Block</a>
+							#{/if}
 							<a href="/mail?action=new&to=${item.login}">&nbsp;<i class="fa fa-envelope"></i>&nbsp;</a>
 						</td>
 					</tr>				

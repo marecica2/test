@@ -50,18 +50,30 @@
 					<input type="hidden" class="form-control" id="facebookName" name="facebookName" />
 					<div class="error">#{error 'login' /}</div>
 				</div>
+				
+				<input type="hidden" name="accPlan" value="standard">
+				*{
+				<div class="form-group">
+					<label class="" for="accPlan">&{'account-type'}</label> 
+					<select	class="form-control" name="type" id="type">
+						<option #{if request.params.type== "standard"}  selected='selected' #{/if} #{if params.type == "standard"}  selected='selected' #{/if} value="standard">&{'standard'}</option>
+						<option #{if request.params.type== "publisher"}  selected='selected' #{/if} #{if params.type== "publisher"}  selected='selected' #{/if} value="publisher">&{'publisher'}</option>
+					</select>
+					<div class="error">#{error 'accPlan' /}</div>
+					<a href="/about#accounts" target="_blank">&{'learn-more'}</a>
+				</div>
 				<div class="form-group">
 					<label class="" for="accPlan">&{'account-plan'}</label> 
 					<select	class="form-control" name="accPlan" id="accPlan">
-						<option #{if request.params.plan== "standard"}  selected='selected' #{/if} #{if params.accPlan == "standard"}  selected='selected' #{/if} value="standard">&{'standard'}</option>
-						*{
+						<option #{if request.params.plan== "standard"}  selected='selected' #{/if} #{if params.accPlan == "standard"}  selected='selected' #{/if} value="standard">&{'basic'}</option>
 						<option #{if request.params.plan== "premium"}  selected='selected' #{/if} #{if params.accPlan== "premium"}  selected='selected' #{/if} value="premium">&{'premium'}</option>
 						<option #{if request.params.plan== "pro"}  selected='selected' #{/if} #{if params.accPlan== "pro"}  selected='selected'	#{/if} value="pro">&{'pro'}</option>
-						}*
 					</select>
 					<div class="error">#{error 'accPlan' /}</div>
 					<a href="/about#pricing" target="_blank">&{'learn-more'}</a>
 				</div>
+				}*
+
 				<div class="form-group">
 					<label class="" for="firstName">&{'first-name'} *</label> 
 					<input type="text" class="form-control" id="firstName" name="firstName" value="${params.firstName}" placeholder="&{'first-name'}" />

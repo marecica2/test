@@ -50,7 +50,7 @@
         <link href="@{'/public/css/font-awesome.min.css'}" rel="stylesheet">
         <link href="@{'/public/css/datepicker.css'}" rel="stylesheet" media="screen">
 		<link href="@{'/public/css/custom.css'}" rel="stylesheet">
-		<link href="@{'public/css/skins/purple.css'}"  rel="stylesheet">
+		<link href="@{'public/css/skins/purple.css'}"  rel="stylesheet" data-style="styles">
         <link href="@{'/public/stylesheets/main.css'}" rel="stylesheet" media="screen">		
 		<link href="@{'/public/style-switcher/style-switcher.css'}" rel="stylesheet">
          #{get 'moreStyles' /}       
@@ -95,6 +95,11 @@
 		    	    $("body").css("background", "white");
 		    	    $(window).unbind("scroll");
 		    		$(".parallax").addClass("iframe");
+		    		
+		    		//stylesheet = "orange";
+		    		//var link = $('link[data-style="styles"]');
+		    		//link.attr('href', 'css/skins/' + stylesheet + '.css');
+		    		//document.getElementById("logo").src="images/logo_" + stylesheet + ".png";
 		    	}
 	    	    
 	    	    #{if user}
@@ -119,6 +124,7 @@
 			    		  	        }
 			    		  	        
 			    		  	        $(".header-notification").removeClass("hidden");
+			    		  	        $(".header-notification2").addClass("hidden");
 									
 			    		  	      if(!titleBlinkI.isRunning())
 			    		  	      	titleBlinkI.start();
@@ -151,12 +157,15 @@
 	<body class="body" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">
 		#{doLayout /}
 #{/if}	
+
+
+
 #{else}	
 	<!-- body classes: 
 			"boxed": boxed layout mode e.g. <body class="boxed">
 			"pattern-1 ... pattern-9": background patterns for boxed layout mode e.g. <body class="boxed pattern-1"> 
 	-->
-	<body class="wide *{pattern-8}* ${switcherBody}">
+	<body class="wide *{pattern-8}* ${switcherBody}" style="background: black">
 
 		<!-- scrollToTop -->
 		<!-- ================ -->
@@ -253,7 +262,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								
-								#{if user && !user.isPublisher() && request.cookies.msg1 == null && session && session.getAuthenticityToken()}
+								#{if displayMsg1 || (user && !user.isPublisher() && request.cookies.msg1 == null) && session && session.getAuthenticityToken()}
 									<div class="shadow alert alert-info alert-dismissible" role="alert">
 									  <button type="button" class="close" data-dismiss="alert" onclick="star.utils.dismiss('msg1')"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
 									  &{'start-helping-others', session.getAuthenticityToken()}
@@ -432,7 +441,7 @@
 	                }
 	            });
 	        }
-        });
+        });	
         </script>
         #{get 'moreHtml' /}
 	</body>

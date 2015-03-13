@@ -32,6 +32,7 @@
 	<div class="row">
 	  	<div class="col-md-12">
 	  	
+	  		*{
 			#{if plan && planLast != null && planLast.id != plan.id}
 				<div class="alert alert-info alert-dismissible" role="alert">
 					&{'account-will-be-valid'} <strong>&{planLast.type}</strong> &{'account-will-be-valid-2'}  ${planLast.validFrom.format("dd MMM yyyy")}, #{time time:planLast.validFrom/}
@@ -66,6 +67,7 @@
 				    }).appendTo(document.body).submit();
 				});
 			</script>	  	
+	  		}*
 	  	
 			<h2 class="btn-margin">
 				<i class="fa fa-cog"></i> &{'settings'}
@@ -162,6 +164,7 @@
 						#{/if}
 						<br/>
 						<br/>
+						
 						*{
 						#{if plan.type == "standard" || plan == null}
 							#{if planLast == null || (plan && planLast && planLast.id == plan.id)}
@@ -185,6 +188,7 @@
 							#{/if}
 						#{/if}
 						}*
+						
 						<a href="/about#pricing">&{'learn-more-about-pricing'}</a>
 					#{/if}
 				</dd>
@@ -214,12 +218,14 @@
 				
 				<dt>&{'email-notifications'}</dt>
 				<dd>
-					#{if user.emailNotification != null} &{user.emailNotification} #{/if}<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'enable-or-disable-email-notifications'}"></i>
+					#{if user.emailNotification != null} &{user.emailNotification} #{/if}
+					<i class="icon-help tip" rel="tooltip" data-placement="right" title="&{'enable-or-disable-email-notifications'}"></i>
 				</dd>	
 
 				<dt>&{'reminder'}</dt>
 				<dd>
-					#{if user.reminder != null} &{user.reminder} #{/if}<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'reminder-help'}"></i>
+					#{if user.reminder != null} &{user.reminder} #{/if}
+					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'reminder-help'}"></i>
 				</dd>	
 				<dt>&{'reminder-minutes'}</dt>
 				<dd>
@@ -321,7 +327,7 @@
 
 			#{if user.account.type == "publisher"}
 			<a id="paypal"></a>
-			<h3>&{'paypal-account'}</h3>
+			<h3>&{'paypal-account'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#paypal"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
 			<div class="separator-2"></div>
 			#{if !edit}
 			<dl class="dl-horizontal">
@@ -375,8 +381,8 @@
 
 
 
-
-			<h3>&{'your-calendar'}</h3>
+			<a id="calendar"></a>
+			<h3>&{'your-calendar'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#calendar"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
 			<div class="separator-2"></div>
 			#{if !edit}
 			<dl class="dl-horizontal">
@@ -524,7 +530,8 @@
 
 
 			<br/>
-			<h3>&{'About You'}</h3>
+			<a id="about"></a>
+			<h3>&{'About You'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#about"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
 			<div class="separator-2"></div>
 			#{if !edit}
 				#{set usr:user /}
@@ -596,24 +603,6 @@
 			</div>				
 			#{/else}	
 			
-			
-			
-
-
-			
-			*{
-			<br/>
-			<h3>Website Embedding</h3>
-			<div class="separator-2"></div>
-			<dl class="dl-horizontal">
-				<dt>&{'account.viaIframe'}</dt>
-				<dd style="margin-bottom:30px;">
-					<textarea class="form-control" rows="2" ><iframe style="width:100%;height:100%;" frameborder="0" src="${baseUrl}/public/calendar?id=${user.uuid}" seamless></iframe></textarea>
-				</dd>
-				<dt>&{'account.viaLink'}</dt>
-				<dd><textarea class="form-control" rows="1" >${baseUrl}/public/calendar?id=${user.uuid}</textarea></dd>
-			</dl>
-			}*
 
 			<br/>
 			#{if edit}

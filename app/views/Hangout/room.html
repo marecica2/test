@@ -127,8 +127,8 @@
 
 
 <!-- Canvas -->
-<div class="canvas-container ui-widget-content shadow-small modal-content" style="background: #fafafa; display: none; position:fixed;z-index: 999;" >
-	<div class="modal-header" id="canvas-slider">
+<div class="canvas-container ui-widget-content shadow-small modal-content draggable" style="background: #fafafa; display: none; position:fixed;z-index: 999;" >
+	<div class="modal-header drag-slider" id="canvas-slider">
     	<button type="button" class="close" onclick="canvas.close()"><span>&times;</span><span class="sr-only">Cancel</span></button>
     	<h3 class="modal-title" id="myModalLabel"><i class="fa fa-paint-brush"></i> &{'canvas'}</h3>
     </div>
@@ -141,16 +141,17 @@
 	    #{if event}
 	    <button class="btn btn-light-gray btn-short " id="btn" onclick="canvas.save()" rel="tooltip" data-original-title="&{'save-painting'}"><i class="fa fa-upload"></i></button>
 	    #{/if}
+	    <input type="text" id="canvas-name" class="form-control" style="width:150px;display:inline-block" placeholder="&{'canvas-name'}">
     </div>
-    <canvas class="canvas-paper" width="340" height="300" style="background-image: url('../images/canvas_pattern_0.jpg');background-repeat: repeat;background-position: 0 0;"></canvas>
+    <canvas class="canvas-paper" width="460" height="300" style="background-image: url('../images/canvas_pattern_0.jpg');background-repeat: repeat;background-position: 0 0;"></canvas>
 </div>
 
 
 
 <!-- comments -->
 #{if event}
-<div class="comments-resize modal-content ui-widget-shadow-small shadow-small" style="display:none; background: white; position:fixed;z-index: 999;border:1px solid silver">
-	<div class="modal-header" id="comments-slider">
+<div class="comments-container modal-content ui-widget-shadow-small shadow-small draggable" style="display:none; background: white; position:fixed;z-index: 999;border:1px solid silver">
+	<div class="modal-header drag-slider" id="comments-slider">
     	<button type="button" class="close" onclick="canvas.commentsClose()"><span>&times;</span><span class="sr-only">Cancel</span></button>
     	<h3 class="modal-title" id="myModalLabel"><i class="icon-docs"></i> &{'posts-and-uploads'}</h3>
     </div>
@@ -195,27 +196,6 @@
 </div>
 
 
-*{
-#{if listing}
-<!-- Rating Modal -->
-<div class="modal" id="ratingModal" tabindex="-1" role="dialog" aria-labelledby="ratingModal" aria-hidden="true">
-  <div class="modal-dialog shadow-outset">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">&{'cancel'}</span></button>
-        <h3 class="modal-title" id="myModalLabel"><i class="icon-user"></i> &{'please-provide-a-rating'}</h3>
-      </div>
-      <div class="modal-body">
-      	#{set ratingType:"listing" /}
-      	#{set ratingsHide:true /}
-      	#{include 'ratings.html' /}
-      </div>
-    </div>
-  </div>
-</div>
-#{/if}
-}*
-
 <!-- Share Modal -->
 <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog shadow-outset">
@@ -257,9 +237,11 @@
 			<button type="button" id="controls-mute" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'mute'}"><i class="icon-sound"></i></button>
 			<button type="button" id="controls-camera" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'turn-camera-off'}"><i class="fa fa-eye-slash"></i></button>
 			<button type="button" id="screenShareButton" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'share-your-screen'}"><i class="fa fa-desktop"></i></button>
+		    <script src="https://www.webrtc-experiment.com/RecordRTC.js"></script>		
+		
 			<button type="button" id="canvas-open" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'open-canvas'}"><i class="fa fa-paint-brush"></i></button>
 			#{if event}
-			<button type="button" id="comments-open" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'open-canvas'}"><i class="icon-docs"></i></button>
+			<button type="button" id="comments-open" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'posts-and-uploads'}"><i class="icon-docs"></i></button>
 			#{/if}
 			<button class="controls btn btn-dark btn-medium" data-toggle="modal" data-target="#myModal" rel="tooltip" data-placement="bottom" data-original-title="&{'share-with-more'}"><i class="icon-user-add"></i></button>
 			<a href="${request.url}" class="btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'refresh'}"><i class="fa fa-refresh"></i></a>

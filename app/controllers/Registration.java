@@ -103,6 +103,7 @@ public class Registration extends BaseController
         String uuid,
         String invitation,
         String accPlan,
+        String type,
         String token,
         Integer offset)
     {
@@ -138,7 +139,7 @@ public class Registration extends BaseController
 
         if (!validation.hasErrors())
         {
-            Account account = createDefaultAccount(firstName, lastName, accPlan);
+            Account account = createDefaultAccount(firstName, lastName, accPlan, type);
 
             User user = createDefaultUser(login, password, firstName, lastName, token, offset);
             user = user.save(account);
@@ -149,7 +150,7 @@ public class Registration extends BaseController
 
             // if user was logged using email link, update his attendance
             if (invitation != null)
-                createInvitation(invitation, user);
+                updateInvitation(invitation, user);
 
             // send activation email
             final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
@@ -180,6 +181,7 @@ public class Registration extends BaseController
         String firstName,
         String lastName,
         String uuid,
+        String type,
         String invitation,
         String token,
         Integer offset)
@@ -190,13 +192,16 @@ public class Registration extends BaseController
         validation.email(login).message("validation.login");
         validation.required(login);
 
-        final User checkUser = User.getUserByLogin(login);
+        User checkUser = User.getUserByLogin(login);
+        if (checkUser != null)
+            validation.addError("login", Messages.get("login-already-used"));
+        checkUser = User.getUserByFacebook(facebook);
         if (checkUser != null)
             validation.addError("login", Messages.get("login-already-used"));
 
         if (!validation.hasErrors())
         {
-            final Account account = createDefaultAccount(firstName, lastName, Account.TYPE_STANDARD);
+            final Account account = createDefaultAccount(firstName, lastName, Account.TYPE_STANDARD, type);
 
             final String password = RandomUtil.getRandomString(10);
             User user = createDefaultUser(login, password, firstName, lastName, token, offset);
@@ -211,7 +216,19 @@ public class Registration extends BaseController
 
             // if user was logged using email link, update his attendance
             if (invitation != null)
-                createInvitation(invitation, user);
+                updateInvitation(invitation, user);
+
+            final String baseUrl = getBaseUrl();
+            final String subject = Messages.getMessage(user.locale, "account.activated-subject");
+            final String body = Messages.getMessage(user.locale, "account.activated-message", baseUrl, baseUrl, baseUrl, baseUrl, baseUrl, baseUrl);
+
+            Message.createAdminNotification(user, subject, body);
+            new EmailNotificationBuilder()
+                    .setWidgrFrom()
+                    .setTo(user)
+                    .setSubject(subject)
+                    .setMessageWiki(body)
+                    .send();
 
             redirectTo("/login");
         }
@@ -264,14 +281,14 @@ public class Registration extends BaseController
 
         final String baseUrl = getBaseUrl();
         final String subject = Messages.getMessage(user.locale, "account.activated-subject");
-        final String body = Messages.getMessage(user.locale, "account.activated-message", baseUrl, baseUrl, baseUrl, baseUrl, baseUrl);
+        final String body = Messages.getMessage(user.locale, "account.activated-message", baseUrl, baseUrl, baseUrl, baseUrl, baseUrl, baseUrl);
 
         Message.createAdminNotification(user, subject, body);
         new EmailNotificationBuilder()
                 .setWidgrFrom()
                 .setTo(user)
                 .setSubject(subject)
-                .setMessageWiki(subject)
+                .setMessageWiki(body)
                 .send();
 
         flash.success(Messages.get("account-successfully-activated"));
@@ -279,7 +296,7 @@ public class Registration extends BaseController
         Secure.login();
     }
 
-    private static void createInvitation(String invitation, User user)
+    private static void updateInvitation(String invitation, User user)
     {
         Attendance a = Attendance.get(invitation);
         if (a != null)
@@ -320,8 +337,8 @@ public class Registration extends BaseController
         user.registrationToken = token;
         user.timezone = offset;
         user.locale = Lang.get();
-        user.reminder = false;
-        user.reminderMinutes = 10;
+        user.reminder = true;
+        user.reminderMinutes = 30;
 
         user.uuid = RandomUtil.getUUID();
         user.referrerToken = RandomUtil.getUUID();
@@ -331,17 +348,18 @@ public class Registration extends BaseController
         user.workingHourStart = "8";
         user.workingHourEnd = "16";
         user.emailNotification = true;
-        user.emailNotification = false;
+        user.reminder = false;
         return user;
     }
 
-    private static Account createDefaultAccount(String firstName, String lastName, String planType)
+    private static Account createDefaultAccount(String firstName, String lastName, String planType, String type)
     {
         Account account = new Account();
         account.key = RandomUtil.getUUID();
-        account.smtpHost = "DEFAULT";
         account.name = firstName + " " + lastName;
         account.type = Account.TYPE_STANDARD;
+        //if (type != null && type.equals("publisher"))
+        //    account.type = Account.TYPE_PUBLISHER_REQUEST_PREPARE;
         account.save();
 
         AccountPlan plan = new AccountPlan();

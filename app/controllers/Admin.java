@@ -37,6 +37,22 @@ public class Admin extends BaseController
         render(user, users, usersMap);
     }
 
+    public static void block(String uuid, String url)
+    {
+        User user = User.getUserByUUID(uuid);
+        user.blocked = true;
+        user.save();
+        redirectTo(url);
+    }
+
+    public static void unblock(String uuid, String url)
+    {
+        User user = User.getUserByUUID(uuid);
+        user.blocked = null;
+        user.save();
+        redirectTo(url);
+    }
+
     public static void refreshIndexes(String url)
     {
         flash.success(refreshIndex());

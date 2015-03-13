@@ -5,18 +5,19 @@ error-default-message=Something went wrong. Exception has been logged. Try again
 you-need-at-least-one-listing=To become a Publisher You need at least one channel. <a href="/channel/new?action=edit&new=true">Click here to create one</a>
 please-fill-in-information-about-you=To become a Publisher please fill in information about you
 please-fill-in-information-about-you=To become a Publisher please fill in information about you
-your-publisher-request-was-submited=Your publisher request was submited. Please give us some time to validate your request. After completing validation you will be notified by email.
+your-publisher-request-was-submited=Your publisher request has been submited. Please give us some time to validate your request. After completing validation you will be notified by email.
 #Admin.java
-publisher-request-approved-subject=Your request for publisher was approved
-publisher-request-approved-message=h3. Your request for publisher was approved \nFrom now all your channels are visible and you can make full use of your account.
-publisher-request-declined-subject=Your request for publisher was declined
-publisher-request-declined-message=h3. Your request for publisher was declined \nPlease complete your personal information and channels and try again. Remember you can always ask us what needs to be corrected in order to be later successfully approved. [Ask a question|%s]
+publisher-request-approved-subject=Your request for publisher has been approved
+publisher-request-approved-message=h3. Your request for publisher has been approved \nFrom now all your channels are visible and you can make full use of your account.
+publisher-request-declined-subject=Your request for publisher has been declined
+publisher-request-declined-message=h3. Your request for publisher has been declined \nPlease complete your personal information and channels and try again. Remember you can always ask us what needs to be corrected in order to be later successfully approved. [Ask a question|%s]
 event-reminder-subject=Reminder for Session %s
-event-reminder-message=h3. Reminder for Session %s \nThis notification was sent to remind you that Session [%s|%sevent/%s] will start on %s. \nIf you do not wish to receive these notifications, log into to Widgr and go Settings page to disable notifications.
+event-reminder-message=h3. Reminder for Session %s \nThis notification has been sent to remind you that Session [%s|%sevent/%s] will start on %s. \nIf you do not wish to receive these notifications, log into to Widgr and go Settings page to disable notifications.
 
 #Application.java
 start-helping-others=Start helping others and become Publisher. <a href='/settings/request-publisher?authenticityToken=%s'>Request for publisher account here</a>.
 click-and-drag-to-create-event=Select a free time slot and start dragging to create a request for a new session. <br/><span style='opacity:0.5'>Session marked with solid black color means, that this time slot is already reserved.</span>
+somebody-wrote-you=Somebody wrote you a message
 
 #Attendances.java
 blocked-contact=This contact is blocked
@@ -32,27 +33,27 @@ you-are-blocked=You have been blocked by user
 invalid-email=Invalid email address
 send-invitation=Send invitation
 is-already-registered=Contact %s is already registered. <a href='/user/%s'>Go to profile</a>
-invited-you-to-widgr-subject=%s invited You to Widgr
+invited-you-to-widgr-subject=%s invited You to join Widgr
 invitation-sent-to=Invitation has been successfully sent to %s 
 view-on-widgr=View on Widgr
 c
 #Events.java
 limit-reached=You have reached the monthly limit for paid Sessions. <a href='/about#pricing'>Learn more</a>
-event-created=Session was successfully created.
-event-left=Session was successfully created.
+event-created=Session has been successfully created.
+event-left=Session has been successfully created.
 invalid-price=Invalid price
 invalid-time-range=Invalid time range
 setup-PayPal-account-warning=To create paid session you must set up your PayPal account first. <a href='/settings?edit=true#PayPal'>Set up your PayPal account here</a>
 you-have-not-paid-for-current-month=You can't create paid sessions. Your subscription is not activated. <a href='/settings'>Activate your subscription first</a>
 invalid-PayPal-account-warning=To create paid session you must set up your PayPal account first. <a href='/settings?edit=true#PayPal'>Set up your PayPal account here</a>
-new-event-proposed-for-channel-subject=New session was requested for channel %s
+new-event-proposed-for-channel-subject=New session request for channel %s
 new-event-proposed-for-channel-message=h3. New session request \n%s requested new session [%s|%s]. Please visit the link to review and approve or decline this request.
-you-have-been-invited-subject=%s invited you to session %s
-you-have-been-invited-message=h3. Invitation to session \n%s invited you to session [%s|%s]
-your-proposal-declined-subject=%s declined your session request
-your-proposal-declined-message=h3. Your session session request was declined \n%s declined your request for channel [%s|%s]
-your-proposal-approved-subject=%s accepted your session request
-your-proposal-approved-message=h3. Your session request was approved \n%s accepted your request [%s|%s] 
+you-have-been-invited-subject=Invitation for %s
+you-have-been-invited-message=h3. Invitation for %s \n%s invited you to join session [%s|%s]
+your-proposal-declined-subject=Your session request has been declined
+your-proposal-declined-message=h3. Your session request has been declined \n%s declined your request for channel [%s|%s]
+your-proposal-approved-subject=Your session request has been accepted
+your-proposal-approved-message=h3. Your session request has been approved \n%s accepted your request for [%s|%s] 
 new-event-request-subject=New instant session request for %s
 new-event-request-message=h3. New session request \n%s requested new instant [session|%s] for channel %s
 
@@ -63,8 +64,8 @@ oauth-successfull=Google Calendar authorization successfull
 oauth-error=Google Calendar authorization failed
 
 #Hangout.java
-please-rating-subject=Please leave a rating
-please-rating-message=Please leave a rating \nPlease help others to decide by giving a rating for the visited session [%s|%s]
+please-rating-subject=Leave a rating
+please-rating-message=Leave a rating \nPlease help others to decide by giving a rating for the visited session [%s|%s]
 invitation-to-video-call-subject=Invitation to video call
 invitation-to-video-call-message=h3. %s invited you to video call. \n[Click here to join this video call|%s]
 
@@ -81,7 +82,7 @@ event-payment-completed-message=h3. New payment received for session %s \n %s se
 event-refund-request-subject=Refund request from %s
 event-refund-request-message=h3. Refund request \n%s requested refund for session [%s|%s]. You can issue refund through [Received payments page|%s] \nh4. Refundation message from customer \n%s
 event-refunded-request-subject=Approved refund request for Session %s 
-event-refunded-request-message=h3. Approved refund request for Session %s \nYour refund request for session [%s|%s] was approved.
+event-refunded-request-message=h3. Approved refund request for Session %s \nYour refund request for session [%s|%s] has been approved.
 
 #Public.java
 
@@ -94,12 +95,12 @@ password-min-length=Password must have at least 6 characters
 password-reset-subject=Your password has been reseted
 password-reset-message=h3. Your password has been reseted \nNew password: *%s* \nIt is highly recommended to [change it immediately|%s]
 password-message=Password has been reseted. Now check your email.
-login-already-used=This login is already used
+login-already-used=This account already exists
 account-activation-subject=Your account has been created
 account-activation-message=h3. Welcome to Widgr! \nYou're almost there! Please click the link below to confirm your Widgr account. \n[Account activation link|%sregistration/activate?uuid=%s] \nHere are a few things to help you get started width Widgr:\n* [How to use Widgr|%shelp#customer] \n* [How to become a Publisher|%shelp#publisher]\n* [How to connect your account with Facebook|%shelp#facebook]\n* [How to sync Widgr sessions with Google Calendar|%shelp#google]\n* [How to set up PayPal payments for Publishers|%shelp#PayPal]
-check-out-your-email-for-activating=Registration successfull! Check out your email for activating this account. <strong>Please check junk folder as well</strong>
-account.activated-subject=Your account has been successfully activated. You can now sign in.
-account.activated-message=h3. Welcome to Widgr! \nYour account has been successfully activated. \nHere are a few things to help you get started width Widgr:\n* [How to use Widgr|%shelp#customer] \n* [How to become a Publisher|%shelp#publisher]\n* [How to connect your account with Facebook|%shelp#facebook]\n* [How to sync Widgr sessions with Google Calendar|%shelp#google]\n* [How to set up PayPal payments for Publishers|%shelp#PayPal]
+check-out-your-email-for-activating=Registration successfull! Check out your email for activating this account. <strong>Please check junk folder as well</strong>	
+account.activated-subject=Welcome to Widgr!
+account.activated-message=h3. Welcome to Widgr! \nYour account has been successfully activated. \nHere are a few things to help you get started width Widgr:\n* [How to use Widgr|%shelp#customer] \n* [How to become a Publisher|%shelp#publisher]\n* [How to connect your account with Facebook|%shelp#facebook]\n* [How to sync Widgr sessions with Google Calendar|%shelp#google]\n* [How to set up PayPal payments for Publishers|%shelp#PayPal]\n* [and more ...|%shelp]
 account-successfully-activated=Your account has been successfully activated
 
 #Secure.java
@@ -229,7 +230,6 @@ valid-to=Valid to
 events-left=Sessions left for current billing cycle
 paypal-account=PayPal Account
 paypal-info=Your PayPal account to receive incoming payments for paid sessions. It must be a verified Business or Premium PayPal account
-login-already-used=Login already used
 true=Enabled
 false=Disabled
 learn-more=Learn more
@@ -328,8 +328,8 @@ from=From
 to=To
 submit=Submit
 payments.income=Income
-payments.totalSales=Total sales
-payments.totalExpenses=Total expenses
+payments.totalSales=Total income per day
+payments.totalExpenses=Total expenses per day
 payments.fee=Fee
 payments.transactions=Transaction history
 customer=Customer
@@ -418,7 +418,7 @@ delete=Delete
 #channels.html
 by-availability=By availability
 search-channels=Search channels
-search-string=Search string
+search-string=Search
 category=Category
 business=Business
 electronics=Computers & Electronics
@@ -447,26 +447,32 @@ easy-use=Easy to use
 and-much-more=And much more
 offer-your-experience=Offer your expertise as a new service
 reach-your-community=Reach your community on Social networks
-get-paid-for-helping=Get paid for helping other
-integration-with-facebook=Integration with Facebook
-sync-your-events-with-calendar=Sync your sessions with Calendar
-easy-payment-PayPal=Easy and secure payment with PayPal
-dont-miss=Don't miss out!
+get-paid-for-helping=Get paid for helping others
+feature31=No fixed monthly fees
+feature32=Easy payments with PayPal
+feature33=Mobile friendly
+
 what-is=What is
 good-for=good for
-find-help=Search
+find-help=Search help
 find-help-message=With Widgr you can get help anytime from people with expertise across a range of topics. Teachers, computer experts, home repair specialists, personal trainers, hobby enthusiasts, and more. No matter who you are, no matter where you are and no matter what time it is, with Widgr you are just few click away from getting help.
 read-more=Read more
 get-help=Get help
 get-help-message=You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. While some Publishers offer free sessions, some may be charged. For those just simply use your PayPal to pay securely and fast. 
 get-paid=Get paid
-get-paid-message=When you know something what might be useful for others you can become a Publisher. Widgr will provide you a simple platform which will help you to connect to your customers. All you need is just PayPal account for receiving payments, and you are ready to start new Business
+get-paid-message=When you know something what might be useful for others you can become a Widgr Publisher. Widgr will provide you a simple platform which will help you to connect to your customers. All you need is just PayPal account for receiving payments, and you are ready to start your business
 you-are-on-the-right-place=Join Us, it's free
-fill-in-quick-registration-and-start-using-widgr=Just fill quick registration form and start using Widgr even today.
+register-as-customer=Register as Customer
+register-as-publisher=Register as Publisher
+fill-in-quick-registration-and-start-using-widgr=Just fill quick registration form and start using Widgr even today
 channels-by-category=Channels by category
 view-all=View all
 
-#comments.html
+#comments.html`
+media-library=Media library
+plain-text=Plain&nbsp;text
+upload-files=Upload&nbsp;files
+attach-media=Attach&nbsp;media
 paid-comment=Paid feed
 paid-comment-note=<p class="bg-info" style="padding:10px;"><i class="fa fa-key"></i> This feed is hidden. Feed will be displayed after completed payment</p>
 paid-comment-info=This feed will be displayed only for customers who paid for the Session
@@ -505,6 +511,7 @@ remove=Remove
 waiting=Waiting
 
 #joinRoom.html
+canvas-name=Canvas name
 open-canvas=Collaborative drawing
 join-vide-conference=Join video call
 your-name=Your name
@@ -513,7 +520,7 @@ or=or
 sign-in=Sign in
 
 #room.html
-posts-and-uploads=Posts and Uploads
+posts-and-uploads=File sharing
 canvas=Canvas
 paint=Pencil
 eraser=Eraser
@@ -537,8 +544,9 @@ refresh=Reload call
 hang-up=End&nbsp;call
 
 #header.html
-waiting-for-approvement=Session requests
-manage-channels=Channels
+session-approval=Session approvals
+waiting-for-approvement=Session requested
+manage-channels=My Channels
 share-your-knowledge=Share your knowledge
 toggle-navigation=Toggle navigation
 received-new-message=Received new message
@@ -612,7 +620,7 @@ url=Url
 channel-type=Channel type
 instant-broadcast=Instant broadcast
 price=Price
-first-free=First free
+first-free=First Session free
 
 #editButtons.html
 approved=Approved
@@ -634,6 +642,11 @@ edit-channel=Edit channel
 delete-channel=Archive&nbsp;channel
 
 #listing.html
+go-to-profile=View profile
+available-now=Online
+schedule-session=Schedule a session
+schedule-session-desc=Pick a free time slot and schedule a Session later
+join-session-now=Take a Session now
 open-chat=Open&nbsp;chat&nbsp;with&nbsp;Publisher
 this-channel-is-free=Free
 media=Media
@@ -651,7 +664,7 @@ refunded=Refunded
 reason-required=You must enter reason of refundation request
 write-reason=Write reason why you are requesting refundation
 confirm-decline=Confirm your choice
-create-new-channel=Create new channel
+create-new-channel=New channel
 play-introduction=Play&nbsp;introduction
 total-price=Total price
 min=Min
@@ -699,6 +712,7 @@ about-widgr=About Widgr
 contact-us=Contact us
 
 #inbox.html
+system-notification=info@wid.gr
 invalid-user-name=Invalid user name
 Inbox=Inbox
 compose-new=Compose new
@@ -876,6 +890,7 @@ add-google-event=Convert Google event to Widgr
 unmute=Unmute
 
 #starEvent.js
+select-this-file=Select this file
 requested=Requested
 new-message=New Notification
 attachments=Attachments

@@ -6,6 +6,10 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -25,6 +29,7 @@ public class Comment extends Model
     public static final String TYPE_DEFAULT = "text";
     public static final String TYPE_LINK = "link";
     public static final String TYPE_FILE = "file";
+    public static final String TYPE_LIBRARY = "library";
     public static final String TYPE_GOOGLE_DOCS = "gdoc";
 
     public Date created;
@@ -56,8 +61,8 @@ public class Comment extends Model
 
     public Boolean paid;
 
-    @Cascade({ org.hibernate.annotations.CascadeType.DELETE })
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "comment_upload", joinColumns = @JoinColumn(name = "comment_id"), inverseJoinColumns = @JoinColumn(name = "fileupload_id"))
     public List<FileUpload> files;
 
     @Cascade({ org.hibernate.annotations.CascadeType.DELETE })

@@ -36,7 +36,7 @@ REFRESH MATERIALIZED VIEW search_index;
 /* tags view and refresh */
 DROP materialized view IF EXISTS tags CASCADE;
 CREATE MATERIALIZED VIEW tags AS 
-select distinct regexp_split_to_table(unaccent(lower(tags)),',') as term from listing 
+select distinct regexp_split_to_table((lower(tags)),',') as term from listing 
 order by term;
 CREATE INDEX tags_search ON tags (term);
 REFRESH MATERIALIZED VIEW tags;

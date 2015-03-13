@@ -1,5 +1,6 @@
 <script>
 	$(document).ready(function(){
+	    var library = [];
 	    var params = "";
 	    if(starCalendar.event != undefined){
 		    params = "event="+starCalendar.event+"&";
@@ -12,6 +13,11 @@
 	    }
 	    star.params = params;
 	    star.loadComments(params, star.dashboard);
+	    
+		$("#uploadButtonMedia").click(function(){
+		    starEvent.getFiles();
+		    $('#mediaModal').modal({show:true});
+		});
 	    
 	    $("#moreResultsComments").click(function(){
 	        star.moreComments(params, star.dashboard);
@@ -28,6 +34,7 @@
 	        data.url = $("input[name='url']").val();
 	        data.tempId = $("input[name='tempId']").val();
 	        data.paid = $("input[name='paidComment']").is(':checked');
+	        data.library = starEvent.library;
 
 	        starServices.addComment(data, function(){
 	            $('#comment-form')[0].reset();
@@ -36,8 +43,9 @@
 		        var tmp = star.utils.uuid()
 		        $('#comment').val(tmp);
 		        starCalendar.temp = tmp;
+		        starEvent.library = [];
 		        
-		        if(webrtc != undefined && webrtc != null){
+		        if(typeof webrtc != "undefined"){
     		        var d = {};
                     socket_message_broadcast("files-reload", d);
 		        }		        
@@ -49,7 +57,9 @@
 		        $.get($(this).attr("data-href"), function(){
 			        star.loadComments(params, star.dashboard);
     		        var d = {};
-                    socket_message_broadcast("files-reload", d);
+    		        if(typeof webrtc != "undefined"){
+                    	socket_message_broadcast("files-reload", d);
+    		        }
 		        });
 	        }
 	    });
@@ -82,11 +92,18 @@
 		$("#uploadComments").change(function(){
 		    var params = "";
 		    params = "temp="+$("#comment").val();
-		    
+		    if(starCalendar.event != undefined)
+			    params += "&type=event&item="+starCalendar.event;
+		    else if(starCalendar.listing != undefined)
+			    params += "&type=listing&item="+starCalendar.listing;
+		    else
+			    params += "&type=comment";
+		        
     		star.utils.uploadFiles('/fileupload?'+star.token+'&'+params, this.files, function(json){
+    		    console.log(json);
     		    var resp = JSON.parse(json);
     		    if(resp.extension.indexOf("image") != -1){
-	    		    $("#images").append("<img class='img-thumbnail' style='height:100px;margin-bottom:4px' src='/public/uploads/"+resp.url+"_thumb'>");
+	    		    $("#images").append("<img class='img-thumbnail' style='height:100px;margin:4px' src='/public/uploads/"+resp.url+"_thumb'>");
     		    } else {
     		        $("#images").append("<span class='label default_bg'><i class='fa fa-file'></i> "+resp.name+"</span><br/>");
     		    }
@@ -100,9 +117,27 @@
 #{if (!edit && isOwner) || (!edit && user && object && object.commentsEnabled)}
 <div class="row">
 <div class="col-md-12">
+
+	<div class="modal" id="mediaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">&{'cancel'}</span></button>
+	        <h3 class="modal-title" id="myModalLabel"><i class="icon-docs"></i> &{'media-library'}</h3>
+	      </div>
+	      <div class="modal-body">
+	      	<div id="fileSizeContainer"></div>
+	      	<div style="max-height:400px;overflow-y:auto" id="filesContainer"></div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default btn-short" data-dismiss="modal">&{'close'}</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>	
+
 	<form action="/event/comment?uuid=${object.uuid}&objectType=${objectType}&url=${request.url.urlEncode()}" id="comment-form" method="post">
 		<h2><img class="img-circle" style="float:left" src="/${user.avatarUrl}_32x32">&nbsp;&{'share-whats-new'}</h2>
-		<div class="separator-2"></div>
     	<div class="form-group has-feedback">
     		<div class="">
     			<input type="hidden" name="objectType" value="${objectType}">
@@ -116,17 +151,15 @@
   	    
 		<div class="form-group">
 			<div class="btn-group pull-left" data-toggle="buttons">
-			  #{if isOwner}
-				  <label class="btn btn-light-gray active btn-short margin-clear" >
-				    <input type="radio" name="type" id="upload-buttonLink" checked="checked" value="text"><i class="fa fa-pencil"></i> &{'text'}
-				  </label>
-				  <label class="btn btn-light-gray btn-short margin-clear" id="upload-buttonComments">
-				    <input type="radio" name="type" id="upload-buttonComments1" value="file" ><i class="fa fa-upload"></i> &{'file'}
-				  </label>
-			  #{/if}
-			  #{else}
-				   <input type="hidden" name="type" id="upload-buttonLink" checked="checked" value="text">
-			  #{/else}
+			  <label class="btn btn-light-gray active btn-short margin-clear" rel="tooltip" data-original-title="&{'plain-text'}">
+			    <input type="radio" name="type" id="upload-buttonLink" checked="checked" value="text"><i class="fa fa-pencil"></i>
+			  </label>
+			  <label class="btn btn-light-gray btn-short margin-clear" id="upload-buttonComments" rel="tooltip" data-original-title="&{'upload-files'}">
+			    <input type="radio" name="type" id="upload-buttonComments1" value="file" ><i class="fa fa-upload"></i> &{'file'}
+			  </label>
+			  <label class="btn btn-light-gray btn-short margin-clear" id="uploadButtonMedia" rel="tooltip" data-original-title="&{'attach-media'}">
+			    <input type="radio" name="type" id="uploadButtonMedia" value="library" ><i class="icon-docs"></i> 
+			  </label>
 			</div>	
 		</div>			
 		
@@ -148,14 +181,6 @@
 		<div id="progresses" >
 		</div>
 		<div id="images">
-			#{if files}
-				#{list items:files, as:'file'}
-					<div style="position:relative; float:left;">
-			        <img class="img-thumbnail" style="height:100px;margin-bottom:4px" src="/public/uploads/${file.url}_thumb" alt="${file.name}" title="${file.name}">
-						<a class="btn btn-default btn-xs" href="/remove-upload?uuid=${file.uuid}&url=${request.url.urlEncode()}" style=""><i class="fa fa-times"></i></a>
-					</div>
-				#{/list}
-			#{/if}
 		</div>	
 		<!-- File upload -->
 	</form>

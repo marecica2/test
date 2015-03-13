@@ -389,7 +389,7 @@ starCalendar.copyValuesToDialog = function(event){
     // event details in dialog
     $(".event-edit").hide();
     $(".event-view").show();
-    var el = $(".event-detail-container");
+    
     var html = "";
     if(event.uuid != undefined){
         if(event.charging != "free")
@@ -397,7 +397,10 @@ starCalendar.copyValuesToDialog = function(event){
         else
             html+="<span style='font-size:0.8em' class='label default-bg'>" + i18n("free") + "</span> ";
     }
-    el.html(html);
+    $(".event-detail-container").html(html);
+    
+    
+    
     $(".popup-event-charging").html(html);
     $(".popup-edit-event").show();
     $(".popup-new-event").hide();
@@ -461,7 +464,8 @@ starCalendar.copyValuesToDialog = function(event){
     if(event.start != null)
         $(".event-time-from").html(starUtils.formatDate(event.start) + " " + starUtils.formatTime(event.start));
     if(event.end != null)
-        $(".event-time-to").html(starUtils.formatTime(event.end));
+        $(".event-time-to").html(" - " + starUtils.formatTime(event.end));
+    $(".event-details").html(" &middot; " + i18n(event.category)+" &middot; " + i18n(event.privacy));
     $("#event-description").html(star.utils.trimTo(event.description, 100));
     $("#event-description-label").html(event.description);
     $(".event-charging-price").val(event.price);
@@ -553,6 +557,7 @@ starCalendar.getEvents = function(start, end, callback) {
             event.state = ev.state;
             event.isInvite = ev.isInvite;
             event.price = ev.price;
+            event.category = ev.category;
             event.priceTotal = ev.priceTotal;
             event.charging = ev.charging;
             event.comments = ev.comments;

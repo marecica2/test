@@ -1,5 +1,6 @@
 package controllers;
 
+import email.EmailNotificationBuilder;
 import google.GoogleCalendarClient;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import models.Account;
 import models.AccountPlan;
 import models.Attendance;
 import models.Listing;
+import models.Message;
 import models.User;
 import play.cache.Cache;
 import play.i18n.Messages;
@@ -27,6 +29,13 @@ import com.google.api.services.calendar.model.CalendarListEntry;
 @With(controllers.Secure.class)
 public class Accounts extends BaseController
 {
+    public static void media()
+    {
+        final User user = getLoggedUserNotCache();
+        boolean isOwner = true;
+        render(user, isOwner);
+    }
+
     public static void account()
     {
         final boolean edit = request.params.get("edit") == null ? false : true;
@@ -111,8 +120,15 @@ public class Accounts extends BaseController
         final boolean edit = request.params.get("edit") == null ? false : true;
         final Account account = Account.get(user.account.key);
         final String baseUrl = request.getBase();
+
         validation.required(firstName);
-        validation.required(lastName);
+        if (!user.isAdmin())
+        {
+            validation.required(lastName);
+            validation.match("lastName", lastName, "[A-Za-z]+").message("bad-characters");
+            validation.match("firstName", firstName, "[A-Za-z]+").message("bad-characters");
+        }
+
         if (reminder && reminderMinutes == null)
             validation.required(reminderMinutes);
 
@@ -240,6 +256,12 @@ public class Accounts extends BaseController
             account.type = Account.TYPE_PUBLISHER_REQUEST;
             account.save();
             user.save();
+
+            final String message = "Publisher request from " + user.login + " [Go to approvals|" + getBaseUrl() + "admin/publishers]";
+            final String subject = "Publisher request";
+
+            Message.createNotification(user, getAdminUser(), subject, message);
+            new EmailNotificationBuilder().setFrom(user).setTo(getAdminUser()).setSubject(subject).setMessageWiki(message).send();
         }
 
         params.flash();

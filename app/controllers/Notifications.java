@@ -27,7 +27,7 @@ public class Notifications extends BaseController
         validation.email("userTo", email).message("invalid-user-name");
         validation.required("emailBody", emailBody);
         final User userTo = User.getUserByLogin(email);
-        if (userTo.hasBlockedContact(userFrom))
+        if (userTo != null && userTo.hasBlockedContact(userFrom))
             validation.addError("userTo", Messages.get("you-are-blocked"));
 
         if (!validation.hasErrors())

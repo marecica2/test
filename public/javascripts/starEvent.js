@@ -237,12 +237,7 @@ star.renderItems = function(data, prefix){
             $(".container"+prefix).show();
         if(prefix.indexOf("Listing") >= 0){
             html += "<div class='event-box2 shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
-            html += "   <div class='overlay-container'>";
-            html += "       <mark style='position:absolute;bottom:0px;padding:5px' class='title'>";
-            if(item.available)
-                html += "       <div style='display:inline-block;width:10px; height:10px; border-radius:10px' class='label-success'></div>";
-            html += "           <img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/"+item.createdByAvatarUrl+"_32x32'>"+item.createdByName;
-            html += "       </mark>";
+            html += "   <div class='overlay-container' style='position:relative'>";
             html += "       <img src='/"+item.imageUrl+"_128x128' style='width:100%'>";
             html += "       <div class='overlay'>";
             html += "           <div class='overlay-links'>";
@@ -251,13 +246,21 @@ star.renderItems = function(data, prefix){
             html += "           </div>";
             html += "       </div>";
             html += "   </div>";
-            html += "   <div class='image-box-body'>";
-            html += "   <div style='height:35px;opacity:0.7'><small>"+i18n(item.category)+" &middot; "+i18n(item.type)+"</small></div> ";
-
-            html += "   <span style=''><a href='/channel/"+item.uuid+"' class='link-left'>"+star.utils.trimTo(item.title, 40)+"</a></span><br/>";
-            html += "   <span style='font-size:0.9em'>" + star.utils.trimTo(item.description, 90) + "</span>";
             
-            html += "   <div style='position:absolute;bottom:15px;'>";
+            html += "   <div class='image-box-body' style='position:relative'>";
+            html += "       <img class='avatar64 img-circle' style='position:absolute; left:10px; top: -35px; border:5px solid #fafafa; float:left' src='/"+item.createdByAvatarUrl+"_64x64'>"
+            html += "       <div style='height:35px;margin-top:5px'>";
+                if(item.available)
+                html += "       <div style='display:inline-block;width:10px; height:10px; border-radius:10px; background:green'></div>";
+            html += "           <small><strong><a href='/user/"+item.createdByLogin+"'>"+item.createdByName+"</a> &middot; "+i18n(item.category)+"</strong></small>";
+            html += "       </div>";
+            
+            html += "           <span style=''><a href='/channel/"+item.uuid+"' class='link-left'>"+star.utils.trimTo(item.title, 40)+"</a></span><br/>";
+            html += "           <span style='font-size:0.9em'>" + star.utils.trimTo(item.description, 90) + "</span>";
+            html += "       </div>";
+            
+            html += "       <div style='position:absolute;bottom:15px;left:15px'>";
+               
                 if(item.charging == 'free'){
                     html += "<strong>"+i18n("free")+"</strong>";
                 }
@@ -276,15 +279,12 @@ star.renderItems = function(data, prefix){
                 }
                 html += " " + item.ratingCount + " "+ i18n("reviews");
                 html += "   </div>";
-            html += "   </div>";
-            
-            
+           
+                
+                
             html += "   </div>";
             html += "</div>"; 
-            
-            
         } else {
-            console.log(new Date(data[i].eventStart).toUTCString());
             
             var end = data[i].eventStart;
             var distance = end - now;
@@ -306,7 +306,6 @@ star.renderItems = function(data, prefix){
             if(item.isOwner || item.uuid != undefined){
                 html += "<div class='event-box2 shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
                 html += "   <div class='overlay-container'>";
-                html += "       <mark style='position:absolute;bottom:0px;padding:5px' class='title'><img class='avatar16 img-circle' style='margin:3px 5px 0 0; float:left' src='/"+item.createdByAvatarUrl+"_32x32'>"+item.createdByName+" </mark>";
                 html += "       <img src='/"+item.imageUrl+"_128x128' style='width:100%'>";
                 html += "       <div class='overlay'>";
                 html += "           <div class='overlay-links'>";
@@ -315,15 +314,13 @@ star.renderItems = function(data, prefix){
                 html += "           </div>";
                 html += "       </div>";
                 html += "   </div>";
-                html += "   <div class='image-box-body'>";
-                
-                html += "           <p style='opacity:0.7'>";
-                html += "               <span>"+i18n(item.category)+"</span> &middot; <span>"+i18n(item.type)+"</span>";
-                if(item.state == 'customer_created'){
-                    html += "       <br/><img class='img-circle avatar22' src='/"+item.customerAvatarUrl+"_32x32'>";
-                    html += "       <span class='label label-danger'>"+i18n("waiting-for-approvement")+"</span>";
-                }
-                html += "           </p>";
+                html += "   <div class='image-box-body' style='position:relative'>";
+                html += "       <img class='avatar64 img-circle' style='position:absolute; left:10px; top: -35px; border:5px solid #fafafa; float:left' src='/"+item.createdByAvatarUrl+"_64x64'>"
+                html += "       <div style='height:35px;margin-top:5px'>";
+                    if(item.available)
+                    html += "       <div style='display:inline-block;width:10px; height:10px; border-radius:10px; background:green'></div>";
+                html += "           <small><strong><a href='/user/"+item.createdByLogin+"'>"+item.createdByName+"</a> &middot; "+i18n(item.category)+"</strong></small>";
+                html += "       </div>";
                 
                
                 html += "           <p><a style='font-weight:bold' title='"+item.title+"' href='/event/"+item.uuid+"'><span>"+star.utils.trimTo(item.title, 30)+"</span></a>";
@@ -349,6 +346,64 @@ star.renderItems = function(data, prefix){
         }
     }
     return html    
+};
+
+starEvent.getFiles = function(){
+    var params = "";
+    starServices.getFiles(params, function(data){
+        var html = starEvent.renderFiles(data);
+        $("#filesContainer").html(html);
+    });    
+};
+
+starEvent.deleteFile = function(elm){
+    console.log(elm);
+    var params = "uuid="+$(elm).attr("data-uuid");
+    if(confirm(i18n("delete-selected-item"))){
+        starServices.deleteFile(params, function(data){
+            starEvent.getFiles();
+        });    
+    }
+};
+
+starEvent.library = [];
+starEvent.selectFile = function(elm){
+    starEvent.library.push($(elm).attr("data-uuid"));
+    $("#fileUploadComments").val($(elm).attr("data-uuid"));
+    $("#typeComments").val("library");
+    if($(elm).attr("data-contentType").indexOf("image") != -1){
+        $("#images").append("<img class='img-thumbnail' style='height:100px;margin:4px' src='/public/uploads/"+$(elm).attr("data-url")+"_thumb'>");
+    } else {
+        $("#images").append("<span class='label default_bg'><i class='fa fa-file'></i> "+$(elm).attr("data-file")+"</span><br/>");
+    }    
+};
+
+starEvent.renderFiles = function(data){
+    var size = 0;
+    var html = "<table class='table table-condensed table-hover' style='font-size:0.9em;'>";
+    for(var i = 0; i < data.length; i++){
+        html += "<tr>";
+        html += "<td>";
+        if(typeof star.media == "undefined")
+            html += "<a class='btn btn-default btn-sm btn-short btn-margin' rel='tooltip' title='"+i18n("select-this-file")+"' data-file='"+data[i].name+"' data-uuid='"+data[i].uuid+"' data-contentType='"+data[i].contentType+"'  data-url='"+data[i].url+"' onclick='starEvent.selectFile(this)'><i class='fa fa-check'></i></a>";
+        html += "&nbsp;&nbsp;<a target='_blank' title='"+data[i].name+"' href='/public/uploads/"+data[i].url+"'>"+star.utils.trimTo(data[i].name, 20)+"</a>";
+        html += "</td>";
+        html += "<td>"+starUtils.formatFilesize(data[i].size)+"</td>";
+        html += "<td>"+starUtils.formatDate(data[i].created) + ", " +starUtils.formatTime(data[i].created)+"</td>";
+        html += "<td>";
+        html += "<a style='cursor:pointer' class='btn btn-light-gray btn-sm btn-margin'  data-uuid='"+data[i].uuid+"' onclick='starEvent.deleteFile(this)'><i class='fa fa-times'></i></a> ";
+        html += "</td>";
+        html += "</tr>";
+        size += data[i].size;
+    }
+    html += "</table>";
+    
+    var percentage = (size*100)/104857600;
+    var limit = "";
+    limit += "" + starUtils.formatFilesize(size) + " from 100MB";
+    limit += '<div class="progress"><div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="'+percentage+'" aria-valuemin="0" aria-valuemax="100" style="width: '+percentage+'%;"></div></div><br/>'
+    $("#fileSizeContainer").html(limit);
+    return html;
 };
 
 starEvent.editEventDialogShow = function(elm){
@@ -778,6 +833,26 @@ starServices.getActivities = function(params, success, error){
     $.ajax({
         type: "GET",
         url: "/public/activities?"+star.token+"&"+params,
+        success: success,
+        error: error,
+        contentType: "application/json"
+    });
+};
+
+starServices.getFiles = function(params, success, error){
+    $.ajax({
+        type: "GET",
+        url: "/files?"+star.token+"&"+params,
+        success: success,
+        error: error,
+        contentType: "application/json"
+    });
+};
+
+starServices.deleteFile = function(params, success, error){
+    $.ajax({
+        type: "DELETE",
+        url: "/files?"+star.token+"&"+params,
         success: success,
         error: error,
         contentType: "application/json"

@@ -170,7 +170,10 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span id="popup-close" style='cursor: pointer;'><i class='fa fa-times'></i></span></button>
-				<h3 class="modal-title" id="myModalLabel"><span class="event-title"></span></h3>
+				<h3 class="modal-title" id="myModalLabel">
+					<span class="event-title"></span>
+					<small style="color:white"><br/><span class="event-time-from"></span><span class="event-time-to"></span>	</small>			
+				</h3>
 			</div>
 			<div class="modal-body">
 			
@@ -178,8 +181,8 @@
 					<div class='arrow'></div>
 					<div class='popover-content'>
 						<div class="popup-edit-event">
-							<span class="event-time-from"></span> <span class="event-time-to"></span>
-							<div class="event-createdByName"></div>
+							<span class="event-createdByName"></span>
+							<span class="event-details"></span>
 						</div>	
 
 						<div class="popup-new-event" style="display:none;">					
@@ -204,7 +207,6 @@
 						</div>							
 						
 						<div class="popup-edit-event">
-							<h3>&{'description'}</h3>
 							<p class="popup-event-description">
 							</p>
 							

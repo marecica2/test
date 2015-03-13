@@ -10,6 +10,7 @@ import play.db.jpa.Model;
 public class Account extends Model
 {
     public static final String TYPE_STANDARD = "standard";
+    public static final String TYPE_PUBLISHER_REQUEST_PREPARE = "publish";
     public static final String TYPE_PUBLISHER_REQUEST = "publisherReq";
     public static final String TYPE_PUBLISHER = "publisher";
 
@@ -27,12 +28,6 @@ public class Account extends Model
     public String url;
     public String currency;
     public String paypalAccount;
-
-    public String smtpHost;
-    public String smtpPort;
-    public String smtpAccount;
-    public String smtpPassword;
-    public String smtpProtocol;
 
     public static Account get(String key)
     {

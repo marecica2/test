@@ -1,6 +1,5 @@
 /* theme fixes */
 body {
-	background: black;
 }
 .dropdown-menu {
 	z-index: 91001;	
@@ -30,6 +29,9 @@ border-bottom: 0px solid #f3f3f3;
 	margin-bottom:0px;
 }
 
+.anchorLink {
+	cursor:pointer;
+}
 
 
 .big {
@@ -99,9 +101,10 @@ img {
 
 @media (min-width: 768px){
 	.dl-horizontal dd {
-		margin-left: 200px;
+		margin-left: 260px;
 	}
 	.dl-horizontal dt {
+		width:180px;
 		max-width: 180px;
 	}	
 }
@@ -129,6 +132,10 @@ img {
 /* various */
 p {
 	text-align: justify;
+}
+
+.centered {
+	text-align: center;
 }
 
 .gradient {

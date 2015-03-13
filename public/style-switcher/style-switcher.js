@@ -12,6 +12,7 @@ jQuery(document).ready(function($) {
 
 		style_switcher = $('.style-switcher'),
 		panelWidth = style_switcher.outerWidth(true);
+		
 			
 		$('.style-switcher .trigger').on("click", function(){
 			var $this = $(this);
@@ -28,4 +29,11 @@ jQuery(document).ready(function($) {
 			}
 			return false;
 		});
+
+		// init open
+		var chat = starUtils.getHashParameterByName("chat");
+		if(chat == "open"){
+		    $('.style-switcher .trigger').click();
+		    window.location.hash = "";
+		}
 });    	

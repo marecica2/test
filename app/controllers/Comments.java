@@ -19,6 +19,8 @@ import utils.JsonUtils;
 import utils.RandomUtil;
 import utils.StringUtils;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import dto.CommentDTO;
@@ -120,6 +122,7 @@ public class Comments extends BaseController
         final String type = JsonUtils.getString(jo, "type");
         final String objectType = JsonUtils.getString(jo, "objectType");
         final String uuid = JsonUtils.getString(jo, "uuid");
+        final JsonArray library = jo.get("library") != null ? jo.get("library").getAsJsonArray() : null;
         final Boolean paid = Boolean.parseBoolean(JsonUtils.getString(jo, "paid"));
 
         final User user = getLoggedUser();
@@ -172,6 +175,18 @@ public class Comments extends BaseController
             for (FileUpload fileUpload2 : fu)
                 fileUpload2.stored = true;
         }
+
+        if (type != null && type.equals(Comment.TYPE_LIBRARY))
+        {
+            List<FileUpload> fu = new ArrayList<FileUpload>();
+            for (JsonElement jsonElement : library)
+            {
+                FileUpload f = FileUpload.getByUuid(jsonElement.getAsString());
+                fu.add(f);
+            }
+            c.files = fu;
+        }
+
         c.saveComment();
         renderJSON("{\"response\":\"ok\"}");
     }
@@ -182,14 +197,7 @@ public class Comments extends BaseController
         final User user = getLoggedUser();
         Comment c = Comment.getByUuid(uuid);
         if (c.canDelete(user))
-        {
-            List<FileUpload> files = c.files;
-            for (FileUpload fileUpload : files)
-            {
-                FileUpload.deleteOnDisc(fileUpload);
-            }
             c.delete();
-        }
         renderText("ok");
     }
 }

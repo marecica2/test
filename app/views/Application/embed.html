@@ -1,0 +1,57 @@
+#{extends 'main.html' /} 
+#{set 'title'}
+	${listing.title} - ${userDisplayed.fullName}
+#{/set}
+#{set raw: true /}
+
+		
+<!-- include from listings list -->
+#{set item: listing /}
+#{set usr: userDisplayed /}
+<div>
+	<h5 class="margin-clear"><a href="/" target="_blank"><img style="height: 25px" src="/public/images/logo_square_small.png"></a> <a href="/channel/${item.uuid}" target="_blank" rel="tooltip" data-original-title="&{'view-channel'}">${item.title}</a></h5>
+
+	<div>
+  		#{if userDisplayed.isOnline()}
+  			&{'available-now'}
+  			<span><i class="icon-record" style="color:#5cb85c"></i></span>
+		#{/if}
+		#{else}
+  			&{'offline'}
+  			<span><i class="icon-record" style="color:gray"></i></span>
+		#{/else}
+		&middot;
+		&{'price'}
+		#{if item.charging != 'free'}
+			&{'from'} ${item.price} <small>${item.currency} &{'for'} ${item.chargingTime} &{'minutes'}</small>
+			#{if item.firstFree && false}
+				<span class="label label-default">&{'first-free'}</span>
+			#{/if}	
+		#{/if}
+		#{else}
+			<strong class="">&{'free'}</strong>
+		#{/else}
+	</div>	
+
+	<div>
+		<a href="/user/${userDisplayed.login}#chat=open" target="_blank" rel="tooltip" data-original-title="&{'go-to-profile'}"><img style="height:40px" src="/${userDisplayed.avatarUrl}_64x64"></a>			
+		#{if listing.isAvailable()}
+			<a href="/channel/${item.uuid}#chat=open" target="_blank" class="btn btn-success btn-xl btn-short open-chat style-switcher" style="border-width:0px;" rel="tooltip" data-original-title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
+		#{/if}		
+		#{if !isOwner}
+			#{if !isOwner && listing.isAvailable()}
+				<a href="/instant-room?id=${listing.uuid}&#{token /}" target="_blank" class="btn btn-success btn-xl btn-short no-schedule-start style-switcher" style="border-width:0px;"><i class="fa fa-play"></i> &{'request-for-event-instant'}</a>
+			#{/if}			
+			#{elseif user}
+				<a href="/mail?action=new&to=${listing.user.login}" target="_blank" class="btn btn-dark btn-xl btn-short open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-comments-o"></i></a>
+			#{/elseif}
+			#{else}
+				<a href="/contact?id=${listing.user.login}" target="_blank" class="btn btn-dark btn-xl btn-short open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-comments-o"></i></a>
+			#{/else}
+			<a href="/user/${usr.login}/calendar?channel=${listing.uuid}&#{token /}" target="_blank" class="btn btn-dark btn-xl btn-short" rel="tooltip" data-original-title="&{'schedule-session'}"><i class="fa fa-calendar"></i>#{if !userDisplayed.isAvailable()} &{'schedule-session'} #{/if}</a>
+		#{/if}
+	</div>
+	
+
+</div>
+

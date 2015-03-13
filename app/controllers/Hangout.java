@@ -40,6 +40,9 @@ public class Hangout extends BaseController
         if (user != null && event != null)
             isOwner = user.isOwner(event);
 
+        if (user != null && event != null && event.user.hasBlockedContact(user))
+            forbidden();
+
         final Event e = event;
 
         if (user == null && tempName == null)

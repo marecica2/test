@@ -5,6 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 import play.db.jpa.Model;
 import controllers.FileuploadController;
@@ -30,9 +35,18 @@ public class FileUpload extends Model
 
     public String temp;
 
+    @ManyToOne
+    public User owner;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "comment_upload", joinColumns = @JoinColumn(name = "fileupload_id"), inverseJoinColumns = @JoinColumn(name = "comment_id"))
+    public List<Comment> comments;
+
+    public String type;
+
     public String getUrl()
     {
-        return this.url + uuid;
+        return this.url;
     }
 
     public static FileUpload getByUuid(String uuid)
@@ -62,6 +76,15 @@ public class FileUpload extends Model
         return null;
     }
 
+    public static List<FileUpload> getByOwner(User owner)
+    {
+        if (owner != null)
+        {
+            return FileUpload.find("from FileUpload where owner = ? order by created desc", owner).fetch();
+        }
+        return null;
+    }
+
     public static boolean deleteOnDisc(FileUpload file)
     {
         File thumb = new File(FileuploadController.PATH_TO_UPLOADS_FILESYSTEM + file.url + "_thumb");
@@ -79,5 +102,12 @@ public class FileUpload extends Model
         if (this.contentType.contains("image"))
             return true;
         return false;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "FileUpload [name=" + name + ", size=" + size + ", objectUuid=" + objectUuid + ", contentType=" + contentType + ", url=" + url + ", created=" + created + ", stored=" + stored
+                + ", uuid=" + uuid + ", temp=" + temp + ", owner=" + owner + "]";
     }
 }

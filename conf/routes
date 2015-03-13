@@ -6,6 +6,7 @@ GET     /upcoming		                    	Application.upcoming
 GET     /past				                    Application.past
 GET     /approvements		                    Application.approvements
 GET     /calendar                               Application.calendar
+GET     /embed/channel/{channel}           		Application.embed
 GET     /user/{login}/calendar		      		Application.calendarUser
 GET     /user/{login}/calendar/{public}    		Application.calendarUser
 GET     /channels								Application.channels
@@ -109,6 +110,8 @@ POST    /photoupload							FileuploadController.uploadPhoto
 POST    /delete-temp-files						FileuploadController.deleteTmpFiles
 GET	    /delete-temp-files						FileuploadController.deleteTmpFiles
 POST    /crop									FileuploadController.cropImage
+GET		/files									FileuploadController.getOwnerFiles	
+DELETE	/files									FileuploadController.deleteOwnerFile	
 
 POST    /rating			                  		Ratings.addRating
 GET  	/rating/delete              			Ratings.deleteRating
@@ -157,6 +160,7 @@ GET 	/settings/request-publisher				Accounts.requestPublisher
 *		/payments								Accounts.payments
 GET		/facebook/clear							Accounts.facebookClear
 GET		/google/clear							Accounts.googleCalendarClear
+GET		/media-library							Accounts.media
 
 
 GET 	/admin/publishers						Admin.publishers
@@ -165,6 +169,8 @@ GET 	/admin/approve							Admin.approve
 GET 	/admin/deny								Admin.deny
 GET 	/admin/refresh 							Admin.refreshIndexes
 GET 	/admin/delete							Admin.deleteData
+GET 	/admin/block							Admin.block
+GET 	/admin/unblock							Admin.unblock
 
 
 # Map static resources from the /app/public folder to the /public path
@@ -174,6 +180,7 @@ GET 	/fonts/									staticDir:public/fonts/
 GET 	/images/								staticDir:public/images/
 GET 	/plugins/								staticDir:public/plugins/
 GET     /public/                                staticDir:public
+GET     /public/uploads/                        staticDir:public/uploads
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

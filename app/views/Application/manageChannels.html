@@ -10,11 +10,10 @@
 	<div class="row row-xs-height">
 	
 		<div class="col-md-12 col-xs-height col-top">
-			<h3><i class="fa fa-share-alt"></i> &{'manage-channels'}</h3>
-			<div class="separator-2"></div>
-			<div>
-				<a href="/channel/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-block margin-clear"><i class="fa fa-plus"></i> Create Channel</a>
-			</div>	
+			<h2>
+				<i class="fa fa-share-alt"></i> &{'manage-channels'}
+				<a href="/channel/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray margin-clear btn-sm"><i class="fa fa-plus"></i> Create Channel</a>
+			</h2>
 			<br/>	
 			#{if listings}
 				#{set items:listings /}

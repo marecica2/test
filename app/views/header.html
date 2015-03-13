@@ -51,27 +51,34 @@
 									<ul class="nav navbar-nav navbar-right">
 									
 										
+							  	  		
+									 	#{if user}
 										<li class="header-notification #{if user && user.unreadMessages}#{/if}#{else}hidden#{/else}" style="padding-left:30px">
 							  	  			<a href="/mail" class="object-non-visible animated object-visible wobble" data-animation-effect="wobble" data-effect-delay="6000" ><i style="font-size:1.3em" class="text-default fa fa-envelope title="&{'received-new-message'}"></i></a>
 							  	  		</li>	
-							  	  		
-									
+									 	#{if user.unreadMessages == null}
+							  	  		<li class="header-notification2"><a href="/mail" style="padding-right:0px"><i class="fa fa-envelope"></i></a></li>
+										#{/if}							  	  		
+										#{/if}							  	  		
+
 										<li class="logo-menu pull-left" style="display:none">
 											<a href="/home"><img style="position:relative;bottom:2px;height:22px;" src="/public/images/logo_purple.png"></a>
 										</li>
 
 									 	#{if user}
-									 	
 									      <li class="dropdown">
 									        <a href="/dashboard" class="dropdown-toggle" data-toggle="dropdown">
 									        	&{'dashboard'}
 									        </a>
 									        <ul class="dropdown-menu">
 									          	<li><a href="/dashboard"><i class="fa fa-dashboard"></i> &{'dashboard'}</a></li>
+									          	<li><a href="/manage-channels"><i class="fa fa-share-alt"></i> &{'manage-channels'}</a></li>
 									          	<li><a href="/upcoming"><i class="icon-clock"></i> &{'upcoming-events'}</a></li>
 									          	<li><a href="/past"><i class="icon-back-in-time"></i> &{'previous-events'}</a></li>
-									          	<li><a href="/manage-channels"><i class="fa fa-share-alt"></i> &{'manage-channels'}</a></li>
-									          	<li><a href="/approvements"><i class="fa fa-check"></i> &{'waiting-for-approvement'}</a></li>
+									          	<li><a href="/approvements"><i class="fa fa-check"></i> &{'session-approval'}</a></li>
+									          	#{if user.isPublisher()}
+										          	<li><a href="/media-library"><i class="icon-docs"></i> &{'media-library'}</a></li>
+									          	#{/if}
 									        </ul>
 									      </li>	
 									      									 	
@@ -88,9 +95,11 @@
 									   	<li class='dropdown #{if request.url.indexOf("about")>=0} active #{/if}'>
 									    	<a class="dropdown-toggle" data-toggle="dropdown" href="/about" >&{'about'}</a>
 									        <ul class="dropdown-menu">
+									      		<li><a href="/about">&{'about'}</a></li>
 									      		<li><a href="/about#pricing">&{'pricing'}</a></li>
 									      		<li><a href="/about#features">&{'features'}</a></li>
 									      		<li><a href="/about#contact">&{'contact-us'}</a></li>
+									      		<li><a href="/help">&{'help'}</a></li>
 									        </ul>
 									    </li>   
 									  	#{/if}
@@ -127,7 +136,6 @@
 									          	<li><a href="/user/${user.login}"><i class="icon-user"></i> &{'profile'}</a></li>
 									          	
 									          	<li><a href="/contacts"><i class="icon-users"></i> &{'contacts'}</a></li>
-									          	<li><a href="/mail"><i class="icon-mail"></i> &{'notifications'}</a></li>
 									          	<li><a href="/payments"><i class="fa fa-bar-chart-o"></i> &{'received-payments'}</a></li>
 									          	<li><a href="/payments?sent=true"><i class="fa fa-bar-chart-o"></i> &{'sent-payments'}</a></li>
 									          	<li><a href="/settings"><i class="fa fa-cog"></i> &{'settings'}</a></li>

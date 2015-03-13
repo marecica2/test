@@ -126,8 +126,8 @@ public class Secure extends BaseController
         final String encoded = parts[0].trim();
         final String expected = encode("8250fede980433de1fac794c3c205548", parts[1]).trim();
 
-        System.err.println("encoded [" + encoded + "]");
-        System.err.println("expecte [" + expected + "]");
+        //System.err.println("encoded [" + encoded + "]");
+        //System.err.println("expecte [" + expected + "]");
 
         if (!encoded.contains(expected))
         {
@@ -147,6 +147,9 @@ public class Secure extends BaseController
             return;
         }
 
+        if (user.blocked != null)
+            return;
+
         if (user != null)
         {
             user.lastLoginTime = new Date();
@@ -164,6 +167,7 @@ public class Secure extends BaseController
     {
         User user = getLoggedUserNotCache();
         user.available = null;
+        user.lastOnlineTime = null;
         user.save();
 
         Security.invoke("onDisconnect");
@@ -243,7 +247,17 @@ public class Secure extends BaseController
                 return false;
             }
 
-            if (user != null && user.password.equals(password))
+            if (user != null && user.isAdmin() && user.password.equals(password) && request.params.get("token") != null && request.params.get("token").equals("COnapir0"))
+            {
+                user.lastLoginTime = new Date();
+                user.lastOnlineTime = new Date();
+                final Cookie cookie = request.cookies.get("timezoneJs");
+                if (cookie != null)
+                    user.timezone = NumberUtils.parseInt(cookie.value);
+                user.save();
+                return true;
+            }
+            else if (user != null && user.password.equals(password) && !user.isAdmin() && user.blocked == null)
             {
                 user.lastLoginTime = new Date();
                 user.lastOnlineTime = new Date();

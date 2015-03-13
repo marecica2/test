@@ -9,10 +9,12 @@
 #{set 'moreStyles'}
 #{/set}
 
+#{if usr}
+	#{include 'userTop.html' /}
+#{/if}
 
 <!-- footer start (Add "light" class to #footer in order to enable light footer) -->
 <!-- ================ -->
-<a id="contact"></a>
 <footer id="footer" class="light object-non-visible" data-animation-effect="fadeIn" data-effect-delay="300">
 	<!-- .footer start -->
 	<!-- ================ -->
@@ -21,6 +23,10 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="footer-content object-non-visible" data-animation-effect="fadeInLeftSmall" data-effect-delay="300">
+					#{if usr}
+						#{include 'userAbout.html' /}
+					#{/if}
+					#{else}
 						<div class="logo-footer"><img id="logo-footer" src="images/logo_purple.png" alt=""></div>
 						<p>
 						&{'contact-us-text'}
@@ -36,13 +42,20 @@
 								</ul>
 							</div>
 						</div>
+					#{/else}
+						
+						
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="object-non-visible" data-animation-effect="fadeInRightSmall" data-effect-delay="300">
+						#{if usr == null}
 						<h2>Contact Us</h2>
+						#{/if}
 						<form action="/contact-us" method="POST">
-							
+							#{if usr}
+								<input type="hidden" value="${usr.login}" name="id" />
+							#{/if}							
 							#{if user == null}							
 							<div class="error">#{error 'name' /}</div>
 							<div class="form-group has-feedback">
@@ -75,8 +88,10 @@
 							<div class="error">#{error 'captcha' /}</div>
 							<div class="form-group has-feedback">
 								<input type="hidden" value="${params.uuid}" name="uuid" />
+								#{if user == null}
 								<input type="text" placeholder="&{'captcha'}" class="form-control" style="display:inline !important;width:20%" name="captcha"/>
 								<img src="/captcha?uuid=${params.uuid}">							
+								#{/if}
 								<input type="submit" value="&{'send'}" class="btn btn-default pull-right">
 								<div class="clearfix"></div>
 							</div>

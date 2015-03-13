@@ -7,82 +7,76 @@
 #{set 'moreScripts'}
 #{/set}
 
-#{set 'moreStyles'}
-#{/set}
-
-#{set background:'true' /} 
 
 
 <div class="container">				
 	<div class="row">
 		<div class="col-md-12" style="min-height:40vh">
 			<h2><i class="icon-users"></i> &{'manage-contacts'}</h2>
-			<div class="separator-2"></div>
-				
-				<form class="form-inline" method="post" role="form" action="/contacts/invite?url=${request.url.urlEncode()}&#{token /}">
-				  	<div class="form-group">
-					    <div class="input-group">
-					      	<div class="input-group-addon light-gray"><i class="fa fa-plus"></i> &{'invite-new-user'}</div>
-					      	<input type="text" class="form-control" autocomplete="off" size="50" maxlength="100" name="email" placeholder="&{'type-email'}" id="query-search" value="${flash.email}" data-provide="typeahead">
-						    <span class="input-group-btn">
-						    	<button class="btn btn-default btn-short btn-margin" style="height:40px;" id="dialog-invite-button" type="submit">&{'send-invitation'}</button>
-						    </span>					    
-					    </div>
-					</div>				
-				</form>
-				
-				<table class="table table-hover">
-					<thead>
-						<tr>
-							<th>&{'name'}</th>
-							<th></th>
-							<th>&{'status'}</th>
-							<th>&{'actions'}</th>
-						</tr>
-					</thead>
-					#{list items:contacts, as:'item'}
-						<tr>
-							<td>
-						  		#{if item.contact.isOnline()}
-						  			<i class="text-default icon-record"></i>
-								#{/if}
-								#{else}
-						  			<i style="color:gray" class="icon-record"></i>
-								#{/else}						
-								<img class="avatar22" src="${item.contact.avatarUrl}_32x32">
-								<a href="/user/${item.contact.login}">${item.contact.fullName}</a>
-							</td>
-							<td>
-								<a href="/mail?action=new&to=${item.contact.login}">&{'write-a-message'}</a>
-							</td>
-							<td>
-								#{if item.blocked}
-									<span class="label label-danger">&{'blocked'}</span>
-								#{/if}
-								#{if item.following}
-									<span class="label label-default">&{'following'}</span>
-								#{/if}
-							</td>
-							<td>
-								#{if item.blocked}
-									<a href="/contact-unblock?uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-gray btn-sm btn-short btn-margin">&{'unblock'}</a>
-								#{/if}
-								#{else}
-									<a href="/contact-block?uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm btn-short btn-margin">&{'block'}</a>
-								#{/else}
-								
-								#{if item.following}
-									<a href="/contact-unfollow?uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-gray btn-sm btn-short btn-margin">&{'unfollow'}</a>
-								#{/if}
-								#{else}
-									<a href="/contact-follow?uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm btn-short btn-margin">&{'follow'}</a>
-								#{/else}
-								
-								<a href="/contact-delete?uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm btn-short btn-margin">&{'remove'}</a>
-							</td>
-						</tr>				
-					#{/list}				
-				</table>
+			<form class="form-inline" method="post" role="form" action="/contacts/invite?url=${request.url.urlEncode()}&#{token /}">
+			  	<div class="form-group">
+				    <div class="input-group">
+				      	<div class="input-group-addon light-gray"><i class="fa fa-plus"></i> &{'invite-new-user'}</div>
+				      	<input type="text" class="form-control" autocomplete="off" size="50" maxlength="100" name="email" placeholder="&{'type-email'}" value="${flash.email}" >
+					    <span class="input-group-btn">
+					    	<button class="btn btn-default btn-short btn-margin" style="height:40px;" id="dialog-invite-button" type="submit">&{'send-invitation'}</button>
+					    </span>					    
+				    </div>
+				</div>				
+			</form>
+			
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>&{'name'}</th>
+						<th></th>
+						<th>&{'status'}</th>
+						<th>&{'actions'}</th>
+					</tr>
+				</thead>
+				#{list items:contacts, as:'item'}
+					<tr>
+						<td>
+					  		#{if item.contact.isOnline()}
+					  			<i class="text-default icon-record"></i>
+							#{/if}
+							#{else}
+					  			<i style="color:gray" class="icon-record"></i>
+							#{/else}						
+							<img class="avatar22" src="${item.contact.avatarUrl}_32x32">
+							<a href="/user/${item.contact.login}">${item.contact.fullName}</a>
+						</td>
+						<td>
+							<a href="/mail?action=new&to=${item.contact.login}">&{'write-a-message'}</a>
+						</td>
+						<td>
+							#{if item.blocked}
+								<span class="label label-danger">&{'blocked'}</span>
+							#{/if}
+							#{if item.following}
+								<span class="label label-default">&{'following'}</span>
+							#{/if}
+						</td>
+						<td>
+							#{if item.blocked}
+								<a href="/contact-unblock?uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-gray btn-sm btn-short btn-margin">&{'unblock'}</a>
+							#{/if}
+							#{else}
+								<a href="/contact-block?uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm btn-short btn-margin">&{'block'}</a>
+							#{/else}
+							
+							#{if item.following}
+								<a href="/contact-unfollow?uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-gray btn-sm btn-short btn-margin">&{'unfollow'}</a>
+							#{/if}
+							#{else}
+								<a href="/contact-follow?uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm btn-short btn-margin">&{'follow'}</a>
+							#{/else}
+							
+							<a href="/contact-delete?uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm btn-short btn-margin">&{'remove'}</a>
+						</td>
+					</tr>				
+				#{/list}				
+			</table>
 		</div>
 	</div>
 </div>

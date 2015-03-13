@@ -8,6 +8,7 @@ import models.Comment;
 import models.Contact;
 import models.Event;
 import models.Listing;
+import models.Message;
 import models.Search;
 import models.User;
 
@@ -21,6 +22,8 @@ import utils.RandomUtil;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import email.EmailNotificationBuilder;
 
 //@With(Secure.class)
 public class Application extends BaseController
@@ -40,16 +43,17 @@ public class Application extends BaseController
         renderTemplate("Application/about.html", user, uuid);
     }
 
-    public static void contact()
+    public static void contact(String id)
     {
         final User user = getLoggedUser();
+        final User usr = id != null ? User.getUserByLogin(id) : null;
         String uuid = RandomUtil.getUUID();
         params.put("uuid", uuid);
         params.flash();
-        render(user, uuid);
+        render(user, uuid, usr);
     }
 
-    public static void contactUs(String uuid, String name, String email, String subject, String message, String captcha)
+    public static void contactUs(String uuid, String name, String email, String subject, String message, String captcha, String id)
     {
         final User user = getLoggedUser();
         final Object cap = Cache.get("captcha." + uuid);
@@ -59,27 +63,50 @@ public class Application extends BaseController
             validation.required("email", email);
             validation.required("name", name);
             validation.email("email", email).message("validation.login");
+            validation.required("captcha", captcha);
         }
+
         validation.required("subject", subject);
         validation.required("message", message);
-        validation.required("captcha", captcha);
 
         if (captcha != null && cap != null)
             validation.equals(captcha, cap).message("invalid.captcha");
 
         if (!validation.hasErrors())
         {
-            System.err.println("sending mail ");
             flash.success(Messages.get("message-sent-successfully"));
             flash.keep();
-            about();
+
+            String body = "Sender: " + name + " (" + email + ")\n\n";
+            body += message;
+
+            User recipient = getAdminUser();
+            if (id != null)
+                recipient = User.getUserByLogin(id);
+
+            // send notification
+            Message.createNotification(user, recipient, subject, body);
+
+            // send email
+            if (recipient != null && recipient.emailNotification)
+            {
+                EmailNotificationBuilder eb = new EmailNotificationBuilder();
+                eb.setTo(recipient);
+                eb.setFrom(user)
+                        .setSubject(Messages.getMessage(recipient.locale, "somebody-wrote-you"))
+                        .setMessageWiki(body)
+                        .send();
+            }
+
+            contact(id);
         } else
         {
             uuid = RandomUtil.getUUID();
             flash.error(Messages.get("message-sent-error"));
             params.put("uuid", uuid);
             params.flash();
-            renderTemplate("Application/contact.html", user, uuid);
+            final User usr = id != null ? User.getUserByLogin(id) : null;
+            renderTemplate("Application/contact.html", user, uuid, usr);
         }
 
     }
@@ -223,7 +250,10 @@ public class Application extends BaseController
         final List<Contact> contacts = Contact.getContacts(user);
         final List<Listing> listings = user != null ? Listing.getForUser(user) : null;
 
-        render(user, listings, isOwner, contacts, dashboard);
+        boolean displayMsg1 = false;
+        if (!user.isPublisher())
+            displayMsg1 = true;
+        render(user, listings, isOwner, contacts, dashboard, displayMsg1);
     }
 
     public static void approvements()
@@ -279,5 +309,16 @@ public class Application extends BaseController
         final Listing listing = channel != null ? Listing.get(channel) : null;
         final List<Listing> listings = user != null ? Listing.getForUser(user) : null;
         renderTemplate("/Application/calendar.html", user, userDisplayed, isOwner, listing, listings, followers, followees, follow);
+    }
+
+    public static void embed(String channel) throws Throwable
+    {
+        final User user = getLoggedUser();
+        final Listing listing = channel != null ? Listing.get(channel) : null;
+        final User userDisplayed = listing.user;
+
+        final List<Contact> followers = Contact.getFollowers(userDisplayed);
+        final List<Contact> followees = Contact.getFollowing(userDisplayed);
+        render(user, userDisplayed, listing, followers, followees);
     }
 }

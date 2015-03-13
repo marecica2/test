@@ -123,8 +123,10 @@
 		#{if !isOwner && !edit && listing.type == 'instant' && listing.started == null}
 		#{/if}
 
-		
 		#{if !edit && isOwner}
+
+			<a class="btn btn-default btn-social margin-clear" href="" rel="tooltip" data-original-title="&{'website-embed'}" data-toggle="modal" data-target="#embedModal"><i class="fa fa-code"></i></a>
+		
 			#{if user.isPublisher() && listing.type != 'instant'}
 				<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&#{token /}&listingId=${listing.uuid}" class="btn btn-default btn-social margin-clear" rel="tooltip" data-original-title="&{'add-event'}">
 					<i class="fa fa-plus"></i>

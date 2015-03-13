@@ -1,0 +1,62 @@
+#{extends 'main.html' /} 
+#{set 'title'}
+	&{'media-library'}
+#{/set}
+
+#{set 'moreScripts'}
+#{/set}
+
+
+<div class="padding container">
+	<div class="row">
+	  	<div class="col-md-12">
+			<h2><i class="icon-docs"></i> &{'media-library'} <button type="button" id="upload-buttonComments" class="btn btn-sm btn-light-gray">&{'upload'}</button></h2>
+			
+			<!-- File upload -->
+			
+			#{authenticityToken /}
+			<input type="file" id="uploadComments" name="upload" style="display:none" multiple="multiple">
+			<input type="hidden" id="comment" name="tempId" value="${commentTemp}">
+			<input type="hidden" id="fileUploadComments" name="fileUpload">
+			<div id="progresses" >
+			</div>
+			<!-- File upload -->			
+			
+			<div id="fileSizeContainer"></div>
+			<div id="filesContainer"></div>
+			<script>
+				star.media = true;
+				starEvent.getFiles();
+				
+				$("#upload-buttonComments").click(function(){
+				    $("#uploadComments").click();
+				});
+				
+				$("#uploadComments").change(function(){
+				    var params = "";
+				    params = "temp="+$("#comment").val();
+				    if(starCalendar.event != undefined)
+					    params += "&type=event&item="+starCalendar.event;
+				    else if(starCalendar.listing != undefined)
+					    params += "&type=listing&item="+starCalendar.listing;
+				    else
+					    params += "&type=comment";
+				        
+		    		star.utils.uploadFiles('/fileupload?'+star.token+'&'+params, this.files, function(json){
+		    		    var resp = JSON.parse(json);
+		    		    if(resp.extension.indexOf("image") != -1){
+			    		    $("#images").append("<img class='img-thumbnail' style='height:100px;margin:4px' src='/public/uploads/"+resp.url+"_thumb'>");
+		    		    } else {
+		    		        $("#images").append("<span class='label default_bg'><i class='fa fa-file'></i> "+resp.name+"</span><br/>");
+		    		    }
+		   		        $("#fileUploadComments").val(resp.uuid);
+		   		        $("#typeComments").val("file");
+		   		     	starEvent.getFiles();
+		    		});
+				});				
+			</script>
+		</div>
+	</div>
+</div>
+
+

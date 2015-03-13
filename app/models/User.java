@@ -59,6 +59,8 @@ public class User extends Model
 
     public Boolean activated;
 
+    public Boolean blocked;
+
     public Boolean available;
 
     public String hiddenDays;
@@ -102,13 +104,7 @@ public class User extends Model
 
     public String skype;
 
-    public String layout;
-
     public String stylesheet;
-
-    public String pattern;
-
-    public String footer;
 
     public String googleAccessToken;
 
@@ -272,7 +268,7 @@ public class User extends Model
 
     public Boolean isOnline()
     {
-        return (this.lastOnlineTime != null && (this.lastOnlineTime.getTime() > System.currentTimeMillis() - 200000)) ? true : false;
+        return (this.lastOnlineTime != null && (this.lastOnlineTime.getTime() > System.currentTimeMillis() - 60000)) ? true : false;
     }
 
     public Boolean isAvailable()

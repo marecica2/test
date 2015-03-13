@@ -40,8 +40,7 @@
 	<div>
 		<div class="row">
 			<div class="col-md-12">
-				<h2><i class="icon-mail"></i> &{'notifications'}</h2>
-				<div class="separator-2"></div>
+				<h2><i class="fa fa-envelope"></i> &{'notifications'}</h2>
 			</div>
 		</div>
 
@@ -54,15 +53,21 @@
 				<a href="/mail?action=new" class="btn btn-default btn-block"><i class="fa fa-envelope-o"></i> &{'compose-new'}</a>
 				<br/>		
 			</div>	
-					
  			<div class="col-md-10">
- 
+ 			
+ 			
+ 			
+ 			
+ 			
+				<!-- THREAD --> 				
   				#{if thread}
-				<table class="table  ">
+				<table class="table table-hover">
 					#{list items:thread, as:'item'}
-				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if} #{if message.uuid == item.uuid} class="active" #{/if}>
+				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if} #{if message.uuid == item.uuid} class="active" #{/if} class="anchorLink" data-href="/mail/${item.uuid}">
 				       	   	<td style="vertical-align:middle; width:100%;">
+				       	   		#{if item.fromUser}
 				       	   		<img class="avatar16 img-circle" src="../${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} &middot;
+				       	   		#{/if}
 								<a href="/mail/${item.uuid}">${item.subject.trimDot(60)}</a>	
 				       		</td>
 				       		<td style="vertical-align:middle; width:180px;">
@@ -82,8 +87,10 @@
 								<dl class="dl-horizontal opacity">
 									  <dt>&{'subject'}</dt>
 									  <dd>${item.subject}</dd>
+									  #{if item.fromUser}
 									  <dt><strong>&{'from'}</strong></dt>
 									  <dd><nobr><img class="img-circle avatar16" src="/${item.fromUser.avatarUrl}_32x32" height="16px"> <a href="/user/${item.fromUser.login}">${item.fromUser.fullName}</a></nobr></dd>
+									  #{/if}
 									  <dt><strong>&{'to'}</strong></dt>
 									  <dd><nobr><img class="img-circle avatar16" src="/${item.toUser.avatarUrl}_32x32" height="16px"> <a href="/user/${item.toUser.login}">${item.toUser.fullName}</a></nobr></dd>
 									  #{if user.isAdmin()}
@@ -110,12 +117,12 @@
 					    <input type="text" class="form-control" name="subject" id="exampleInputEmail1" placeholder="&{'subject'}" value="${message.subject}">
 					</div>
 				    <div class="form-group">
-						<input type="text" class="form-control typeahead" autocomplete="off" placeholder="&{'contact-name-or-email'}" maxlength="50" name="toUser" value="${message.fromUser.login}" data-provide="typeahead">
+						<input type="text" class="form-control typeahead" autocomplete="off" placeholder="&{'contact-name-or-email'}" maxlength="50" name="toUser" #{if message.fromUser} value="${message.fromUser.login}" #{/if} data-provide="typeahead">
 				    </div>
 					<div class="form-group has-feedback">			    
 				    	<textarea rows="7" cols="" class="form-control" placeholder="&{'message'}" name="emailBody" style="margin-top:5px"></textarea>
 				    	#{include 'help.html' /}
-				    	<div class="alert alert-danger">#{error 'emailBody' /}</div>
+				    	<div class="error">#{error 'emailBody' /}</div>
 				    </div>		
 					<div class="form-group">			    
 				        <button type="submit" class="pull-right btn btn-default popup-event-notify">&{'submit'}</button>
@@ -124,6 +131,12 @@
 				</form>
 				#{/if}
  			
+ 			
+ 			
+ 			
+ 			
+ 			
+ 				<!-- NEW MESSAGE -->
  				#{elseif action && action.equals("new")}	
 				<div class="error">#{error 'email' /}</div>		
  				<form action="/mail-new" role="form" method="post" class="margin-clear">
@@ -132,20 +145,20 @@
 						<label for="exampleInputEmail1">&{'subject'}</label>
 					    <input type="text" class="form-control" name="subject" id="exampleInputEmail1" placeholder="&{'subject'}" value="#{if params.subject}${params.subject}#{/if}#{else}${request.params.subject}#{/else}">
 					</div>
-					<div class="alert alert-danger">#{error 'subject' /}</div>
+					<div class="error">#{error 'subject' /}</div>
 					
 					<label for="exampleInputEmail1">To</label>
 					<div class="form-group">
 						<input type="text" class="form-control typeahead" autocomplete="off" placeholder="&{'contact-name-or-email'}" maxlength="50" name="toUser" data-provide="typeahead" value="#{if params.toUser}${params.toUser}#{/if}#{else}${request.params.to}#{/else}">
 					</div>
-					<div class="alert alert-danger">#{error 'userTo' /}</div>
+					<div class="error">#{error 'userTo' /}</div>
 					
 					<div class="form-group has-feedback">			    
 						<label for="exampleInputEmail1" >Body</label>
 				    	<textarea rows="15" class="form-control" placeholder="&{'message'}" name="emailBody">${params.emailBody}</textarea>
 				    	#{include 'help.html' /}
 				    </div>
-				    <div class="alert alert-danger">#{error 'emailBody' /}</div>
+				    <div class="error">#{error 'emailBody' /}</div>
 				    
 					<div class="form-group">			    
 				        <button type="submit" class="pull-right btn btn-default popup-event-notify">&{'submit'}</button>
@@ -155,18 +168,20 @@
   				#{/elseif}
  			
  			
+ 			
+ 			
+ 			
+ 			
+ 				<!-- INBOX -->
  				#{elseif !action}
 				<table class="table table-hover table-striped">
 					#{list items:received, as:'item'}
-				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if}>
+				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if} class="anchorLink" data-href="/mail/${item.uuid}">
 				       	   	<td style="vertical-align:middle; width:100%">
-				       	   		#{if item.isMessage}
-				       	   			From: <img class="avatar16 img-circle" src="/${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} 
-								#{/if}
-								#{else}
-									<img class="avatar16 img-circle" src="/public/images/favicon.png" height="16px"> System Notification
-								#{/else}
-								&middot;
+				       	   		#{if item.fromUser}
+					       	   		&{'from'} <img class="avatar16 img-circle" src="/${item.fromUser.avatarUrl}_32x32" height="16px"> ${item.fromUser.fullName} 
+									&middot;
+				       	   		#{/if}
 								<a href="/mail/${item.uuid}">${item.subject.trimDot(60)}</a>
 				       		</td>
 				       		<td style="vertical-align:middle;width:180px">
@@ -197,17 +212,17 @@
 				</div>				
 				#{/elseif}
 
+
+
+
+
+				<!-- SENT -->
  				#{elseif action && action.equals("sent")}
 				<table class="table table-hover table-striped">
 					#{list items:sent, as:'item'}
-				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if}>
+				       <tr #{if !item.read && item.toUser.equals(user)} style="font-weight:bold" #{/if} class="anchorLink" data-href="/mail/${item.uuid}">
 				       	   	<td style="vertical-align:middle; width:100%">
-				       	   		#{if item.isMessage}
-				       	   			To: <img class="avatar16 img-circle" src="/${item.toUser.avatarUrl}_32x32"> ${item.toUser.fullName} 
-								#{/if}
-								#{else}
-									<img class="avatar16 img-circle" src="/public/images/favicon.png" height="16px"> System Notification
-								#{/else}
+				       	   		To: <img class="avatar16 img-circle" src="/${item.toUser.avatarUrl}_32x32"> ${item.toUser.fullName} 
 								&middot;
 								<a href="/mail/${item.uuid}">${item.subject.trimDot(60)}</a>
 				       		</td>
@@ -238,6 +253,8 @@
 					#{/else}
 				</div>
 				#{/elseif}
+				
+				
 			</div>
 		</div>
 	</div>

@@ -80,7 +80,7 @@ public class Message extends Model
 
     public static void createNotification(User user, User toUser, String subject, String body)
     {
-        if (toUser != null && user != null)
+        if (toUser != null)
         {
             toUser.refresh();
             toUser.unreadMessages = true;

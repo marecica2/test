@@ -30,6 +30,7 @@
 			    
 				<div class="form-group">
 					<label class="" for="login">&{'login'}</label>
+					<input type="hidden" class="form-control" id="token" name="token" value="${request.params.token}"/>
 					<input type="hidden" class="form-control" id="url" name="url" value="${flash.url}"/>
 					<input type="text" class="form-control" id="login" name="username" placeholder="&{'login'}" autofocus/>
 				</div>

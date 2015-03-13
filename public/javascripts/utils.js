@@ -1,100 +1,5 @@
 star.utils = {};
-
-star.utils.Interval = function(fn, time) {
-    var timer = false;
-    this.start = function () {
-        if (!this.isRunning())
-            timer = setInterval(fn, time);
-    };
-    this.stop = function () {
-        clearInterval(timer);
-        timer = false;
-    };
-    this.isRunning = function () {
-        return timer !== false;
-    };
-}
-
-
-star.utils.getHashParams = function () {
-    var hashParams = {};
-    var e,
-        a = /\+/g,  // Regex for replacing addition symbol with a space
-        r = /([^&;=]+)=?([^&;]*)/g,
-        d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
-        q = window.location.hash.substring(1);
-    while (e = r.exec(q))
-       hashParams[d(e[1])] = d(e[2]);
-    return hashParams;
-}
-
-star.utils.getParams = function () {
-    var hashParams = {};
-    var e,
-        a = /\+/g,  // Regex for replacing addition symbol with a space
-        r = /([^&;=]+)=?([^&;]*)/g,
-        d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
-        q = window.location.search.substring(1);
-    while (e = r.exec(q))
-       hashParams[d(e[1])] = d(e[2]);
-    return hashParams;
-}
-
-star.utils.trimTo = function(input, len) {
-    if(input != undefined && input != null && input.length > 10 && input.length > len){
-        input = input.substring(0, len-1);
-        input += "...";
-    }
-    return input;
-}
-
-star.utils.uuid = function() {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    }
-    return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
-  }
-
-star.utils.uploadFiles = function(url, files, clbk) {
-    for (var i = 0; i < files.length; i++) {
-      var formData = new FormData();
-      var file = files[i];
-      console.log(file.name);
-      formData.append("attachment", file);
-      formData.append("contentType", file.type);
-      formData.append("size", file.size);
-      formData.append("name", file.name);
-      console.log(formData);
-      
-      $("#progresses").append("<div class='progress' id='progressContainer"+i+"'><div class='progress-bar progress-bar-striped active' id='progress"+i+"' role='progressbar' aria-valuenow='45' aria-valuemin='0' aria-valuemax='100'></div></div>");
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', url, true);
-      
-      (function(i, clbk) {
-          var index = i;
-          xhr.onload = function(e) { 
-              $("#upload").replaceWith($("#upload").clone(true));                  
-              $("#progressContainer"+index).remove();
-              var uuid = e.currentTarget.responseText;
-              if(clbk != undefined)
-                  clbk(uuid);
-              $.post("/delete-temp-files", function(){});
-          };
-          
-          xhr.upload.onprogress = function(e) {
-              if (e.lengthComputable) {
-                  var up = (e.loaded / e.total) * 100;
-                  $("#progress"+i).css("width", up+"%");
-              }
-          }
-      })(i, clbk);      
-
-      $("#progress"+i).show();
-      xhr.send(formData);
-    }
-};   
+var starUtils = {};
 
 $(document).ready(function(){
     $("#query-search").typeahead({
@@ -168,6 +73,99 @@ $(document).ready(function(){
     
 });
 
+star.utils.Interval = function(fn, time) {
+    var timer = false;
+    this.start = function () {
+        if (!this.isRunning())
+            timer = setInterval(fn, time);
+    };
+    this.stop = function () {
+        clearInterval(timer);
+        timer = false;
+    };
+    this.isRunning = function () {
+        return timer !== false;
+    };
+}
+
+star.utils.getHashParams = function () {
+    var hashParams = {};
+    var e,
+        a = /\+/g,  // Regex for replacing addition symbol with a space
+        r = /([^&;=]+)=?([^&;]*)/g,
+        d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
+        q = window.location.hash.substring(1);
+    while (e = r.exec(q))
+       hashParams[d(e[1])] = d(e[2]);
+    return hashParams;
+}
+
+star.utils.getParams = function () {
+    var hashParams = {};
+    var e,
+        a = /\+/g,  // Regex for replacing addition symbol with a space
+        r = /([^&;=]+)=?([^&;]*)/g,
+        d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
+        q = window.location.search.substring(1);
+    while (e = r.exec(q))
+       hashParams[d(e[1])] = d(e[2]);
+    return hashParams;
+}
+
+star.utils.trimTo = function(input, len) {
+    if(input != undefined && input != null && input.length > 10 && input.length > len){
+        input = input.substring(0, len-1);
+        input += "...";
+    }
+    return input;
+}
+
+star.utils.uuid = function() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
+}
+
+star.utils.uploadFiles = function(url, files, clbk) {
+    for (var i = 0; i < files.length; i++) {
+      var formData = new FormData();
+      var file = files[i];
+      formData.append("attachment", file);
+      formData.append("contentType", file.type);
+      formData.append("size", file.size);
+      formData.append("name", file.name);
+      
+      $("#progresses").append("<div class='progress' id='progressContainer"+i+"'><div class='progress-bar progress-bar-striped active' id='progress"+i+"' role='progressbar' aria-valuenow='45' aria-valuemin='0' aria-valuemax='100'></div></div>");
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', url, true);
+      
+      (function(i, clbk) {
+          var index = i;
+          xhr.onload = function(e) { 
+              $("#upload").replaceWith($("#upload").clone(true));                  
+              $("#progressContainer"+index).remove();
+              var uuid = e.currentTarget.responseText;
+              if(clbk != undefined)
+                  clbk(uuid);
+              $.post("/delete-temp-files", function(){});
+          };
+          
+          xhr.upload.onprogress = function(e) {
+              if (e.lengthComputable) {
+                  var up = (e.loaded / e.total) * 100;
+                  $("#progress"+i).css("width", up+"%");
+              }
+          }
+      })(i, clbk);      
+
+      $("#progress"+i).show();
+      xhr.send(formData);
+    }
+};   
+
 star.utils.setCookie = function(name,value,days) {
     var date = new Date();
     date.setTime(date.getTime()+(9999*24*60*60*1000));
@@ -186,7 +184,6 @@ star.utils.getCookie = function(cname) {
     return "";
 }
 
-
 star.utils.dismiss = function(name){
     star.utils.setCookie(name, "true");
 }
@@ -196,9 +193,6 @@ star.utils.deleteCookie = function(cname) {
     document.cookie = name + "=; Expires="+date.toGMTString()+"; Path=/";
     return "";
 }
-
-
-// other libs
 
 var dateFormat = function () {
     var token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,
@@ -279,8 +273,42 @@ var dateFormat = function () {
     };
 }();
 
+dateFormat.masks = {
+    "default":      "ddd mmm dd yyyy HH:MM:ss",
+    shortDate:      "m/d/yy",
+    mediumDate:     "d mmm",
+    longDate:       "d mmmm, yyyy",
+    fullDate:       "dddd, mmmm d, yyyy",
+    shortTime:      "h:MM TT",
+    mediumTime:     "h:MM:ss TT",
+    longTime:       "h:MM:ss TT Z",
+    isoDate:        "yyyy-mm-dd",
+    isoTime:        "HH:MM:ss",
+    isoDateTime:    "yyyy-mm-dd'T'HH:MM:ss",
+    isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
+};
 
-var starUtils = {};
+// Internationalization strings
+dateFormat.i18n = {
+    dayNames: [
+        "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
+        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    ],
+    monthNames: [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+        "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+    ]
+};
+
+// For convenience...
+Date.prototype.format = function (mask, utc) {
+    return dateFormat(this, mask, utc);
+};
+
+
+
+
+
 starUtils.s4 = function() {
  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 };
@@ -318,7 +346,10 @@ starUtils.formatDateTime = function(long) {
 
 starUtils.formatDate = function(long) {
     var date = starUtils.getTimeZoneDate(long);
-    return dateFormat(date.getTime(), dateFormat.masks.mediumDate);
+    var year = new Date(new Date().getFullYear(), 0, 1);
+    if(date.getTime() > year.getTime())
+        return dateFormat(date.getTime(), dateFormat.masks.mediumDate);
+    return dateFormat(date.getTime(), dateFormat.masks.longDate);
 };
 
 starUtils.formatTime = function(long) {
@@ -335,8 +366,15 @@ starUtils.formatDateTime = function(date) {
 
 starUtils.getParameterByName = function(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(document.URL);
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), 
+    results = regex.exec(document.URL);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+};
+
+starUtils.getHashParameterByName = function(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regex = new RegExp("[\\#&]" + name + "=([^&#]*)");
+    results = regex.exec(window.location.hash);
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 };
 
@@ -384,41 +422,8 @@ function linkify(inputText) {
     return replacedText;
 }
 
-// Some common format strings
-dateFormat.masks = {
-    "default":      "ddd mmm dd yyyy HH:MM:ss",
-    shortDate:      "m/d/yy",
-    mediumDate:     "d mmm",
-    longDate:       "d mmmm, yyyy",
-    fullDate:       "dddd, mmmm d, yyyy",
-    shortTime:      "h:MM TT",
-    mediumTime:     "h:MM:ss TT",
-    longTime:       "h:MM:ss TT Z",
-    isoDate:        "yyyy-mm-dd",
-    isoTime:        "HH:MM:ss",
-    isoDateTime:    "yyyy-mm-dd'T'HH:MM:ss",
-    isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
-};
 
-// Internationalization strings
-dateFormat.i18n = {
-    dayNames: [
-        "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
-        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-    ],
-    monthNames: [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-        "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-    ]
-};
-
-// For convenience...
-Date.prototype.format = function (mask, utc) {
-    return dateFormat(this, mask, utc);
-};
-
-
-//ratings
+//rating stars
 (function ($) {
     $.fn.rating = function () {
       var element;

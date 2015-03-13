@@ -724,8 +724,9 @@ public class Events extends BaseController
             {
                 final Attendance attendance = Attendance.get(invite[i]);
                 final String locale = attendance.customer == null ? "en" : attendance.customer.locale;
-                final String subject = Messages.getMessage(locale, "you-have-been-invited-subject", user.getFullName(), attendance.event.listing.title);
-                final String body = Messages.getMessage(locale, "you-have-been-invited-message", user.getFullName(), event.listing.title, getBaseUrl() + "event/" + event.uuid);
+                final String subject = Messages.getMessage(locale, "you-have-been-invited-subject", attendance.event.listing.title);
+                final String body = Messages.getMessage(locale, "you-have-been-invited-message", event.listing.title, user.getFullName(), event.listing.title, getBaseUrl() + "event/"
+                        + event.uuid);
 
                 if (attendance.customer != null)
                 {
