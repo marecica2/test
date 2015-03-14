@@ -31,8 +31,8 @@ you-are-blocked=You have been blocked by user
 
 #Contacts.java
 invalid-email=Invalid email address
-send-invitation=Send invitation
-is-already-registered=Contact %s is already registered. <a href='/user/%s'>Go to profile</a>
+send-invitation=Send Invitation
+is-already-registered=Contact %s is already registered. <a href='/user/%s'>Visit profile</a>
 invited-you-to-widgr-subject=%s invited You to join Widgr
 invitation-sent-to=Invitation has been successfully sent to %s 
 view-on-widgr=View on Widgr
@@ -434,11 +434,13 @@ sort-by-best-match=Sort by best match
 search=Search
 
 #dashboard.html
+dashboard-description=<h4>What is Dasboard?</h4>View new comments, posts and updates on this page. When publisher updates something on your scheduled Session it will appear here, so you won't miss anything important.<br/> You can even communicate with all your contacts through posts here just like on Facebook.<br/>Posts related to Sessions will be displayed only to invited Users
 lates-posts=Lates posts
 upcoming-events=Upcoming sessions
 previous-events=Past sessions
 
 #home.html
+register=Register Now
 for-customers=<strong>widgr</strong> for Customers
 for-publishers=<strong>widgr</strong> for Publishers
 find-everything-on-one-place=Get help from experts
@@ -484,8 +486,9 @@ latest-posts=Latest posts
 
 #contacts.html
 manage-contacts=Manage contacts
-invite-new-user=Invite new user
-type-email=Type email
+invite-new-user=Invite new Users to join Widgr
+invite-by-email=send
+type-email=Email address
 invite=Invite
 name=Name
 status=Status

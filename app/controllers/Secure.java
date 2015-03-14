@@ -267,7 +267,6 @@ public class Secure extends BaseController
                 user.save();
                 return true;
             }
-
             return false;
         }
 

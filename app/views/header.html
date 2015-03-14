@@ -1,3 +1,71 @@
+<div class="header-top">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-2  col-sm-6">
+
+				<!-- header-top-first start -->
+				<!-- ================ -->
+				<div class="header-top-first clearfix">
+					<ul class="social-links clearfix hidden-xs">
+						<li class="facebook"><a target="_blank" href="http://www.facebook.com"><i class="fa fa-facebook"></i></a></li>
+						<li class="twitter"><a target="_blank" href="http://www.twitter.com"><i class="fa fa-twitter"></i></a></li>
+						<li class="googleplus"><a target="_blank" href="http://plus.google.com"><i class="fa fa-google-plus"></i></a></li>
+						<li class="linkedin"><a target="_blank" href="http://www.linkedin.com"><i class="fa fa-linkedin"></i></a></li>
+					</ul>
+					<div class="social-links hidden-lg hidden-md hidden-sm">
+						<div class="btn-group dropdown">
+							<button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i class="fa fa-share-alt"></i></button>
+							<ul class="dropdown-menu dropdown-animation">
+								<li class="facebook"><a target="_blank" href="http://www.facebook.com"><i class="fa fa-facebook"></i></a></li>
+								<li class="twitter"><a target="_blank" href="http://www.twitter.com"><i class="fa fa-twitter"></i></a></li>
+								<li class="googleplus"><a target="_blank" href="http://plus.google.com"><i class="fa fa-google-plus"></i></a></li>
+								<li class="linkedin"><a target="_blank" href="http://www.linkedin.com"><i class="fa fa-linkedin"></i></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- header-top-first end -->
+
+			</div>
+			<div class="col-xs-10 col-sm-6">
+
+				<!-- header-top-second start -->
+				<!-- ================ -->
+				<div id="header-top-second" class="clearfix">
+
+					<!-- header top dropdowns start -->
+					<!-- ================ -->
+					<div class="header-top-dropdown">
+						<div class="btn-group dropdown">
+							<button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i class="fa fa-search"></i> Search</button>
+							<ul class="dropdown-menu dropdown-menu-right dropdown-animation">
+								<li>
+									<form role="search" class="search-box">
+										<div class="form-group has-feedback">
+											<input type="text" class="form-control" placeholder="Search">
+											<i class="fa fa-search form-control-feedback"></i>
+										</div>
+									</form>
+								</li>
+							</ul>
+						</div>
+						
+						<div class="btn-group">dsd
+							<a href="/login" class="link" ><i class="fa fa-user"></i> Login</a>
+						</div>
+
+					</div>
+					<!--  header top dropdowns end -->
+
+				</div>
+				<!-- header-top-second end -->
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
 <header class="header fixed clearfix">
 	<div class="container">
 		<div class="row">
@@ -51,6 +119,9 @@
 									<ul class="nav navbar-nav navbar-right">
 									
 										
+										<li>
+											<a href="/instant" target="_blank" rel="tooltip" data-placement="bottom" data-original-title="&{'start-instant-chat'}"><i class="fa fa-video-camera "></i></a>
+										</li>
 							  	  		
 									 	#{if user}
 										<li class="header-notification #{if user && user.unreadMessages}#{/if}#{else}hidden#{/else}" style="padding-left:30px">
@@ -91,7 +162,6 @@
 									  	#{/if}
    								  	   	<li #{if request.url.indexOf("channels")>=0}class="active"#{/if}><a href="/channels" id="public-btn-logout">&{'search'}</a></li>
 									   	
-									   	#{if user == null}
 									   	<li class='dropdown #{if request.url.indexOf("about")>=0} active #{/if}'>
 									    	<a class="dropdown-toggle" data-toggle="dropdown" href="/about" >&{'about'}</a>
 									        <ul class="dropdown-menu">
@@ -102,12 +172,7 @@
 									      		<li><a href="/help">&{'help'}</a></li>
 									        </ul>
 									    </li>   
-									  	#{/if}
 									    
-										<li>
-											<a href="/instant" target="_blank" rel="tooltip" data-placement="bottom" style="position:relative;font-size:1.2em" data-original-title="&{'start-instant-chat'}"><i class="fa fa-video-camera "></i></a>
-										</li>									    									
-
 								    	<li class="dropdown" style="">
 									    	<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="" ><span><img src='/public/images/flags/#{if request.cookies.get("PLAY_LANG") != null}${request.cookies.get("PLAY_LANG").value}#{/if}#{else}${lang}#{/else}.gif'></span></a>
 									        <ul class="dropdown-menu">

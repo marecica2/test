@@ -15,6 +15,7 @@ import models.Account;
 import models.Activity;
 import models.Attendance;
 import models.Comment;
+import models.Contact;
 import models.Event;
 import models.FileUpload;
 import models.Listing;
@@ -468,6 +469,8 @@ public class Events extends BaseController
             act.event = event;
             act.eventName = event.listing.title;
             act.saveActivity();
+
+            createContacts(user, event.user);
         } else
         {
             final Activity act = new Activity();
@@ -487,6 +490,27 @@ public class Events extends BaseController
         QuartzServise.scheduleEvent(event);
 
         renderJSON(EventDTO.convert(event, user));
+    }
+
+    private static void createContacts(User from, User to)
+    {
+        if (!from.hasContact(to))
+        {
+            Contact c = new Contact();
+            c.user = from;
+            c.contact = to;
+            c.following = true;
+            c.saveContact();
+        }
+
+        if (!to.hasContact(from))
+        {
+            Contact c1 = new Contact();
+            c1.user = to;
+            c1.contact = from;
+            c1.following = true;
+            c1.saveContact();
+        }
     }
 
     public static void eventSyncGoogleRest(String uuid)

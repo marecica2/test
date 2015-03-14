@@ -42,7 +42,7 @@ public class Contacts extends BaseController
         if (validation.hasErrors())
         {
             flash.error(Messages.get("invalid-email"));
-            contacts();
+            Application.dashboard(null, null);
         }
 
         if (u != null)
@@ -63,7 +63,7 @@ public class Contacts extends BaseController
                     .sendInvitation();
             flash.success(Messages.get("invitation-sent-to", email));
         }
-        contacts();
+        Application.dashboard(null, null);
     }
 
     public static void contactBlock(String uuid, String url)

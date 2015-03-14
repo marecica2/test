@@ -12,6 +12,19 @@
 			#{/else}			
 		#{/list}	
 	</p>
+	
+	<form class="form-inline" method="post" role="form" action="/contacts/invite?url=${request.url.urlEncode()}&#{token /}">
+	  	<div class="form-group">
+		    <label>&{'invite-new-user'} &nbsp;</label>
+		    <div class="input-group">
+		      	<input type="text" class="form-control" autocomplete="off" size="50" maxlength="100" name="email" placeholder="&{'type-email'}" value="${flash.email}" >
+			    <span class="input-group-btn">
+			    	<button class="btn btn-light-gray btn-short btn-margin" style="height:40px;" id="dialog-invite-button" type="submit">&{'invite-by-email'}</button>
+			    </span>					    
+		    </div>
+		</div>				
+	</form>	
+	
 	<br/>
 	<br/>
 

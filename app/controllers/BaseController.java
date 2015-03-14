@@ -108,6 +108,21 @@ public class BaseController extends Controller
             } else
             {
                 u = User.getUserByLogin(userLogin);
+                u.userAbout = null;
+                u.userEducation = null;
+                u.userExperiences = null;
+                u.linkedIn = null;
+                u.facebook = null;
+                u.googlePlus = null;
+                u.skype = null;
+                u.workingHourEnd = null;
+                u.workingHourStart = null;
+                u.hiddenDays = null;
+                u.password = null;
+                u.referrerToken = null;
+                u.registrationToken = null;
+                u.stylesheet = null;
+                u.twitter = null;
                 Cache.set(userLogin, u);
                 return u;
             }

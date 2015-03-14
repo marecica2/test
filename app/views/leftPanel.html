@@ -18,12 +18,4 @@
 </ul>
 <br/>
 
-*{
-#{if !isOwner && mail}
-<br/>
-<a href="/mail?action=new&to=${usr.login}&url=${request.url.urlEncode()}" class="btn btn-light-gray btn-block"><i class="fa fa-envelope"></i> &{'write-message-for'} ${usr.firstName}</a>
-<br/>
-#{/if}
-}*
 
-<iframe width="100%" height="200px" frameBorder="0" src="https://localhost:10001/embed/channel/da119626412e4e55b58d56af52e5de93"></iframe>

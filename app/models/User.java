@@ -286,6 +286,14 @@ public class User extends Model
         return false;
     }
 
+    public boolean hasContact(User u)
+    {
+        final Contact contact = Contact.get(this, u);
+        if (contact != null)
+            return true;
+        return false;
+    }
+
     public boolean paidForCurrentMonth()
     {
         final AccountPlan currentPlan = this.account.currentPlan();
