@@ -181,6 +181,8 @@ public class Attendances extends BaseController
             final Activity act = new Activity();
             if (result.equals(Attendance.ATTENDANCE_RESULT_ACCEPTED))
                 act.type = Activity.ACTIVITY_EVENT_INVITE_ACCEPTED;
+            if (result.equals(Attendance.ATTENDANCE_RESULT_DECLINED))
+                act.type = Activity.ACTIVITY_EVENT_INVITE_DECLINED;
             act.user = user;
             act.event = a.event;
             act.eventName = a.event.listing.title;

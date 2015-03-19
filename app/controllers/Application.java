@@ -9,6 +9,7 @@ import models.Contact;
 import models.Event;
 import models.Listing;
 import models.Message;
+import models.Rating;
 import models.Search;
 import models.User;
 
@@ -46,11 +47,14 @@ public class Application extends BaseController
     public static void contact(String id)
     {
         final User user = getLoggedUser();
+        final String uuid = RandomUtil.getUUID();
         final User usr = id != null ? User.getUserByLogin(id) : null;
-        String uuid = RandomUtil.getUUID();
+        final List<Contact> followers = usr != null ? Contact.getFollowers(usr) : null;
+        final List<Contact> followees = usr != null ? Contact.getFollowing(usr) : null;
+        final Contact follow = usr != null ? Contact.isFollowing(user, usr, followers) : null;
         params.put("uuid", uuid);
         params.flash();
-        render(user, uuid, usr);
+        render(user, uuid, usr, followers, followees, follow);
     }
 
     public static void contactUs(String uuid, String name, String email, String subject, String message, String captcha, String id)
@@ -285,40 +289,55 @@ public class Application extends BaseController
         render(user, isOwner, contacts, dashboard);
     }
 
+    public static void userProfile(String userLogin)
+    {
+        final boolean userProfile = true;
+        final User user = getLoggedUser();
+        final User usr = User.getUserByLogin(userLogin);
+
+        if (usr == null)
+            notFound();
+
+        final Boolean isOwner = user != null && usr != null && usr.equals(user) ? true : false;
+        final Contact contact = user != null ? Contact.get(user, usr) : null;
+
+        final List<Contact> followers = Contact.getFollowers(usr);
+        final List<Contact> followees = Contact.getFollowing(usr);
+        final Contact follow = Contact.isFollowing(user, usr, followers);
+
+        final List<Rating> ratings = Rating.getByUser(usr.uuid);
+        final List<Listing> listings = Listing.getForUser(usr);
+        final Map<String, Object> stats = Rating.calculateStats(ratings);
+
+        final String name = user != null ? user.getFullName() : Messages.get("anonymous") + RandomUtil.getRandomDigits(5);
+        final String room = usr != null ? usr.uuid : null;
+        final String rmtp = getProperty(CONFIG_RMTP_PATH);
+        final String socketIo = getProperty(CONFIG_SOCKET_IO);
+
+        render(user, usr, userProfile, isOwner, listings, followees,
+                followers, follow, ratings, stats, contact, name, room, rmtp, socketIo);
+    }
+
     public static void calendarUser(String login, String channel) throws Throwable
     {
         final User user = getLoggedUser();
         final User userDisplayed = User.getUserByLogin(login);
-        final Boolean isPublic = request.params.get("public") != null ? true : false;
-        final Boolean isOwner = user != null && user.equals(userDisplayed) && !isPublic ? true : false;
+        final Boolean isOwner = user != null && user.equals(userDisplayed) ? true : false;
+        final List<Contact> followers = Contact.getFollowers(userDisplayed);
+        final List<Contact> followees = Contact.getFollowing(userDisplayed);
+        final Contact follow = Contact.isFollowing(user, userDisplayed, followers);
+        final Listing listing = channel != null ? Listing.get(channel) : null;
+        final List<Listing> listings = user != null ? Listing.getForUser(user) : null;
 
-        // for event request user must be logged in
         if (channel != null)
         {
             if (!userDisplayed.isPublisher())
                 forbidden();
-
             if (user == null)
                 redirectToLogin(request.url);
             flash.put("success", Messages.get("click-and-drag-to-create-event"));
         }
-
-        final List<Contact> followers = Contact.getFollowers(userDisplayed);
-        final List<Contact> followees = Contact.getFollowing(userDisplayed);
-        final Contact follow = Contact.isFollowing(user, userDisplayed, followees);
-        final Listing listing = channel != null ? Listing.get(channel) : null;
-        final List<Listing> listings = user != null ? Listing.getForUser(user) : null;
         renderTemplate("/Application/calendar.html", user, userDisplayed, isOwner, listing, listings, followers, followees, follow);
     }
 
-    public static void embed(String channel) throws Throwable
-    {
-        final User user = getLoggedUser();
-        final Listing listing = channel != null ? Listing.get(channel) : null;
-        final User userDisplayed = listing.user;
-
-        final List<Contact> followers = Contact.getFollowers(userDisplayed);
-        final List<Contact> followees = Contact.getFollowing(userDisplayed);
-        render(user, userDisplayed, listing, followers, followees);
-    }
 }

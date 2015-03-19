@@ -1,4 +1,8 @@
 #{if usr.userAbout != null && usr.userAbout.length() > 0}
+<h2>&{'about'} ${usr.firstName}
+#{if isOwner}<a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#about"><i class="fa fa-pencil"></i> &{'edit'}</a>#{/if}
+</h2>
+<div class="separator-2"></div>
 <p class="black">${usr.userAboutHtml().raw()}</p>
 #{/if}
 

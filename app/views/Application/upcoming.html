@@ -17,6 +17,16 @@
 	</script>
 #{/set}
 
+
+#{set 'moreMessages'}
+	#{if request.cookies.msgUpcoming == null}
+		<div class="shadow alert alert-info alert-dismissible" role="alert">
+		  <button type="button" class="close" data-dismiss="alert" onclick="star.utils.dismiss('msgUpcoming')"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
+		  &{'upcoming-msg'}
+		</div>
+	#{/if}
+#{/set}
+
 <div class="container">
 	<div class="padding row">
 		<div class="col-md-12">

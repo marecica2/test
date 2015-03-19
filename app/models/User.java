@@ -268,7 +268,7 @@ public class User extends Model
 
     public Boolean isOnline()
     {
-        return (this.lastOnlineTime != null && (this.lastOnlineTime.getTime() > System.currentTimeMillis() - 60000)) ? true : false;
+        return (this.lastOnlineTime != null && (this.lastOnlineTime.getTime() > (System.currentTimeMillis() - 200000))) ? true : false;
     }
 
     public Boolean isAvailable()
@@ -352,5 +352,10 @@ public class User extends Model
             Logger.error(e, "availableEvents ERROR");
         }
         return 99999;
+    }
+
+    public void detach()
+    {
+        this.em().detach(this);
     }
 }

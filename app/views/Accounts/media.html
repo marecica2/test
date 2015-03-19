@@ -6,6 +6,15 @@
 #{set 'moreScripts'}
 #{/set}
 
+#{set 'moreMessages'}
+	#{if request.cookies.msgMedia == null}
+		<div class="shadow alert alert-info alert-dismissible" role="alert">
+		  <button type="button" class="close" data-dismiss="alert" onclick="star.utils.dismiss('msgMedia')"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
+		  &{'msgMedia-msg'}
+		</div>
+	#{/if}
+#{/set}
+
 
 <div class="padding container">
 	<div class="row">

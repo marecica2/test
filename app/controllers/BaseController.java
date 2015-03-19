@@ -108,6 +108,7 @@ public class BaseController extends Controller
             } else
             {
                 u = User.getUserByLogin(userLogin);
+                u.detach();
                 u.userAbout = null;
                 u.userEducation = null;
                 u.userExperiences = null;

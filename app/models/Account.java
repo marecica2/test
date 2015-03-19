@@ -1,6 +1,7 @@
 package models;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.persistence.Entity;
 
@@ -28,6 +29,7 @@ public class Account extends Model
     public String url;
     public String currency;
     public String paypalAccount;
+    public Date requestTime;
 
     public static Account get(String key)
     {

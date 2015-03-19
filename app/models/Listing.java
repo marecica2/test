@@ -128,7 +128,7 @@ public class Listing extends Model
         String query = "";
         query += " SELECT s.uuid, title, s.firstname, s.lastname, s.avatarUrl, "
                 + "s.category, s.privacy, s.charging, s.price, s.currency, s.imageUrl, "
-                + "s.tags, s.type, s.ratingStars, s.ratingAvg, s.login, firstFree, u.available, s.description ";
+                + "s.tags, s.type, s.ratingStars, s.ratingAvg, s.login, firstFree, s.description, u.available, u.lastOnlineTime ";
         query += " FROM search_index s ";
         query += " JOIN users u ON u.login = s.login ";
         query += " WHERE 1 = 1 ";
@@ -199,8 +199,9 @@ public class Listing extends Model
             u.login = (String) item[15];
             l.firstFree = (Boolean) item[16];
             l.user = u;
-            l.available = item[17] != null ? true : false;
-            l.description = (String) item[18];
+            l.description = (String) item[17];
+            u.available = item[18] != null ? true : false;
+            u.lastOnlineTime = (Date) item[19];
             listings.add(l);
         }
         return listings;
@@ -253,8 +254,6 @@ public class Listing extends Model
 
     public boolean isAvailable()
     {
-        if (this.user.available != null && this.user.available)
-            return true;
-        return false;
+        return this.user.isAvailable();
     }
 }

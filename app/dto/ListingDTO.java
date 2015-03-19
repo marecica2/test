@@ -53,7 +53,7 @@ public class ListingDTO
 
     public boolean firstFree;
 
-    private Boolean available;
+    public boolean available;
 
     public static ListingDTO convert(Listing listing, User user)
     {
@@ -73,7 +73,7 @@ public class ListingDTO
         l.type = listing.type;
         l.privacy = listing.privacy;
         l.uuid = listing.uuid;
-        l.available = listing.available;
+        l.available = listing.isAvailable();
         if (listing.firstFree != null && listing.firstFree)
             l.firstFree = listing.firstFree;
         else

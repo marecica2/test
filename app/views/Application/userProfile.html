@@ -15,20 +15,18 @@
 <div class="container" >				
 	<div class="row">
 		<div class="col-md-8">
+			<div>
+				#{set usr:usr /}
+				#{include 'userAbout.html' /}
+			</div>
+			
 			#{if listings && (usr.isPublisher()) || (user != null  && user.isAdmin()) }
 				<h2>&{'all-channels-from'} ${usr.firstName}</h2>
 				<div class="separator-2"></div>
 				#{set items:listings /}
 				#{set forEvents:false /}
 				#{include 'listingsList.html' /}
-			#{/if}				
-
-			<div>
-				<h2 class="">&{'about'} ${usr.firstName}</h2>
-				<div class="separator-2"></div>
-				#{set usr:usr /}
-				#{include 'userAbout.html' /}
-			</div>
+			#{/if}					
 						
 			<div>
 				#{set object:usr /}

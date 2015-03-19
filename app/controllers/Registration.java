@@ -54,11 +54,18 @@ public class Registration extends BaseController
         validation.required(captcha);
         final Object cap = Cache.get("captcha." + uuid);
         if (captcha != null && cap != null)
+        {
             validation.equals(captcha, cap).message("invalid-captcha");
+        }
+
+        User user = User.getUserByLogin(login);
+        if (user == null)
+        {
+            validation.addError("login", "user-not-exists");
+        }
 
         if (!validation.hasErrors())
         {
-            User user = User.getUserByLogin(login);
             if (user != null)
             {
                 user.password = StringUtils.getRandomPassword(8);
@@ -74,10 +81,10 @@ public class Registration extends BaseController
                         .setSubject(title)
                         .setMessageWiki(message)
                         .send();
+                // send email
+                flash.success(Messages.get("password-message"));
+                Secure.login();
             }
-            // send email
-            flash.success(Messages.get("password-message"));
-            Secure.login();
         } else
         {
             params.flash();

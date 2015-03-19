@@ -3,22 +3,18 @@ package controllers;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import models.Activity;
 import models.ChatFeed;
 import models.Contact;
 import models.Event;
 import models.Listing;
-import models.Rating;
 import models.User;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
 import play.i18n.Lang;
-import play.i18n.Messages;
 import utils.JsonUtils;
-import utils.RandomUtil;
 
 import com.google.gson.JsonObject;
 
@@ -27,6 +23,17 @@ import dto.ChatFeedDTO;
 
 public class Public extends BaseController
 {
+    public static void embed(String channel) throws Throwable
+    {
+        final User user = getLoggedUser();
+        final Listing listing = channel != null ? Listing.get(channel) : null;
+        final User userDisplayed = listing.user;
+
+        final List<Contact> followers = Contact.getFollowers(userDisplayed);
+        final List<Contact> followees = Contact.getFollowing(userDisplayed);
+        render(user, userDisplayed, listing, followers, followees);
+    }
+
     public static void checkConnection()
     {
         User user = getLoggedUser();
@@ -108,35 +115,6 @@ public class Public extends BaseController
         for (Activity activity : activities)
             aDto.add(ActivityDTO.convert(activity, user));
         renderJSON(aDto);
-    }
-
-    public static void userProfile(String userLogin)
-    {
-        final boolean userProfile = true;
-        final User user = getLoggedUser();
-        final User usr = User.getUserByLogin(userLogin);
-
-        if (usr == null)
-            notFound();
-
-        final Boolean isOwner = user != null && usr != null && usr.equals(user) ? true : false;
-        final Contact contact = user != null ? Contact.get(user, usr) : null;
-
-        final List<Contact> followers = Contact.getFollowers(usr);
-        final List<Contact> followees = Contact.getFollowing(usr);
-        final Contact follow = Contact.isFollowing(user, usr, followers);
-
-        final List<Rating> ratings = Rating.getByUser(usr.uuid);
-        final List<Listing> listings = Listing.getForUser(usr);
-        final Map<String, Object> stats = Rating.calculateStats(ratings);
-
-        final String name = user != null ? user.getFullName() : Messages.get("anonymous") + RandomUtil.getRandomDigits(5);
-        final String room = usr != null ? usr.uuid : null;
-        final String rmtp = getProperty(CONFIG_RMTP_PATH);
-        final String socketIo = getProperty(CONFIG_SOCKET_IO);
-
-        render(user, usr, userProfile, isOwner, listings, followees,
-                followers, follow, ratings, stats, contact, name, room, rmtp, socketIo);
     }
 
     public static void wiki()

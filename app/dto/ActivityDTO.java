@@ -42,7 +42,7 @@ public class ActivityDTO extends Model
         aDto.customerLogin = a.user.login;
         aDto.forCustomer = a.forCustomer;
 
-        if (a.type.indexOf("Cust") >= 0)
+        if (a.type != null && a.type.indexOf("Cust") >= 0)
             aDto.byCustomer = true;
         if (Activity.ACTIVITY_EVENT_INVITED.equals(a.type))
         {

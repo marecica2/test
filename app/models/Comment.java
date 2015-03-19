@@ -109,7 +109,7 @@ public class Comment extends Model
     {
         StringBuilder sb = new StringBuilder();
         sb.append(" select distinct comment from Comment comment left outer join Comment.event e left outer join e.attendances as a where (comment.user in ");
-        sb.append(" (select contact.contact from Contact contact where contact.following = true and contact.user = :user ) ");
+        sb.append(" (select contact.contact from Contact contact where contact.following = true and contact.user = :user and (contact.blocked is null or contact.blocked = false) ) ");
         sb.append(" and (comment.objectType != 'event' or e.privacy = 'public' or (e.privacy = 'private' and a.customer = :user) ) ");
         sb.append(" ) or comment.user = :user ");
         sb.append(" order by comment.updated desc ");

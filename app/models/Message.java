@@ -82,7 +82,7 @@ public class Message extends Model
     {
         if (toUser != null)
         {
-            toUser.refresh();
+            toUser = User.getUserByUUID(toUser.uuid);
             toUser.unreadMessages = true;
             toUser.save();
 

@@ -16,6 +16,8 @@
 #{/set}
 
 
+
+
 <form id="cropForm" action="/crop" method="post">
 	<input type="hidden" id="url" name="url" value="${request.url.urlEncode()}" />
 	<input type="hidden" id="x1" name="x1" />
@@ -70,13 +72,14 @@
 	  		}*
 	  	
 			<h2 class="btn-margin">
-				<i class="fa fa-cog"></i> &{'settings'}
-				<span class="">
+				<i class="fa fa-edit"></i> &{'settings'}
+				<span class="pull-right">
 					#{if !edit}
-						<a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true"><i class="fa fa-pencil"></i> &{'edit'}</a>
+						<span id="upload-button" class="btn btn-margin btn-light-gray btn-short" style=""><i class="icon-user"></i> &{'change-profile-picture'}</span>
+						<a class="btn btn-light-gray btn-margin btn-short" href="/settings?edit=true"><i class="fa fa-pencil"></i> &{'edit'}</a>
 					#{/if}
 					#{else}
-						<a class="btn btn-light-gray btn-sm btn-margin" href="/settings"><i class="fa fa-times"></i> &{'cancel'}</a>
+						<a class="btn btn-light-gray btn-margin btn-short" href="/settings"><i class="fa fa-times"></i> &{'cancel'}</a>
 					#{/else}
 				</span>
 			</h2>
@@ -84,13 +87,14 @@
 		    #{authenticityToken /}
 
 			<div class="row">
-				<div class="col-md-9">
-					<div class="avatar-container">
-					  <img id="image" class="cropper avatar" src="/${user.avatarUrl}">
-					</div>
-					  <span id="upload-button" class="btn btn-default btn-short" style="position:absolute;left:25px;top:0px"><i class="fa fa-camera"></i></span>
+				<div class="col-md-0">
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-4">
+					<div class="avatar-container box-style-1 gray-bg team-member" style="display:table">
+					  <img id="image" class="cropper avatar" src="/${user.avatarUrl}" style="height: 200px">
+					</div>
+				</div>
+				<div class="col-md-4">
 					<div class="eg-preview clearfix" style="display:none">
 						<div class="avatar-preview preview preview-lg"></div>
 						<div class="avatar-preview preview preview-md"></div>
@@ -114,153 +118,226 @@
 			</div>
 			<!-- Fileupload -->		
 			
-			<h3>&{'account.account'}</h3>
-			<div class="separator-2"></div>
+			<h3 class="centered">&{'account.account'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
+			<div class="separator"></div>
 			
 			#{if !edit}
-			<dl class="dl-horizontal">
-				<dt>&{'login'}</dt>
-				<dd>${user.login} &nbsp;</dd>
-				<dt>&{'account-name'}</dt>
-				<dd>${user.account.name} &nbsp;</dd>
-				<dt>&{'account-type'}</dt>
-				<dd>
-					#{if user && user.account.type == "publisherReq"}
-						<span class="label label-default">&{user.account.type}</span><br/>
-						<span class="label label-success">&{'publisher-waiting-for-approvement'}</span>
-					#{/if}
-					#{elseif user && user.account.type == "standard"}
-						<span class="label label-default">&{user.account.type}</span><br/>
-						<a href="/settings/request-publisher?url=${request.url.urlEncode()}&#{token /}">&{'become-a-publisher'}</a> &middot;
-						<a href="/help#publisher">&{'learn-more'}</a>
-					#{/elseif}
-					#{else}
-						<span class="label default-bg">&{user.account.type}</span>
-					#{/else}
-				</dd>
-				
-				
-				#{if user.isPublisher()}
-				<dt>&{'account-plan'}</dt>
-				<dd>
-					#{if plan}
-						<span class="label default-bg">
-							&{plan.type} 
-							#{if !plan.isStandard()}
-							, &{'price'}: ${user.account.getPlanPrice()}$ &{'per-month'}
-							#{/if}
-						</span>&nbsp;
-						
-						#{if plan.profile && plan.type == "premium"}
-						<span class="label default-bg">
-							&{'events-left'}: ${user.availableEvents()}						
-						</span>
-						#{/if}
-						
-						#{if plan && plan.validTo != null}&nbsp;
-							<span class="label label-default">
-								&{'valid-to'} ${plan.validTo.format("dd MMM yyyy")}
-							</span>
-						#{/if}
-						<br/>
-						<br/>
-						
-						*{
-						#{if plan.type == "standard" || plan == null}
-							#{if planLast == null || (plan && planLast && planLast.id == plan.id)}
-								<a href="/settings/paypal/upgrade?type=premium&url=${request.url.urlEncode()}&#{token /}">&{'upgrade-to-plan'} &{'premium'}</a> &middot;
-								<a href="/settings/paypal/upgrade?type=pro&url=${request.url.urlEncode()}&#{token /}">&{'upgrade-to-plan'} &{'pro'}</a> &middot;
-							#{/if}
-						#{/if}
-						
-						#{if plan.type == "premium"}
-							#{if plan && planLast && planLast.id == plan.id && plan.profile != null}
-								<a href="/settings/paypal/upgrade?type=pro&url=${request.url.urlEncode()}&#{token /}">&{'upgrade-to-plan'} &{'pro'}</a> &middot;
-							#{/if}
-							#{if plan && plan.canceled == null}
-								<a href="/settings/paypal/cancel?url=${request.url.urlEncode()}&#{token /}">&{'cancel-subscription'}</a> &middot;
-							#{/if}
-						#{/if}
-						
-						#{if plan.type == "pro"}
-							#{if plan && plan.canceled == null}
-								<a href="/settings/paypal/cancel?url=${request.url.urlEncode()}&#{token /}">&{'cancel-subscription'} &middot;
-							#{/if}
-						#{/if}
-						}*
-						
-						<a href="/about#pricing">&{'learn-more-about-pricing'}</a>
-					#{/if}
-				</dd>
-				#{/if}
-				
-				</br>
-				<dt>&{'display-name'}</dt>
-				<dd>
-					${user.firstName} ${user.lastName}
-				</dd>
-				<dt>&{'password'}</dt>
-				<dd>
-					<a href="/password">&{'change-your-password'}</a>
-				</dd>	
-				
-				*{			
-				<dt>&{'locale'}</dt>
-				<dd>
-					${user.locale}
-				</dd>
-				
-				<dt>&{'timezone'}</dt>
-				<dd>
-					#{if user.timezone} #{if user.timezone < 0} + #{/if} ${user.timezone / -60}:00 &{'hrs'} #{/if}
-				</dd>			
-				}*
-				
-				<dt>&{'email-notifications'}</dt>
-				<dd>
-					#{if user.emailNotification != null} &{user.emailNotification} #{/if}
-					<i class="icon-help tip" rel="tooltip" data-placement="right" title="&{'enable-or-disable-email-notifications'}"></i>
-				</dd>	
 
-				<dt>&{'reminder'}</dt>
-				<dd>
-					#{if user.reminder != null} &{user.reminder} #{/if}
-					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'reminder-help'}"></i>
-				</dd>	
-				<dt>&{'reminder-minutes'}</dt>
-				<dd>
-					 ${user.reminderMinutes} &{'reminder-minutes-desc'} 
-				</dd>	
-				
-				<dt>&{'facebook-id'}</dt>
-				<dd>
-					${user.facebookName}
-					<div class="fb-login-button" data-max-rows="1" data-scope="public_profile" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
-					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'connect-with-your-facebook-account'}"></i><br/>
-					<br/>
-					#{if user.facebookId != null}
-						<a href="/facebook/clear?${request.url.urlEncode()}&#{token /}">&{'clear-facebook-id'}</a> &middot;
-					#{/if}				
-					<a target="_blank" href="https://www.facebook.com/add.php?api_key=731388346951866&pages">&{'install-widgr-app-to-your-facebook-page'}</a> &middot;
-					<a href="/help#facebook">&{'learn-more'}</a>
-				  	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
-					<script>
-					  star.fbClbck = function() {
-					      FB.api('/me', function(response) {
-					        $("#facebookId").val(response.id);
-					        $("#facebookName").val(response.name);
-					        $('<form>', {
-					            "html": '<input name="facebookId" value="' + response.id + '" /><input name="facebookName" value="' + response.name + '" />',
-					            "action": '/settings/facebook/add?#{token /}',
-					            "method": 'POST'
-					        }).appendTo(document.body).submit();
-					      });
-					  }
-					</script>		
-					<div id="fb-root"></div>				
-				</dd>				
-				
-			</dl>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					&{'login'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+			      		${user.login}
+			      	</p>
+			    </div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					&{'account-name'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+			      		${user.account.name}
+			      	</p>
+			    </div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					&{'account-type'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+						#{if user && user.account.type == "publisherReq"}
+							<span class="label label-default">&{user.account.type}</span> 
+							<span class="label label-success">&{'publisher-waiting-for-approvement'}</span>
+						#{/if}
+						#{elseif user && user.account.type == "standard"}
+							<span class="label label-default">&{user.account.type}</span>
+							<a href="/settings/request-publisher?url=${request.url.urlEncode()}&#{token /}">&{'become-a-publisher'}</a> &middot;
+							<a href="/help#publisher">&{'learn-more'}</a>
+						#{/elseif}
+						#{else}
+							<span class="label default-bg">&{user.account.type}</span>
+						#{/else}
+			      	</p>
+			    </div>
+			</div>
+
+			#{if user.isPublisher()}
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					&{'account-plan'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+						#{if plan}
+							<span class="label default-bg">
+								&{plan.type} 
+								#{if !plan.isStandard()}
+								, &{'price'}: ${user.account.getPlanPrice()}$ &{'per-month'}
+								#{/if}
+							</span>&nbsp;
+							
+							#{if plan.profile && plan.type == "premium"}
+							<span class="label default-bg">
+								&{'events-left'}: ${user.availableEvents()}						
+							</span>
+							#{/if}
+							
+							#{if plan && plan.validTo != null}&nbsp;
+								<span class="label label-default">
+									&{'valid-to'} ${plan.validTo.format("dd MMM yyyy")}
+								</span>
+							#{/if}
+							
+							*{
+							#{if plan.type == "standard" || plan == null}
+								#{if planLast == null || (plan && planLast && planLast.id == plan.id)}
+									<a href="/settings/paypal/upgrade?type=premium&url=${request.url.urlEncode()}&#{token /}">&{'upgrade-to-plan'} &{'premium'}</a> &middot;
+									<a href="/settings/paypal/upgrade?type=pro&url=${request.url.urlEncode()}&#{token /}">&{'upgrade-to-plan'} &{'pro'}</a> &middot;
+								#{/if}
+							#{/if}
+							
+							#{if plan.type == "premium"}
+								#{if plan && planLast && planLast.id == plan.id && plan.profile != null}
+									<a href="/settings/paypal/upgrade?type=pro&url=${request.url.urlEncode()}&#{token /}">&{'upgrade-to-plan'} &{'pro'}</a> &middot;
+								#{/if}
+								#{if plan && plan.canceled == null}
+									<a href="/settings/paypal/cancel?url=${request.url.urlEncode()}&#{token /}">&{'cancel-subscription'}</a> &middot;
+								#{/if}
+							#{/if}
+							
+							#{if plan.type == "pro"}
+								#{if plan && plan.canceled == null}
+									<a href="/settings/paypal/cancel?url=${request.url.urlEncode()}&#{token /}">&{'cancel-subscription'}</a> &middot;
+								#{/if}
+							#{/if}
+							}*
+							
+							<a href="/about#pricing">&{'learn-more-about-pricing'}</a>
+						#{/if}
+			      	</p>
+			    </div>
+			</div>
+			#{/if}
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					&{'display-name'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+			      		${user.firstName} ${user.lastName}
+			      	</p>
+			    </div>
+			</div>			
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					&{'password'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+			      		<a href="/password">&{'change-your-password'}</a>
+			      	</p>
+			    </div>
+			</div>
+
+			*{
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					&{'locale'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+			      		${user.locale}
+			      	</p>
+			    </div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					&{'timezone'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+			      		#{if user.timezone} #{if user.timezone < 0} + #{/if} ${user.timezone / -60}:00 &{'hrs'} #{/if}
+			      	</p>
+			    </div>
+			</div>
+			}*
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					<i class="icon-info tip" rel="tooltip" data-placement="left" title="&{'enable-or-disable-email-notifications'}"></i> &{'email-notifications'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+			      		#{if user.emailNotification != null} &{user.emailNotification} #{/if}
+						
+			      	</p>
+			    </div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					 <i class="icon-info tip" rel="tooltip" data-placement="left" data-original-title="&{'reminder-help'}"></i> &{'reminder'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+			      		#{if user.reminder != null} &{user.reminder} #{/if}
+			      	</p>
+			    </div>
+			</div>			
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					&{'reminder-minutes'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+			      		${user.reminderMinutes} &{'reminder-minutes-desc'}
+			      	</p>
+			    </div>
+			</div>			
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					<i class="icon-info tip" rel="tooltip" data-placement="left" data-original-title="&{'connect-with-your-facebook-account'}"></i> &{'facebook-id'}
+				</label>
+			    <div class="col-sm-9">
+			      	<div class="form-control-static">
+						#{if user.facebookId != null}
+							&{'connected-to'} <strong>${user.facebookName}</strong>
+						#{/if}
+						#{if user.facebookId != null}
+							&middot; <a href="/facebook/clear?${request.url.urlEncode()}&#{token /}">&{'clear-facebook-id'}</a>
+							&middot; <a target="_blank" href="https://www.facebook.com/add.php?api_key=731388346951866&pages">&{'install-widgr-app-to-your-facebook-page'}</a> &middot;
+						#{/if}
+						#{else}
+							<div class="fb-login-button" data-max-rows="1" data-scope="public_profile" data-size="large" data-show-faces="false" data-auto-logout-link="false" style="inline-block"></div>
+						  	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
+							<script>
+							  star.fbClbck = function() {
+							      FB.api('/me', function(response) {
+							        $("#facebookId").val(response.id);
+							        $("#facebookName").val(response.name);
+							        $('<form>', {
+							            "html": '<input name="facebookId" value="' + response.id + '" /><input name="facebookName" value="' + response.name + '" />',
+							            "action": '/settings/facebook/add?#{token /}',
+							            "method": 'POST'
+							        }).appendTo(document.body).submit();
+							      });
+							  }
+							</script>		
+						#{/else}				
+						<a href="/help#facebook">&{'learn-more'}</a>
+						<div id="fb-root"></div>							
+			      	</div>
+			    </div>
+			</div>			
 			#{/if}
 			#{else}
 			<div class="form-group">
@@ -327,18 +404,30 @@
 
 			#{if user.account.type == "publisher"}
 			<a id="paypal"></a>
-			<h3>&{'paypal-account'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#paypal"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
-			<div class="separator-2"></div>
+			<h3 class="centered">&{'paypal-account'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#paypal"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
+			<div class="separator"></div>
 			#{if !edit}
-			<dl class="dl-horizontal">
-				<dt>&{'paypal-account'}</dt>
-				<dd>
-					${user.account.paypalAccount}
-					<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'paypal-info'}"></i>
-				</dd>
-				<dt>&{'account.currency'}</dt>
-				<dd>${user.account.currency} &nbsp;</dd>
-			</dl>
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					<i class="icon-info tip" rel="tooltip" data-placement="left" data-original-title="&{'paypal-info'}"></i> &{'paypal-account'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+			      		${user.account.paypalAccount}
+			      	</p>
+			    </div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					&{'account.currency'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+			      		${user.account.currency}
+			      	</p>
+			    </div>
+			</div>
 			#{/if}
 			#{else}
 			<div class="form-group">
@@ -382,41 +471,59 @@
 
 
 			<a id="calendar"></a>
-			<h3>&{'your-calendar'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#calendar"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
-			<div class="separator-2"></div>
+			<h3 class="centered">&{'your-calendar'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#calendar"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
+			<div class="separator"></div>
 			#{if !edit}
-			<dl class="dl-horizontal">
-				<dt>&{'working-hours'}</dt>
-				<dd>${user.workingHourStart} - ${user.workingHourEnd} &{'hrs'}</dd>
-				<dt>&{'hidden-days'}</dt>
-				<dd>
-					#{if user.hiddenDays != null}
- 					#{if user.hiddenDays.indexOf("0") >= 0}&{'cal.sunday'}#{/if} 
- 					#{if user.hiddenDays.indexOf("1") >= 0}&{'cal.monday'}#{/if} 
- 					#{if user.hiddenDays.indexOf("2") >= 0}&{'cal.tuesday'}#{/if} 
- 					#{if user.hiddenDays.indexOf("3") >= 0}&{'cal.wednesday'}#{/if} 
- 					#{if user.hiddenDays.indexOf("4") >= 0}&{'cal.thursday'}#{/if} 
- 					#{if user.hiddenDays.indexOf("5") >= 0}&{'cal.friday'}#{/if} 
- 					#{if user.hiddenDays.indexOf("6") >= 0}&{'cal.saturday'}#{/if} 
- 					#{/if}
-				</dd>
-				<dt>&{'sync-with-google'}</dt>
-				<dd>
-					<div>
-						#{if user.googleCalendarId}
-						<span class="">&{'google-calendar-sync-with'} ${user.googleCalendarId}</span>
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					<i class="icon-info tip" rel="tooltip" data-placement="left" data-original-title="&{'working-hours-info'}"></i> &{'working-hours'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+			      		${user.workingHourStart} - ${user.workingHourEnd} &{'hrs'}
+			      	</p>
+			    </div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					<i class="icon-info tip" rel="tooltip" data-placement="left" data-original-title="&{'working-days-info'}"></i> &{'hidden-days'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+						#{if user.hiddenDays != null}
+	 					#{if user.hiddenDays.indexOf("0") >= 0}&{'cal.sunday'}#{/if} 
+	 					#{if user.hiddenDays.indexOf("1") >= 0}&{'cal.monday'}#{/if} 
+	 					#{if user.hiddenDays.indexOf("2") >= 0}&{'cal.tuesday'}#{/if} 
+	 					#{if user.hiddenDays.indexOf("3") >= 0}&{'cal.wednesday'}#{/if} 
+	 					#{if user.hiddenDays.indexOf("4") >= 0}&{'cal.thursday'}#{/if} 
+	 					#{if user.hiddenDays.indexOf("5") >= 0}&{'cal.friday'}#{/if} 
+	 					#{if user.hiddenDays.indexOf("6") >= 0}&{'cal.saturday'}#{/if} 
+	 					#{/if}
+			      	</p>
+			    </div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					<i class="icon-info tip" rel="tooltip" data-placement="left" data-original-title="&{'enable-google-calendar-sync'}"></i> &{'sync-with-google'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+						<span>
+							#{if user.googleCalendarId}
+							<span class="">&{'google-calendar-sync-with'} <strong>${user.googleCalendarId}</strong></span>
+							#{/if}
+						</span>
+						<span><a href="/google?url=${request.url.urlEncode()}&#{token /}">&{'enable-google-calendar'}</a></span> &middot; 
+						#{if user.googleTokenExpires}
+							<span><a href="/google/clear?url=${request.url.urlEncode()}&#{token /}">&{'disable-google-calendar-sync'}</a></span> &middot;
 						#{/if}
-						<i class="icon-help tip" rel="tooltip" data-placement="right" data-original-title="&{'enable-google-calendar-sync'}"></i>
-					</div>
-					<br/>
-					<span><a href="/google?url=${request.url.urlEncode()}&#{token /}">&{'enable-google-calendar-sync'}</a></span> &middot; 
-					#{if user.googleTokenExpires}
-						<span><a href="/google/clear?url=${request.url.urlEncode()}&#{token /}">&{'disable-google-calendar-sync'}</a></span> &middot;
-					#{/if}
-					
-					<a href="/help#gcal">&{'learn-more'}</a>
-				</dd>
-			</dl>
+						
+						<a href="/help#gcal">&{'learn-more'}</a>
+			      	</p>
+			    </div>
+			</div>			
+						
 			
 			#{/if}
 			#{else}
@@ -530,9 +637,14 @@
 
 
 			<br/>
+			<br/>
 			<a id="about"></a>
-			<h3>&{'About You'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#about"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
-			<div class="separator-2"></div>
+			<h3 class="centered"> 
+				<i class="icon-info tip" rel="tooltip" data-placement="left" data-original-title="&{'about-you-section-info'}"></i> 
+				&{'about-you-section'} 
+				<a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#about"><i class="fa fa-pencil"></i> &{'edit'}</a>
+			</h3>
+			<div class="separator"></div>
 			#{if !edit}
 				#{set usr:user /}
 				#{include 'userAbout.html' /}

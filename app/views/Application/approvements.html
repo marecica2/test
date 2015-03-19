@@ -6,6 +6,15 @@
 #{set 'moreScripts'}
 #{/set}
 
+#{set 'moreMessages'}
+	#{if request.cookies.msgApprovements == null}
+		<div class="shadow alert alert-info alert-dismissible" role="alert">
+		  <button type="button" class="close" data-dismiss="alert" onclick="star.utils.dismiss('msgApprovements')"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
+		  &{'approvements-msg'}
+		</div>
+	#{/if}
+#{/set}
+
 <div class="padding container container-xs-height">
 	<div class="row row-xs-height">
 		<div class="col-md-12 col-xs-height col-top">
@@ -14,6 +23,11 @@
 				#{set items:approved /}
 				#{include 'eventsList.html' /}	
 			#{/if}	
+			#{else}
+				<br/>
+				<h3 class="centered">&{'no-requests'}</h3>
+				<br/>
+			#{/else}
 		</div>
 	</div>
 </div>

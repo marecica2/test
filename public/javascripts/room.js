@@ -119,7 +119,7 @@ if(webrtc != null){
          // show invite modal when there is only one user
          var stopInterval = setInterval(function(){
              if($(".user-elm").length <= 1)
-                 //$('#myModal').modal({show:true});
+                 $('#myModal').modal({show:true});
              clearInterval(stopInterval);
          }, 5000);
          
@@ -218,16 +218,17 @@ if(webrtc != null){
                  $(".peer-controls[data-id='"+id+"']").hide();
              else {
                  $(".peer-controls").hide();
+                 var height = $(".peer-controls[data-id='"+id+"']").height() + 5;
+                 $(".peer-controls[data-id='"+id+"']").css("top", "-"+height+"px");
                  $(".peer-controls[data-id='"+id+"']").show();
              }
          });
          
          // maximize mimize peer
          $(document).on("click", ".user-elm", function(){
+
              var id = $(this).attr("data-id");
              var local = $(this).parent().parent().parent().attr("data-local");
-             
-    
              if(star.selectedId == null || star.selectedId != id){
                  star.selectedId = id;
                  star.switchAuto = false;
@@ -339,18 +340,15 @@ if(webrtc != null){
     
     
     webrtc.on('localScreenRemoved', function () {
-        
     });
     
     
     webrtc.on('localScreenAdded', function (video) {
-        console.log('localScreenAdded');
-        console.log(video);
     });
     
 
     webrtc.on('connectionReady', function (id) {
-        $(webrtc.getLocalVideoContainer()).parent().wrap("<div data-id='"+id+"' data-local='true' style='position:relative' id='video-element-"+id+"' class='user-elm'></div>");
+        $(webrtc.getLocalVideoContainer()).parent().wrap("<div data-id='"+id+"' data-local='true' style='position:relative;' id='video-element-"+id+"' class='user-elm'></div>");
         $(webrtc.getLocalVideoContainer()).parent().parent().append("<div id='localVolume' class='volumeBar'></div>");
         webrtc.getLocalVideoContainer().play();
     });
@@ -430,7 +428,6 @@ if(webrtc != null){
             showVolume(document.getElementById('localVolume'), volume);
             if(volume > treshold && star.switchAuto){
                 var id = getPeerId();
-                
                 var data = {};
                 data.id = getPeerId();
                 data.volume = volume;
@@ -460,6 +457,20 @@ function usersRender(data) {
                     if(row[usr] == getPeerId())
                         peerId = row[usr].id;
                     
+                    
+                    // dropdown + peer controls
+                    html += "<div class='video-dropdown' data-id='"+peerId+"'><i class='fa fa-chevron-down color-link-light'></i></div>"
+                    html += "<div class='peer-controls' data-id='"+peerId+"' style='display:none;z-index:9999;opacity:0.8'>";
+                    if(typeof row[usr].avatar != "undefined"){
+                        html += "<a class='btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' href='/user/"+row[usr].user+"' target='_blank' >"
+                            html += "<i class='icon-user'></i> "+i18n("view-profile");
+                        html += "</a> ";
+                    }
+                    html += "<button class='peer-mute btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' data-type='audio' data-name='" + row[usr].user + "' data-id='"+peerId+"'>"
+                    html += "   <i class='icon-mute'></i> "+i18n("mute");
+                    html += "</button> ";
+                    html += "</div>";
+                    
                     html += "<div id='user-item-"+peerId+"' data-id='"+peerId+"' style='position:relative;' title='"+row[usr].user+"'>";
                     
                     // peer labels
@@ -468,17 +479,8 @@ function usersRender(data) {
                     html += "   <div style='display:none' class='peer-label-muted peer-control-lbl btn-danger' data-id='"+peerId+"'><i class='icon-mute'></i></div>"
                     html += "   <div style='display:none' class='peer-label-camera peer-control-lbl btn-danger' data-id='"+peerId+"'><i class='fa fa-eye-slash'></i></div>"
                     html += "</div>";
-                    
-                    // peer controls
-                    html += "<div class='video-dropdown' data-id='"+peerId+"'><i class='fa fa-chevron-down color-link-light'></i></div>"
-                    html += "<div class='peer-controls' data-id='"+peerId+"' style='display:none;z-index:9999;opacity:0.8'>";
-                    html += "   <button class='peer-mute btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' data-type='audio' data-name='" + row[usr].user + "' data-id='"+peerId+"'>"
-                    html += "       <i class='icon-mute'></i> "+i18n("mute");
-                    html += "   </button> ";
-                    //html += "   <button class='peer-unmute btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' data-type='audio' data-name='" + row[usr].user + "' data-id='"+peerId+"'>"
-                    //html += "       <i class='icon-sound'></i> "+i18n("unmute");
-                    //html += "   </button> ";
-                    html += "</div>";
+                   
+ 
 
                     // peer avatar
                     html += "<div id='"+ peerId +"_video_small' class='peer-avatar'>";
@@ -517,11 +519,10 @@ function maximizeMimize(id, local){
         $(star.maximized).appendTo(moveTo);
         if(star.maximized != null)
             star.maximized.play();
-        $("#video-element-"+star.maximizedId).css("border", "3px solid rgba(0,0,0,0.0)");
+        $("#video-element-"+star.maximizedId).css("border", "4px solid rgba(0,0,0,0.0)");
         $("#"+star.maximizedId+"_video_small").hide();
         
         // mimize maximized screen
-        
         $(star.maximizedScreen).removeClass("video-screen");
         $(star.maximizedScreen).addClass("video-screen-mimized");
         $(star.maximizedScreen).appendTo(moveTo);
@@ -555,7 +556,7 @@ function maximizeMimize(id, local){
         $("#"+star.maximizedId+"_video_small").show();
         $(".container", "#video-element-"+star.maximizedId).hide();
         if(star.selectedId != null)
-            $("#video-element-"+id).css("border", "3px solid rgba(255,255,255,0.7)");
+            $("#video-element-"+id).css("border", "4px solid rgba(255,255,255,0.7)");
         if(star.maximized != null)
             star.maximized.play();
         
@@ -823,7 +824,6 @@ if(star.userInRoom){
             image.src = undo;
             canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
             canvas.ctx.drawImage(image,0, 0);
-            console.log("undo " + canvas.history.length);
             
             var data = {};
             data.image = canvas.canvas.toDataURL();
@@ -959,7 +959,6 @@ if(star.userInRoom){
         if($("#canvas-name").val().length > 0)
             name = $("#canvas-name").val()+".png";
         blob.name = name;
-        console.log(blob.name);
         blob.lastModifiedDate = new Date();
         blob.lastModified = blob.lastModifiedDate.getTime();
         var files = [];
@@ -969,7 +968,6 @@ if(star.userInRoom){
         params = "temp="+temp;
         star.utils.uploadFiles('/fileupload?'+star.token+'&'+params, files, function(json){
             var response = JSON.parse(json);
-            console.log(response);
             
             // save comment
             var data = {};

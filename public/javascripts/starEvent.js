@@ -176,7 +176,7 @@ star.initItems = function(prefix, urlParams){
                 $("#spinner"+prefix).hide();
                 $(html).hide().appendTo($("#itemsList"+prefix)).fadeIn(500);
                 $("#moreResults"+prefix).show();
-                if(typeof(FB) !== "undefined")
+                if(typeof FB !== "undefined")
                     FB.Canvas.setSize();
             }
             f(html);
@@ -187,7 +187,6 @@ star.initItems = function(prefix, urlParams){
         $(window).scroll(function() {
             var diff = Math.abs($(window).scrollTop() - ($(document).height() - $(window).height()));
             if(diff < 1) {
-                //console.log($(window).scrollTop() + "  " + ($(document).height() - $(window).height()) + " diff" + diff)
                 $("#moreResults"+prefix).click();              
             }
        }); 
@@ -236,7 +235,10 @@ star.renderItems = function(data, prefix){
 
         html += "       <div class='overlay' style='position:fixed; z-index:9999'>";
         html += "           <div class='overlay-links'>";
-        html += "               <a href='/channel/"+item.uuid+"'><i class='fa fa-link'></i></a>";
+        if(listing)
+            html += "               <a href='/channel/"+item.uuid+"'><i class='fa fa-link'></i></a>";
+        else
+            html += "               <a href='/event/"+item.uuid+"'><i class='fa fa-link'></i></a>";
         html += "               <a href='/user/"+item.createdByLogin+"/calendar?channel="+item.uuid+"' title='"+i18n("schedule-session-desc")+"'><i class='fa fa-calendar'></i></a>";
         html += "           </div>";
         html += "       </div>";
@@ -250,8 +252,8 @@ star.renderItems = function(data, prefix){
         
         html += "       <div style='position:absolute;top:0px;right:0px;width:270px'>";
         if(item.available)
-            html += "           <div style='display:inline-block;width:10px; height:10px; border-radius:10px; background:green'></div>";            
-        html += "               <small><strong><a href='/user/"+item.createdByLogin+"'>"+item.createdByName+"</a></strong> &middot; "+i18n(item.category)+"</small>";
+            html += "       <i class='fa fa-circle' style='color:green'></i>";            
+        html += "           <small><strong><a href='/user/"+item.createdByLogin+"'>"+item.createdByName+"</a></strong> &middot; "+i18n(item.category)+"</small>";
         html += "       </div>";
         
         if(listing)
@@ -331,7 +333,6 @@ starEvent.getFiles = function(){
 };
 
 starEvent.deleteFile = function(elm){
-    console.log(elm);
     var params = "uuid="+$(elm).attr("data-uuid");
     if(confirm(i18n("delete-selected-item"))){
         starServices.deleteFile(params, function(data){
@@ -374,7 +375,7 @@ starEvent.renderFiles = function(data){
     
     var percentage = (size*100)/104857600;
     var limit = "";
-    limit += "" + starUtils.formatFilesize(size) + " from 100MB";
+    limit += "" + starUtils.formatFilesize(size) + " (max 100MB)";
     limit += '<div class="progress"><div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="'+percentage+'" aria-valuemin="0" aria-valuemax="100" style="width: '+percentage+'%;"></div></div><br/>'
     $("#fileSizeContainer").html(limit);
     return html;
@@ -672,8 +673,6 @@ starEvent.updateStyle = function(data){
 var starServices = {};
 
 starServices.createEvent = function(data, success, error){
- //console.log("peforming ajax post");
- //console.log(data);
  $.ajax({
      type: "POST",
      url: "/event/save?"+star.token,
@@ -685,8 +684,6 @@ starServices.createEvent = function(data, success, error){
 };
 
 starServices.updateEvent = function(data, success, error){
- //console.log("peforming ajax post");
- //console.log(data);
  $.ajax({
      type: "POST",
      url: "/event/update?"+star.token,
@@ -698,8 +695,6 @@ starServices.updateEvent = function(data, success, error){
 };
 
 starServices.deleteEvent = function(data, success, error){
-    //console.log("peforming ajax delete");
-    //console.log(data);
     $.ajax({
         type: "DELETE",
         url: "/event/delete?"+star.token,

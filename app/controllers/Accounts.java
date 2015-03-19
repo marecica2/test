@@ -254,8 +254,8 @@ public class Accounts extends BaseController
             flash.success(Messages.get("your-publisher-request-was-submited"));
             Account account = Account.get(user.account.key);
             account.type = Account.TYPE_PUBLISHER_REQUEST;
+            account.requestTime = new Date();
             account.save();
-            user.save();
 
             final String message = "Publisher request from " + user.login + " [Go to approvals|" + getBaseUrl() + "admin/publishers]";
             final String subject = "Publisher request";

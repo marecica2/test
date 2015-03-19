@@ -1,57 +1,77 @@
 <div class="section gray-bg-lighter ">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-3 col-sm-3">
+	<div class="container container-xs-height">
+		<div class="row row-xs-height">
+			<div class="col-lg-3 col-sm-3 col-xs-height">
 				<div class="box-style-1 gray-bg team-member">
 					<div class="overlay-container">
-						<img src="/${usr.avatarUrl}" style="width:100%s">
+						<img src="/${usr.avatarUrl}">
 					</div>
 				</div>
 			</div>
 			
-			<div class="col-lg-5 col-sm-5">
+			<div class="col-lg-5 col-sm-5 col-xs-height col-top">
 				<h3 class="margin-top-clear">
 					<a class="anchor" href="/user/${usr.login}">${usr.fullName}</a>
-							
-			    	#{if userProfile}
+						<img src='/public/images/flags/${usr.locale}.gif'>
 						<span>
 					    	#{if user && isOwner}
-					    		<a href="/settings?edit=true" class="btn btn-light-gray btn-sm controls"><i class="fa fa-pencil"></i> &{'edit-profile'}</a> 
-					    	#{/if}			
+					    		<a href="/settings?edit=true" class="btn btn-light-gray btn-sm controls"><i class="fa fa-pencil"></i> &{'edit'}</a> 
+					    	#{/if}		
+							#{if isOwner && user.isAvailable()}
+								<a class="btn btn-success btn-sm btn-short controls" href="/available-stop?url=${request.url.urlEncode()}&#{token /}">&{'uncheck-me-as-available'}</a>
+							#{/if}		
+							#{if isOwner && user.isPublisher() && !user.isAvailable()}
+								<a class="btn btn-light-gray btn-sm btn-short controls" href="/available-start?url=${request.url.urlEncode()}&#{token /}">&{'check-me-as-available'}</a>
+							#{/if}	
+					    		
 							#{if user && !isOwner}
 							<span>
 								#{if follow && follow.following == true}
 									<a href="/contact-unfollow?uuid=${follow.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-minus"></i> &{'unfollow'}</a> 
 								#{/if}
 								#{else}
-									<a href="/contact-follow?uuid=${follow}&usr=${usr.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm controls"><i class="fa fa-plus"></i> &{'follow'}</a> 
+									<a href="/contact-follow?uuid=${follow}&usr=${usr.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm controls" rel="tooltip" data-original-title="&{'follow-user'}" ><i class="fa fa-plus"></i> &{'follow'}</a> 
 								#{/else}
+								#{if contact && contact.blocked}
+									<a href="/contact-unblock?uuid=${contact.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm btn-short btn-margin">&{'unblock'}</a>
+								#{/if}
+								#{elseif contact}
+									<a href="/contact-block?uuid=${contact.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm btn-short btn-margin" rel="tooltip" data-original-title="&{'block-user'}"><i class="fa fa-ban"></i> &{'block'}</a>
+								#{/elseif}								
 							</span>
 							#{/if}	
 						</span>
-					#{/if}				
 				</h3>
 				<ul class="list-icons">
 					#{if !usr.isOnline()}
-						<li><i class="fa fa-clock-o"></i> &{'offline'} - &{'last-online'} #{if usr.lastLoginTime} ${usr.lastLoginTime.format("dd MMM, yyyy")} #{time time:usr.lastLoginTime/} #{/if}</li>
+						<li><i class="icon-record"></i> &{'offline'} - &{'last-online'} #{if usr.lastLoginTime} ${usr.lastLoginTime.format("dd MMM, yyyy")} #{time time:usr.lastLoginTime/} #{/if}</li>
 					#{/if}
 					#{else}
-						<i class=" icon-record" style="color:#5cb85c;"></i>
-						&{'online'}
+						<li>
+							<i class=" icon-record" style="color:#5cb85c;"></i>
+							&{'online'}
+							#{if usr.isAvailable()}
+								<span class="label label-success">&{'available-now'}</span>
+							#{/if}
+						</li>
 					#{/else}
 					
-					#{if user}
-					<li><i class="fa fa-envelope pr-5"></i><a href="/mail?action=new&to=${usr.login}" class="">&{'write-message-for'} ${usr.firstName}</a></li>
+					#{if !isOwner}
+						#{if user}
+						<li><i class="fa fa-envelope pr-5"></i><a href="/mail?action=new&to=${usr.login}" class="">&{'write-message-for'} ${usr.firstName}</a></li>
+						#{/if}
+						#{else}
+						<li><i class="fa fa-envelope pr-5"></i><a href="/contact?id=${usr.login}" class="">&{'write-message-for'} ${usr.firstName}</a></li>
+						#{/else}
 					#{/if}
-					#{else}
-					<li><i class="fa fa-envelope pr-5"></i><a href="/contact?id=${usr.login}" class="">&{'write-message-for'} ${usr.firstName}</a></li>
-					#{/else}
+					
 					<li><i class="fa fa-calendar pr-5"></i><a href="/user/${usr.login}/calendar/public" class="">&{'public-calendar'}</a></li>
 					#{if user && user.isPublisher()}
 						<li><i class="fa fa-bar-chart-o pr-5"></i><a href="/payments?sender=${usr.login}" class="">&{'payments-receivedPayments-for-this-user'} ${usr.firstName}</a></li>
 					#{/if}
+					<li><i class="fa fa-clock-o"></i>&{'timezone'} #{if usr.timezone < 0}+#{/if}${usr.timezone/-60}:00 &{'hrs'}</li>
 				</ul>
-				<ul class="social-links colored clearfix">
+				<ul class="social-links light">
 					#{if usr.facebook}<li class="facebook"><a target="_blank" href="${usr.facebook}"><i class="fa fa-facebook"></i></a></li>#{/if}
 					#{if usr.twitter}<li class="twitter"><a target="_blank" href="${usr.twitter}"><i class="fa fa-twitter"></i></a></li>#{/if}
 					#{if usr.linkedIn}<li class="linkedin"><a target="_blank" href="${usr.linkedIn}"><i class="fa fa-linkedin"></i></a></li> #{/if}
@@ -59,7 +79,7 @@
 				</ul>			
 			</div>
 	
-			<div class="col-lg-4 col-sm-4 " style="height:100%">
+			<div class="col-lg-4 col-sm-4 col-xs-height col-top">
 				<div class="vertical-divider-left-lg side">
 					<h5 class="title margin-clear">&{'followers'}</h5>
 					#{if followers}

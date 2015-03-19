@@ -231,7 +231,7 @@ public class Listings extends BaseController
         redirectTo("/");
     }
 
-    public static void availableStart(String id, String url)
+    public static void availableStart(String url)
     {
         checkAuthenticity();
         final User user = getLoggedUserNotCache();

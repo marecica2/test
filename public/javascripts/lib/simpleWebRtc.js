@@ -619,7 +619,7 @@ var MediaStream = window.webkitMediaStream || window.MediaStream;
 var screenSharing = window.location.protocol === 'https:' &&
     ((window.navigator.userAgent.match('Chrome') && parseInt(window.navigator.userAgent.match(/Chrome\/(.*) /)[1], 10) >= 26) ||
      (window.navigator.userAgent.match('Firefox') && parseInt(window.navigator.userAgent.match(/Firefox\/(.*)/)[1], 10) >= 33));
-var AudioContext = window.webkitAudioContext || window.AudioContext;
+var AudioContext = window.AudioContext;
 
 
 // export support flags and constructors.prototype && PC
@@ -7391,7 +7391,7 @@ var IceCandidate = window.mozRTCIceCandidate || window.RTCIceCandidate;
 var SessionDescription = window.mozRTCSessionDescription || window.RTCSessionDescription;
 var MediaStream = window.webkitMediaStream || window.MediaStream;
 var screenSharing = window.location.protocol === 'https:' && window.navigator.userAgent.match('Chrome') && parseInt(window.navigator.userAgent.match(/Chrome\/(.*) /)[1], 10) >= 26;
-var AudioContext = window.webkitAudioContext || window.AudioContext;
+var AudioContext = window.AudioContext;
 
 
 // export support flags and constructors.prototype && PC
@@ -8266,7 +8266,7 @@ function getMaxVolume (analyser, fftBins) {
 }
 
 
-var audioContextType = window.webkitAudioContext || window.AudioContext;
+var audioContextType = window.AudioContext;
 // use a single audio context due to hardware limits
 var audioContext = null;
 module.exports = function(stream, options) {

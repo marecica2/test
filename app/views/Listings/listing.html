@@ -414,13 +414,13 @@
 					#{/if}
 					
 					#{if listing.isAvailable()}
-						<a href="#" class="btn btn-success btn-lg btn-short open-chat style-switcher" style="border-width:0px;" rel="tooltip" data-original-title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
+						<a href="#" class="btn btn-success btn-lg btn-short open-chat style-switcher hidden" style="border-width:0px;" rel="tooltip" data-original-title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
 					#{/if}
 					
 								
 					#{if !isOwner}
 						#{if !isOwner && listing.isAvailable()}
-							<a href="/instant-room?id=${listing.uuid}&#{token /}" class="btn btn-success btn-lg btn-short no-schedule-start style-switcher" rel="tooltip" data-original-title="&{'join-session-now'}">&{'request-for-event-instant'}</a>
+							<a href="/instant-room?id=${listing.uuid}&#{token /}" class="btn btn-success btn-lg btn-short no-schedule-start style-switcher hidden" rel="tooltip" data-original-title="&{'join-session-now'}">&{'request-for-event-instant'}</a>
 						#{/if}			
 						#{elseif user}
 							<a href="/mail?action=new&to=${listing.user.login}&url=${request.url}" class="btn btn-dark btn-lg btn-short open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-comments-o"></i></a>
@@ -444,7 +444,164 @@
 #{if !edit}
 <div class="container">		
 	<div class="row">
-		<div class="col-md-8" >
+
+		<div class="col-md-4 col-md-push-8">
+
+			<!-- Guests -->
+			<a name="invitation"></a>
+			#{if fromEvent && !edit}
+			<div>
+				<h2>
+					<label style="font-weight:500" for="notify-check-all">&{'guests'}</label>
+					#{if isOwner}
+						<input id='notify-check-all' type='checkbox' style='position:relative;top:2px;' class='notify-check-all' value='all'>
+					#{/if}
+				</h2>
+				<div class="separator-2"></div>
+				
+				#{if false && event && (attendance == null || !attendance.watchlist)}
+					<a href="/watchlist/add?event=${event.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm margin-clear">
+						<i class="dialog-event-edit color-link fa fa-plus fa-1x"></i> &{'add-to-watchlist'}
+					</a>
+				#{/if}
+				
+				#{if false && attendance != null && attendance.watchlist}
+					<a href="/watchlist/remove?id=${attendance.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm margin-clear">
+						<i class="dialog-event-edit color-link fa fa-minus fa-1x"></i> &{'remove-from-watchlist'}
+					</a>
+				#{/if}				
+				
+				#{if isOwner}
+	 				<form class="" action="/attendance-new-save?eventId=${event.uuid}&url=${request.url.urlEncode()}&#{token /}#invitation" method="post">
+					    #{authenticityToken /}
+					    <div class="input-group" style="width:100%">
+							<input type="text" class="form-control" autocomplete="off" placeholder="&{'contact-name-or-email'}" style="font-size:0.9em" maxlength="100" name="email" id="dialog-invite-input" data-provide="typeahead" rel="tooltip" data-original-title="&{'add-more-people'}">
+						    <span class="input-group-btn">
+						    	<button class="btn btn-default btn-short" style="margin:0px;height:40px" id="dialog-invite-button" type="submit">&{'add'}</button>
+						    </span>
+					    </div>
+						<div class="error">#{error 'email' /}</div>
+						<script>
+						        $(".notify-check-all").change(function(){
+						            if($(this).prop("checked")){
+						                $('.notify-checkboxes').prop("checked", true);
+						            } else {
+						                $('.notify-checkboxes').prop("checked", false);
+						            }
+						        });
+						    				      
+							  	$("#dialog-invite-input").typeahead(
+								  	{
+								  	    minLength : 2, 
+								  	    source : function(value, process){
+											  	    $.get("/invites?str="+value, function(data){
+											  	        var list = [];
+												  	    for(var i in data){
+												  	        var item = data[i].name + " ("+data[i].login + ")";
+												  	        list.push(item);
+												  	    }
+											  	        process(list);
+											  	    });
+								  				},
+								  		updater : function(item){
+								  		    return item;
+								  		}, 
+								  		matcher : function(item){
+								  		    return true;
+								  		}
+								  	}
+							  	);
+						</script>
+	  				</form>
+					#{/if}					
+
+					#{if event && event.attendances}
+	  				<form action="/event/invite?eventId=${event.uuid}&url=${request.url.urlEncode()}&#{token /}" method="post">
+						<table class="dialog-invite-list" data-checkboxes="true" style="width:100%">
+							#{list items:event.attendances, as:'item'}
+							    <tr>
+							    	<td>
+							    		#{if item.isForUser && item.user != null}
+								    		<img class="avatar22 img-circle"  src="/${item.user.avatarUrl}"> <label class="light" for="invite${item.uuid}"><a href="/user/${item.user.login}">${item.user.fullName}</a></label>
+										#{/if}
+										#{elseif item.customer != null}
+								    		<img class="avatar22 img-circle"  src="/${item.customer.avatarUrl}"> <label class="light" for="invite${item.uuid}"><a href="/user/${item.customer.login}">${item.customer.fullName}</a></label>
+										#{/elseif}
+										#{else}
+								    		<img class="avatar22 img-circle"  src="/public/images/avatar_32x32"> <label for="invite${item.uuid}">${item.email}</label>
+										#{/else}
+							    		#{if isOwner && (item.user == null || !item.isForUser)}<input name="invite" id="invite${item.uuid}" class="notify-checkboxes" type="checkbox" value="${item.uuid}">#{/if} 
+							    	</td>
+							    	<td style="padding:3px;text-align:center"> 
+							    		#{if item.result && item.result == 'accepted'}<span class="label default-bg">&{'accepted'}</span> #{/if}
+							    		#{if item.result && item.result == 'declined'}<span class="label label-danger">&{'declined'}</span> #{/if}
+							    		#{if item.result == null}<span class="label label-default">&{'waiting'}</span> #{/if}
+							    	</td>
+							    	<td style="padding:3px;text-align:center"> 
+							    	#{if isOwner && item.paid}
+							    		<span class="label label-success">&{'paid'}</span>
+							    	#{/if}
+							    	</td>
+							    	#{if !event.isLocked()}
+							    	<td style="text-align:right;font-size:1.3em">
+							    		#{if user && item.email == user.login}
+							    		<a href="/attendance-new-edit?type=accepted&uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}#invitation" rel="tooltip" data-original-title="&{'accept'}"><i class="fa fa-check color-link"></i></a>
+							    		#{/if}
+							    		#{if user && item.email == user.login && !isOwner}
+							    		<a href="/attendance-new-edit?type=declined&uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}#invitation" rel="tooltip" data-original-title="&{'decline'}"><i class="fa fa-times color-link"></i></a>&nbsp;
+							    		#{/if}
+							    		#{if isOwner && user && item.email != user.login}
+							    		<a href="/attendance-new-delete?uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}#invitation" rel="tooltip" data-original-title="&{'delete'}"><i class="fa fa-trash color-link"></i></a>
+							    		#{/if}
+							    	</td>
+							    	#{/if}
+							    </tr>
+							#{/list}							
+						</table>
+						#{if isOwner}
+							*{
+							<h3>&{'write-custom-message'}</h3>
+							<div class="form-group" style="margin-bottom:5px;">			    
+						    	<textarea rows="4" cols="" name="message" class="form-control" placeholder="Message" style="margin-top:5px"></textarea>
+						    </div>
+						    }*
+					        <button type="submit" class="btn btn-light-gray btn-short btn-block" rel="tooltip" data-original-title="&{'invite-press'}">&{'send-invitation'}</button>
+			  				<div class="clearfix"></div>
+						#{/if}
+	  				</form>					
+					#{/if}
+			</div>
+  			<!-- Guests -->				
+			#{/if}
+			
+			
+			<!-- Images -->
+			#{if comments}
+			<div style="width:100%;">
+				#{list items:comments, as:'item'}
+					#{list items:item.files, as:'file'}
+						#{if file.isImage() && item.paid == false}
+							<span style="float:left;margin:1px; " title="${file.name}">
+							<span class="overlay-container">
+								<img src="/public/uploads/${file.url}_thumb" title="${file.name}" style="height:62px" alt="${file.name}">
+								<a href="/public/uploads/${file.url}" class="overlay small popup-img">
+									<i class="fa fa-search-plus"></i>
+								</a>
+							</span>		
+							</span>		
+						#{/if}
+					#{/list}
+				#{/list}
+				<div class="clearfix"></div>
+			</div>
+			#{/if}		
+			<!-- Images -->
+
+			#{set mail:true /}
+			#{include 'leftPanel.html' /}			
+		</div>
+
+		<div class="col-md-8 col-md-pull-4">
 			<!-- description -->
 			<div>
     	   	   <h2>
@@ -561,8 +718,6 @@
 
 			<!-- user about -->
 			<div>
-				<h2><a class="anchor" href="/user/${listing.user.login}">&{'about'} ${listing.user.firstName}</a></h2>
-				<div class="separator-2"></div>
 				#{if listing}
 					#{set usr: listing.user /}
 				#{/if}		
@@ -597,162 +752,6 @@
 
 		</div>
 
-		<div class="col-md-4">
-
-			<!-- Guests -->
-			<a name="invitation"></a>
-			#{if fromEvent && !edit}
-			<div>
-				<h2>
-					<label style="font-weight:500" for="notify-check-all">&{'guests'}</label>
-					#{if isOwner}
-						<input id='notify-check-all' type='checkbox' style='position:relative;top:2px;' class='notify-check-all' value='all'>
-					#{/if}
-				</h2>
-				<div class="separator-2"></div>
-				
-				#{if false && event && (attendance == null || !attendance.watchlist)}
-					<a href="/watchlist/add?event=${event.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm margin-clear">
-						<i class="dialog-event-edit color-link fa fa-plus fa-1x"></i> &{'add-to-watchlist'}
-					</a>
-				#{/if}
-				
-				#{if false && attendance != null && attendance.watchlist}
-					<a href="/watchlist/remove?id=${attendance.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-sm margin-clear">
-						<i class="dialog-event-edit color-link fa fa-minus fa-1x"></i> &{'remove-from-watchlist'}
-					</a>
-				#{/if}				
-				
-				#{if isOwner}
-	 				<form class="" action="/attendance-new-save?eventId=${event.uuid}&url=${request.url.urlEncode()}&#{token /}#invitation" method="post">
-					    #{authenticityToken /}
-					    <div class="input-group" style="width:100%">
-							<input type="text" class="form-control" autocomplete="off" placeholder="&{'contact-name-or-email'}" style="font-size:0.9em" maxlength="100" name="email" id="dialog-invite-input" data-provide="typeahead" rel="tooltip" data-original-title="&{'add-more-people'}">
-						    <span class="input-group-btn">
-						    	<button class="btn btn-default btn-short" style="margin:0px;height:40px" id="dialog-invite-button" type="submit">&{'add'}</button>
-						    </span>
-					    </div>
-						<div class="error">#{error 'email' /}</div>
-						<script>
-						        $(".notify-check-all").change(function(){
-						            if($(this).prop("checked")){
-						                $('.notify-checkboxes').prop("checked", true);
-						            } else {
-						                $('.notify-checkboxes').prop("checked", false);
-						            }
-						        });
-						    				      
-							  	$("#dialog-invite-input").typeahead(
-								  	{
-								  	    minLength : 2, 
-								  	    source : function(value, process){
-											  	    $.get("/invites?str="+value, function(data){
-											  	        var list = [];
-												  	    for(var i in data){
-												  	        var item = data[i].name + " ("+data[i].login + ")";
-												  	        list.push(item);
-												  	    }
-											  	        process(list);
-											  	    });
-								  				},
-								  		updater : function(item){
-								  		    return item;
-								  		}, 
-								  		matcher : function(item){
-								  		    return true;
-								  		}
-								  	}
-							  	);
-						</script>
-	  				</form>
-					#{/if}					
-
-					#{if event && event.attendances}
-	  				<form action="/event/invite?eventId=${event.uuid}&url=${request.url.urlEncode()}&#{token /}" method="post">
-						<table class="dialog-invite-list" data-checkboxes="true" style="width:100%">
-							#{list items:event.attendances, as:'item'}
-							    <tr>
-							    	<td>
-							    		#{if item.isForUser && item.user != null}
-								    		<img class="avatar22 img-circle"  src="/${item.user.avatarUrl}"> <label class="light" for="invite${item.uuid}"><a href="/user/${item.user.login}">${item.user.fullName}</a></label>
-										#{/if}
-										#{elseif item.customer != null}
-								    		<img class="avatar22 img-circle"  src="/${item.customer.avatarUrl}"> <label class="light" for="invite${item.uuid}"><a href="/user/${item.customer.login}">${item.customer.fullName}</a></label>
-										#{/elseif}
-										#{else}
-								    		<img class="avatar22 img-circle"  src="/public/images/avatar_32x32"> <label for="invite${item.uuid}">${item.email}</label>
-										#{/else}
-							    		#{if isOwner && (item.user == null || !item.isForUser)}<input name="invite" id="invite${item.uuid}" class="notify-checkboxes" type="checkbox" value="${item.uuid}">#{/if} 
-							    	</td>
-							    	<td style="padding:3px;text-align:center"> 
-							    		#{if item.result && item.result == 'accepted'}<span class="label default-bg">&{'accepted'}</span> #{/if}
-							    		#{if item.result && item.result == 'declined'}<span class="label label-danger">&{'declined'}</span> #{/if}
-							    		#{if item.result == null}<span class="label label-default">&{'waiting'}</span> #{/if}
-							    	</td>
-							    	<td style="padding:3px;text-align:center"> 
-							    	#{if isOwner && item.paid}
-							    		<span class="label label-success">&{'paid'}</span>
-							    	#{/if}
-							    	</td>
-							    	#{if !event.isLocked()}
-							    	<td style="text-align:right">
-							    		#{if user && item.email == user.login}
-							    		<a class="" href="/attendance-new-edit?type=accepted&uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}#invitation">
-							    			<i class="fa fa-check color-link fa-1x"></i>
-							    		</a>
-							    		#{/if}
-							    		#{if (user && item.email == user.login && !isOwner) || (isOwner && user && item.email != user.login)}
-							    		<a class="" href="/attendance-new-delete?uuid=${item.uuid}&url=${request.url.urlEncode()}&#{token /}#invitation">
-							    			<i class="fa fa-times color-link fa-1x"></i>
-							    		</a>
-							    		#{/if}
-							    	</td>
-							    	#{/if}
-							    </tr>
-							#{/list}							
-						</table>
-						#{if isOwner}
-							*{
-							<h3>&{'write-custom-message'}</h3>
-							<div class="form-group" style="margin-bottom:5px;">			    
-						    	<textarea rows="4" cols="" name="message" class="form-control" placeholder="Message" style="margin-top:5px"></textarea>
-						    </div>
-						    }*
-					        <button type="submit" class="btn btn-light-gray btn-short btn-block" rel="tooltip" data-original-title="&{'invite-press'}">&{'send-invitation'}</button>
-			  				<div class="clearfix"></div>
-						#{/if}
-	  				</form>					
-					#{/if}
-			</div>
-  			<!-- Guests -->				
-			#{/if}
-			
-			
-			<!-- Images -->
-			#{if comments}
-			<div style="width:100%;">
-				#{list items:comments, as:'item'}
-					#{list items:item.files, as:'file'}
-						#{if file.isImage() && item.paid == false}
-							<span style="float:left;margin:1px; " title="${file.name}">
-							<span class="overlay-container">
-								<img src="/public/uploads/${file.url}_thumb" title="${file.name}" style="height:62px" alt="${file.name}">
-								<a href="/public/uploads/${file.url}" class="overlay small popup-img">
-									<i class="fa fa-search-plus"></i>
-								</a>
-							</span>		
-							</span>		
-						#{/if}
-					#{/list}
-				#{/list}
-				<div class="clearfix"></div>
-			</div>
-			#{/if}		
-			<!-- Images -->
-
-			#{set mail:true /}
-			#{include 'leftPanel.html' /}			
-		</div>
 	</div>	
 </div>
 #{/if}

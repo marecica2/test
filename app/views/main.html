@@ -135,8 +135,11 @@
 		    	        });	    	        
 		    	    };
 		    	    
+		    	    // blink speed in millis
 		  	      	var titleBlinkI = new star.utils.Interval(titleBlink , 1000);
-			    	var checkI = new star.utils.Interval(check , 10000);
+			    	
+		    	    // check interval millis
+		    	    var checkI = new star.utils.Interval(check , 20000);
 			    	checkI.start();
 			    	
 				    #{if user && user.unreadMessages}
@@ -262,9 +265,9 @@
 						<div class="row">
 							<div class="col-md-12">
 								
-								#{if displayMsg1 || (user && !user.isPublisher() && request.cookies.msg1 == null) && session && session.getAuthenticityToken()}
+								#{if user && request.cookies.msgPublisher == null}
 									<div class="shadow alert alert-info alert-dismissible" role="alert">
-									  <button type="button" class="close" data-dismiss="alert" onclick="star.utils.dismiss('msg1')"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
+									  <button type="button" class="close" data-dismiss="alert" onclick="star.utils.dismiss('msgPublisher')"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
 									  &{'start-helping-others', session.getAuthenticityToken()}
 									</div>
 								#{/if}

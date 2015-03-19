@@ -6,7 +6,6 @@ GET     /upcoming		                    	Application.upcoming
 GET     /past				                    Application.past
 GET     /approvements		                    Application.approvements
 GET     /calendar                               Application.calendar
-GET     /embed/channel/{channel}           		Application.embed
 GET     /user/{login}/calendar		      		Application.calendarUser
 GET     /user/{login}/calendar/{public}    		Application.calendarUser
 GET     /channels								Application.channels
@@ -20,6 +19,8 @@ GET     /help									Application.help
 GET 	/about									Application.about
 GET 	/contact								Application.contact
 POST 	/contact-us								Application.contactUs
+GET 	/user/{userLogin}						Application.userProfile
+GET 	/public/user							Application.userProfile
 
 GET		/login									Secure.login
 GET		/login/									Secure.login
@@ -94,8 +95,6 @@ GET     /contact-follow							Contacts.contactFollow
 GET     /contact-unfollow						Contacts.contactUnfollow
 
 GET		/locale									Public.locale
-GET 	/user/{userLogin}						Public.userProfile
-GET 	/public/user							Public.userProfile
 GET 	/public/feeds							Public.feeds
 GET 	/public/feeds-clear						Public.feedsClear
 POST 	/public/feed							Public.feedSave
@@ -103,6 +102,7 @@ GET 	/public/activities						Public.activities
 GET 	/public/facebook/registration			Public.facebookRegistration
 GET 	/wiki									Public.wiki
 GET     /check-connection	                  	Public.checkconnection
+GET     /embed/channel/{channel}           		Public.embed
 
 GET		/remove-upload							FileuploadController.removeFile	
 POST    /fileupload								FileuploadController.uploadFile

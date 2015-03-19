@@ -30,23 +30,18 @@
 	   	#{/if} 				
 		
 		
-		#{if !edit && event.type == 'p2p' && (event.state.equals("user_accepted") || event.state.equals("user_created"))}
-			<a class="btn btn-danger  btn-social margin-clear" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank" rel="tooltip" data-original-title="&{'join-video-call'}"><i class="fa fa-video-camera"></i></a>
-		#{/if}		
-		
-		
 		#{if isOwner && !edit && event.type == 'broadcast'}
 			#{if event.started == null}
-				<a class="btn btn-default btn-social margin-clear" href="/event-start?event=${event.uuid}&url=${request.url.urlEncode()}&#{token /}" >&{'start-live-broadcast'}</a>
+				<a class="btn btn-light-gray btn-social margin-clear" href="/event-start?event=${event.uuid}&url=${request.url.urlEncode()}&#{token /}" >&{'start-live-broadcast'}</a>
 			#{/if}
 			#{else}
-				<a class="btn btn-default btn-social margin-clear" href="/event-stop?event=${event.uuid}&url=${request.url.urlEncode()}&#{token /}" >&{'stop-live-broadcast'}</a>
+				<a class="btn btn-light-gray btn-social margin-clear" href="/event-stop?event=${event.uuid}&url=${request.url.urlEncode()}&#{token /}" >&{'stop-live-broadcast'}</a>
 			#{/else}
 		#{/if}		
 		
 		
 		#{if isOwner && !edit && event.type == 'instant'}
-			<a class="btn btn-default btn-social margin-clear btn-instant-stop"  data-href='/channel-stop?id=${listing.uuid}&url=${("/channel/"+listing.uuid+"").urlEncode()}' >&{'stop-instant-broadcast'}</a>
+			<a class="btn btn-light-gray btn-social margin-clear btn-instant-stop"  data-href='/channel-stop?id=${listing.uuid}&url=${("/channel/"+listing.uuid+"").urlEncode()}' >&{'stop-instant-broadcast'}</a>
 		#{/if}							
 
 
@@ -67,36 +62,40 @@
 		
 		
 		#{if isOwner && !edit && event.type == 'hangout'}
-			<a class="btn btn-default btn-social margin-clear" href="//plus.google.com/hangouts/_/?gid=647254293629&gd=${event.uuid}" target="_blank">&{'start-hangout'}</a>
+			<a class="btn btn-light-gray btn-social margin-clear" href="//plus.google.com/hangouts/_/?gid=647254293629&gd=${event.uuid}" target="_blank">&{'start-hangout'}</a>
 		#{/if}			
 		
 										
 		#{if !isOwner && !edit && event.type == 'hangout'}
 			#{if event.hangoutUrl}
-				<a class="btn btn-default btn-social margin-clear" href="${event.hangoutUrl}" target="_blank">&{'join-hangout'}</a>
+				<a class="btn btn-light-gray btn-social margin-clear" href="${event.hangoutUrl}" target="_blank">&{'join-hangout'}</a>
 			#{/if}											
 			#{else}
-				<a class="btn btn-default btn-social margin-clear" href="">&{'refresh'}</a>
+				<a class="btn btn-light-gray btn-social margin-clear" href="">&{'refresh'}</a>
 			#{/else}											
 		#{/if}											
 		
 		
 		#{if !edit && isOwner && event.isEditable(user)}
-		<a class="btn btn-default btn-social margin-clear" href="/event?action=edit&uuid=${request.params.uuid}&url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-original-title="&{'edit-event'}">
+		<a class="btn btn-light-gray btn-social margin-clear" href="/event?action=edit&uuid=${request.params.uuid}&url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-original-title="&{'edit-event'}">
 			<i class="dialog-event-edit fa fa-pencil fa-1x"></i>
 		</a>
 		#{/if}
 
 
 		#{if !edit && isOwner && event.isEditable(user)}
-		<a class="btn btn-default btn-social margin-clear" href="/event-delete?uuid=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}" rel="tooltip" data-original-title="&{'delete-event'}">
+		<a class="btn btn-light-gray btn-social margin-clear" href="/event-delete?uuid=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}" rel="tooltip" data-original-title="&{'delete-event'}">
 			<i class="dialog-event-edit fa fa-times fa-1x"></i>
 		</a>
 		#{/if}
+		
+		#{if !edit && event.type == 'p2p' && (event.state.equals("user_accepted") || event.state.equals("user_created"))}
+			<a class="btn btn-danger  btn-social margin-clear" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank" rel="tooltip" data-original-title="&{'join-video-call'}"><i class="fa fa-video-camera fa-flip-horizontal"></i></a>
+		#{/if}			
 
 		
 		#{if edit}
-			<a class="btn btn-default btn-social margin-clear" href="${request.params.url}">
+			<a class="btn btn-light-gray btn-social margin-clear" href="${request.params.url}">
 				&{'cancel'}
 			</a>		
 		#{/if}	
@@ -106,17 +105,17 @@
 	#{else}	 
 		#{if isOwner && !edit && listing.type == 'instant'}
 			#{if listing.started == null}
-				<a class="btn btn-default btn-social margin-clear btn-instant-start" href="/channel-start?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" title="&{'star-instant-broadcast'}"><i class="fa fa-play"></i></a>
+				<a class="btn btn-light-gray btn-social margin-clear btn-instant-start" href="/channel-start?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" title="&{'star-instant-broadcast'}"><i class="fa fa-play"></i></a>
 			#{/if}
 			#{else}
-				<a class="btn btn-default btn-social margin-clear btn-instant-stop" data-href="/channel-stop?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" title="&{'stop-instant-broadcast'}"><i class="fa fa-stop"></i></a>
-				<a class="btn btn-default btn-social margin-clear btn-instant-room" data-href="/create-room?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" title="&{'go-to-private-room'}"><i class="icon-key"></i></a>
+				<a class="btn btn-light-gray btn-social margin-clear btn-instant-stop" data-href="/channel-stop?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" title="&{'stop-instant-broadcast'}"><i class="fa fa-stop"></i></a>
+				<a class="btn btn-light-gray btn-social margin-clear btn-instant-room" data-href="/create-room?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" title="&{'go-to-private-room'}"><i class="icon-key"></i></a>
 			#{/else}
 		#{/if}		
 
 
 		#{if !isOwner && !edit && listing.type == 'instant' && listing.instantBroadcast != null}
-			<a class="btn btn-default  btn-social margin-clear" href="/event/${listing.instantBroadcast}" >&{'go-to-private-room'}</a>
+			<a class="btn btn-light-gray  btn-social margin-clear" href="/event/${listing.instantBroadcast}" >&{'go-to-private-room'}</a>
 		#{/if}		
 		
 		
@@ -125,24 +124,24 @@
 
 		#{if !edit && isOwner}
 
-			<a class="btn btn-default btn-social margin-clear" href="" rel="tooltip" data-original-title="&{'website-embed'}" data-toggle="modal" data-target="#embedModal"><i class="fa fa-code"></i></a>
+			<a class="btn btn-light-gray btn-social margin-clear" href="" rel="tooltip" data-original-title="&{'website-embed'}" data-toggle="modal" data-target="#embedModal"><i class="fa fa-code"></i></a>
 		
 			#{if user.isPublisher() && listing.type != 'instant'}
-				<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&#{token /}&listingId=${listing.uuid}" class="btn btn-default btn-social margin-clear" rel="tooltip" data-original-title="&{'add-event'}">
+				<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&#{token /}&listingId=${listing.uuid}" class="btn btn-light-gray btn-social margin-clear" rel="tooltip" data-original-title="&{'add-event'}">
 					<i class="fa fa-plus"></i>
 				</a>
 			#{/if}
-			<a href="/channel/${listing.uuid}?action=edit&url=${request.url.urlEncode()}&#{token /}" class="btn btn-default btn-social margin-clear" rel="tooltip" data-original-title="&{'edit-channel'}">
+			<a href="/channel/${listing.uuid}?action=edit&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-social margin-clear" rel="tooltip" data-original-title="&{'edit-channel'}">
 				<i class="fa fa-pencil fa-1x"></i>
 			</a>
-			<a href="/channel-delete?uuid=${listing.uuid}&#{token /}" class="btn btn-default btn-social margin-clear" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}" rel="tooltip" data-original-title="&{'delete-channel'}">
+			<a href="/channel-delete?uuid=${listing.uuid}&#{token /}" class="btn btn-light-gray btn-social margin-clear" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}" rel="tooltip" data-original-title="&{'delete-channel'}">
 				<i class="fa fa-times"></i>
 			</a>
 		#{/if}
 		
 		
 		#{if edit}
-			<a href="${request.params.url}" class="btn btn-default  btn-social margin-clear">&{'cancel'}</a>		
+			<a href="${request.params.url}" class="btn btn-light-gray  btn-social margin-clear">&{'cancel'}</a>		
 		#{/if}	
 	#{/else}	
 	<!-- edit buttons -->   	

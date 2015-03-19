@@ -4,15 +4,18 @@
 	<div class="separator-2"></div>
 	<p>
 		#{list items:contacts, as:'item'}
-	  		#{if item.contact.isOnline()}
-				<a href="/user/${item.contact.login}"><img class="pull-left" style="height:32px;margin:1px" src="/${item.contact.avatarUrl}_64x64" title="${item.contact.fullName}"></a>
+			#{if item.blocked == null || item.blocked == false}
+		  		#{if item.contact.isOnline()}
+					<a href="/user/${item.contact.login}"><img class="pull-left" style="height:32px;margin:1px" src="/${item.contact.avatarUrl}_64x64" title="${item.contact.fullName}"></a>
+				#{/if}
+				#{else}
+					<a href="/user/${item.contact.login}"><img class="pull-left" style="height:32px;margin:1px;opacity:0.2" src="/${item.contact.avatarUrl}_64x64" title="${item.contact.fullName}"></a>
+				#{/else}			
 			#{/if}
-			#{else}
-				<a href="/user/${item.contact.login}"><img class="pull-left" style="height:32px;margin:1px;opacity:0.2" src="/${item.contact.avatarUrl}_64x64" title="${item.contact.fullName}"></a>
-			#{/else}			
 		#{/list}	
 	</p>
 	
+	<br/>
 	<form class="form-inline" method="post" role="form" action="/contacts/invite?url=${request.url.urlEncode()}&#{token /}">
 	  	<div class="form-group">
 		    <label>&{'invite-new-user'} &nbsp;</label>
@@ -25,8 +28,6 @@
 		</div>				
 	</form>	
 	
-	<br/>
-	<br/>
 
 	<h3>&{'activities'}  <span style="font-size:0.7em"><i class="activities-refresh color-link  fa fa-refresh"></i></span> </h3>
 	<div class="separator-2"></div>

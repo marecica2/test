@@ -6,20 +6,34 @@
 #{set 'moreScripts'}
 #{/set}
 
+#{set 'moreMessages'}
+	#{if request.cookies.msgChannels == null}
+		<div class="shadow alert alert-info alert-dismissible" role="alert">
+		  <button type="button" class="close" data-dismiss="alert" onclick="star.utils.dismiss('msgChannels')"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
+		  &{'msgChannels-msg'}
+		</div>
+	#{/if}
+#{/set}
+
 <div class="padding container container-xs-height">
 	<div class="row row-xs-height">
 	
 		<div class="col-md-12 col-xs-height col-top">
 			<h2>
 				<i class="fa fa-share-alt"></i> &{'manage-channels'}
-				<a href="/channel/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray margin-clear btn-sm"><i class="fa fa-plus"></i> Create Channel</a>
+				<a href="/channel/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray margin-clear btn-sm"><i class="fa fa-plus"></i> &{'create-channel'}</a>
 			</h2>
 			<br/>	
-			#{if listings}
+			#{if listings && listings.size > 0}
 				#{set items:listings /}
 				#{set forEvents:false /}
 				#{include 'listingsList.html' /}
 			#{/if}	
+			#{else}
+				<br/>
+				<h3 class="centered">&{'no-listings'}</h3>
+				<br/>
+			#{/else}			
 		</div>
 	</div>
 </div>
