@@ -23,6 +23,7 @@ import play.libs.Crypto;
 import play.mvc.With;
 import utils.NumberUtils;
 import utils.RandomUtil;
+import utils.StringUtils;
 import email.EmailNotificationBuilder;
 
 @With(controllers.Secure.class)
@@ -42,10 +43,15 @@ public class PaymentController extends BaseController
 
     public static void paymentPost(String event, String url, String payment, String transactionId) throws Exception
     {
-        checkAuthenticity();
         final User user = getLoggedUser();
         final Event e = Event.get(event);
         Attendance attendance = e.getInviteForCustomer(user);
+
+        if (url == null || StringUtils.getStringOrNull(url) == null)
+        {
+            flash.put("warning", Messages.get("invalid-parameters-try-again"));
+            Events.event(null, null, event, null, null, null);
+        }
 
         // in case of public event and missing attendance create it for the logged customer on the fly
         if (attendance == null)
@@ -53,10 +59,7 @@ public class PaymentController extends BaseController
 
         //TODO add here other payment methods
         if (payment.equals(Attendance.ATTENDANCE_PAYMENT_PAYPAL))
-        {
-            //processWithPaypal(attendance, e, user, url, null);
             processWithPaypalAdaptive(attendance, e, user, url, transactionId);
-        }
     }
 
     public static void processWithPaypalAdaptiveResponse(String event, String url, String transactionId) throws Exception
@@ -70,7 +73,7 @@ public class PaymentController extends BaseController
     private static void processWithPaypalAdaptive(Attendance attendance, Event e, User user, String url, String transactionId) throws Exception
     {
         final String baseUrl = getBaseUrl();
-        final String paypalCancelUrl = baseUrl + request.url.substring(1);
+        final String paypalCancelUrl = baseUrl + "event/" + e.uuid;
         final String paypalRedirectUrl = new URIBuilder(baseUrl + "/paypal/adaptive/" + e.uuid)
                 .addParameter("transactionId", Crypto.encryptAES(user.uuid + e.roomSecret))
                 .addParameter("url", url)
@@ -97,118 +100,66 @@ public class PaymentController extends BaseController
         if (transactionId != null && Crypto.decryptAES(transactionId).equals(user.uuid + e.roomSecret))
         {
             Map<String, String> resp = pp.getAdaptiveCheckoutDetails(e, dual, attendance.paypalAdaptivePayKey);
-            attendance.paid = true;
-            attendance.paypalTransactionDate = new Date();
-            attendance.paymentMethod = Attendance.ATTENDANCE_PAYMENT_PAYPAL;
-            attendance.currency = resp.get("currencyCode");
-            attendance.price = e.getTotalPrice();
-            attendance.providerPrice = NumberUtils.parseDecimal(resp.get("paymentInfoList.paymentInfo(0).receiver.amount"));
-            attendance.fee = NumberUtils.parseDecimal(resp.get("paymentInfoList.paymentInfo(1).receiver.amount"));
-            attendance.paypalTransactionId = resp.get("paymentInfoList.paymentInfo(0).transactionId");
-            attendance.paypalTransactionIdProvider = resp.get("paymentInfoList.paymentInfo(1).transactionId");
+            final String respCode = resp.get("responseEnvelope.ack");
+            if (respCode != null && respCode.equals("Success"))
+            {
+                // update attendance
+                attendance.paid = true;
+                attendance.paypalTransactionDate = new Date();
+                attendance.paymentMethod = Attendance.ATTENDANCE_PAYMENT_PAYPAL;
+                attendance.currency = resp.get("currencyCode");
+                attendance.price = e.getTotalPrice();
+                attendance.providerPrice = NumberUtils.parseDecimal(resp.get("paymentInfoList.paymentInfo(0).receiver.amount"));
+                attendance.fee = NumberUtils.parseDecimal(resp.get("paymentInfoList.paymentInfo(1).receiver.amount"));
+                attendance.paypalTransactionId = resp.get("paymentInfoList.paymentInfo(0).transactionId");
+                attendance.paypalTransactionIdProvider = resp.get("paymentInfoList.paymentInfo(1).transactionId");
+                attendance.save();
+
+                // notification
+                final String subject = Messages.getMessage(e.user.locale, "event-payment-completed-subject", e.listing.title);
+                final String body = Messages.getMessage(e.user.locale, "event-payment-completed-message", e.listing.title, user.getFullName(), e.listing.title, getBaseUrl() + "event/"
+                        + e.uuid);
+                if (e.customer != null)
+                    Message.createAdminNotification(e.user, subject, body);
+
+                if (e.customer != null && e.customer.emailNotification)
+                {
+                    EmailNotificationBuilder eb = new EmailNotificationBuilder();
+                    eb.setTo(e.user);
+                    eb.setFrom(user)
+                            .setSubject(subject)
+                            .setMessageWiki(body)
+                            .send();
+                }
+
+                redirect(url);
+            }
 
             if (attendance.paypalTransactionId == null)
             {
                 flash.error(Messages.get("paypal-error"));
-                payment(e.uuid, url);
+                Events.event(null, null, e.uuid, null, null, null);
             }
 
-            // notification
-            final String subject = Messages.getMessage(e.user.locale, "event-payment-completed-subject", e.listing.title);
-            final String body = Messages.getMessage(e.user.locale, "event-payment-completed-message", e.listing.title, user.getFullName(), e.listing.title, getBaseUrl() + "event/" + e.uuid);
-            if (e.customer != null)
-                Message.createAdminNotification(e.user, subject, body);
-
-            if (e.customer != null && e.customer.emailNotification)
-            {
-                EmailNotificationBuilder eb = new EmailNotificationBuilder();
-                eb.setTo(e.user);
-                eb.setFrom(user)
-                        .setSubject(subject)
-                        .setMessageWiki(body)
-                        .send();
-            }
-
-            attendance.save();
-            redirect(url);
         } else
         {
             Map<String, String> resp = pp.setAdaptiveCheckout(e, dual);
-            String payKeyResp = resp.get("payKey");
-            attendance.paypalAdaptivePayKey = payKeyResp;
-            attendance.save();
-            redirect(BaseController.getProperty(BaseController.CONFIG_PAYPAL_ADAPTIVE_URL) + payKeyResp);
+            final String respCode = resp.get("responseEnvelope.ack");
+
+            if (respCode != null && respCode.equals("Success"))
+            {
+                String payKeyResp = resp.get("payKey");
+                attendance.paypalAdaptivePayKey = payKeyResp;
+                attendance.save();
+                redirect(BaseController.getProperty(BaseController.CONFIG_PAYPAL_ADAPTIVE_URL) + payKeyResp);
+            } else
+            {
+                final String errorCode = resp.get("error(0).message");
+                flash.error(Messages.get("paypal-error", errorCode));
+                Events.event(null, null, e.uuid, null, null, null);
+            }
         }
     }
-
-    //    private static void processWithPaypal(Attendance attendance, final Event e, final User user, String url, String transactionId) throws Exception
-    //    {
-    //        final AccountPlan currentPlan = e.user.account.currentPlan();
-    //        Boolean dual = true;
-    //        if (currentPlan != null && !currentPlan.type.equals(Account.TYPE_STANDARD) && currentPlan.profile != null)
-    //            dual = false;
-    //
-    //        final String payerId = request.params.get("PayerID");
-    //        final String baseUrl = getBaseUrl();
-    //        final String paypalCancelUrl = baseUrl + url.substring(1);
-    //        final String paypalRedirectUrl = new URIBuilder(baseUrl + "/paypal/" + e.uuid)
-    //                .addParameter("transactionId", Crypto.encryptAES(user.uuid))
-    //                .addParameter("url", url)
-    //                .build()
-    //                .toString();
-    //
-    //        final Paypal pp = new Paypal(e, paypalRedirectUrl, paypalCancelUrl,
-    //                getProperty(CONFIG_PAYPAL_PROVIDER_ACCOUNT),
-    //                getProperty(CONFIG_PAYPAL_PROVIDER_ACCOUNT_MICROPAYMENT),
-    //                getProperty(CONFIG_PAYPAL_USER),
-    //                getProperty(CONFIG_PAYPAL_PWD),
-    //                getProperty(CONFIG_PAYPAL_SIGNATURE),
-    //                getProperty(CONFIG_PAYPAL_ENDPOINT),
-    //                getProperty(CONFIG_PAYPAL_URL),
-    //                getProperty(CONFIG_PAYPAL_PERCENTAGE)
-    //                );
-    //
-    //        // handle response from paypal
-    //        if (transactionId != null && Crypto.decryptAES(transactionId).equals(user.uuid) && payerId != null)
-    //        {
-    //            attendance.paypalPayerId = payerId;
-    //            final PaypalResponseParser resp = pp.doExpressCheckoutDual(attendance.paypalAccessToken, attendance.paypalPayerId, e, dual);
-    //
-    //            if (resp.success)
-    //            {
-    //                attendance.paid = true;
-    //                attendance.paypalTransactionDate = new Date();
-    //                attendance.fee = resp.fee;
-    //                attendance.price = resp.price;
-    //                attendance.providerPrice = resp.providerPrice;
-    //                attendance.currency = e.currency;
-    //                attendance.paypalAccount = e.user.account.paypalAccount;
-    //                attendance.paypalAccountProvider = resp.providerAccount;
-    //                attendance.paypalTransactionId = resp.transactionIdProvider;
-    //                attendance.paypalTransactionIdProvider = resp.transactionIdOur;
-    //                attendance.result = Attendance.ATTENDANCE_RESULT_ACCEPTED;
-    //                attendance.save();
-    //                redirectTo(request.params.get("url"));
-    //            } else
-    //            {
-    //                Logger.error(resp.errorMessage);
-    //                BaseController.flashErrorPut(resp.errorMessage);
-    //                redirectTo(request.params.get("url"));
-    //            }
-    //        }
-    //
-    //        // redirect to paypal
-    //        if (attendance.paid == null || !attendance.paid)
-    //        {
-    //            AccessToken token = pp.setExpressCheckoutDual(e, dual);
-    //            attendance.paypalAccessToken = token.getToken();
-    //            attendance.paypalAccessTokenValidity = token.getValidity();
-    //            attendance.paymentMethod = "paypal";
-    //            attendance.save();
-    //            redirect(pp.getPaymentUrl(token.getToken()));
-    //        }
-    //
-    //    }
 
     public static void paypalRefundRequest(String id, String url, String reason)
     {
@@ -272,7 +223,8 @@ public class PaymentController extends BaseController
         if (user == null)
             forbidden();
 
-        if (!attendance.event.user.equals(user) || !user.isAdmin())
+        System.err.println(attendance.event.user.login + " " + user.login);
+        if (!attendance.event.user.equals(user) && !user.isAdmin())
             forbidden();
 
         final Paypal pp = new Paypal(attendance.event, null, null,

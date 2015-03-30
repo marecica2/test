@@ -37,6 +37,8 @@ public class ListingDTO
 
     public String charging;
 
+    public String language;
+
     public boolean commentsEnabled;
 
     public long eventStart;
@@ -72,6 +74,7 @@ public class ListingDTO
         l.imageUrl = listing.imageUrl;
         l.type = listing.type;
         l.privacy = listing.privacy;
+        l.language = listing.language;
         l.uuid = listing.uuid;
         l.available = listing.isAvailable();
         if (listing.firstFree != null && listing.firstFree)

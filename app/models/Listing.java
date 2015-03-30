@@ -128,7 +128,7 @@ public class Listing extends Model
         String query = "";
         query += " SELECT s.uuid, title, s.firstname, s.lastname, s.avatarUrl, "
                 + "s.category, s.privacy, s.charging, s.price, s.currency, s.imageUrl, "
-                + "s.tags, s.type, s.ratingStars, s.ratingAvg, s.login, firstFree, s.description, u.available, u.lastOnlineTime ";
+                + "s.tags, s.type, s.ratingStars, s.ratingAvg, s.login, firstFree, s.description, u.available, u.lastOnlineTime, s.language ";
         query += " FROM search_index s ";
         query += " JOIN users u ON u.login = s.login ";
         query += " WHERE 1 = 1 ";
@@ -152,7 +152,6 @@ public class Listing extends Model
             query += " (ratingStars * ratingAvg) DESC NULLS LAST ";
         } else if (filter.sort != null && filter.sort.equals("availability"))
         {
-            System.err.println("sss");
             query += " ORDER BY u.available DESC NULLS LAST, (ratingStars * ratingAvg) DESC NULLS LAST";
         } else
         {
@@ -202,6 +201,7 @@ public class Listing extends Model
             l.description = (String) item[17];
             u.available = item[18] != null ? true : false;
             u.lastOnlineTime = (Date) item[19];
+            l.language = (String) item[20];
             listings.add(l);
         }
         return listings;

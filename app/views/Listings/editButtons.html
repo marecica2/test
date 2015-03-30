@@ -90,7 +90,7 @@
 		#{/if}
 		
 		#{if !edit && event.type == 'p2p' && (event.state.equals("user_accepted") || event.state.equals("user_created"))}
-			<a class="btn btn-danger  btn-social margin-clear" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank" rel="tooltip" data-original-title="&{'join-video-call'}"><i class="fa fa-video-camera fa-flip-horizontal"></i></a>
+			<a class="btn btn-danger  btn-social margin-clear" href="/room?id=${event.uuid}&secret=${event.roomSecret}&#{token /}" target="_self" rel="tooltip" data-original-title="&{'join-video-call'}"><i class="fa fa-video-camera fa-flip-horizontal"></i></a>
 		#{/if}			
 
 		

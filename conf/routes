@@ -16,6 +16,7 @@ POST    /facebook-save							Application.facebookPost
 GET     /privacy								Application.privacy
 GET     /terms									Application.terms
 GET     /help									Application.help
+GET     /faq									Application.faq
 GET 	/about									Application.about
 GET 	/contact								Application.contact
 POST 	/contact-us								Application.contactUs
@@ -69,7 +70,6 @@ GET     /attendances                  			Attendances.attendancesRest
 POST    /attendance/save              			Attendances.attendanceRestSave
 POST    /attendance/update              		Attendances.attendanceRestUpdate
 DELETE  /attendance/delete              		Attendances.attendanceRestDelete
-GET     /invites								Attendances.invites
 GET		/watchlist/add							Attendances.watchListAdd
 GET		/watchlist/remove						Attendances.watchListRemove
 
@@ -85,6 +85,7 @@ POST 	/public/password						Registration.passwordCustomerPost
 POST 	/registration/facebook					Registration.registrationFacebookPost
 GET 	/registration/activate					Registration.activate
 
+GET     /invites								Contacts.invites
 GET     /contacts								Contacts.contacts
 POST    /contacts/invite						Contacts.contactInvite
 GET     /contact-add							Contacts.contactAdd

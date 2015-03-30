@@ -1,11 +1,13 @@
 package controllers;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import models.Contact;
 import models.User;
 import play.i18n.Messages;
 import play.mvc.With;
+import dto.UserDTO;
 import email.EmailNotificationBuilder;
 
 @With(Secure.class)
@@ -17,6 +19,19 @@ public class Contacts extends BaseController
         User usr = user;
         List<Contact> contacts = Contact.getContacts(user);
         render(user, usr, contacts);
+    }
+
+    public static void invites(String str)
+    {
+        final User user = getLoggedUser();
+        List<Contact> c = Contact.getContacts(user, str.toLowerCase());
+        List<UserDTO> contacts = new LinkedList<UserDTO>();
+        if (user != null)
+        {
+            for (Contact contact : c)
+                contacts.add(UserDTO.convert(contact.contact));
+        }
+        renderJSON(contacts);
     }
 
     public static void contactAdd(String uuid, String url)

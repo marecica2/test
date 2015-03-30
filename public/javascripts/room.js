@@ -41,6 +41,7 @@ usr.user = star.user;
 usr.room = star.room;
 usr.avatar = star.avatar;
 usr.admin = star.isOwner;
+usr.login = star.login;
 if(webrtc == null)
     socket.emit('user_joined', usr);
 
@@ -462,7 +463,7 @@ function usersRender(data) {
                     html += "<div class='video-dropdown' data-id='"+peerId+"'><i class='fa fa-chevron-down color-link-light'></i></div>"
                     html += "<div class='peer-controls' data-id='"+peerId+"' style='display:none;z-index:9999;opacity:0.8'>";
                     if(typeof row[usr].avatar != "undefined"){
-                        html += "<a class='btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' href='/user/"+row[usr].user+"' target='_blank' >"
+                        html += "<a class='btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' href='/user/"+row[usr].login+"' target='_blank' >"
                             html += "<i class='icon-user'></i> "+i18n("view-profile");
                         html += "</a> ";
                     }

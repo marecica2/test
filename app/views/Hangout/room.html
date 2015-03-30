@@ -263,6 +263,7 @@
     star.user = '${name}';
     star.room = '${room}';
     #{if user}
+    	star.login = '${user.login}';
     	star.avatar = '${user.avatarUrl}';
     #{/if}
     star.userInRoom = true;

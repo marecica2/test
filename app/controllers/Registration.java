@@ -13,6 +13,7 @@ import models.User;
 import play.cache.Cache;
 import play.i18n.Lang;
 import play.i18n.Messages;
+import play.libs.Crypto;
 import play.libs.Images;
 import play.mvc.Before;
 import utils.RandomUtil;
@@ -68,7 +69,9 @@ public class Registration extends BaseController
         {
             if (user != null)
             {
-                user.password = StringUtils.getRandomPassword(8);
+                final String password = StringUtils.getRandomPassword(8);
+                user.password = password;
+                user.password = Crypto.encryptAES(password);
                 user.save();
 
                 final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
@@ -259,7 +262,8 @@ public class Registration extends BaseController
         checkAuthenticity();
         validation.required(oldPassword);
         validation.required(password);
-        if (!oldPassword.equals(user.password))
+
+        if (!Crypto.encryptAES(oldPassword).equals(user.password))
             validation.addError("oldPassword", "validation-invalidPassword");
 
         Pattern pattern = Pattern.compile("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}");
@@ -270,7 +274,7 @@ public class Registration extends BaseController
 
         if (!validation.hasErrors())
         {
-            user.password = password;
+            user.password = Crypto.encryptAES(password);
             user.save(user.account);
             redirect("/login");
         } else
@@ -340,7 +344,7 @@ public class Registration extends BaseController
         user.login = login;
         user.firstName = firstName;
         user.lastName = lastName;
-        user.password = password;
+        user.password = Crypto.encryptAES(password);
         user.registrationToken = token;
         user.timezone = offset;
         user.locale = Lang.get();

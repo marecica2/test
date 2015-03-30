@@ -60,6 +60,8 @@ public class Event extends Model
 
     public String state;
 
+    public String language;
+
     public Date eventStart;
 
     public Date eventEnd;

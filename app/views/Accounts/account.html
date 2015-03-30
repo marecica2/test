@@ -118,8 +118,8 @@
 			</div>
 			<!-- Fileupload -->		
 			
-			<h3 class="centered">&{'account.account'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
-			<div class="separator"></div>
+			<h3 class="normal">&{'account.account'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
+			<div class="separator-2"></div>
 			
 			#{if !edit}
 
@@ -135,7 +135,7 @@
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">
-					&{'account-name'}
+					<i class="icon-info tip" rel="tooltip" data-placement="left" title="&{'account-info'}"></i> &{'account-name'}
 				</label>
 			    <div class="col-sm-9">
 			      	<p class="form-control-static">
@@ -343,21 +343,21 @@
 			<div class="form-group">
 				<label for="name" class="col-sm-2 control-label">&{'account-name'}</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="accName" placeholder="&{'account.accountName'}" name="accName" value="${params.accName}">
+			      <input type="text" class="form-control" id="accName" placeholder="&{'account-name'}" name="accName" value="${params.accName}">
 			      <div class="error">#{error 'accName' /}</div>
 			    </div>
 			</div>
 			<div class="form-group">
 				<label for="firstName" class="col-sm-2 control-label">&{'first-name'}</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="firstName" placeholder="&{'first-name'}" name="firstName" value="${flash.firstName}">
+			      <input type="text" class="form-control" id="firstName" placeholder="&{'first-name'}" name="firstName" value="${params.firstName}">
 			      <div class="error">#{error 'firstName' /}</div>
 			    </div>
 			</div>
 			<div class="form-group">
 				<label for="lastName" class="col-sm-2 control-label">&{'last-name'}</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="lastName" placeholder="&{'last-name'}" name="lastName" value="${flash.lastName}">
+			      <input type="text" class="form-control" id="lastName" placeholder="&{'last-name'}" name="lastName" value="${params.lastName}">
 			      <div class="error">#{error 'lastName' /}</div>
 			    </div>
 			</div>	
@@ -404,8 +404,8 @@
 
 			#{if user.account.type == "publisher"}
 			<a id="paypal"></a>
-			<h3 class="centered">&{'paypal-account'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#paypal"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
-			<div class="separator"></div>
+			<h3 class="normal">&{'paypal-account'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#paypal"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
+			<div class="separator-2"></div>
 			#{if !edit}
 			
 			<div class="form-group">
@@ -471,8 +471,8 @@
 
 
 			<a id="calendar"></a>
-			<h3 class="centered">&{'your-calendar'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#calendar"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
-			<div class="separator"></div>
+			<h3 class="normal">&{'your-calendar'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#calendar"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
+			<div class="separator-2"></div>
 			#{if !edit}
 			
 			<div class="form-group">
@@ -514,12 +514,13 @@
 							<span class="">&{'google-calendar-sync-with'} <strong>${user.googleCalendarId}</strong></span>
 							#{/if}
 						</span>
-						<span><a href="/google?url=${request.url.urlEncode()}&#{token /}">&{'enable-google-calendar'}</a></span> &middot; 
-						#{if user.googleTokenExpires}
-							<span><a href="/google/clear?url=${request.url.urlEncode()}&#{token /}">&{'disable-google-calendar-sync'}</a></span> &middot;
+						#{if user.googleTokenExpires == null}
+							&middot;  <span><a href="/google?url=${request.url.urlEncode()}&#{token /}">&{'enable-google-calendar'}</a></span> 
 						#{/if}
-						
-						<a href="/help#gcal">&{'learn-more'}</a>
+						#{if user.googleTokenExpires}
+							&middot;  <span><a href="/google/clear?url=${request.url.urlEncode()}&#{token /}">&{'disable-google-calendar-sync'}</a></span> 
+						#{/if}
+						&middot; <a href="/help#gcal">&{'learn-more'}</a>
 			      	</p>
 			    </div>
 			</div>			
@@ -639,12 +640,13 @@
 			<br/>
 			<br/>
 			<a id="about"></a>
-			<h3 class="centered"> 
+			<h3 class="normal"> 
 				<i class="icon-info tip" rel="tooltip" data-placement="left" data-original-title="&{'about-you-section-info'}"></i> 
 				&{'about-you-section'} 
 				<a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#about"><i class="fa fa-pencil"></i> &{'edit'}</a>
 			</h3>
-			<div class="separator"></div>
+			<div class="separator-2"></div>
+			<br/>
 			#{if !edit}
 				#{set usr:user /}
 				#{include 'userAbout.html' /}

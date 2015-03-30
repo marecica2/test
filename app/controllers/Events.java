@@ -188,6 +188,8 @@ public class Events extends BaseController
             params.put("privacy", event.privacy);
             params.put("currency", event.currency);
             params.put("charging", event.charging);
+            if (event.language != null)
+                params.put("language", event.language);
             if (event.price != null)
                 params.put("price", event.price.toString());
             if (event.chargingTime != null)
@@ -204,6 +206,9 @@ public class Events extends BaseController
             params.put("privacy", listing.privacy);
             params.put("currency", listing.currency);
             params.put("charging", listing.charging);
+
+            if (listing.language != null)
+                params.put("language", listing.language);
             if (listing.price != null)
                 params.put("price", listing.price.toString());
             if (listing.chargingTime != null)
@@ -244,6 +249,7 @@ public class Events extends BaseController
         String privacy,
         String charging,
         Integer chargingTime,
+        String language,
         String type,
         String category,
         String tags,
@@ -342,6 +348,7 @@ public class Events extends BaseController
             event.eventStart = eventSt;
             event.eventEnd = eventEn;
             event.privacy = privacy;
+            event.language = language;
             event.type = type;
             event.currency = currency;
             event.price = NumberUtils.parseDecimal(price);
@@ -411,10 +418,18 @@ public class Events extends BaseController
                 forbidden();
         }
 
+        final Date start = time.fromJson(jo.get("eventStart").getAsString());
+        final Date end = time.fromJson(jo.get("eventEnd").getAsString());
+
+        if (start.getTime() > end.getTime())
+            forbidden();
+        if ((end.getTime() - start.getTime()) > (1000 * 60 * 60 * 2))
+            forbidden();
+
         // create event
         Event event = new Event();
-        event.eventStart = time.fromJson(jo.get("eventStart").getAsString());
-        event.eventEnd = time.fromJson(jo.get("eventEnd").getAsString());
+        event.eventStart = start;
+        event.eventEnd = end;
         event.listing = listing;
         event.googleId = googleId;
         event.listing_uuid = listing.uuid;

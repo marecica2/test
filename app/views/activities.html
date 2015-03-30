@@ -1,7 +1,6 @@
 <div>
 
-	<h3>&{'contacts'} <a href="/contacts" class="btn btn-light-gray btn-sm">&{'manage'}</a></h3>
-	<div class="separator-2"></div>
+	<h2>&{'contacts'} <a href="/contacts" class="btn btn-light-gray btn-sm margin-clear">&{'manage'}</a></h2>
 	<p>
 		#{list items:contacts, as:'item'}
 			#{if item.blocked == null || item.blocked == false}
@@ -18,9 +17,8 @@
 	<br/>
 	<form class="form-inline" method="post" role="form" action="/contacts/invite?url=${request.url.urlEncode()}&#{token /}">
 	  	<div class="form-group">
-		    <label>&{'invite-new-user'} &nbsp;</label>
 		    <div class="input-group">
-		      	<input type="text" class="form-control" autocomplete="off" size="50" maxlength="100" name="email" placeholder="&{'type-email'}" value="${flash.email}" >
+		      	<input type="text" class="form-control" autocomplete="off" size="50" maxlength="100" name="email" placeholder="&{'invite-new-user'}" value="${flash.email}" >
 			    <span class="input-group-btn">
 			    	<button class="btn btn-light-gray btn-short btn-margin" style="height:40px;" id="dialog-invite-button" type="submit">&{'invite-by-email'}</button>
 			    </span>					    

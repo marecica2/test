@@ -25,10 +25,11 @@ public class WikiUtils
 
             MarkupParser parser = new MarkupParser(new ConfluenceLanguage());
             parser.setBuilder(builder);
+
             parser.parse(content);
             String htmlContent = writer.toString();
             htmlContent = htmlContent.replaceAll("\\[mailto:(.+?)\\]", "<a href=\"mailto:$1\">$1</a>");
-            htmlContent = htmlContent.replaceAll("\\[(.+?)\\|(.+?)\\]", "<a href=\"$2\">$1</a>");
+            htmlContent = htmlContent.replaceAll("\\[(.+?)\\|(.+?)\\]", "<a href=\"$2\" target='_blank'>$1</a>");
             htmlContent = htmlContent.replaceAll("\\>mailto:(.+?)\\</", ">$1</");
             htmlContent = htmlContent.replaceAll("\\{.+?\\}", "");
             htmlContent = htmlContent.replaceAll("&amp;", "&");

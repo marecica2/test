@@ -8,9 +8,9 @@
 				<div class="header-top-first clearfix">
 					<ul class="social-links clearfix hidden-xs">
 						<li class="vimeo"><a href="/"><i class="fa fa-home"></i></a></li>
-						<li class="facebook"><a target="_blank" href="http://www.facebook.com"><i class="fa fa-facebook"></i></a></li>
-						<li class="googleplus"><a target="_blank" href="http://plus.google.com"><i class="fa fa-google-plus"></i></a></li>
-						<li class="twitter"><a target="_blank" href="http://www.twitter.com"><i class="fa fa-twitter"></i></a></li>
+						<li class="facebook"><a target="_blank" href="http://www.facebook.com/widgr"><i class="fa fa-facebook"></i></a></li>
+						<li class="googleplus"><a target="_blank" href="https://plus.google.com/+WidGrApp"><i class="fa fa-google-plus"></i></a></li>
+						<li class="twitter"><a target="_blank" href="http://twitter.com/widgrApp"><i class="fa fa-twitter"></i></a></li>
 					</ul>
 					<div class="social-links hidden-lg hidden-md hidden-sm">
 						<div class="btn-group dropdown">
@@ -42,7 +42,7 @@
 							<a class="btn dropdown-toggle margin-top-clear" href="/instant" target="_blank" rel="tooltip" data-placement="bottom" data-original-title="&{'start-instant-chat'}"><i class="fa fa-video-camera fa-flip-horizontal"></i></a>
 							<a class="btn dropdown-toggle margin-top-clear" href="/about">&{'about'}</a>
 							<a class="btn dropdown-toggle margin-top-clear" href="/help">&{'help'}</a>
-							<a class="btn dropdown-toggle margin-top-clear" href="/help#faq">&{'FAQ'}</a>
+							<a class="btn dropdown-toggle margin-top-clear" href="/faq">&{'FAQ'}</a>
 							<a class="btn dropdown-toggle margin-top-clear" href="/contact">&{'contact-us'}</a>
 						</div>
 						<div class="btn-group dropdown">
@@ -141,17 +141,24 @@
 									        <ul class="dropdown-menu">
 									          	<li><a href="/dashboard"><i class="fa fa-dashboard"></i> &{'dashboard'}</a></li>
 									          	<li><a href="/manage-channels"><i class="fa fa-share-alt"></i> &{'manage-channels'}</a></li>
-									          	<li><a href="/upcoming"><i class="icon-clock"></i> &{'upcoming-events'}</a></li>
-									          	<li><a href="/past"><i class="icon-back-in-time"></i> &{'previous-events'}</a></li>
 									          	#{if user.isPublisher()}
 										          	<li><a href="/approvements"><i class="fa fa-check"></i> &{'session-approval'}</a></li>
 									          	#{/if}
 									          	<li><a href="/media-library"><i class="icon-docs"></i> &{'media-library'}</a></li>
 									        </ul>
 									      </li>	
+
+									      <li class="dropdown">
+									        <a href="/user/${user.login}/calendar" class="dropdown-toggle" data-toggle="dropdown">
+									        	&{'your-sessions'}
+									        </a>
+									        <ul class="dropdown-menu">
+											    <li><a href="/user/${user.login}/calendar"><i class="icon-calendar"></i> &{'your-sessions'}</a></li>
+									          	<li><a href="/upcoming"><i class="icon-clock"></i> &{'upcoming-events'}</a></li>
+									          	<li><a href="/past"><i class="icon-back-in-time"></i> &{'previous-events'}</a></li>
+									        </ul>
+									      </li>	
 									      									 	
-									      <li #{if request.url.indexOf("dashboard")>=0}class="active" #{/if}></li>
-									      <li #{if request.url.indexOf("calendar")>=0}class="active" #{/if}><a href="/user/${user.login}/calendar">&{'your-sessions'}</a></li>
 										#{/if}
 										
 									   	
@@ -182,7 +189,7 @@
 									        	#{if user.isAvailable()}
 									        		<i style="color:#5cb85c" class="fa fa-circle"></i>
 									        	#{/if}
-									        	<img class="img-circle inline" title="${user.fullName}" style="position:relative;bottom:2px;height:24px;" src="/${user.avatarUrl}_64x64">
+									        	<img class="img-circle inline" style="position:relative;bottom:2px;height:24px;" src="/${user.avatarUrl}_64x64">
 									        </a>
 									        <ul class="dropdown-menu">
 									        

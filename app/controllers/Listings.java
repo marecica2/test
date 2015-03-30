@@ -73,6 +73,7 @@ public class Listings extends BaseController
             params.put("description", listing.description);
             params.put("charging", listing.charging);
             params.put("type", listing.type);
+            params.put("language", listing.language);
             params.put("privacy", listing.privacy);
             params.put("price", listing.price != null ? listing.price.toString() : null);
             params.put("chargingTime", listing.chargingTime + "");
@@ -116,6 +117,7 @@ public class Listings extends BaseController
         String category,
         String tags,
         String price,
+        String language,
         String currency,
         String color,
         String url,
@@ -172,6 +174,7 @@ public class Listings extends BaseController
                 listing.user = user;
                 listing.state = Event.EVENT_STATE_USER_CREATED;
             }
+            listing.language = language;
             listing.chatEnabled = chatEnabled != null ? true : null;
             listing.firstFree = firstFree != null ? true : null;
             listing.commentsEnabled = commentsEnabled != null ? true : null;

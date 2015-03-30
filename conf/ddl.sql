@@ -20,6 +20,7 @@ SELECT listing.uuid,
        account.type as account,
        users.login as login,
        listing.description,
+       listing.language,
        setweight(to_tsvector('english'::regconfig, listing.title), 'A') || 
        setweight(to_tsvector('simple', listing.tags), 'B') ||
        setweight(to_tsvector('simple', listing.description), 'C') ||
@@ -29,7 +30,7 @@ JOIN users ON users.id = listing.user_id
 LEFT OUTER JOIN rating r ON r.objectuuid = listing.uuid
 JOIN account ON users.account_id = account.id and account.type = 'publisher' where deleted is null
 GROUP BY listing.uuid, listing.title, listing.description, users.firstname, users.lastname, users.avatarUrl, listing.category,listing.privacy,listing.charging,listing.price,listing.currency,listing.imageUrl,listing.tags,
-listing.type,listing.firstFree,account.type,users.login ;
+listing.type,listing.firstFree,account.type,users.login, listing.language;
 CREATE INDEX idx_fts_search ON search_index USING gin(document);
 REFRESH MATERIALIZED VIEW search_index;
 

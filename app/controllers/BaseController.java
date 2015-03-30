@@ -202,7 +202,7 @@ public class BaseController extends Controller
     protected static void checkPayment(Event e, String url)
     {
         final User user = getLoggedUser();
-        Attendance attendance = e.getInviteForCustomer(user);
+        final Attendance attendance = e.getInviteForCustomer(user);
 
         if (e.isOwner(user))
         {
@@ -218,7 +218,6 @@ public class BaseController extends Controller
 
         if (!e.isFree() && getLoggedUser() == null)
         {
-            Logger.info("Redirect to login");
             flash.put("url", request.url);
             Secure.login();
             return;

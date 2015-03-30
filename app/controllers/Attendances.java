@@ -1,7 +1,6 @@
 package controllers;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import jobs.QuartzServise;
@@ -16,7 +15,6 @@ import utils.RandomUtil;
 import utils.StringUtils;
 import utils.UriUtils;
 import dto.AttendanceDTO;
-import dto.UserDTO;
 
 public class Attendances extends BaseController
 {
@@ -42,19 +40,6 @@ public class Attendances extends BaseController
             renderJSON(aDto);
         }
         renderJSON(null);
-    }
-
-    public static void invites(String str)
-    {
-        final User user = getLoggedUser();
-        List<Contact> c = Contact.getContacts(user, str.toLowerCase());
-        List<UserDTO> contacts = new LinkedList<UserDTO>();
-        if (user != null)
-        {
-            for (Contact contact : c)
-                contacts.add(UserDTO.convert(contact.contact));
-        }
-        renderJSON(contacts);
     }
 
     public static void attendanceNewSave(String email, String eventId, String url)

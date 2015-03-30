@@ -8,6 +8,15 @@
     <link href="@{'/public/css/bootstrap-timepicker.min.css'}" rel="stylesheet" media="screen"/>
 #{/set}
 
+#{set 'moreMessages'}
+	#{if request.cookies.msgCalendar == null}
+		<div class="shadow alert alert-info alert-dismissible" role="alert">
+		  <button type="button" class="close" data-dismiss="alert" onclick="star.utils.dismiss('msgCalendar')"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
+		  &{'calendar-msg'}
+		</div>
+	#{/if}
+#{/set}
+
 #{set 'moreScripts'}
 	<script src="@{'/public/javascripts/lib/bootstrap-timepicker.min.js'}" type="text/javascript"></script>	
 	<script src="@{'/public/javascripts/lib/jquery-ui.custom.min.js'}" type="text/javascript" ></script>
@@ -20,12 +29,11 @@
 	    starCalendar.isPublic = starCalendar.isPublic;
 	    starCalendar.isLogged = starCalendar.isLogged;
 	    starCalendar.login = starCalendar.login;
-	    starCalendar.userDisplayedLogin = starCalendar.userDisplayedLogin;
-	    starCalendar.selectedEventDate = starCalendar.selectedEventDate;
-	    starCalendar.selectedEventId = starCalendar.selectedEventId;
+	    #{if userDisplayed && listing}
+		    starCalendar.proposal = true;
+		    starCalendar.chargingTime = ${listing.chargingTime};
+	    #{/if}
 	    starCalendar.userUUID = starCalendar.userUUID;
-	    starCalendar.userDisplayed = starCalendar.userDisplayed;
-	    starCalendar.defaultCurrency = starCalendar.defaultCurrency;
 	    starCalendar.showEvent = true;
 	    starCalendar.activitiesLimit = 5;
 	    starCalendar.clientId = "";	
@@ -109,7 +117,7 @@
 					</p>
 					<h4>${item.title}</h4>
 					
-					<span class="truncate">${item.getDescriptionHtml().trimDot(140).raw()}</span>
+					<span class="truncate">${item.getDescriptionHtml().trimDot(500).raw()}</span>
 		   			<p>
 		   			#{if item.charging != 'free'}
 		   				<strong>&{'from'} ${item.price} <small>${item.currency}</small></strong>

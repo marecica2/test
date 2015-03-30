@@ -137,7 +137,8 @@ $(document).ready(function() {
             starCalendar.calendar.fullCalendar( 'refetchEvents' );
         }
     })
-    
+    var chargingTime = (typeof starCalendar.chargingTime != "undefined") ? starCalendar.chargingTime : 15;
+    var calendarHeight = starCalendar.defaultView == "month" ? 700 : ((starCalendar.endHour - starCalendar.startHour) * ((60 /chargingTime) * 30));
     starCalendar.options = {
             header: {
                 center: 'prev,today,next',
@@ -155,14 +156,14 @@ $(document).ready(function() {
             dayNames: [i18n('cal.sunday'), i18n('cal.monday'), i18n('cal.tuesday'), i18n('cal.wednesday'), i18n('cal.thursday'), i18n('cal.friday'), i18n('cal.saturday')],
             dayNamesShort: [i18n('cal.sun'), i18n('cal.mon'), i18n('cal.tue'), i18n('cal.wed'), i18n('cal.thu'), i18n('cal.fri'), i18n('cal.sat')],
             allDaySlot: false,
-            slotMinutes: 15,
             slotEventOverlap: true,
             selectable: starCalendar.editable,
             editable: starCalendar.editable,
             selectHelper: true,
             axisFormat: 'HH:mm',
+            slotMinutes: chargingTime,
             hiddenDays: starCalendar.hiddenDays,
-            height: starCalendar.defaultView == "month" ? 700 : ((starCalendar.endHour - starCalendar.startHour) * 105) ,
+            height: calendarHeight ,
             minTime: starCalendar.startHour,
             maxTime: starCalendar.endHour,
             defaultView: starCalendar.defaultView == undefined ? "agendaWeek" : starCalendar.defaultView,

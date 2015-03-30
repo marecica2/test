@@ -43,7 +43,7 @@ public class Contact extends Model
     public static List<Contact> getContacts(User user, String search)
     {
         return Contact
-                .find("from Contact where user = ? and lower(concat(contact.login, ' ', contact.firstName, ' ', contact.lastName)) like ? order by contact.firstName asc contact.lastName asc",
+                .find("from Contact where user = ? and (blocked is null or blocked = false) and lower(concat(contact.login, ' ', contact.firstName, ' ', contact.lastName)) like ? order by contact.firstName asc contact.lastName asc",
                         user, "%" + search + "%").fetch();
     }
 

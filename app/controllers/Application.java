@@ -194,6 +194,12 @@ public class Application extends BaseController
         render(user);
     }
 
+    public static void faq()
+    {
+        final User user = getLoggedUser();
+        render(user);
+    }
+
     public static void home()
     {
         final User user = getLoggedUser();
@@ -249,6 +255,9 @@ public class Application extends BaseController
     public static void manageChannels()
     {
         final User user = getLoggedUser();
+        if (user == null)
+            home();
+
         final Boolean isOwner = true;
         final Boolean dashboard = true;
         final List<Contact> contacts = Contact.getContacts(user);
@@ -263,6 +272,9 @@ public class Application extends BaseController
     public static void approvements()
     {
         final User user = getLoggedUser();
+        if (user == null)
+            home();
+
         final Boolean isOwner = true;
         final Boolean dashboard = true;
         final List<Event> approved = user != null ? Event.getApprovement(user) : null;
@@ -273,8 +285,11 @@ public class Application extends BaseController
 
     public static void upcoming()
     {
-        final Boolean dashboard = true;
         final User user = getLoggedUser();
+        if (user == null)
+            home();
+
+        final Boolean dashboard = true;
         final Boolean isOwner = true;
         final List<Contact> contacts = Contact.getContacts(user);
         render(user, isOwner, contacts, dashboard);
@@ -282,8 +297,11 @@ public class Application extends BaseController
 
     public static void past()
     {
-        final Boolean dashboard = true;
         final User user = getLoggedUser();
+        if (user == null)
+            home();
+
+        final Boolean dashboard = true;
         final Boolean isOwner = true;
         final List<Contact> contacts = Contact.getContacts(user);
         render(user, isOwner, contacts, dashboard);
@@ -291,9 +309,9 @@ public class Application extends BaseController
 
     public static void userProfile(String userLogin)
     {
-        final boolean userProfile = true;
         final User user = getLoggedUser();
         final User usr = User.getUserByLogin(userLogin);
+        final boolean userProfile = true;
 
         if (usr == null)
             notFound();

@@ -87,7 +87,7 @@ public class Accounts extends BaseController
             if (user.googleTokenExpires != null)
                 calendars = GoogleCalendarClient.getCalendars(user);
 
-            params.flash();
+            //params.flash();
         }
 
         // displaying recurring payments information
@@ -99,7 +99,7 @@ public class Accounts extends BaseController
             plan.type = Account.PLAN_STANDARD;
         }
 
-        render(user, baseUrl, account, edit, calendars, plan, planLast);
+        render(user, baseUrl, account, edit, calendars, plan, planLast, params);
     }
 
     public static void accountPost(
@@ -115,6 +115,7 @@ public class Accounts extends BaseController
         )
     {
         checkAuthenticity();
+        flash.clear();
         final User user = getLoggedUserNotCache();
 
         final boolean edit = request.params.get("edit") == null ? false : true;
@@ -122,12 +123,16 @@ public class Accounts extends BaseController
         final String baseUrl = request.getBase();
 
         validation.required(firstName);
+        validation.maxSize(firstName, 20);
         if (!user.isAdmin())
         {
             validation.required(lastName);
+            validation.maxSize(lastName, 20);
             validation.match("lastName", lastName, "[A-Za-z]+").message("bad-characters");
             validation.match("firstName", firstName, "[A-Za-z]+").message("bad-characters");
         }
+        if (accName != null)
+            validation.maxSize(accName, 30);
 
         if (reminder && reminderMinutes == null)
             validation.required(reminderMinutes);
@@ -191,6 +196,7 @@ public class Accounts extends BaseController
             redirect("/settings");
         } else
         {
+            flash.error(Messages.get("invalid-channel-data"));
             params.flash();
         }
         render("Accounts/account.html", user, baseUrl, account, edit);
@@ -210,7 +216,6 @@ public class Accounts extends BaseController
             user.facebookId = facebookId;
             user.save();
         }
-
         clearUserFromCache();
         flash.keep();
         account();

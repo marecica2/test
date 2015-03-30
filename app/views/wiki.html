@@ -53,6 +53,174 @@
 				<div class="">
 
 					<section class="">
+						<h2>Links</h2>
+						<p>Learning how to create links quickly is important.</p>
+						<table class="">
+							<thead>
+								<tr>
+									<th style="min-width: 250px; width: 50%;">Notation</th>
+									<th>Comment</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><pre>
+											<code>[http://example.com]
+[Example|http://example.com]
+</code>
+										</pre></td>
+									<td>
+										<p>Creates a link to an external resource, special
+											characters that come after the URL and are not part of it
+											must be separated with a space.</p>
+										<p>The [] around external links are optional in the case
+											you do not want to use any alias for the link.</p>
+										<p>Examples:</p>
+										<p>
+											<a href="http://example.com">&#104;ttp://example.com</a><br />
+											<a href="http://example.com">Example</a>
+										</p>
+									</td>
+								</tr>
+								<tr>
+									<td><pre>
+											<code>[mailto:example@example.com]</code>
+										</pre></td>
+									<td>
+										<p>Creates a link to an email address, complete with mail
+											icon.</p>
+										<p>Example:</p>
+										<p>
+											<span style="white-space: nowrap;"><a href="mailto:example@example.com">example@example.com</a>
+											</span>
+										</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>		
+						
+						
+						<h2>Lists</h2>
+						<p>Lists allow you to present information as a series of
+							ordered items.</p>
+						<table class="">
+							<thead>
+								<tr>
+									<th style="min-width: 250px; width: 50%;">Notation</th>
+									<th>Comment</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><pre>
+											<code>* some
+* bullet
+** indented
+** bullets
+* points
+</code>
+										</pre></td>
+									<td>
+										<p>A bulleted list (must be in first column). Use more
+											(**) for deeper indentations.</p>
+										<p>Example:</p>
+										<ul class="">
+											<li>some</li>
+											<li>bullet
+												<ul class="">
+													<li>indented</li>
+													<li>bullets</li>
+												</ul>
+											</li>
+											<li>points</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td><pre>
+											<code>- different
+- bullet
+- types
+</code>
+										</pre></td>
+									<td>
+										<p>A list item (with -), several lines create a single
+											list.</p>
+										<p>Example:</p>
+										<ul type="square" class="">
+											<li>different</li>
+											<li>bullet</li>
+											<li>types</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td><pre>
+											<code># a
+# numbered<br />
+# list
+</code>
+										</pre></td>
+									<td>
+										<p>A numbered list (must be in first column). Use more
+											(&#35;&#35;, &#35;&#35;&#35;) for deeper indentations.</p>
+										<p>Example:</p>
+										<ol>
+											<li>a</li>
+											<li>numbered</li>
+											<li>list</li>
+										</ol>
+									</td>
+								</tr>
+								<tr>
+									<td><pre>
+											<code># a
+# numbered
+&#35;* with
+&#35;* nested
+&#35;* bullet
+# list
+</code>
+										</pre> <pre>
+											<code>* a
+* bulleted
+*# with
+*# nested
+*# numbered
+* list
+</code>
+										</pre></td>
+									<td>
+										<p>You can even go with any kind of mixed nested lists</p>
+										<p>Example:</p>
+										<ol>
+											<li>a</li>
+											<li>numbered
+												<ul class="">
+													<li>with</li>
+													<li>nested</li>
+													<li>bullet</li>
+												</ul>
+											</li>
+											<li>list</li>
+										</ol>
+										<p>Example:</p>
+										<ul class="">
+											<li>a</li>
+											<li>bulleted
+												<ol>
+													<li>with</li>
+													<li>nested</li>
+													<li>numbered</li>
+												</ol>
+											</li>
+											<li>list</li>
+										</ul>
+									</td>
+								</tr>
+							</tbody>
+						</table>									
+					
 						<h2>Headings</h2>
 						<p>To create a header, place "hn. " at the start of the line
 							(where n can be a number from 1-6).</p>
@@ -64,18 +232,6 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td><pre>
-											<code>h1. Biggest heading</code>
-										</pre></td>
-									<td><h1>Biggest heading</h1></td>
-								</tr>
-								<tr>
-									<td><pre>
-											<code>h2. Bigger heading</code>
-										</pre></td>
-									<td><h2>Bigger heading</h2></td>
-								</tr>
 								<tr>
 									<td><pre>
 											<code>h3. Big heading</code>
@@ -260,172 +416,11 @@
 								</tr>
 							</tbody>
 						</table>
-						<h2>Links</h2>
-						<p>Learning how to create links quickly is important.</p>
-						<table class="">
-							<thead>
-								<tr>
-									<th style="min-width: 250px; width: 50%;">Notation</th>
-									<th>Comment</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td><pre>
-											<code>[http://example.com]
-[Example|http://example.com]
-</code>
-										</pre></td>
-									<td>
-										<p>Creates a link to an external resource, special
-											characters that come after the URL and are not part of it
-											must be separated with a space.</p>
-										<p>The [] around external links are optional in the case
-											you do not want to use any alias for the link.</p>
-										<p>Examples:</p>
-										<p>
-											<a href="http://example.com">&#104;ttp://example.com</a><br />
-											<a href="http://example.com">Example</a>
-										</p>
-									</td>
-								</tr>
-								<tr>
-									<td><pre>
-											<code>[mailto:example@example.com]</code>
-										</pre></td>
-									<td>
-										<p>Creates a link to an email address, complete with mail
-											icon.</p>
-										<p>Example:</p>
-										<p>
-											<span style="white-space: nowrap;"><a href="mailto:example@example.com">example@example.com</a>
-											</span>
-										</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+
 						
-						<h2>Lists</h2>
-						<p>Lists allow you to present information as a series of
-							ordered items.</p>
-						<table class="">
-							<thead>
-								<tr>
-									<th style="min-width: 250px; width: 50%;">Notation</th>
-									<th>Comment</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td><pre>
-											<code>* some
-* bullet
-** indented
-** bullets
-* points
-</code>
-										</pre></td>
-									<td>
-										<p>A bulleted list (must be in first column). Use more
-											(**) for deeper indentations.</p>
-										<p>Example:</p>
-										<ul class="">
-											<li>some</li>
-											<li>bullet
-												<ul class="">
-													<li>indented</li>
-													<li>bullets</li>
-												</ul>
-											</li>
-											<li>points</li>
-										</ul>
-									</td>
-								</tr>
-								<tr>
-									<td><pre>
-											<code>- different
-- bullet
-- types
-</code>
-										</pre></td>
-									<td>
-										<p>A list item (with -), several lines create a single
-											list.</p>
-										<p>Example:</p>
-										<ul type="square" class="">
-											<li>different</li>
-											<li>bullet</li>
-											<li>types</li>
-										</ul>
-									</td>
-								</tr>
-								<tr>
-									<td><pre>
-											<code># a
-# numbered<br />
-# list
-</code>
-										</pre></td>
-									<td>
-										<p>A numbered list (must be in first column). Use more
-											(&#35;&#35;, &#35;&#35;&#35;) for deeper indentations.</p>
-										<p>Example:</p>
-										<ol>
-											<li>a</li>
-											<li>numbered</li>
-											<li>list</li>
-										</ol>
-									</td>
-								</tr>
-								<tr>
-									<td><pre>
-											<code># a
-# numbered
-&#35;* with
-&#35;* nested
-&#35;* bullet
-# list
-</code>
-										</pre> <pre>
-											<code>* a
-* bulleted
-*# with
-*# nested
-*# numbered
-* list
-</code>
-										</pre></td>
-									<td>
-										<p>You can even go with any kind of mixed nested lists</p>
-										<p>Example:</p>
-										<ol>
-											<li>a</li>
-											<li>numbered
-												<ul class="">
-													<li>with</li>
-													<li>nested</li>
-													<li>bullet</li>
-												</ul>
-											</li>
-											<li>list</li>
-										</ol>
-										<p>Example:</p>
-										<ul class="">
-											<li>a</li>
-											<li>bulleted
-												<ol>
-													<li>with</li>
-													<li>nested</li>
-													<li>numbered</li>
-												</ol>
-											</li>
-											<li>list</li>
-										</ul>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+
+						
+						
 						
 *{						
 						<h2>Images</h2>

@@ -9,6 +9,7 @@ import models.User;
 
 import org.apache.http.client.utils.URIBuilder;
 
+import play.Logger;
 import play.i18n.Messages;
 import play.libs.WS;
 import play.libs.WS.HttpResponse;
@@ -113,7 +114,7 @@ public class GoogleOAuth extends BaseController
 
     public static String getAccessToken()
     {
-        User user = getLoggedUser();
+        User user = getLoggedUserNotCache();
         String url = request.url;
 
         // token is valid
@@ -166,27 +167,34 @@ public class GoogleOAuth extends BaseController
             String refreshToken = json.get("refresh_token") != null ? json.get("refresh_token").getAsString() : null;
             Long expires = json.get("expires_in").getAsLong();
 
-            clearUserFromCache();
             user.googleTokenExpires = new Date(System.currentTimeMillis() + (expires * 1000));
             user.googleAccessToken = accessToken;
             if (refreshToken != null)
                 user.googleRefreshToken = refreshToken;
-            user.save();
 
             // get default calendar
             if (user.googleCalendarId == null)
                 user.googleCalendarId = GoogleCalendarClient.getPrimaryCalendar(user);
-            user.save();
-            flash.success(Messages.get("oauth-successfull"));
 
+            System.err.println(user);
+            System.err.println(user.isPersistent());
+            System.err.println("Google response ");
+            System.err.println(json);
+
+            user.save();
+            clearUserFromCache();
+            flash.success(Messages.get("oauth-successfull"));
         } catch (Exception e)
         {
-            // delete invalid tokens
-            user.googleAccessToken = null;
-            user.googleTokenExpires = null;
-            user.googleRefreshToken = null;
-            user.save();
             flash.error(Messages.get("oauth-error"));
+            Logger.error(e, "Exception during oauth for user " + user.login);
+
+            // delete invalid tokens
+            // user.googleAccessToken = null;
+            // user.googleTokenExpires = null;
+            // user.googleRefreshToken = null;
+            // user.save();
+            // clearUserFromCache();
         }
 
         flash.keep();

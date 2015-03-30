@@ -315,6 +315,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
 	min-width:0px !important;
 }
 
+.btn-short2 {
+	min-width:60px !important;
+	height:60px !important;
+}
+
 .side-padding-short {
 	padding-left:5px !important;
 	padding-right:5px !important;

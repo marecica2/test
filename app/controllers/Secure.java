@@ -240,7 +240,9 @@ public class Secure extends BaseController
          */
         static boolean authenticate(String username, String password)
         {
+            password = Crypto.encryptAES(password);
             User user = User.getUserByLogin(username);
+
             if (user != null && !user.activated)
             {
                 flash.error(Messages.get("your-account-is-not-activated"));

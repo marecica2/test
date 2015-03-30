@@ -253,7 +253,10 @@ star.renderItems = function(data, prefix){
         html += "       <div style='position:absolute;top:0px;right:0px;width:270px'>";
         if(item.available)
             html += "       <i class='fa fa-circle' style='color:green'></i>";            
-        html += "           <small><strong><a href='/user/"+item.createdByLogin+"'>"+item.createdByName+"</a></strong> &middot; "+i18n(item.category)+"</small>";
+        html += "           <small><strong><a href='/user/"+item.createdByLogin+"'>"+item.createdByName+"</a></strong></small>";
+        if(item.language != null) 
+            html += "       &middot; <img src='/public/images/flags/"+item.language+".gif'>"; 
+        html += "           &middot; <small>"+i18n(item.category)+"</small>"
         html += "       </div>";
         
         if(listing)
@@ -265,8 +268,12 @@ star.renderItems = function(data, prefix){
         if(item.charging == 'free'){
             html += "<strong>"+i18n("free")+"</strong>";
         }
+        
         if(item.charging != 'free'){
-            html += i18n("from")+"&nbsp;<strong>"+item.price+"</strong>&nbsp;"+item.currency+"&nbsp;";
+            if(listing)
+                html += i18n("from")+"&nbsp;<strong>"+item.price+"</strong>&nbsp;"+item.currency+"&nbsp;";
+            else
+                html += "<strong>"+item.priceTotal+"</strong>&nbsp;"+item.currency+"&nbsp;"+i18n("for")+" "+item.chargingTime+ " "+i18n("min") + " ";
             if(item.firstFree != undefined && item.firstFree == true){
                 html += "<small class='label default-bg'>First free</small>";
             }       
@@ -375,7 +382,7 @@ starEvent.renderFiles = function(data){
     
     var percentage = (size*100)/104857600;
     var limit = "";
-    limit += "" + starUtils.formatFilesize(size) + " (max 100MB)";
+    limit += "" + starUtils.formatFilesize(size) + " (max 100MB, max 10MB per file)";
     limit += '<div class="progress"><div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="'+percentage+'" aria-valuemin="0" aria-valuemax="100" style="width: '+percentage+'%;"></div></div><br/>'
     $("#fileSizeContainer").html(limit);
     return html;

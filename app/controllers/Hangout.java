@@ -35,7 +35,6 @@ public class Hangout extends BaseController
     {
         final User user = getLoggedUserNotCache();
         final Event event = Event.get(id);
-
         Boolean isOwner = false;
         if (user != null && event != null)
             isOwner = user.isOwner(event);
@@ -61,7 +60,7 @@ public class Hangout extends BaseController
                 final String message = Messages.getMessage(user.locale, "please-rating-message", event.listing.title, getBaseUrl() + "event/" + event.uuid + "#ratings");
                 DelayedNotification delayedNotification = new DelayedNotification(user, subject, message);
                 delayedNotification.in(300);
-                response.setCookie(e.uuid + "", e.uuid + "", "1h");
+                response.setCookie(e.uuid, e.uuid, "12h");
             }
         }
 
@@ -69,7 +68,6 @@ public class Hangout extends BaseController
         final String room = id;
         final String baseUrl = getBaseUrl().substring(0, getBaseUrl().length() - 1);
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
-
         render(user, name, room, socketIo, baseUrl, event, isOwner);
     }
 

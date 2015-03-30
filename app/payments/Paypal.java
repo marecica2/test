@@ -187,12 +187,9 @@ public class Paypal
         sb.append("&receiverList.receiver(0).email=" + event.user.account.paypalAccount);
         sb.append("&receiverList.receiver(0).amount=" + UriUtils.urlEncode(price.toPlainString()));
 
-        System.err.println(event.user.account.paypalAccount);
-
         // our payment
         if (dual)
         {
-            System.err.println(paypalAccount);
             sb.append("&feesPayer=" + UriUtils.urlEncode("PRIMARYRECEIVER"));
             sb.append("&receiverList.receiver(0).primary=" + UriUtils.urlEncode("true"));
 

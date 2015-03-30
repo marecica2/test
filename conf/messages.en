@@ -1,11 +1,9 @@
-
 #Accounts.java
 invalid-value=Invalid value
 error-default-message=Something went wrong. Exception has been logged. Try again.
 you-need-at-least-one-listing=To become a Publisher You need at least one channel. <a href="/channel/new?action=edit&new=true">Click here to create one</a>
 please-fill-in-information-about-you=To become a Publisher please fill in information about you
-please-fill-in-information-about-you=To become a Publisher please fill in information about you
-your-publisher-request-was-submited=Your publisher request has been submited. Please give us some time to validate your request. After completing validation you will be notified by email.
+your-publisher-request-was-submited=Your publisher request has been submitted. Please give us some time to validate your request. After completing validation you will be notified by email.
 #Admin.java
 publisher-request-approved-subject=Your request for publisher has been approved
 publisher-request-approved-message=h3. Your request for publisher has been approved \nFrom now all your channels are visible and you can make full use of your account.
@@ -15,13 +13,13 @@ event-reminder-subject=Reminder for Session %s
 event-reminder-message=h3. Reminder for Session %s \nThis notification has been sent to remind you that Session [%s|%sevent/%s] will start on %s. \nIf you do not wish to receive these notifications, log into to Widgr and go Settings page to disable notifications.
 
 #Application.java
-start-helping-others=Start helping others and become Publisher. <a href='/settings/request-publisher?authenticityToken=%s'>Request for publisher account </a> or <a href="/help#publisher">learn more</a>.
-click-and-drag-to-create-event=Select a free time slot and start dragging to create a request for a new session. <br/><span style='opacity:0.5'>Session marked with solid black color means, that this time slot is already reserved.</span>
+start-helping-others=Start helping others and become a Publisher. <a href='/settings/request-publisher?authenticityToken=%s'>Request for publisher account </a> or <a href="/help#publisher">learn more</a>.
+click-and-drag-to-create-event=Select a free time slot and start dragging to create a request for a new session. <br/><span style='opacity:0.5'>Session markiewith solid black color means, that this time slot is already reserved.</span>
 somebody-wrote-you=Somebody wrote you a message
 
 #Attendances.java
 blocked-contact=This contact is blocked
-you-are-blocked=You have been blocked by user
+you-are-blocked=Unable to send message
 
 #BaseController.java
 
@@ -36,7 +34,7 @@ is-already-registered=Contact %s is already registered. <a href='/user/%s'>Visit
 invited-you-to-widgr-subject=%s invited You to join Widgr
 invitation-sent-to=Invitation has been successfully sent to %s 
 view-on-widgr=View on Widgr
-c
+
 #Events.java
 limit-reached=You have reached the monthly limit for paid Sessions. <a href='/about#pricing'>Learn more</a>
 event-created=Session has been successfully created.
@@ -64,8 +62,8 @@ oauth-successfull=Google Calendar authorization successfull
 oauth-error=Google Calendar authorization failed
 
 #Hangout.java
-please-rating-subject=Leave a rating
-please-rating-message=Leave a rating \nPlease help others to decide by giving a rating for the visited session [%s|%s]
+please-rating-subject=Please give a rating for visited session
+please-rating-message=Please help others to decide by giving a rating for the visited session [%s|%s]
 invitation-to-video-call-subject=Invitation to video call
 invitation-to-video-call-message=h3. %s invited you to video call. \n[Click here to join this video call|%s]
 
@@ -83,6 +81,8 @@ event-refund-request-subject=Refund request from %s
 event-refund-request-message=h3. Refund request \n%s requested refund for session [%s|%s]. You can issue refund through [Received payments page|%s] \nh4. Refundation message from customer \n%s
 event-refunded-request-subject=Approved refund request for Session %s 
 event-refunded-request-message=h3. Approved refund request for Session %s \nYour refund request for session [%s|%s] has been approved.
+invalid-parameters-try-again=Missing payment id, please try again
+paypal-error=An exception occured while processing your payment. <b>Reason:</b> %s
 
 #Public.java
 
@@ -320,6 +320,7 @@ about-you-section=Edit about you section
 about-you-section-info=This section is displayed in your profile and every channel
 working-hours-info=Here you can specify when you are avaible for scheduling sessions
 working-days-info=Here you can specify which days you are not avaiable for scheduling sessions
+account-info=If filled, account name will be used instead of full name
 
 
 
@@ -409,6 +410,7 @@ get-modern-browser=Compatibility
 compatibility=<p><strong>To get full experience</strong> make sure that you are using up-to-date browser<br/>Widgr sessions happens over live video calls. These Video calls are based on Webrtc browser technology, which is still under development and is not fully supported by all browsers. Make sure that your browser supports Webrtc <a href="/instant">by starting test video call.</a> You should be able to see yourself on the screen. Or you can check your <a target="_blank" href="http://iswebrtcreadyyet.com/">browser support for Webrtc in detail here &raquo;</p>
 
 #calendar.html
+calendar-msg=<h4>My Schedule</h4>On this page you can view all your scheduled sessions. If you are Publisher, you can create new session by clicking on the calendar.
 show-google-calendar-events=Show Google calendar events
 for=For
 minutes=Minutes
@@ -424,7 +426,7 @@ decline=Reject
 delete=Delete
 
 #channels.html
-by-availability=By availability
+by-availability=Sort by availability
 search-channels=Search channels
 search-string=Search
 category=Category
@@ -507,12 +509,12 @@ paid-comment-info=This feed will be displayed only for customers who paid for th
 share-whats-new=Share what's new
 text=Text
 
-file
+
 latest-posts=Latest posts
 
 #contacts.html
 manage-contacts=Manage contacts
-invite-new-user=Invite your friends to widgr
+invite-new-user=Invite your friends by email
 invite-by-email=send
 type-email=Type email address
 invite=Invite
@@ -573,7 +575,7 @@ refresh=Reload call
 hang-up=End&nbsp;call
 
 #header.html
-your-sessions=My Sessions
+your-sessions=My schedule
 session-approval=Requested sessions
 waiting-for-approvement=Session requested
 manage-channels=My Channels
@@ -589,7 +591,7 @@ features=Features
 contact-us=Contact us
 start-instant-chat=Instant&nbsp;video&nbsp;call
 sign-out=Sign out
-profile=My public profile
+profile=Public profile
 notifications=Messages
 received-payments=Received payments
 sent-payments=Sent payments
@@ -613,6 +615,8 @@ set-up-your-camera-desc=Wigdr sessions happen over video conferencing, so be sur
 video-tutorials=Video tutorials
 
 #edit.html
+session-type=Session type
+preferred-language=Preferred language
 video-recorder-directly=Create Introductory video using Youtube widget
 introduction-video=Link to youtube/vimeo introductory video displayed on Session page
 p2p-description=Online Video Call
@@ -653,9 +657,12 @@ price=Price
 first-free=First Session free
 
 #editButtons.html
+website-embed=Embed this channel on your website
+embed-listing=Embed this channel on your website
+embed-listing-desc=If you own a site, you can embed this simple html snippet into your site. With this feature your visitors could be able to contact you using widgr with one click. <a href="">Learn more here</a>
 approved=Approved
 you-can-pay-for-event-before-or-you-can-wait-until-event-starts=You can pay for session before or you can wait until session starts
-pay-for-event-now=Pay for session with PayPal
+pay-for-event-now=Pay&nbsp;for&nbsp;session&nbsp;before&nbsp;it&nbsp;starts
 join-video-call=Join&nbsp;Session
 start-live-broadcast=Start live broadcast
 stop-live-broadcast=Stop live broadcast
@@ -672,6 +679,7 @@ edit-channel=Edit channel
 delete-channel=Archive&nbsp;channel
 
 #listing.html
+setup-paypal-account-warning=If you want to create paid sessions, you need to set up your PayPal account first. <a href='/settings#paypal'>Go here to set up PayPal account</a>
 go-to-profile=View profile
 available-now=Available now
 schedule-session=Schedule a session

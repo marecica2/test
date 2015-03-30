@@ -109,7 +109,7 @@ public class EventDTO
         e.createdByUser = event.createdByUser;
         e.googleId = event.googleId;
         if (event.chargingTime != null)
-            e.chargingTime = event.chargingTime.toString();
+            e.chargingTime = event.getMinutes() + "";
         if (event.customer != null)
         {
             e.customerAvatarUrl = event.customer.avatarUrl;

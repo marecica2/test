@@ -12,6 +12,10 @@
 				<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
 				<strong>${item.user.fullName}</strong>  &middot; 
 				&{item.category}  
+				
+				#{if item.language}
+					 &middot;  <img src="/public/images/flags/${item.language}.gif">
+				#{/if}
 			</p>
 			
 			<h4 class="margin-clear">${item.title.trimDot(90)}

@@ -133,7 +133,7 @@
 	        <h3 class="modal-title" id="myModalLabel"><i class="fa fa-code"></i> &{'embed-listing'}</h3>
 	      </div>
 	      <div class="modal-body">
-	      	<label>&{'refund-reason'}</label>
+	      	<label>&{'embed-listing-desc'}</label>
 	      	<textarea rows="4" class="form-control" name="reason" maxlength="500" onclick="javascript:$(this).select();"><iframe width="100%" height="200px" frameBorder="0" src="${baseUrl}/embed/channel/${listing.uuid}"></iframe></textarea>
 	      </div>
 	      <div class="modal-footer">
@@ -359,12 +359,18 @@
 
 <!-- parallax -->
 #{if !edit}
-<div class="section parallax default-translucent-bg parallax-bg" style="background-image: url('/images/page-about-banner-2.jpg');">
+<div class="section parallax default-translucent-bg parallax-bg " style="background-image: url('/images/page-about-banner-2.jpg');">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-7">
-				<h2 class="title text-center text-shadow" style="font-size:2.5em">
-					<a class="anchor2" href="/channel/${listing.uuid}">${listing.title}</a>		
+				<h2 class="title text-center" style="font-size:2.5em">
+					<span style="font-size:0.5em;position:relative;bottom:-20px; right:-30px">
+						#{if usr.isOnline()}
+				  			<span><i class="icon-record" style="color:#5cb85c"></i></span>
+						#{/if}
+					</span>
+					<a href="/user/${usr.login}"><img style="height:60px;width:60px" class="img-circle shadow-small" src="/${usr.avatarUrl}_64x64"></a>
+					<a class="anchor2" href="/channel/${listing.uuid}">${listing.title}</a>	
 				</h2>
 				<h5 class="text-center text-shadow" >
 					<span>
@@ -397,36 +403,27 @@
 			</div>
 			<div class="col-md-5">
 				<div class="text-center">
-				
-			  		#{if usr.isOnline()}
-			  			<span><i class="icon-record" style="color:#5cb85c"></i></span>
-					#{/if}
-					#{else}
-			  			<span><i class="icon-record" style="color:gray"></i></span>
-					#{/else}
-					<a href="/user/${usr.login}"><img style="height:60px" src="/${usr.avatarUrl}_64x64"></a>	
-					
 					#{if isOwner && listing.isAvailable()}
-						<a class="btn btn-success btn-lg btn-short" href="/available-stop?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}">&{'uncheck-me-as-available'}</a>
+						<a class="btn btn-success btn-lg btn-short2" href="/available-stop?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}">&{'uncheck-me-as-available'}</a>
 					#{/if}		
 					#{if isOwner && user.isPublisher() && !listing.isAvailable() && listing.type == 'p2p'}
-						<a class="btn btn-dark btn-lg btn-short" href="/available-start?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}">&{'check-me-as-available'}</a>
+						<a class="btn btn-dark btn-lg btn-short2" href="/available-start?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}">&{'check-me-as-available'}</a>
 					#{/if}
 					
 					#{if listing.isAvailable()}
-						<a href="#" class="btn btn-success btn-lg btn-short open-chat style-switcher hidden" style="border-width:0px;" rel="tooltip" data-original-title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
+						<a href="#" class="btn btn-success btn-lg btn-short2 open-chat style-switcher hidden" style="border-width:0px;" rel="tooltip" data-original-title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
 					#{/if}
 					
 								
 					#{if !isOwner}
 						#{if !isOwner && listing.isAvailable()}
-							<a href="/instant-room?id=${listing.uuid}&#{token /}" class="btn btn-success btn-lg btn-short no-schedule-start style-switcher hidden" rel="tooltip" data-original-title="&{'join-session-now'}">&{'request-for-event-instant'}</a>
+							<a href="/instant-room?id=${listing.uuid}&#{token /}" class="btn btn-success btn-lg btn-short2 no-schedule-start style-switcher hidden" rel="tooltip" data-original-title="&{'join-session-now'}">&{'request-for-event-instant'}</a>
 						#{/if}			
 						#{elseif user}
-							<a href="/mail?action=new&to=${listing.user.login}&url=${request.url}" class="btn btn-dark btn-lg btn-short open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-comments-o"></i></a>
+							<a href="/mail?action=new&to=${listing.user.login}&url=${request.url}" class="btn btn-dark btn-lg btn-short2 open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-comments-o"></i></a>
 						#{/elseif}
 						#{else}
-							<a href="/contact?id=${listing.user.login}" class="btn btn-dark btn-lg btn-short open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-comments-o"></i></a>
+							<a href="/contact?id=${listing.user.login}" class="btn btn-dark btn-lg btn-short2 open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-comments-o"></i></a>
 						#{/else}
 						
 						<a href="/user/${usr.login}/calendar?channel=${listing.uuid}&#{token /}" class="btn btn-dark btn-lg" rel="tooltip" data-original-title="&{'schedule-session-desc'}"><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
@@ -627,9 +624,11 @@
     	   	   	<div class="separator-2"></div>
     	   	   	<strong><a href="/user/${listing.user.login}"><img class="avatar16 img-circle" src="/${listing.user.avatarUrl}_32x32"> <span>${listing.user.fullName}</span></a></strong> 
     	   	 	&middot;
+    	   	 	
 
  	    	   	<span>
 					#{if fromEvent && event}
+		
 						#{if event.privacy == 'private'}
 							<span class="labels " rel="tooltip" data-original-title="&{'privacy-private-description'}"><i class="fa fa-lock"></i> &{event.privacy}</span> &middot;
 						#{/if}
@@ -638,10 +637,14 @@
 							<span class="labels " rel="tooltip" data-original-title="&{'privacy-public-description'}"><i class="fa fa-unlock"></i> &{event.privacy}</span> 
 						#{/if}
 						
-						<span class="labels " rel="tooltip" data-original-title="&{ event.type+'-description'}"><i class="fa fa-comments"></i> &{event.type}</span> 
-
+						<span class="labels " rel="tooltip" data-original-title="&{ event.type+'-description'}"><i class="fa fa-comments"></i> &{event.type}</span> &middot;  
+						
+						#{if event.language}
+		    	   	 		<img class="inline" src='/public/images/flags/${event.language}.gif' rel="tooltip" data-original-title="&{'preferred-language'}"> 
+						#{/if}
 					#{/if}		 	    	   	
 					#{else}
+					
 						#{if listing.privacy == 'private'}
 							<span class="labels "><i class="fa fa-lock"></i> &{listing.privacy}</span> &middot;
 						#{/if}
@@ -650,7 +653,11 @@
 							<span class="labels "><i class="fa fa-unlock"></i> &{listing.privacy}</span> &middot;
 						#{/if}
 						
-						<span class="labels "><i class="fa fa-comments"></i> &{listing.type}</span>
+						<span class="labels "><i class="fa fa-comments"></i> &{listing.type}</span> &middot;
+
+						#{if listing.language}
+							<img class="inline" src='/public/images/flags/${listing.language}.gif' rel="tooltip" data-original-title="&{'preferred-language'}"> 
+						#{/if}
 					#{/else}		    	   
 	    	   	</span>
     	   	   	
