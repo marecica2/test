@@ -111,6 +111,8 @@ public class EventDTO
         Attendance a = event.getInviteForCustomer(user);
         if (a != null)
             e.googleId = a.uuid;
+        else
+            e.googleId = event.uuid;
         if (event.chargingTime != null)
             e.chargingTime = event.getMinutes() + "";
         if (event.customer != null)

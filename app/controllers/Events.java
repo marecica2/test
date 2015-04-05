@@ -434,7 +434,10 @@ public class Events extends BaseController
         event.listing_uuid = listing.uuid;
         event.uuid = RandomUtil.getUUID();
         if (googleId != null)
+        {
             event.uuid = googleId;
+            System.err.println(googleId);
+        }
         event.roomSecret = RandomUtil.getUUID();
         event.privacy = listing.privacy;
         event.type = listing.type;

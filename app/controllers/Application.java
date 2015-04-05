@@ -10,7 +10,6 @@ import models.Event;
 import models.Listing;
 import models.Message;
 import models.Rating;
-import models.Search;
 import models.User;
 
 import org.apache.commons.codec.binary.Base64;
@@ -219,11 +218,11 @@ public class Application extends BaseController
         return ratings;
     }
 
-    public static void search(String query)
-    {
-        List<String> result = Search.tags(query.toLowerCase());
-        renderJSON(result);
-    }
+    //    public static void autocomplete(String query)
+    //    {
+    //        List<String> result = Search.tags(query.toLowerCase());
+    //        renderJSON(result);
+    //    }
 
     public static void channels()
     {
