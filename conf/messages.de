@@ -357,7 +357,7 @@ activities=Aktivitäten
 contact-us-text=Hilf uns besser zu Widgr! Im Falle von Fragen oder Problemen, kontaktieren Sie uns alles fragen. Wir freuen uns über Feedback von Ihnen. Verwenden Sie die E-Mail-Adresse ein oder das Web-Formular.
 pricing-for-customers=Die Preise für Grund Benutzer
 pricing-for-publishers=Die Preise für Widgr Publishers
-widgr-share-your-knowledge=widgr <small style = "font-size: 0.6em"> &middot;Teilen Sie Ihre Erfahrungen</ small>
+widgr-share-your-knowledge=widgr <small style="font-size: 0.6em"> &middot;Teilen Sie Ihre Erfahrungen</small>
 find-help-header=Hilfe über Themenspektrum finden
 get-help-header=Erhalten Sie Hilfe von Experten mit einem Klick
 get-paid-header=Werden Sie ein Publisher und Hilfen Sie Anderen und werden Sie dafür bezahlt
@@ -404,9 +404,9 @@ contact-sent-message-error=Kontakt Nachricht gesendet Fehler
 name=Name
 email-address=E-Mail-Addresse
 message=Nachricht
-send=Zukommen Lassen
+send=Senden
 get-modern-browser=Kompatibilität
-compatibility=<P> <strong> Um eine volle Erfahrung zu bekommen </ strong> stellen Sie sicher, dass Sie mit up-to-date-Browser <br/> Widgr Sitzungen geschieht über Live-Video-Anrufe. Diese Video-Anrufe auf WebRTC Browser-Technologie, die sich noch in der Entwicklung und ist noch nicht vollständig von allen Browsern unterstützt wird. Stellen Sie sicher, dass Ihr Webbrowser WebRTC <a href="/instant"> durch Starten Testvideoanruf. </a> Sie sollten in der Lage, sich selbst auf dem Bildschirm zu sehen sein. Oder Sie können Ihre <a target="_blank" href="http://iswebrtcreadyyet.com/"> Browser-Unterstützung für WebRTC im Detail prüfen & raquo; </ p>
+compatibility=<p><strong> Um eine volle Erfahrung zu bekommen </strong> stellen Sie sicher, dass Sie mit up-to-date-Browser <br/> Widgr Sitzungen geschieht über Live-Video-Anrufe. Diese Video-Anrufe auf WebRTC Browser-Technologie, die sich noch in der Entwicklung und ist noch nicht vollständig von allen Browsern unterstützt wird. Stellen Sie sicher, dass Ihr Webbrowser WebRTC <a href="/instant"> durch Starten Testvideoanruf. </a> Sie sollten in der Lage, sich selbst auf dem Bildschirm zu sehen sein. Oder Sie können Ihre <a target="_blank" href="http://iswebrtcreadyyet.com/"> Browser-Unterstützung für WebRTC im Detail prüfen &raquo; </ p>
                                               
 #calendar.html                                                        # Calendar.html
 calendar-msg=<H4> Meine Termine </ h4> Auf dieser Seite können Sie alle Ihre geplanten Sitzungen anzuzeigen. Wenn Sie Publisher sind, können Sie neue Sitzung, indem Sie auf Kalender erstellen.
@@ -426,8 +426,8 @@ delete=Löschen
                                               
 #channels.html                                                        
 by-availability=Sortieren nach Verfügbarkeit
-search-channels=Suche nach Kanälen
-search-string=Suche
+search-channels=Suchen nach Kanälen
+search-string=Suchen
 category=Kategorie
 business=Unternehmen
 electronics=Elektronik
@@ -440,7 +440,7 @@ household=Haushalt, Garten, Heimwerken
 sorting=Sortierung
 sort-by-reviews=Sortiert nach Bewertungen
 sort-by-best-match=Nach bester Übereinstimmung
-search=Suche
+search=Suchen
                                               
 #dashboard.html                                                      
 dashboard-description=<H4> Was ist Dasboard? </ H4> Auf dieser Seite können Sie Ihre Online-Kontakte sehen neuesten Aktivitäten, um Ihre Sitzungen bezogen, sehen neue Kommentare, Beiträge und Updates. Wenn Publisher Updates etwas auf dem geplanten Sitzung wird es hier zu erscheinen, so dass Sie nichts Wichtiges verpassen. <br/> Sie können sogar mit all Ihren Kontakten durch Beiträge hier zu kommunizieren wie auf Facebook. <br/> Beiträge an private bezogenen Sitzungen werden nur eingeladene Benutzer angezeigt werden
@@ -514,7 +514,7 @@ latest-posts=Letzte Beiträge
 #contacts.html                                                       
 manage-contacts=Kontakte verwalten
 invite-new-user=Laden Sie Ihre Freunde per E-Mail
-invite-by-email=zukommen lassen
+invite-by-email=Einladen bei E-Mail
 type-email=Typ E-Mail-Adresse
 invite=Laden
 name=Name
@@ -578,7 +578,7 @@ your-sessions=Mein Terminkalender
 session-approval=Angeforderte Sitzungen
 waiting-for-approvement=Session angefordert
 manage-channels=Meine Kanäle
-share-your-knowledge=Sie Ihr Wissen
+share-your-knowledge=Teilen Sie Ihre Erfahrungen
 toggle-navigation=Toggle-Navigation
 received-new-message=Erhalten neue Nachricht
 dashboard=Armaturenbrett
@@ -588,7 +588,7 @@ channels=Kanäle
 pricing=Preise
 features=Eigenschaften
 contact-us=Kontaktieren Sie uns
-start-instant-chat=Sofort&nbsp;Video&nbsp;Anruf
+start-instant-chat=Sofort&nbsp;Video&nbsp;Anruf&nbsp;starten
 sign-out=Austragen
 profile=Öffentliches Profil
 notifications=Nachrichten
@@ -677,7 +677,8 @@ go-to-private-room=Zum privaten Raum
 edit-channel=Kanal bearbeiten
 delete-channel=Archive&nbsp;Kanal
                                               
-#listing.html                                                        
+#listing.html
+turn-on-available-now=Whan activated, You can use simple chat box to communicate with your customers. And customers can create sessions for avaiable channel instantly. You will receive notification when new instant session will be created.                                                        
 setup-paypal-account-warning=Wenn Sie bezahlten Sitzungen erstellen möchten, müssen Sie zunächst Ihren PayPal-Account. <a href='/settings#paypal'> Gehen Sie hier, um PayPal-Konto </a> einrichten
 go-to-profile=Benutzer-Profile anzeigen
 available-now=Sofort verfügbar
@@ -719,7 +720,7 @@ all-channels-from=Alle Kanäle aus
 enter-your-message=Nachricht schreiben
                                               
 #stream.html                                                        
-send=Zukommen Lassen
+send=Senden
 chat-box=Unterhaltung
                                               
 #listingsList.html                                                  

@@ -46,6 +46,8 @@ public class Attendance extends Model
     public Date created;
     public Boolean isForUser;
 
+    public String googleId;
+
     public BigDecimal price;
     public BigDecimal fee;
     public BigDecimal providerPrice;

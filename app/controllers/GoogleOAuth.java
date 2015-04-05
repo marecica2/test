@@ -112,9 +112,8 @@ public class GoogleOAuth extends BaseController
         user.save();
     }
 
-    public static String getAccessToken()
+    public static String getAccessToken(User user)
     {
-        User user = getLoggedUserNotCache();
         String url = request.url;
 
         // token is valid

@@ -314,19 +314,35 @@ starEvent.renderEventBody = function(item){
     var distance = end - now;
     var before = distance > 0 ? false : true;
     var days = Math.abs(Math.floor(distance / _day));
-    if(before)
-        days = days - 1;
     var hours = Math.abs(Math.floor( (distance % _day ) / _hour ));
+    if(before){
+        days = days - 1;
+        hours = hours - 1;
+    }
     var minutes = Math.abs(Math.floor( (distance % _hour) / _minute ));
     var seconds = Math.abs(Math.floor( (distance % _minute) / _second ));
-
     var html = "";
     html += "<div style='margin-top:20px;font-size:0.9em'>";
     html += "<span>"+starUtils.formatDate(item.eventStart)+"</span> ";
     html += "<span>"+starUtils.formatTime(item.eventStart)+"</span> - ";
     html += "<span>"+starUtils.formatTime(item.eventEnd)+"</span>";                
     html += "<br/>";
-    html += "<strong>"+(before? i18n("before") : i18n("starts-in"))+"</strong> " + (days > 0 ? (days + " " + i18n("days")) : "") + " " + (hours > 0 ? (hours + " " + i18n("hrs")) : "") + " " + minutes + " " + i18n("min") + "<br/>";          
+    html += "<strong>"+(before? i18n("before") : i18n("starts-in"))+"</strong> ";
+    
+    if(days > 1)
+        html += days + " " + i18n("days");
+    else {
+        
+        if(days > 0)
+            html += days + " " + i18n("days")  + " "; 
+        if(hours > 0)
+            html += hours + " " + i18n("hrs") + " "; 
+        if(minutes > 0)
+            html += minutes + " " + i18n("min") + " ";
+    }
+    html += "<br/>";
+            
+    
     html += "</div>";
     return html;
 };

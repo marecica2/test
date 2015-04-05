@@ -427,7 +427,6 @@ starCalendar.copyValuesToDialog = function(event){
     if(event.state == 'customer_created' && event.isOwner){
         $(".popup-event-approvement").show();
     }
-    $(".event-dialog-sync").show();
     $(".event-dialog-propose").hide();
     $(".event-dialog-create").hide();
     if(!event.editable){
@@ -436,7 +435,9 @@ starCalendar.copyValuesToDialog = function(event){
         $(".event-dialog-save-notify").hide();
         $(".popup-event-delete").hide();
         $(".popup-event-notify").hide();
+        $(".event-dialog-sync").hide();
     } else {
+        $(".event-dialog-sync").show();
         $(".event-title-label").hide();
         $(".event-description-label").hide();
         $(".event-dialog-save").show();

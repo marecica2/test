@@ -47,7 +47,7 @@
 						</div>
 						<div class="btn-group dropdown">
 							<button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
-								<img src='/public/images/flags/#{if request.cookies.get("PLAY_LANG") != null}${request.cookies.get("PLAY_LANG").value}#{/if}#{else}${lang}#{/else}.gif'>
+								<img src='/public/images/flags/#{if request.cookies.get("WIDGR_LANG") != null}${request.cookies.get("WIDGR_LANG").value}#{/if}#{else}${lang}#{/else}.gif'>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-right dropdown-animation" style="padding:0px;">
 					            <li><a href="/locale?locale=en&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/en.gif'> English</a></li>

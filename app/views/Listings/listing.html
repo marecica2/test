@@ -407,7 +407,7 @@
 						<a class="btn btn-success btn-lg btn-short2" href="/available-stop?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}">&{'uncheck-me-as-available'}</a>
 					#{/if}		
 					#{if isOwner && user.isPublisher() && !listing.isAvailable() && listing.type == 'p2p'}
-						<a class="btn btn-dark btn-lg btn-short2" href="/available-start?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}">&{'check-me-as-available'}</a>
+						<a class="btn btn-dark btn-lg btn-short2" href="/available-start?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-original-title="&{'turn-on-available-now'}">&{'check-me-as-available'}</a>
 					#{/if}
 					
 					#{if listing.isAvailable()}

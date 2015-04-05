@@ -1,5 +1,6 @@
 package dto;
 
+import models.Attendance;
 import models.Event;
 import models.User;
 
@@ -107,7 +108,9 @@ public class EventDTO
         e.archived = event.archived;
         e.notifyInvited = false;
         e.createdByUser = event.createdByUser;
-        e.googleId = event.googleId;
+        Attendance a = event.getInviteForCustomer(user);
+        if (a != null)
+            e.googleId = a.uuid;
         if (event.chargingTime != null)
             e.chargingTime = event.getMinutes() + "";
         if (event.customer != null)

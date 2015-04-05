@@ -92,8 +92,6 @@ public class Event extends Model
 
     public String hangoutUrl;
 
-    public String googleId;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event", orphanRemoval = true)
     @Cascade({ org.hibernate.annotations.CascadeType.DELETE })
     public List<Attendance> attendances = new ArrayList<Attendance>();

@@ -679,6 +679,7 @@ edit-channel=Edit channel
 delete-channel=Archive&nbsp;channel
 
 #listing.html
+turn-on-available-now=Whan activated, You can use simple chat box to communicate with your customers. And customers can create sessions for avaiable channel instantly. You will receive notification when new instant session will be created.
 setup-paypal-account-warning=If you want to create paid sessions, you need to set up your PayPal account first. <a href='/settings#paypal'>Go here to set up PayPal account</a>
 go-to-profile=View profile
 available-now=Available now
@@ -707,7 +708,7 @@ play-introduction=Play&nbsp;introduction
 total-price=Total price
 min=Min
 request-for-event=Schedule a Session
-request-for-event-instant=Take a Session
+request-for-event-instant=Take a Session now
 guests=Guests
 add-to-watchlist=Add to watchlist
 remove-from-watchlist=Remove from watchlist

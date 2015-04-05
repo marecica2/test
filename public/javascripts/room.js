@@ -1303,7 +1303,6 @@ socket.on('message', function(data) {
 
 
 $(document).ready(function(){
-    $(".style-switcher").show();
     
     $("#chat-slider").click(function() {
         var elm = $("#chat-container");

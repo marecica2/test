@@ -84,7 +84,7 @@
 
 
 		#{if !edit && isOwner && event.isEditable(user)}
-		<a class="btn btn-light-gray btn-social margin-clear" href="/event-delete?uuid=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}" rel="tooltip" data-original-title="&{'delete-event'}">
+		<a class="btn btn-light-gray btn-social margin-clear" href="/event-delete?uuid=${request.params.uuid}&url=${'/channel/'+listing.uuid.urlEncode()}&#{token /}" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}" rel="tooltip" data-original-title="&{'delete-event'}">
 			<i class="dialog-event-edit fa fa-times fa-1x"></i>
 		</a>
 		#{/if}

@@ -431,9 +431,10 @@ public class Events extends BaseController
         event.eventStart = start;
         event.eventEnd = end;
         event.listing = listing;
-        event.googleId = googleId;
         event.listing_uuid = listing.uuid;
         event.uuid = RandomUtil.getUUID();
+        if (googleId != null)
+            event.uuid = googleId;
         event.roomSecret = RandomUtil.getUUID();
         event.privacy = listing.privacy;
         event.type = listing.type;
@@ -531,16 +532,26 @@ public class Events extends BaseController
     public static void eventSyncGoogleRest(String uuid)
     {
         checkAuthenticity();
-        final User user = getLoggedUser();
         final Event event = Event.get(uuid);
-        // google event sync
-        if (event.googleId == null)
+        if (event == null)
+            notFound();
+
+        // sync with google calendars
+        for (Attendance a : event.attendances)
         {
-            event.googleId = event.uuid;
-            event.save();
+            if (a.customer != null && !a.isForUser && a.customer.syncWithGoogle())
+            {
+                GoogleCalendarClient.upsertGoogleEvent(a, getBaseUrl());
+                a.googleId = a.uuid;
+                a.save();
+            }
+            if (a.user != null && a.isForUser && a.user.syncWithGoogle())
+            {
+                GoogleCalendarClient.upsertGoogleEvent(a, getBaseUrl());
+                a.googleId = a.uuid;
+                a.save();
+            }
         }
-        if (user.syncWithGoogle())
-            GoogleCalendarClient.upsertGoogleEvent(user, event, getBaseUrl());
         renderText("ok");
     }
 
@@ -597,13 +608,13 @@ public class Events extends BaseController
         if (!event.isEditable(user))
             forbidden();
 
+        // sync with google calendars
+        for (Attendance a : event.attendances)
+            GoogleCalendarClient.deleteFromGoogleCalendar(a);
+
+        // unschedule quartz
         QuartzServise.unScheduleEvent(event);
         event.deleteEvent();
-
-        // google event sync
-        if (user.syncWithGoogle() && event.googleId != null)
-            GoogleCalendarClient.deleteGoogleEvent(user, event);
-
         renderJSON(EventDTO.convert(event, user));
     }
 
@@ -622,6 +633,11 @@ public class Events extends BaseController
             QuartzServise.unScheduleEvent(event);
             event.deleteEvent();
         }
+
+        // sync with google calendars
+        for (Attendance a : event.attendances)
+            GoogleCalendarClient.deleteFromGoogleCalendar(a);
+
         redirectTo(url);
     }
 

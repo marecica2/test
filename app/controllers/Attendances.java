@@ -1,5 +1,7 @@
 package controllers;
 
+import google.GoogleCalendarClient;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,6 +123,8 @@ public class Attendances extends BaseController
         User user = getLoggedUser();
         Attendance a = Attendance.get(uuid);
         a.delete();
+
+        GoogleCalendarClient.deleteFromGoogleCalendar(a);
 
         if (!a.event.user.equals(user))
         {

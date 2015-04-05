@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import models.Attendance;
 import models.User;
 
 import com.google.api.client.auth.oauth2.Credential;
@@ -71,7 +72,7 @@ public class GoogleCalendarClient
                 .setJsonFactory(jsonFactory)
                 .setClientSecrets(GoogleOAuth.CLIENT_ID, GoogleOAuth.CLIENT_SECRET)
                 .build()
-                .setAccessToken(GoogleOAuth.getAccessToken())
+                .setAccessToken(GoogleOAuth.getAccessToken(user))
                 .setRefreshToken(user.googleRefreshToken)
                 .setExpirationTimeMilliseconds(user.googleTokenExpires.getTime());
         final CalendarRequestInitializer calendarRequestInitializer = new CalendarRequestInitializer(GoogleOAuth.CLIENT_ID);
@@ -87,7 +88,6 @@ public class GoogleCalendarClient
             service.events().update(user.googleCalendarId, id, content).execute();
         } catch (Exception e)
         {
-            e.printStackTrace();
         }
     }
 
@@ -96,6 +96,7 @@ public class GoogleCalendarClient
         try
         {
             Calendar service = initCalendar(user);
+            service.events().list(user.googleCalendarId).execute();
             service.events().insert(user.googleCalendarId, content).execute();
         } catch (Exception e)
         {
@@ -108,7 +109,7 @@ public class GoogleCalendarClient
         try
         {
             Calendar service = initCalendar(user);
-            Event e = service.events().get(user.googleCalendarId, eventId).setEventId(eventId).execute();
+            Event e = service.events().get(user.googleCalendarId, eventId).execute();
             return e;
         } catch (Exception e)
         {
@@ -116,55 +117,62 @@ public class GoogleCalendarClient
         return null;
     }
 
-    public static com.google.api.services.calendar.model.Event getGoogleEvent(User user, models.Event event)
+    public static com.google.api.services.calendar.model.Event getGoogleEvent(User user, String id)
     {
-        com.google.api.services.calendar.model.Event existing = null;
-        if (event.googleId != null)
-            existing = GoogleCalendarClient.getEvent(user, event.googleId);
-        if (existing == null)
-            existing = GoogleCalendarClient.getEvent(user, event.uuid);
+        com.google.api.services.calendar.model.Event existing = GoogleCalendarClient.getEvent(user, id);
         return existing;
     }
 
-    public static void upsertGoogleEvent(final User user, models.Event event, String baseUrl)
+    public static void upsertGoogleEvent(Attendance attendance, String baseUrl)
     {
-        com.google.api.services.calendar.model.Event existing = GoogleCalendarClient.getGoogleEvent(user, event);
+        User user = attendance.isForUser ? attendance.user : attendance.customer;
+        com.google.api.services.calendar.model.Event existing = GoogleCalendarClient.getGoogleEvent(user, attendance.uuid);
 
         if (existing != null)
         {
             com.google.api.services.calendar.model.Event update = new com.google.api.services.calendar.model.Event();
-            update.setStart(new EventDateTime().setDateTime(new DateTime(event.eventStart.getTime())));
-            update.setEnd(new EventDateTime().setDateTime(new DateTime(event.eventEnd.getTime())));
-            update.setSummary(event.listing.title);
+            update.setStart(new EventDateTime().setDateTime(new DateTime(attendance.event.eventStart.getTime())));
+            update.setEnd(new EventDateTime().setDateTime(new DateTime(attendance.event.eventEnd.getTime())));
+            update.setSummary(attendance.event.listing.title);
 
-            update.setDescription(event.listing.description + "\n" + baseUrl + "event/" + event.uuid);
-            update.set("link", baseUrl + "event/" + event.uuid);
-            update.set("url", baseUrl + "event/" + event.uuid);
-            update.set("location", baseUrl + "event/" + event.uuid);
-            update.set("source.url", baseUrl + "event/" + event.uuid);
-            update.set("source.title", baseUrl + "event/" + event.uuid);
+            update.setDescription(attendance.event.listing.description + "\n" + baseUrl + "event/" + attendance.uuid);
+            update.set("link", baseUrl + "event/" + attendance.event.uuid);
+            update.set("url", baseUrl + "event/" + attendance.event.uuid);
+            update.set("location", baseUrl + "event/" + attendance.event.uuid);
+            update.set("source.url", baseUrl + "event/" + attendance.event.uuid);
+            update.set("source.title", baseUrl + "event/" + attendance.event.uuid);
             GoogleCalendarClient.updateEvent(user, existing.getId(), update);
         }
 
         if (existing == null)
         {
+            String link = baseUrl + "event/" + attendance.event.uuid;
             com.google.api.services.calendar.model.Event insert = new com.google.api.services.calendar.model.Event();
-            insert.setId(event.uuid);
-            insert.setStart(new EventDateTime().setDateTime(new DateTime(event.eventStart.getTime())));
-            insert.setEnd(new EventDateTime().setDateTime(new DateTime(event.eventEnd.getTime())));
-            insert.setSummary(event.listing.title);
-            insert.setDescription(event.listing.description + "\n\n" + baseUrl + "event/" + event.uuid + "");
+            insert.setId(attendance.uuid);
+            insert.setHangoutLink(link);
+            insert.setHtmlLink(link);
+            insert.setStart(new EventDateTime().setDateTime(new DateTime(attendance.event.eventStart.getTime())));
+            insert.setEnd(new EventDateTime().setDateTime(new DateTime(attendance.event.eventEnd.getTime())));
+            insert.setSummary(attendance.event.listing.title);
+            insert.setDescription(attendance.event.listing.description + "\n\n" + link + "");
             //insert.set("location", baseUrl + "event/" + event.uuid);
             GoogleCalendarClient.insertEvent(user, insert);
         }
     }
 
-    public static void deleteGoogleEvent(User user, models.Event event)
+    public static void deleteFromGoogleCalendar(Attendance a)
+    {
+        if (a.customer != null && !a.isForUser && a.customer.syncWithGoogle())
+            GoogleCalendarClient.deleteGoogleEvent(a.customer, a);
+        if (a.user != null && a.isForUser && a.user.syncWithGoogle())
+            GoogleCalendarClient.deleteGoogleEvent(a.user, a);
+    }
+
+    public static void deleteGoogleEvent(User user, Attendance attendance)
     {
         try
         {
-            com.google.api.services.calendar.model.Event existing = GoogleCalendarClient.getGoogleEvent(user, event);
-            System.err.println("deleting  " + existing.getId());
+            com.google.api.services.calendar.model.Event existing = GoogleCalendarClient.getGoogleEvent(user, attendance.uuid);
             if (existing != null)
             {
                 Calendar service = initCalendar(user);
@@ -172,7 +180,6 @@ public class GoogleCalendarClient
             }
         } catch (Exception e)
         {
-            e.printStackTrace();
         }
     }
 
