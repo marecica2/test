@@ -80,3 +80,25 @@ order by term
 select distinct term from tags where term like '%ava%'
  */
 
+
+delete from activity where user_id = 6922;
+delete from activity where customer_id = 6922;
+delete from activity where event_id in (select id from event where user_id = 6922);
+delete from message where fromuser_id = 6922;
+delete from message where owner_id = 6922;
+delete from message where touser_id = 6922;
+delete from attendance where user_id = 6922;
+delete from attendance where customer_id = 6922;
+delete from event where user_id = 6922;
+delete from event where customer_id = 6922;
+delete from comment_comment_reply where comment_id in (select id from comment where user_id = 6922);
+delete from comment_comment_reply where replies_id in (select id from comment_reply where user_id = 6922);
+delete from comment where user_id = 6922;
+delete from comment_reply where user_id = 6922;
+delete from fileupload where owner_id  = 6922;
+delete from listing where user_id = 6922;
+delete from contact where user_id = 6922;
+delete from contact where contact_id = 6922;
+delete from ratingvote where user_id = 6922;
+delete from rating where user_id = 6922;
+delete from users where id = 6922;

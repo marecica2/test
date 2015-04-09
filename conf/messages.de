@@ -8,9 +8,9 @@ your-publisher-request-was-submited=Ihr Publisher Anfrage wurde abgeschickt. Las
 publisher-request-approved-subject=Ihre Anfrage für Herausgeber wurde genehmigt 
 publisher-request-approved-message=h3. Ihre Anfrage für Publisher genehmigt wurde \ nVon jetzt alle Ihre Kanäle zu sehen sind und Sie können vollen Gebrauch von Ihrem Konto zu machen.
 publisher-request-declined-subject=Ihre Anfrage für Publisher wurde abgelehnt 
-publisher-request-declined-message=h3. Ihre Anfrage für Publisher wurde abgelehnt \ nBitte füllen Ihre persönlichen Daten und Kanäle und erneut versuchen. Denken Sie daran, Sie können immer fragen Sie uns, was in Ordnung korrigiert werden, um später erfolgreich genehmigt. [Stellen Sie eine Frage |% s]
-event-reminder-subject=Erinnerung Sitzung% s
-event-reminder-message=h3. Erinnerung Sitzung% s \nDiese Mitteilung wurde gesendet daran erinnern, dass Session [% s |% SEVENT /% s] wird am% s gestartet. \nWenn Sie nicht möchten, dass diese Benachrichtigungen zu erhalten, melden Sie sich an und gehen Widgr Seite Einstellungen, um Benachrichtigungen zu deaktivieren.
+publisher-request-declined-message=h3. Ihre Anfrage für Publisher wurde abgelehnt \ nBitte füllen Ihre persönlichen Daten und Kanäle und erneut versuchen. Denken Sie daran, Sie können immer fragen Sie uns, was in Ordnung korrigiert werden, um später erfolgreich genehmigt. [Stellen Sie eine Frage |%s]
+event-reminder-subject=Erinnerung Sitzung %s
+event-reminder-message=h3. Erinnerung Sitzung %s \nDiese Mitteilung wurde gesendet daran erinnern, dass Session [%s|%sevent/%s] wird am %s gestartet. \nWenn Sie nicht möchten, dass diese Benachrichtigungen zu erhalten, melden Sie sich an und gehen Widgr Seite Einstellungen, um Benachrichtigungen zu deaktivieren.
                                               
 #Application.java                                                    
 start-helping-others=Beginnen Sie, anderen zu helfen und werden Sie ein Publisher. <a href='/settings/request-publisher?authenticityToken=%s'> Beantragen Sie für ein Publisher-Konto </a> oder lesen Sie <a href="/help#publisher"> weitere Informationen </a>.
@@ -30,9 +30,9 @@ you-are-blocked=Kann nicht gesendet werden
 #Contacts.java                                                   
 invalid-email=Ungültige E-Mail-Adresse
 send-invitation=Einladung senden
-is-already-registered=Kontakt% s ist bereits registriert. <a href='/user/%s'> Profil besuchen </a>
-invited-you-to-widgr-subject=% S eingeladen Sie auf Widgr beitreten
-invitation-sent-to=Einladung wurde erfolgreich auf% s gesendet
+is-already-registered=Kontakt %s ist bereits registriert. <a href='/user/%s'> Profil besuchen </a>
+invited-you-to-widgr-subject=%s eingeladen Sie auf Widgr beitreten
+invitation-sent-to=Einladung wurde erfolgreich auf %s gesendet
 view-on-widgr=Zum Kontakt
                                                                      
 #Events.java                                                         
@@ -44,16 +44,16 @@ invalid-time-range=Ungültige Zeitbereich
 setup-PayPal-account-warning=Bezahlt Sitzung zu erstellen müssen Sie zunächst bis Ihr PayPal-Konto. <a href='/settings?edit=true#PayPal'> Set up Ihr ​​PayPal-Konto hier </a>
 you-have-not-paid-for-current-month=Sie können keine bezahlten Sitzungen. Ihr Abonnement ist nicht aktiviert. <a href='/settings'> Aktivieren Sie Ihr Abonnement ersten </a>
 invalid-PayPal-account-warning=Bezahlt Sitzung zu erstellen müssen Sie zunächst bis Ihr PayPal-Konto. <a href='/settings?edit=true#PayPal'> Set up Ihr ​​PayPal-Konto hier </a>
-new-event-proposed-for-channel-subject=New Sitzungsanforderung für Channel% s
-new-event-proposed-for-channel-message=h3. New Sitzungsanforderung \n% s angefordert neue Sitzung [% s |% s]. Besuchen Sie bitte den Link zu überprüfen und zu genehmigen oder diesen Antrag abzulehnen.
-you-have-been-invited-subject=Einladung für% s
-you-have-been-invited-message=h3. Einladung für% s \n% s Sie eingeladen, Kursen teilnehmen [% s |% s]
+new-event-proposed-for-channel-subject=New Sitzungsanforderung für Channel %s
+new-event-proposed-for-channel-message=h3. New Sitzungsanforderung \n%s angefordert neue Sitzung [%s|%s]. Besuchen Sie bitte den Link zu überprüfen und zu genehmigen oder diesen Antrag abzulehnen.
+you-have-been-invited-subject=Einladung für%s
+you-have-been-invited-message=h3. Einladung für %s \n%s Sie eingeladen, Kursen teilnehmen [%s|%s]
 your-proposal-declined-subject=Ihre Sitzung Antrag abgelehnt
-your-proposal-declined-message=h3. Ihre Sitzung Antrag abgelehnt \n% s abgelehnt Ihre Anfrage für Kanal [% s |% s]
+your-proposal-declined-message=h3. Ihre Sitzung Antrag abgelehnt \n%s abgelehnt Ihre Anfrage für Kanal [%s|%s]
 your-proposal-approved-subject=Ihre Sitzung Antrag ist genehmigt,
-your-proposal-approved-message=h3. Ihre Sitzung Anfrage zugelassen wurde \n% s akzeptiert Ihre Anfrage für [% s |% s]
-new-event-request-subject=Neue Chat-Sitzungsanforderung für% s
-new-event-request-message=h3. New Sitzungsanforderung \n% s angefordert neue Instant [session |% s] für Channel% s
+your-proposal-approved-message=h3. Ihre Sitzung Anfrage zugelassen wurde \n%s akzeptiert Ihre Anfrage für [%s|%s]
+new-event-request-subject=Neue Chat-Sitzungsanforderung für %s
+new-event-request-message=h3. New Sitzungsanforderung \n%s angefordert neue Instant [session|%s] für Channel %s
                                               
 #FileuploadController.java                                    
                                               
@@ -63,9 +63,9 @@ oauth-error=Google Calendar Autorisierung fehlgeschlagen
                                               
 #Hangout.java                                                   
 please-rating-subject=Möchtest du eine Bewertung für besuchte Sitzung
-please-rating-message=Bitte helfen Sie anderen, indem sie eine Bewertung für das besuchte Sitzung entscheiden, [% s |% s]
+please-rating-message=Bitte helfen Sie anderen, indem sie eine Bewertung für das besuchte Sitzung entscheiden, [%s|%s]
 invitation-to-video-call-subject=Einladung zur Videoanruf
-invitation-to-video-call-message=h3. % S eingeladen Sie Videoanruf. \n[Klicken Sie hier, um dieses Video Anruf teilnehmen |% s]
+invitation-to-video-call-message=h3. %s eingeladen Sie Videoanruf. \n[Klicken Sie hier, um dieses Video Anruf teilnehmen |%s]
                                               
 #Listings.java                                                       
 invalid-channel-data=Ungültige Daten zur Verfügung gestellt. Bitte prüfen und korrigieren alle Eingänge.
@@ -75,10 +75,10 @@ message-sent-error=Nachricht wurde nicht gesendet, bitte korrigieren ersten Eing
 message-sent-successfully=Nachricht wurde gesendet
                                               
 #PaymentController.java                                              
-event-payment-completed-subject=New Bezahlung Sitzung% s erhalten
-event-payment-completed-message=h3. New empfangenen Zahlung für Sitzung% s \n%s gesendete Sie eine Zahlung für%s. [Hier klicken, um Sitzungsdetails öffnen |%s]
-event-refund-request-subject=Antrag auf Rückerstattung von%s
-event-refund-request-message=h3. Erstattungsantrag \n%s beantragte Erstattung für die Sitzungs [%s |%s]. \nH4 | Sie können Rückerstattung durch [%s Erhaltene Zahlungen Seite] erlassen. Geld zurückzuzahlen Nachricht von Kunden \n%s
+event-payment-completed-subject=New Bezahlung Sitzung %s erhalten
+event-payment-completed-message=h3. New empfangenen Zahlung für Sitzung %s \n%s gesendete Sie eine Zahlung für %s. [Hier klicken, um Sitzungsdetails öffnen |%s]
+event-refund-request-subject=Antrag auf Rückerstattung von %s
+event-refund-request-message=h3. Erstattungsantrag \n%s beantragte Erstattung für die Sitzungs [%s|%s]. \n h4. Sie können Rückerstattung durch [%sErhaltene Zahlungen Seite] erlassen. Geld zurückzuzahlen Nachricht von Kunden \n%s
 event-refunded-request-subject=Genehmigt Erstattungsantrag für Session%s
 event-refunded-request-message=h3. Genehmigt Erstattungsantrag für Session%s \nIhre Erstattungsantrag für die Sitzungs [%s |%s] wurde genehmigt.
 invalid-parameters-try-again=Fehlende Zahlung id, bitte wiederholen

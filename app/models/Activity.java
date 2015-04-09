@@ -3,6 +3,7 @@ package models;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -30,15 +31,15 @@ public class Activity extends Model
     public static final String ACTIVITY_EVENT_COMMENTED_CUSTOMER = "eventCommentedCust";
     public static final String ACTIVITY_EVENT_STARTED = "eventStarted";
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public Event event;
 
     public String eventName;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public User customer;
 
     public Date created;

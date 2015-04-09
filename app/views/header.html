@@ -51,7 +51,9 @@
 							</button>
 							<ul class="dropdown-menu dropdown-menu-right dropdown-animation" style="padding:0px;">
 					            <li><a href="/locale?locale=en&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/en.gif'> English</a></li>
+								<!-- 
 					            <li><a href="/locale?locale=de&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/de.gif'> Deutsch</a></li>
+								 -->					            
 							</ul>							
 						</div>
 						
@@ -118,6 +120,11 @@
 								<!-- Collect the nav links, forms, and other content for toggling -->
 								<div class="collapse navbar-collapse" id="navbar-collapse-1">
 									<ul class="nav navbar-nav navbar-right">
+									
+										<li class="logo-menu pull-left" style="display:none">
+											<a href="/home"><img style="position:relative;bottom:2px;height:22px;" src="/public/images/logo_purple.png"></a>
+										</li>
+
 									 	#{if user}
 											<li class="header-notification #{if user && user.unreadMessages}#{/if}#{else}hidden#{/else}" style="padding-left:30px">
 								  	  			<a href="/mail" class="object-non-visible animated object-visible wobble" data-animation-effect="wobble" data-effect-delay="6000" ><i style="font-size:1.3em" class="text-default fa fa-envelope title="&{'received-new-message'}"></i></a>
@@ -128,10 +135,6 @@
 										#{/if}							  	  		
 
    								  	   	<li #{if request.url.indexOf("seach")>=0}class="active"#{/if}><a href="/search" id="public-btn-logout">&{'search'}</a></li>
-
-										<li class="logo-menu pull-left" style="display:none">
-											<a href="/home"><img style="position:relative;bottom:2px;height:22px;" src="/public/images/logo_purple.png"></a>
-										</li>
 
 									 	#{if user}
 									      <li class="dropdown">

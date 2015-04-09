@@ -385,9 +385,9 @@
 			<div class="row">
 				<div class="col-md-12">
 				
-					<form class="form" role="form" method="get" action="/channels">
+					<form class="form" role="form" method="get" action="/search">
 					    <div class="input-group banner-search">
-					      	<input type="text" placeholder="Find Help with ..." class="form-control" autocomplete="off" size="30" maxlength="100" name="search" id="query-search" value="${request.params.search}" data-provide="typeahead">
+					      	<input type="text" placeholder="Find Help with ..." class="form-control" autocomplete="off" size="30" maxlength="100" name="q" id="query-search" value="${request.params.q}" data-provide="typeahead">
 						    <span class="input-group-btn">
 						    	<button class="btn btn-default btn-short btn-margin" style="height:40px;" id="dialog-invite-button" type="submit"><i style="font-size:1.3em" class="fa fa-search"></i></button>
 						    </span>

@@ -3,6 +3,7 @@ package models;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -14,10 +15,10 @@ import utils.RandomUtil;
 @Table(name = "\"contact\"")
 public class Contact extends Model
 {
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public User contact;
 
     public Date created;

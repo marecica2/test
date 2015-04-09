@@ -399,7 +399,7 @@ public class Listings extends BaseController
         final Integer count = request.params.get("count") != null ? Integer.parseInt(request.params.get("count")) : null;
 
         final ListingFilter filterListing = new ListingFilter();
-        filterListing.search = StringUtils.getStringOrNull(request.params.get("search"));
+        filterListing.search = StringUtils.getStringOrNull(request.params.get("q"));
         filterListing.sort = StringUtils.getStringOrNull(request.params.get("sort"));
         filterListing.category = StringUtils.getStringOrNull(request.params.get("category"));
 

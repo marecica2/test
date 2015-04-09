@@ -3,6 +3,7 @@ package models;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -17,13 +18,13 @@ import controllers.BaseController;
 @Entity
 public class Message extends Model
 {
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public User owner;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public User fromUser;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public User toUser;
 
     @Column(length = 1000)
