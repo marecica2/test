@@ -374,6 +374,75 @@
 <!-- banner end -->
 
 
+<section class="main-container white-bg">
+	<div class="main">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+					<form class="form" role="form" method="get" action="/search">
+					    <div class="input-group banner-search">
+					      	<input type="text" placeholder="Find Help with ..." class="form-control" autocomplete="off" size="30" maxlength="100" name="q" id="query-search" value="${request.params.q}" data-provide="typeahead">
+						    <span class="input-group-btn">
+						    	<button class="btn btn-default btn-short btn-margin" style="height:40px;" id="dialog-invite-button" type="submit"><i style="font-size:1.3em" class="fa fa-search"></i></button>
+						    </span>
+					    </div>
+					</form>					
+				</div>
+				<h1 class="text-center title">&{'what-is'} Widgr? </h1>
+				<div class="col-sm-4">
+					<div class="box-style-2 object-non-visible animated object-visible fadeInUpSmall centered" data-animation-effect="fadeInUpSmall" data-effect-delay="1500">
+						<h2>
+							<i class="icon-users"></i><br/>
+							&{'group-video-chat'}
+						</h2>
+						&{'group-video-chat-desc'}
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="box-style-2 object-non-visible animated object-visible fadeInUpSmall centered" data-animation-effect="fadeInUpSmall" data-effect-delay="2000">
+						<h2>
+							<i class="fa fa-desktop"></i><br/>
+							&{'screen-sharing'}
+						</h2>
+						&{'screen-sharing-desc'}
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="box-style-2 object-non-visible animated object-visible fadeInUpSmall centered" data-animation-effect="fadeInUpSmall" data-effect-delay="2500">
+						<h2>
+							<i class="icon-download"></i><br/>
+							&{'no-installation'}
+						</h2>
+						&{'no-installation-desc'}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- section start -->
+<!-- ================ -->
+<div class="section parallax default-translucent-bg parallax-bg-3" style="padding:30px">
+	<div class="container">
+		<div class="call-to-action">
+			<div class="row">
+				<div class="col-md-8">
+					<h2 class="title text-center" style="font-size:2.5em">&{'you-are-on-the-right-place'}</h2>
+					<p class="text-center" style="font-size:1.4em;margin-bottom:0px;">&{'fill-in-quick-registration-and-start-using-widgr'}</p>
+				</div>
+				<div class="col-md-4">
+					<div class="text-center">
+						<a href="/instant" target="_blank" class="btn btn-dark btn-lg"><i class="fa fa-video-camera fa-flip-horizontal"></i> &nbsp; &{'start-now'}</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- section end -->
+
+
 <!-- main-container start -->
 <!-- ================ -->
 <section class="main-container gray-bg">
@@ -385,52 +454,40 @@
 			<div class="row">
 				<div class="col-md-12">
 				
-					<form class="form" role="form" method="get" action="/search">
-					    <div class="input-group banner-search">
-					      	<input type="text" placeholder="Find Help with ..." class="form-control" autocomplete="off" size="30" maxlength="100" name="q" id="query-search" value="${request.params.q}" data-provide="typeahead">
-						    <span class="input-group-btn">
-						    	<button class="btn btn-default btn-short btn-margin" style="height:40px;" id="dialog-invite-button" type="submit"><i style="font-size:1.3em" class="fa fa-search"></i></button>
-						    </span>
-					    </div>
-					</form>						
-				
-					<h1 class="text-center title">&{'what-is'} Widgr? </h1>
 					<div class="row">
-						<!-- 
-						<p class="text-center">one place where you can</p>
-						 -->
 						<div class="col-sm-4">
-							<div class="box-style-1 white-bg object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="510">
+							<div class="box-style-1 white-bg object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="0">
 								<i class="fa fa-search"></i>
 								<h2>&{'find-help'}</h2>
 								<p>
 									&{'find-help-message'}
 								</p>
-								<a href="/about" class="btn-default btn">&{'read-more'}</a>
+								<a href="/about" class="btn-white btn">&{'read-more'}</a>
 							</div>
 						</div>
 						
 						<div class="col-sm-4">
-							<div class="box-style-1 white-bg object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="0">
+							<div class="box-style-1 white-bg object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="500">
 								<i class="icon-users"></i>
 								<h2>&{'get-help'}</h2>
 								<p>
 									&{'get-help-message'}
 								</p>
-								<a href="/about" class="btn-default btn">&{'read-more'}</a>
+								<a href="/about" class="btn-white btn">&{'read-more'}</a>
 							</div>
 						</div>
 						
 						<div class="col-sm-4">
-							<div class="box-style-1 white-bg object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="940">
+							<div class="box-style-1 white-bg object-non-visible" data-animation-effect="fadeInUpSmall" data-effect-delay="1000">
 								<i class="fa fa-line-chart"></i>
 								<h2>&{'get-paid'}</h2>
 								<p>
 									&{'get-paid-message'}
 								</p>
-								<a href="/about" class="btn-default btn">&{'read-more'}</a>
+								<a href="/about" class="btn-white btn">&{'read-more'}</a>
 							</div>
 						</div>
+						
 						
 					</div>
 				</div>
@@ -438,31 +495,9 @@
 		</div>
 	</div>
 	<!-- main end -->
-
 </section>
 <!-- main-container end -->
 
-
-<!-- section start -->
-<!-- ================ -->
-<div class="section parallax light-translucent-bg parallax-bg-3" style="padding:0px">
-	<div class="container">
-		<div class="call-to-action">
-			<div class="row">
-				<div class="col-md-8">
-					<h1 class="title text-center">&{'you-are-on-the-right-place'}</h1>
-					<p class="text-center" style="font-size:1.4em">&{'fill-in-quick-registration-and-start-using-widgr'}</p>
-				</div>
-				<div class="col-md-4">
-					<div class="text-center">
-						<a href="/registration" class="btn btn-default btn-lg"> &{'register'}</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- section end -->
 
 <!-- section start -->
 <!-- ================ -->

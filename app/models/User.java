@@ -5,14 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import play.Logger;
 import play.db.jpa.Model;
@@ -32,8 +28,7 @@ public class User extends Model
 
     public String uuid;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne
     public Account account;
 
     public String login;
@@ -77,6 +72,8 @@ public class User extends Model
     public Date lastLoginTime;
 
     public Date lastOnlineTime;
+
+    public Date created;
 
     @Column(length = 2000)
     public String userAbout;
@@ -165,7 +162,7 @@ public class User extends Model
 
     public static List<User> getUsers()
     {
-        return User.all().fetch();
+        return User.find("from User order by created desc ").fetch();
     }
 
     public static List<User> getPublisherRequests()

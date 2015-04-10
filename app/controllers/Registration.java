@@ -60,10 +60,8 @@ public class Registration extends BaseController
         }
 
         User user = User.getUserByLogin(login);
-        if (user == null)
-        {
+        if (user == null || (user != null && user.isAdmin()))
             validation.addError("login", "user-not-exists");
-        }
 
         if (!validation.hasErrors())
         {
@@ -76,7 +74,7 @@ public class Registration extends BaseController
 
                 final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
                 final String title = Messages.get("password-reset-subject");
-                final String message = Messages.get("password-reset-message", user.password, baseUrl + "password");
+                final String message = Messages.get("password-reset-message", password, baseUrl + "password");
 
                 new EmailNotificationBuilder()
                         .setWidgrFrom()
@@ -124,21 +122,24 @@ public class Registration extends BaseController
         validation.required(lastName);
         validation.match("lastName", lastName, "[A-Za-z]+").message("bad-characters");
         validation.email(login).message("validation.login");
-        validation.required(password);
+        validation.required(captcha);
 
-        Pattern pattern = Pattern.compile("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}");
+        // password
+        validation.required(password);
+        validation.minSize(password, 8).message(Messages.get("password-error"));
+        Pattern pattern = Pattern.compile(".*\\d.*");
         Matcher matcher = pattern.matcher(password);
         if (!matcher.matches())
             validation.addError("password", Messages.get("password-error"));
+        pattern = Pattern.compile(".*[A-Z].*[A-Z].*");
+        matcher = pattern.matcher(password);
+        if (!matcher.matches())
+            validation.addError("password", Messages.get("password-error"));
         validation.equals(passwordRepeat, password).message("validation.passwordMatch");
-        validation.required(captcha);
 
         final Object cap = Cache.get("captcha." + uuid);
         if (captcha != null && cap != null)
             validation.equals(captcha, cap).message("invalid.captcha");
-
-        if (password.length() < 6)
-            validation.addError("password", Messages.get("password-min-length"));
 
         if (!accPlan.equals(Account.PLAN_STANDARD) && !accPlan.equals(Account.PLAN_MONTH_PREMIUM) && !accPlan.equals(Account.PLAN_MONTH_PRO))
             validation.addError("accPlan", Messages.get("invalid-value"));
@@ -165,7 +166,7 @@ public class Registration extends BaseController
             // send activation email
             final String baseUrl = getProperty(BaseController.CONFIG_BASE_URL);
             final String title = Messages.get("account-activation-subject");
-            final String message = Messages.get("account-activation-message", baseUrl, user.uuid, baseUrl, baseUrl, baseUrl, baseUrl, baseUrl);
+            final String message = Messages.get("account-activation-message", baseUrl, user.uuid);
 
             new EmailNotificationBuilder()
                     .setWidgrFrom()
@@ -204,10 +205,10 @@ public class Registration extends BaseController
 
         User checkUser = User.getUserByLogin(login);
         if (checkUser != null)
-            validation.addError("login", Messages.get("login-already-used"));
+            validation.addError("login", Messages.get("login-already-used", login));
         checkUser = User.getUserByFacebook(facebook);
         if (checkUser != null)
-            validation.addError("login", Messages.get("login-already-used"));
+            validation.addError("login", Messages.get("login-already-used", facebook));
 
         if (!validation.hasErrors())
         {
@@ -230,7 +231,7 @@ public class Registration extends BaseController
 
             final String baseUrl = getBaseUrl();
             final String subject = Messages.getMessage(user.locale, "account.activated-subject");
-            final String body = Messages.getMessage(user.locale, "account.activated-message", baseUrl, baseUrl, baseUrl, baseUrl, baseUrl, baseUrl);
+            final String body = Messages.getMessage(user.locale, "account.activated-message", user.login, baseUrl, user.login, baseUrl, baseUrl, baseUrl, baseUrl, baseUrl, baseUrl);
 
             Message.createAdminNotification(user, subject, body);
             new EmailNotificationBuilder()
@@ -266,8 +267,14 @@ public class Registration extends BaseController
         if (!Crypto.encryptAES(oldPassword).equals(user.password))
             validation.addError("oldPassword", "validation-invalidPassword");
 
-        Pattern pattern = Pattern.compile("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}");
+        validation.required(password);
+        validation.minSize(password, 8).message(Messages.get("password-error"));
+        Pattern pattern = Pattern.compile(".*\\d.*");
         Matcher matcher = pattern.matcher(password);
+        if (!matcher.matches())
+            validation.addError("password", Messages.get("password-error"));
+        pattern = Pattern.compile(".*[A-Z].*[A-Z].*");
+        matcher = pattern.matcher(password);
         if (!matcher.matches())
             validation.addError("password", Messages.get("password-error"));
         validation.equals(passwordRepeat, password).message("validation.passwordMatch");
@@ -292,7 +299,7 @@ public class Registration extends BaseController
 
         final String baseUrl = getBaseUrl();
         final String subject = Messages.getMessage(user.locale, "account.activated-subject");
-        final String body = Messages.getMessage(user.locale, "account.activated-message", baseUrl, baseUrl, baseUrl, baseUrl, baseUrl, baseUrl);
+        final String body = Messages.getMessage(user.locale, "account.activated-message", user.login, baseUrl, user.login, baseUrl, baseUrl, baseUrl, baseUrl, baseUrl, baseUrl);
 
         Message.createAdminNotification(user, subject, body);
         new EmailNotificationBuilder()
@@ -350,6 +357,7 @@ public class Registration extends BaseController
         user.locale = Lang.get();
         user.reminder = true;
         user.reminderMinutes = 30;
+        user.created = new Date();
 
         user.uuid = RandomUtil.getUUID();
         user.referrerToken = RandomUtil.getUUID();
@@ -369,8 +377,7 @@ public class Registration extends BaseController
         account.key = RandomUtil.getUUID();
         account.name = firstName + " " + lastName;
         account.type = Account.TYPE_STANDARD;
-        //if (type != null && type.equals("publisher"))
-        //    account.type = Account.TYPE_PUBLISHER_REQUEST_PREPARE;
+        account.created = new Date();
         account.save();
 
         AccountPlan plan = new AccountPlan();

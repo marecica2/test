@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -103,7 +102,7 @@ public class Listing extends Model
 
     public String instantBroadcast;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     public User user;
 
@@ -120,19 +119,18 @@ public class Listing extends Model
 
     public static List<Listing> getForUser(User user)
     {
-        return Listing.find("from Listing where user = ? and deleted is null", user).fetch(500);
+        return Listing.find("from Listing where user = ? order by deleted desc nulls first ", user).fetch(500);
     }
 
     public static List<Listing> getSearch(Integer first, Integer count, ListingFilter filter)
     {
-
         String query = "";
         query += " SELECT s.uuid, title, s.firstname, s.lastname, s.avatarUrl, "
                 + "s.category, s.privacy, s.charging, s.price, s.currency, s.imageUrl, "
                 + "s.tags, s.type, s.ratingStars, s.ratingAvg, s.login, firstFree, s.description, u.available, u.lastOnlineTime, s.language ";
         query += " FROM search_index s ";
         query += " JOIN users u ON u.login = s.login ";
-        query += " WHERE 1 = 1 ";
+        query += " WHERE 1 = 1 AND s.available is null ";
 
         if (filter.category != null)
         {

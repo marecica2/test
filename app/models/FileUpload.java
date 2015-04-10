@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -36,7 +35,7 @@ public class FileUpload extends Model
 
     public String temp;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     public User owner;
 
     @ManyToMany(fetch = FetchType.LAZY)

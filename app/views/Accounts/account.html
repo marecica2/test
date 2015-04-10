@@ -415,9 +415,29 @@
 			    <div class="col-sm-9">
 			      	<p class="form-control-static">
 			      		${user.account.paypalAccount}
+			      		<span class="pointer label label-danger" data-toggle="modal" data-target="#refundModal" onclick="$('#share-link').select();">&{'paypal-refund'}</span>
 			      	</p>
 			    </div>
 			</div>
+			
+			<!-- Paypal Modal -->
+			<div class="modal" id="refundModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">&{'cancel'}</span></button>
+			        <h3 class="modal-title" id="myModalLabel">&{'paypal-refund'}</h3>
+			      </div>
+			      <div class="modal-body">
+			      	 &{'paypal-refund-desc'}
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default btn-short" data-dismiss="modal">&{'close'}</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			
 			<div class="form-group">
 				<label class="col-sm-3 control-label">
 					&{'account.currency'}

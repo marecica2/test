@@ -25,10 +25,11 @@
 				<thead>
 					<tr>
 						<th>Name</th>
+						<th>Id</th>
 						<th>Account type</th>
 						<th>Account plan</th>
 						<th>Referrer</th>
-						<th>Status</th>
+						<th>Created</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -37,6 +38,9 @@
 						<td>
 							<img class="avatar16" src="/${item.avatarUrl}_32x32">
 							<a href="/user/${item.login}">${item.fullName}</a>
+						</td>
+						<td>
+							${item.id}
 						</td>
 						<td>
 							${item.account.type}
@@ -53,20 +57,18 @@
 							#{/if}
 						</td>
 						<td>
-							#{if false}
-								<span class="label label-danger">blocked</span>
-							#{/if}
+							${item.created}
 						</td>
 						<td>
-							<a href="/payments?transaction=${item.login}&sent=true">sent</a> 
-							<a href="/payments?transaction=${item.login}">received</a>
+							<a href="/mail?action=new&to=${item.login}">&nbsp;<i class="fa fa-envelope-o"></i></a> &middot;
+							<a href="/payments?transaction=${item.login}&sent=true">sent</a> &middot;
+							<a href="/payments?transaction=${item.login}">received</a> &middot;
 							#{if item.blocked}
 								<a href="/admin/unblock?uuid=${item.uuid}&url=${request.url.urlEncode()}" class="btn btn-default btn-sm btn-margin">Unblock</a>
 							#{/if}
 							#{if item.blocked == null}
 							<a href="/admin/block?uuid=${item.uuid}&url=${request.url.urlEncode()}" class="btn btn-white btn-sm btn-margin">Block</a>
 							#{/if}
-							<a href="/mail?action=new&to=${item.login}">&nbsp;<i class="fa fa-envelope"></i>&nbsp;</a>
 						</td>
 					</tr>				
 				#{/list}				

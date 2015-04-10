@@ -24,7 +24,7 @@ public class Rating extends Model
 {
     public static final String TYPE_LISTING = "listing";
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     public User user;
 
     public String type;

@@ -161,8 +161,7 @@ public class Application extends BaseController
             if (displayedUser.facebookPageType.equals("channel"))
                 redirect("/channel/" + displayedUser.facebookPageChannel);
         }
-
-        redirect("/dashboard");
+        redirect("/");
     }
 
     public static void facebookPost(String id, String type, String channel) throws IOException

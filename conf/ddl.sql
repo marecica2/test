@@ -21,6 +21,7 @@ SELECT listing.uuid,
        users.login as login,
        listing.description,
        listing.language,
+       listing.available,
        setweight(to_tsvector('english'::regconfig, listing.title), 'A') || 
        setweight(to_tsvector('simple', listing.tags), 'B') ||
        setweight(to_tsvector('simple', listing.description), 'C') ||
@@ -30,7 +31,7 @@ JOIN users ON users.id = listing.user_id
 LEFT OUTER JOIN rating r ON r.objectuuid = listing.uuid
 JOIN account ON users.account_id = account.id and account.type = 'publisher' where deleted is null
 GROUP BY listing.uuid, listing.title, listing.description, users.firstname, users.lastname, users.avatarUrl, listing.category,listing.privacy,listing.charging,listing.price,listing.currency,listing.imageUrl,listing.tags,
-listing.type,listing.firstFree,account.type,users.login, listing.language;
+listing.type,listing.firstFree,account.type,users.login, listing.language, listing.available;
 CREATE INDEX idx_fts_search ON search_index USING gin(document);
 REFRESH MATERIALIZED VIEW search_index;
 
@@ -81,24 +82,25 @@ select distinct term from tags where term like '%ava%'
  */
 
 
-delete from activity where user_id = 6922;
-delete from activity where customer_id = 6922;
-delete from activity where event_id in (select id from event where user_id = 6922);
-delete from message where fromuser_id = 6922;
-delete from message where owner_id = 6922;
-delete from message where touser_id = 6922;
-delete from attendance where user_id = 6922;
-delete from attendance where customer_id = 6922;
-delete from event where user_id = 6922;
-delete from event where customer_id = 6922;
-delete from comment_comment_reply where comment_id in (select id from comment where user_id = 6922);
-delete from comment_comment_reply where replies_id in (select id from comment_reply where user_id = 6922);
-delete from comment where user_id = 6922;
-delete from comment_reply where user_id = 6922;
-delete from fileupload where owner_id  = 6922;
-delete from listing where user_id = 6922;
-delete from contact where user_id = 6922;
-delete from contact where contact_id = 6922;
-delete from ratingvote where user_id = 6922;
-delete from rating where user_id = 6922;
-delete from users where id = 6922;
+delete from activity where user_id = 334;
+delete from activity where customer_id = 334;
+delete from activity where event_id in (select id from event where user_id = 334);
+delete from activity where event_id in (select id from event where customer_id = 334);
+delete from message where fromuser_id = 334;
+delete from message where owner_id = 334;
+delete from message where touser_id = 334;
+delete from attendance where user_id = 334;
+delete from attendance where customer_id = 334;
+delete from event where user_id = 334;
+delete from event where customer_id = 334;
+delete from comment_comment_reply where comment_id in (select id from comment where user_id = 334);
+delete from comment_comment_reply where replies_id in (select id from comment_reply where user_id = 334);
+delete from comment where user_id = 334;
+delete from comment_reply where user_id = 334;
+delete from fileupload where owner_id  = 334;
+delete from listing where user_id = 334;
+delete from contact where user_id = 334;
+delete from contact where contact_id = 334;
+delete from ratingvote where user_id = 334;
+delete from rating where user_id = 334;
+delete from users where id = 334;

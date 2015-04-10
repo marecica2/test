@@ -211,7 +211,7 @@ public class FileuploadController extends BaseController
         }
         else
         {
-            fu.owner = getLoggedUser();
+            fu.owner = getLoggedUserNotCache();
         }
 
         fu.save();

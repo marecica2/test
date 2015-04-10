@@ -155,6 +155,11 @@ img {
 
 
 /* various */
+
+.pointer {
+	cursor: pointer;
+}
+
 .text-light {
 	color: #aaa;	
 }
@@ -272,12 +277,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
 
 
 @media screen and (min-width: 767px) {
-
-
 	.banner-search {
 		max-width:400px;
 		position:absolute;
-		top:-18%;
+		top:-100px;
 		left:15px;
 		z-index: 9999;	
 	}

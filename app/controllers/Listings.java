@@ -37,11 +37,12 @@ public class Listings extends BaseController
         final Boolean edit = action != null && action.equals("edit") ? true : false;
         final User user = getLoggedUser();
         final Listing listing = Listing.get(uuid);
-        if ((!isNew && listing == null) || (listing != null && listing.deleted != null))
+        final Boolean isOwner = listing != null ? listing.user.equals(user) : false;
+
+        if ((!isNew && listing == null) || (listing != null && listing.deleted != null && !isOwner))
             notFound();
 
         final List<Listing> listings = listing != null ? Listing.getForUser(listing.user) : null;
-        final Boolean isOwner = listing != null ? listing.user.equals(user) : false;
         final Boolean fromEvent = false;
         final String temp = RandomUtil.getUUID();
         final String commentTemp = RandomUtil.getUUID();
@@ -135,7 +136,7 @@ public class Listings extends BaseController
     {
         Listing listing = Listing.get(uuid);
         boolean edit = action != null && action.equals("edit") ? true : false;
-        final User user = getLoggedUser();
+        final User user = getLoggedUserNotCache();
 
         checkAuthenticity();
         validation.required(type);
@@ -232,6 +233,21 @@ public class Listings extends BaseController
         listing.deleted = true;
         listing.save();
         redirectTo("/");
+    }
+
+    public static void enableListing(String uuid, String url)
+    {
+        checkAuthenticity();
+        final User user = getLoggedUser();
+        final Listing listing = Listing.get(uuid);
+
+        // permissions check
+        if (!user.isOwner(listing))
+            forbidden();
+
+        listing.deleted = null;
+        listing.save();
+        redirectTo(url);
     }
 
     public static void availableStart(String url)

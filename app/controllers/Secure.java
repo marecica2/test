@@ -91,7 +91,6 @@ public class Secure extends BaseController
         if (validation.hasErrors() || !allowed)
         {
             flash.keep("url");
-            flash.error(Messages.get("incorrect-login-or-password"));
             params.flash();
             login();
         }
@@ -246,10 +245,11 @@ public class Secure extends BaseController
             if (user != null && !user.activated)
             {
                 flash.error(Messages.get("your-account-is-not-activated"));
+                flash.keep();
                 return false;
             }
 
-            if (user != null && user.isAdmin() && user.password.equals(password) && request.params.get("token") != null && request.params.get("token").equals("COnapir0"))
+            if (user != null && user.isAdmin() && user.password.equals(password) && request.params.get("token") != null && request.params.get("token").equals("s6FMP58sOs821"))
             {
                 user.lastLoginTime = new Date();
                 user.lastOnlineTime = new Date();
@@ -269,6 +269,8 @@ public class Secure extends BaseController
                 user.save();
                 return true;
             }
+
+            flash.error(Messages.get("incorrect-login-or-password"));
             return false;
         }
 

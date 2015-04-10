@@ -62,6 +62,14 @@
     </style>
 #{/set}
 
+#{set 'fbmeta'}
+	#{if listing}
+		<meta class="fb-meta-title" property="og:title" content="${listing.title}" /> 
+		<meta class="fb-meta-description" property="og:description" content="${listing.description}" /> 
+		<meta class="fb-meta-image" property="og:image" content="${baseUrl}/${listing.imageUrl}" />  
+	#{/if} 
+#{/set}
+
 <!-- set the item object -->
 #{if fromEvent && event}
 	#{set item:event /}
@@ -359,20 +367,20 @@
 
 <!-- parallax -->
 #{if !edit}
-<div class="section parallax default-translucent-bg parallax-bg " style="background-image: url('/images/page-about-banner-2.jpg');">
+<div class="section parallax default-translucent-bg parallax-bg-3" style="padding:20px; background-image: url('/images/page-about-banner-3.jpg');">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-7">
-				<h2 class="title text-center" style="font-size:2.5em">
+				<h2 class="title text-center" style="font-size:2.3em">
 					<span style="font-size:0.5em;position:relative;bottom:-20px; right:-30px">
 						#{if usr.isOnline()}
 				  			<span><i class="icon-record" style="color:#5cb85c"></i></span>
 						#{/if}
 					</span>
-					<a href="/user/${usr.login}"><img style="height:60px;width:60px" class="img-circle shadow-small" src="/${usr.avatarUrl}_64x64"></a>
+					<a href="/user/${usr.login}"><img style="height:60px;width:60px" class="img-circle" src="/${usr.avatarUrl}_64x64"></a>
 					<a class="anchor2" href="/channel/${listing.uuid}">${listing.title}</a>	
 				</h2>
-				<h5 class="text-center text-shadow" >
+				<h5 class="text-center text-shadow" style="margin-bottom:0px">
 					<span>
 						#{if event && fromEvent}
 							#{if item && item.charging == 'free'}

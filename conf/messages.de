@@ -312,6 +312,8 @@ start-of-working-hours=Beginn der Arbeitszeit
 end-of-working-hours=Ende der Arbeitszeit
 PayPal-account=PayPal Konto
 PayPal-info=Um bezahlt Sitzungen müssen Sie gilt Premier- oder Geschäftskonto für Geld Annahme bieten zu schaffen.
+paypal-refund=Important! How to enable refundations
+paypal-refund-desc=By default you cannot use Widgr to make refundations to your customers. You would always need to do it through PayPal and do it manually. By granting API access to Widgr you can make then refunds to your customers just with a single click through <a href='/payments'>Received payments page</a> <h4>Steps to granting API access</h4> <ul><li>Go to <a target="_blank" href="https://www.paypal.com">paypal.com</a> and log into your PayPal account</li><li>Navigate to Home > Profile > My selling tools </li><li>Click on API access Update link</li><li>Click on Add or edit API permissions</li><li>Click on Add new Third Party button</li><li>Type <input type="text" value="sales_api1.wid.gr"> into "Third Party Permission Username field" and click "Lookup"</li><li>Check <strong>"Issue a refund for a specific transaction"</strong> option and click "Add"</li><li>And that's it</li></ul>
 account.currency=Standardwährung
 currency=Währung
 save=Speichern
@@ -380,8 +382,6 @@ widgr-feature-5=Die Integration mit Facebook
 widgr-feature-5-text=Sie können problemlos integrieren Ihre Widgr Konto mit bestehenden Facebook-Seite, dass Ihr Konto mehr zugänglich zu Ihrem Facebook-Gemeinschaft zu sein. Wenn Sie ein Facebook-Seite besitzen, können Sie Widgr App, benutzerdefinierte Registerkarte zu installieren. Bei dieser Option sind Ihre potenziellen Kunden nur wenigen Klicks mit Ihrer Dienstleistungen. <br/> <a href="https://www.facebook.com/add.php?api_key=731388346951866&pages"> Klicken Sie hier um Widgr App auf Ihrem Facebook-Seite </a> oder <a href = "https://www.facebook.com/add.php?api_key=731388346951866&pages"> mehr </a> zu dieser Funktion.
 widgr-feature-6=Integration mit Google Calendar
 widgr-feature-6-text=Sie können ganz einfach Ihr Widgr Konto mit Google Calendar. Mit Google Kalender können Sie planen und zu verwalten und über Ihre Sitzungen auf jedem Gerät, das Sie verwenden, zu melden.
-widgr-feature-7=Integration mit Google Calendar
-widgr-feature-7-text=Sie können ganz einfach Ihr Widgr Konto mit Google Calendar. Mit Google Kalender können Sie planen und zu verwalten und über Ihre Sitzungen auf jedem Gerät, das Sie verwenden, zu melden.
 pricing=Preise
 basic=Basic
 free=Kostenlos
@@ -491,11 +491,16 @@ get-help-message=Sie können wählen, die Hilfe von auf der Grundlage Qualifikat
 get-paid=Holen Sie sich bezahlt
 get-paid-message=Wenn Sie etwas, was man für andere nützlich sein können Sie eine Widgr Publisher zu werden. Widgr wird Ihnen eine einfache Plattform, die Ihnen helfen, Ihre Kunden verbinden wird. Alles, was Sie brauchen, ist nur PayPal-Konto für Zahlungen, und schon können Sie Ihr Unternehmen beginnen
 you-are-on-the-right-place=Verbinden Sie uns an, kostenlos
-register-as-customer=Neukunden-Anmeldung
-register-as-publisher=Als Publisher zu registrieren
+start-now=Jetzt versuchen
 fill-in-quick-registration-and-start-using-widgr=Füllen Sie einfach schnell Anmeldeformular aus und starten Sie mit Widgr auch heute noch
 channels-by-category=Kanäle nach Kategorien
 view-all=Alle anzeigen
+group-video-chat=GROUP VIDEO CHAT
+group-video-chat-desc=Add up to 5 people to the conversation
+screen-sharing=SCREEN SHARING
+screen-sharing-desc=Easily add anyone's screen to the conversation
+no-installation=NO INSTALLATION
+no-installation-desc=You don't need to download or install anything
                                               
 #comments.html                                                   
 media-library=Mediathek
@@ -676,6 +681,7 @@ star-instant-broadcast=Starten Sie Instant-Broadcast
 go-to-private-room=Zum privaten Raum
 edit-channel=Kanal bearbeiten
 delete-channel=Archive&nbsp;Kanal
+enable-channel=Enable&nbsp;Kanal
                                               
 #listing.html
 turn-on-available-now=Whan activated, You can use simple chat box to communicate with your customers. And customers can create sessions for avaiable channel instantly. You will receive notification when new instant session will be created.                                                        
@@ -729,6 +735,7 @@ available-activated=Jetzt erhältlich
 reviews=Bewertungen
 create-event=Neue Sitzung
 request-event=Termine Sitzung
+archived=Archived             
                                               
 #main.html                                                          
 online-users=Benutzer Online

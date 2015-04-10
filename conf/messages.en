@@ -97,18 +97,18 @@ password-min-length=Password must have at least 6 characters
 password-reset-subject=Your password has been reseted
 password-reset-message=h3. Your password has been reseted \nNew password: *%s* \nIt is highly recommended to [change it immediately|%s]
 password-message=Password has been reseted. Now check your email.
-login-already-used=This account already exists
-account-activation-subject=Your account has been created
-account-activation-message=h3. Welcome to Widgr! \nYou're almost there! Please click the link below to confirm your Widgr account. \n[Account activation link|%sregistration/activate?uuid=%s] \nHere are a few things to help you get started width Widgr:\n* [How to use Widgr|%shelp#customer] \n* [How to become a Publisher|%shelp#publisher]\n* [How to connect your account with Facebook|%shelp#facebook]\n* [How to sync Widgr sessions with Google Calendar|%shelp#google]\n* [How to set up PayPal payments for Publishers|%shelp#PayPal]
+login-already-used=Login %s is already taken
+account-activation-subject=Activate your account
+account-activation-message=h3. Welcome to Widgr! \nYou're almost there! Please click the link below to confirm your Widgr account. \n[Account activation link|%sregistration/activate?uuid=%s] 
 check-out-your-email-for-activating=Registration successfull! Check out your email for activating this account. <strong>Please check junk folder as well</strong>	
 account.activated-subject=Welcome to Widgr!
-account.activated-message=h3. Welcome to Widgr! \nYour account has been successfully activated. \nHere are a few things to help you get started width Widgr:\n* [How to use Widgr|%shelp#customer] \n* [How to become a Publisher|%shelp#publisher]\n* [How to connect your account with Facebook|%shelp#facebook]\n* [How to sync Widgr sessions with Google Calendar|%shelp#google]\n* [How to set up PayPal payments for Publishers|%shelp#PayPal]\n* [and more ...|%shelp]
+account.activated-message=h3. Welcome to Widgr! \nYour account [%s|%suser/%s] has been successfully activated. \nHere are a few things to help you get started width Widgr:\n* [How to request for a session|%shelp#request-session] \n* [How to request for Publisher account|%shelp#publisher]\n* [How to connect your account with Facebook|%shelp#facebook]\n* [How to set up PayPal payments for Publishers|%shelp#paypal] \n* [How to sync your sessions with Google Calendar|%shelp#calendar] \n* [and more ...|%shelp]
 account-successfully-activated=Your account has been successfully activated
 
 #Secure.java
 incorrect-login-or-password=Invalid credentials
 user-does-not-exist=User does not exist
-your-account-is-not-activated=Account is not activated
+your-account-is-not-activated=Your account is not activated
 you-have-been-logged-out=You have been signed out
 
 #ActivityDTO.java
@@ -313,6 +313,8 @@ start-of-working-hours=Start of working hours
 end-of-working-hours=End of working hours
 PayPal-account=PayPal account
 PayPal-info=To be able to create paid sessions you need to provide valid Premier or Business PayPal account for accepting money.
+paypal-refund=Important! How to enable refundations
+paypal-refund-desc=By default you cannot use Widgr to make refundations to your customers. You would always need to do it through PayPal and do it manually. By granting API access to issue refunds to Widgr you can make then refunds to your customers just with a single click through <a href='/payments'>Received payments page</a> <h4>Steps for granting API access (Only for refunds)</h4> <ul><li>Go to <a target="_blank" href="https://www.paypal.com">paypal.com</a> and log into your PayPal account</li><li>Navigate to Home > Profile > My selling tools </li><li>Click on API access "Update" link</li><li>Click on Add or edit API permissions</li><li>Click on Add new Third Party button</li><li>Type <input type="text" value="sales_api1.wid.gr"> into "Third Party Permission Username field" and click "Lookup"</li><li>Check <strong>"Issue a refund for a specific transaction"</strong> option and click "Add"</li><li>And that's it</li></ul>
 account.currency=Default currency
 currency=Currency
 save=Save
@@ -370,19 +372,17 @@ about-3=With Widgr you can get help anytime from people with expertise across a 
 why-choose-widgr=Features
 why-choose-widgr-text=Why choose widgr?
 widgr-feature-1=Live interactive video
-widgr-feature-1-text=Widgr sessions are conducted through live video calls. During the session, you can point your camera to show what you need help with, upload and share files, interactive drawings, If you don't want the Publisher to see you, you can always turn off your camera. <a href="/instant" target="_blank">Try it now</a>.
+widgr-feature-1-text=Widgr sessions are conducted through live video calls. During the session, you can point your camera to show what you need help with, upload and share files, interactive drawings, If you don't want the Publisher to see you, you can always turn off your camera. <a href="/instant" target="_blank">Try instant video call now</a>.
 widgr-feature-2=Scheduling flexibility
-widgr-feature-2-text=There are two ways to create join session -- instant and scheduled. If a publisher's channel has a green "Available now" icon, you are just a few clicks away from getting help instantly. Before taking Session you can use interactive chat box to get more information about provided Channel from Publisher. Otherwise, you can see when publishers are available in their calendar and pick a time slot or send a message to request a different time.
+widgr-feature-2-text=There are two ways to create join session -- instant and scheduled. If a publisher's channel has a green "Available now" icon, you are just a few clicks away from getting help instantly. Before taking Session you can use interactive chat box to get more information about provided Channel from Publisher. Otherwise, you can see when publishers are available in their calendar and pick a time slot or send a message to request a different time. <a class="link" href="/help#request-session">Learn more</a>
 widgr-feature-3=Pricing options
 widgr-feature-3-text=Sessions that are free don't require a PayPal account. Prices are set by the publishers and can be free or charged by the session. Some publishers might offer the first session for free. All you need for paying a session is a valid PayPal account.
 widgr-feature-4=Easy payments and refunds with PayPal
-widgr-feature-4-text=All payments are currently done through PayPal with easy refundantion policy. If you as a Customer will not be satisfied with the session, you can ask for a refund with just few clicks.<br/><br/>If you plan to use Widgr as a Publisher and offer paid Sessions, you'll need to have a verified Premier or Business account to be able to receive money through PayPal.
+widgr-feature-4-text=All payments are currently done through PayPal with easy refundantion policy. If you as a Customer will not be satisfied with the session, you can ask for a refund with just few clicks. If you plan to use Widgr as a Publisher and offer paid Sessions, you'll need to have a verified Premier or Business account to be able to receive money through PayPal. <a class="link" href="/help#paypal">Learn more</a>
 widgr-feature-5=Integration with Facebook
-widgr-feature-5-text=You can easily integrate your Widgr account with existing Facebook page, that your account will be more accesible to your Facebook community. If you own a Facebook page, you can install Widgr app to custom tab. With this option, your potential customers are just few clicks away using your services. <br/><a href="https://www.facebook.com/add.php?api_key=731388346951866&pages">Click here to add Widgr app to your Facebook page</a> or <a href="/help#facebook">learn more</a> about this feature.
+widgr-feature-5-text=You can easily integrate your Widgr account with existing Facebook page, that your account will be more accesible to your Facebook community. If you own a Facebook page, you can install Widgr app to custom tab. With this option, your potential customers are just few clicks away using your services. <a class="link" href="/help#facebook">Learn more</a>
 widgr-feature-6=Integration with Google Calendar
-widgr-feature-6-text=You can easily connect your Widgr account with Google Calendar. With Google calendar you can schedule and manage and be notified about your sessions on every device you use.
-widgr-feature-7=Integration with Google Calendar
-widgr-feature-7-text=You can easily connect your Widgr account with Google Calendar. With Google calendar you can schedule and manage and be notified about your sessions on every device you use.
+widgr-feature-6-text=You can easily connect your Widgr account with your Google calendar. With this feature you can better manage your sessions and keep your schedule up to date on every device you use. <a class="link" href="/help#calendar">Learn more</a>
 pricing=Pricing
 basic=Basic
 free=Free
@@ -491,12 +491,17 @@ get-help=Get help
 get-help-message=You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. While some Publishers offer free sessions, some may be charged. For those just simply use your PayPal to pay securely and fast. 
 get-paid=Get paid
 get-paid-message=When you know something what might be useful for others you can become a Widgr Publisher. Widgr will provide you a simple platform which will help you to connect to your customers. All you need is just PayPal account for receiving payments, and you are ready to start your business
-you-are-on-the-right-place=Join Us, it's free
-register-as-customer=Register as Customer
-register-as-publisher=Register as Publisher
-fill-in-quick-registration-and-start-using-widgr=Just fill quick registration form and start using Widgr even today
+you-are-on-the-right-place=Instant video call
+start-now=Start now
+fill-in-quick-registration-and-start-using-widgr=Anonymous. Peer-to-peer. No plugins, signup, or payment required.
 channels-by-category=Channels by category
 view-all=View all
+group-video-chat=GROUP VIDEO CHAT
+group-video-chat-desc=Add up to 5 people to the conversation
+screen-sharing=SCREEN SHARING
+screen-sharing-desc=Easily add anyone's screen to the conversation. Share files or use simple collaborative drawing tool
+no-installation=NO INSTALLATION
+no-installation-desc=You don't need to download or install anything
 
 #comments.html`
 media-library=Media library
@@ -677,6 +682,7 @@ star-instant-broadcast=Start instant broadcast
 go-to-private-room=Go to private room
 edit-channel=Edit channel
 delete-channel=Archive&nbsp;channel
+enable-channel=Enable&nbsp;channel
 
 #listing.html
 turn-on-available-now=Whan activated, You can use simple chat box to communicate with your customers. And customers can create sessions for avaiable channel instantly. You will receive notification when new instant session will be created.
@@ -730,6 +736,7 @@ available-activated=Available Now
 reviews=Reviews
 create-event=New session
 request-event=Schedule session
+archived=Archived
 
 #main.html
 online-users=Online Users

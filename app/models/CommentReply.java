@@ -2,7 +2,6 @@ package models;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -16,7 +15,7 @@ public class CommentReply extends Model
 {
     public Date created;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     public User user;
 
     @Column(length = 600)

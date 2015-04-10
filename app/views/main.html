@@ -8,13 +8,13 @@
         <title>#{get 'title' /}</title>
         
         <!-- facebook meta tags -->
-        <meta name="viewport" content="width=100,initial-scale=1, maximum-scale=1, minimum-scale=1"/>
 		<meta class="fb-app-id" property="fb:app_id" content="117287758301883" /> 
 		<meta class="fb-meta-title" property="og:title" content="widgr" /> 
 		<meta class="fb-meta-description" property="og:description" content="widgr - share your knowledge" /> 
+		#{get 'fbmeta' /}  
 		<meta class="fb-meta-image" property="og:image" content="${request.base}/public/images/logo.jpg" />  
-		<meta name="description" content="iDea a Bootstrap-based, Responsive HTML5 Template">
-		<meta name="author" content="htmlcoder.html">
+
+        <meta name="viewport" content="width=100,initial-scale=1, maximum-scale=1, minimum-scale=1"/>
 
 		<!-- Mobile Meta -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -177,7 +177,6 @@
 		<!-- page wrapper start -->
 		<!-- ================ -->
 		<div class="page-wrapper">
-			#{include 'header.html' /}
 
 			<!-- facebook header -->
 			#{if session && session.facebookTab && user}
@@ -206,7 +205,9 @@
 											<label>&nbsp;&nbsp;&nbsp; &{'select-channel'}</label>
 											<select name="channel" class="form-control" style="width:200px">
 												#{list items:listings, as:'item'}
+													#{if item.deleted == null}
 													<option value="${item.uuid}">${item.title}</option>
+													#{/if}
 												#{/list}
 											</select>
 										</div>
@@ -222,6 +223,8 @@
 			</div>
 			#{/if}
 			<!-- facebook header -->
+			
+			#{include 'header.html' /}
 			
 			<!-- Chat box -->
 			#{if (listing != null && listing.user.isAvailable()) || (usr != null && usr.isAvailable())}

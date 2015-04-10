@@ -49,7 +49,7 @@ public class Contacts extends BaseController
     public static void contactInvite(String email)
     {
         checkAuthenticity();
-        User user = getLoggedUser();
+        User user = getLoggedUserNotCache();
         User u = User.getUserByLogin(email);
 
         validation.email(email);

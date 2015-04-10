@@ -126,7 +126,7 @@
 
 			<a class="btn btn-light-gray btn-social margin-clear" href="" rel="tooltip" data-original-title="&{'website-embed'}" data-toggle="modal" data-target="#embedModal"><i class="fa fa-code"></i></a>
 		
-			#{if user.isPublisher() && listing.type != 'instant'}
+			#{if user.isPublisher() && listing.type != 'instant' && listing.deleted == null}
 				<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&#{token /}&listingId=${listing.uuid}" class="btn btn-light-gray btn-social margin-clear" rel="tooltip" data-original-title="&{'add-event'}">
 					<i class="fa fa-plus"></i>
 				</a>
@@ -134,9 +134,16 @@
 			<a href="/channel/${listing.uuid}?action=edit&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-social margin-clear" rel="tooltip" data-original-title="&{'edit-channel'}">
 				<i class="fa fa-pencil fa-1x"></i>
 			</a>
-			<a href="/channel-delete?uuid=${listing.uuid}&#{token /}" class="btn btn-light-gray btn-social margin-clear" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}" rel="tooltip" data-original-title="&{'delete-channel'}">
-				<i class="fa fa-times"></i>
-			</a>
+			#{if listing.deleted}
+				<a href="/channel-enable?uuid=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-gray btn-social margin-clear" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}" rel="tooltip" data-original-title="&{'enable-channel'}">
+					<i class="fa fa-check"></i>
+				</a>
+			#{/if}
+			#{else}
+				<a href="/channel-delete?uuid=${listing.uuid}&#{token /}" class="btn btn-light-gray btn-social margin-clear" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}" rel="tooltip" data-original-title="&{'delete-channel'}">
+					<i class="fa fa-times"></i>
+				</a>
+			#{/else}
 		#{/if}
 		
 		

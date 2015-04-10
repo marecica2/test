@@ -35,10 +35,10 @@ public class Comment extends Model
     public Date created;
     public Date updated;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     public User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     public Event event;
 
     @ManyToOne

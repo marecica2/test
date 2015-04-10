@@ -35,6 +35,7 @@ GET   	/google-oauth							GoogleOauth.callback
 GET 	/channel/{uuid}							Listings.listing
 POST	/channel/{uuid}							Listings.listingPost
 GET 	/channel-delete							Listings.deleteListing
+GET 	/channel-enable							Listings.enableListing
 GET     /channel-reset-image					Listings.resetImage
 GET     /channels-get							Listings.listingsRest
 GET     /channels/tags							Listings.tagsRest

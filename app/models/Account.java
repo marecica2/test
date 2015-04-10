@@ -30,6 +30,7 @@ public class Account extends Model
     public String currency;
     public String paypalAccount;
     public Date requestTime;
+    public Date created;
 
     public static Account get(String key)
     {

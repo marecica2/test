@@ -4,10 +4,6 @@
 
 			<!-- Title and User part -->
 			<div style="margin:0px;width:100%; max-width:1000px;padding:20px; color:white; background-color: ${color4}">
-				<div style="width:100%; text-align:center">
-					<img src="${logo_footer}" alt="widgr">
-				</div>				
-				
 				<table style="border-collapse: collapse; width:100%">
 					<tr>
 						#if($user)
