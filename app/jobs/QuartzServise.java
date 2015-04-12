@@ -66,7 +66,7 @@ public class QuartzServise extends Job
             JobDetail job = JobBuilder.newJob(QuartzEventNotificationJob.class).withIdentity(attendance.uuid, EVENT_NOTIFICATION_GROUP).build();
 
             User recipient = attendance.isForUser ? attendance.user : attendance.customer;
-            if (recipient.reminder != null && recipient.reminder && recipient.reminderMinutes != null)
+            if (recipient != null && recipient.reminder != null && recipient.reminder && recipient.reminderMinutes != null)
             {
                 Date scheduledTime = new Date(attendance.event.eventStart.getTime() - (1000 * 60 * recipient.reminderMinutes));
                 Logger.info("Notification is scheduled for event " + attendance.event.listing.title + " for " + recipient.login + " " + scheduledTime);

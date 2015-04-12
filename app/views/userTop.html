@@ -68,7 +68,7 @@
 					#{if user && user.isPublisher()}
 						<li><i class="fa fa-bar-chart-o pr-5"></i><a href="/payments?sender=${usr.login}" class="">&{'payments-receivedPayments-for-this-user'} ${usr.firstName}</a></li>
 					#{/if}
-					<li><i class="fa fa-clock-o"></i>&{'timezone'} #{if usr.timezone < 0}+#{/if}${usr.timezone/-60}:00 &{'hrs'}</li>
+					<li><i class="fa fa-clock-o"></i>&{'timezone'} #{if usr.timezone < 0}+#{/if} ${usr.timezone/-60}:00 &{'hrs'}</li>
 				</ul>
 				<ul class="social-links light">
 					#{if usr.facebook}<li class="facebook"><a target="_blank" href="${usr.facebook}"><i class="fa fa-facebook"></i></a></li>#{/if}

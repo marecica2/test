@@ -16,11 +16,11 @@
 						#end
 						<td style="width: 100%; vertical-align:middle; font-family: Arial, Helvetica;font-size:1.3em;">
 							#if($user)
-								<h3>${user} &nbsp;<a href="${userUrl}" style="color:white;font-size:10px;">${userUrlLabel}</a></h3>
+								<h3 style="color:white">${user} &nbsp;<a href="${userUrl}" style="color:white;font-size:10px;">${userUrlLabel}</a></h3>
 							#end
-							<h4 style="margin-top:0px;">${title}</h4>
+							<h4 style="color:white;margin-top:0px;">${title}</h4>
 							#if($event)
-								<span style="font-family: Arial, Helvetica;font-size:14px;">${eventDate} ${eventStart} - ${eventEnd}</span>
+								<span style="color:white; font-family: Arial, Helvetica;font-size:14px;">${eventDate} ${eventStart} - ${eventEnd}</span>
 								<a href="${eventUrl}" style="color:white;font-size:10px;font-family: Arial, Helvetica">${userUrlLabel}</a>
 							#end					
 						</td>

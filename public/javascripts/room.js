@@ -122,7 +122,7 @@ if(webrtc != null){
              if($(".user-elm").length <= 1)
                  $('#myModal').modal({show:true});
              clearInterval(stopInterval);
-         }, 5000);
+         }, 15000);
          
          // camera on off
          $("#controls-camera").click(function(){

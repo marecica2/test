@@ -1,11 +1,11 @@
 #{list items:items, as:'item'}
 #{if item.deleted == null || (user != null && user.uuid == item.user.uuid) }
-<div class="shadow-blur anchorLink" data-href="/channel/${item.uuid}" style="#{if item.deleted}opacity:0.4#{/if}; cursor:pointer;text-align:left;width:100% background: #fafafa; width:100%; margin:0 0 20px 0;">
+<div class="shadow-blur anchorlink" data-href="/channel/${item.uuid}" style="#{if item.deleted}opacity:0.4#{/if}; cursor:pointer;text-align:left;width:100% background: #fafafa; width:100%; margin:0 0 20px 0;">
 	<div>
-   		<div class="listing-item-top" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
+   		<div class="listing-item-top shadow-inset-2" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
    		</div>
 
-   		<div class="listing-item" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
+   		<div class="listing-item shadow-inset-2" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
    		</div>
    		
    		<div class="listing-item-right" style="background: #fafafa">

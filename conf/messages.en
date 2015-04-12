@@ -2,7 +2,7 @@
 invalid-value=Invalid value
 error-default-message=Something went wrong. Exception has been logged. Try again.
 you-need-at-least-one-listing=To become a Publisher You need at least one channel. <a href="/channel/new?action=edit&new=true">Click here to create one</a>
-please-fill-in-information-about-you=To become a Publisher please fill in information about you
+please-fill-in-information-about-you=To become a Publisher please fill in information <a href="/settings?edit=true#about">about you</a>
 your-publisher-request-was-submited=Your publisher request has been submitted. Please give us some time to validate your request. After completing validation you will be notified by email.
 #Admin.java
 publisher-request-approved-subject=Your request for publisher has been approved
@@ -318,6 +318,7 @@ paypal-refund-desc=By default you cannot use Widgr to make refundations to your 
 account.currency=Default currency
 currency=Currency
 save=Save
+about-you=About you
 about-you-section=Edit about you section
 about-you-section-info=This section is displayed in your profile and every channel
 working-hours-info=Here you can specify when you are avaible for scheduling sessions
@@ -482,7 +483,7 @@ feature31=No fixed monthly fees
 feature32=Easy payments with PayPal
 feature33=Mobile friendly
 
-what-is=What is
+what-is=What is Widgr Marketplace?
 good-for=good for
 find-help=Search help
 find-help-message=With Widgr you can get help anytime from people with expertise across a range of topics. Teachers, computer experts, home repair specialists, personal trainers, hobby enthusiasts, and more. No matter who you are, no matter where you are and no matter what time it is, with Widgr you are just few click away from getting help.
@@ -491,9 +492,11 @@ get-help=Get help
 get-help-message=You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. While some Publishers offer free sessions, some may be charged. For those just simply use your PayPal to pay securely and fast. 
 get-paid=Get paid
 get-paid-message=When you know something what might be useful for others you can become a Widgr Publisher. Widgr will provide you a simple platform which will help you to connect to your customers. All you need is just PayPal account for receiving payments, and you are ready to start your business
-you-are-on-the-right-place=Instant video call
+instant-video-calls=Instant video calls
+anonymous-peers-no-plugins=Anonymous. Peer-to-peer. No plugins, signup, or payment required.
 start-now=Start now
-fill-in-quick-registration-and-start-using-widgr=Anonymous. Peer-to-peer. No plugins, signup, or payment required.
+you-are-on-the-right-place=Join us, it's free
+fill-in-quick-registration-and-start-using-widgr=Just fill in quick registration and start using Widgr now!
 channels-by-category=Channels by category
 view-all=View all
 group-video-chat=GROUP VIDEO CHAT

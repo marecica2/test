@@ -39,8 +39,10 @@ public class Listings extends BaseController
         final Listing listing = Listing.get(uuid);
         final Boolean isOwner = listing != null ? listing.user.equals(user) : false;
 
-        if ((!isNew && listing == null) || (listing != null && listing.deleted != null && !isOwner))
+        if ((!isNew && listing == null) || (listing != null && listing.deleted != null && listing.deleted && !isOwner))
+        {
             notFound();
+        }
 
         final List<Listing> listings = listing != null ? Listing.getForUser(listing.user) : null;
         final Boolean fromEvent = false;
