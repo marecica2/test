@@ -168,6 +168,17 @@
 			"pattern-1 ... pattern-9": background patterns for boxed layout mode e.g. <body class="boxed pattern-1"> 
 	-->
 	<body class="wide *{pattern-8}* ${switcherBody}" style="background: black">
+	
+<script type="application/ld+json">
+{ "@context" : "http://schema.org",
+  "@type" : "Organization",
+  "url" : "http://wid.gr",
+  "contactPoint" : [
+    { "@type" : "ContactPoint",
+      "url" : "https://wid.gr/contact-us",
+      "contactType" : "Customer service"
+    } ] }
+</script>	
 
 		<!-- scrollToTop -->
 		<!-- ================ -->
@@ -267,9 +278,11 @@
 						<div class="row">
 							<div class="col-md-12">
 								
-								#{if user && request.cookies.msgPublisher == null}
+								#{if user && request.cookies.msgPublisher == null && !user.isPublisher()}
 									<div class="shadow alert alert-info alert-dismissible" role="alert">
+									*{
 									  <button type="button" class="close" data-dismiss="alert" onclick="star.utils.dismiss('msgPublisher')"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
+									}*
 									  &{'start-helping-others', session.getAuthenticityToken()}
 									</div>
 								#{/if}
@@ -458,11 +471,9 @@
 		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-		
 		  ga('create', 'UA-61807962-1', 'auto');
 		  ga('send', 'pageview');
-		
-		</script>        
+		</script>    
         
         #{get 'moreHtml' /}
 	</body>

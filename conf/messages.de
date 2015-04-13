@@ -434,6 +434,8 @@ business=Unternehmen
 electronics=Elektronik
 education=Bildung
 health=Lifestyle & Gesundheit
+food=Cooking
+fashion=Fashion
 art=Art & Music
 sport=Sport
 household=Haushalt, Garten, Heimwerken
@@ -581,7 +583,8 @@ share-your-screen=Starten Sie Ihre Bildschirm (Chrom nur)
 refresh=Reload Anruf
 hang-up=End&nbsp;Anruf
                                               
-#header.html                                                    
+#header.html
+sitemap=Sitemap                                                    
 your-sessions=Mein Terminkalender
 session-approval=Angeforderte Sitzungen
 waiting-for-approvement=Session angefordert

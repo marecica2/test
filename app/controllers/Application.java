@@ -198,6 +198,18 @@ public class Application extends BaseController
         render(user);
     }
 
+    public static void sitemap()
+    {
+        final User user = getLoggedUser();
+        render(user);
+    }
+
+    public static void sitemapXml()
+    {
+        response.setContentTypeIfNotSet("application/xml");
+        render();
+    }
+
     public static void home()
     {
         final User user = getLoggedUser();
