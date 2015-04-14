@@ -427,6 +427,7 @@ decline=Reject
 delete=Delete
 
 #channels.html
+search-title=Search available sessions
 by-availability=Sort by availability
 search-channels=Search channels
 search-string=Search
@@ -471,6 +472,7 @@ no-listings=You have not created any channel yet
 msgMedia-msg=<h4>Media library</h4>On this page you can manage all your uploaded files.
 
 #home.html
+home-title=Widgr - share your knowledge. Instant video calls - Screen sharing - No installation. Widgr marketplace - Online tutoring - search help - get help - get paid for helping others
 register=Register Now
 for-customers=<strong>widgr</strong> for Customers
 for-publishers=<strong>widgr</strong> for Publishers

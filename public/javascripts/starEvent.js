@@ -17,7 +17,7 @@ star.moreComments = function(params, dashboard){
 
 star.loadComments = function(params, dashboard){
     star.comments = {};
-    star.comments.size = 8;
+    star.comments.size = 9;
     star.comments.first = 0;
     star.comments.count = star.comments.size;
     
@@ -157,7 +157,7 @@ star.renderComments = function(data, dashboard){
 star.initItems = function(prefix, urlParams){
     $(document).ready(function(){
         star[prefix] = {};
-        star[prefix].size = 8;
+        star[prefix].size = 9;
         star[prefix].first = 0;
         star[prefix].count = star[prefix].size;
 

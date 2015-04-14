@@ -425,7 +425,8 @@ approve=Genehmigen
 decline=Ablehnen
 delete=Löschen
                                               
-#channels.html                                                        
+#channels.html
+search-title=Search available sessions                                                        
 by-availability=Sortieren nach Verfügbarkeit
 search-channels=Suchen nach Kanälen
 search-string=Suchen
@@ -469,7 +470,8 @@ no-listings=Sie haben kein Kanal erzeugt noch
 #media.html                                                         
 msgMedia-msg=<H4> Mediathek </ h4> Auf dieser Seite können Sie alle Ihre hochgeladenen Dateien zu verwalten.
                                               
-#home.html                                                         
+#home.html
+home-title=Widgr - share your knowledge. Instant video calls - Screen sharing - no installation.                                                          
 register=Jetzt registrieren
 for-customers=<Strong> widgr </ strong> für Kunden
 for-publishers=<Strong> widgr </ strong> für Verlage

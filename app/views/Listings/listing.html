@@ -2,6 +2,12 @@
 #{set 'title'}
 	#{if listing} ${listing.title} #{/if} #{if event} - ${event.eventStart.format("dd MMM")} #{time time:event.eventStart/} #{/if}
 #{/set}
+#{set 'meta'}
+	#{if listing} 
+		<meta class="meta-title" property="title" content="${listing.title}" />  
+		<meta class="meta-description" property="description" content="${listing.description}" />  
+	#{/if}
+#{/set}
 
 #{set 'moreScripts'}
 	<script>
