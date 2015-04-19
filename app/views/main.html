@@ -171,15 +171,18 @@
 	<body class="wide *{pattern-8}* ${switcherBody}" style="background: black">
 	
 <script type="application/ld+json">
-{ "@context" : "http://schema.org",
-  "@type" : "Organization",
-  "url" : "http://wid.gr",
-  "contactPoint" : [
-    { "@type" : "ContactPoint",
-      "url" : "https://wid.gr/contact-us",
-      "contactType" : "Customer service"
-    } ] }
+{ 
+	"@context" : "http://schema.org",
+  	"@type" : "WebSite",
+  	"url" : "http://wid.gr",
+   	"potentialAction": {
+     	"@type": "SearchAction",
+     	"target": "https://wid.gr/search?q={search_term_string}",
+     	"query-input": "required name=search_term_string"
+   	}
+}
 </script>	
+
 
 		<!-- scrollToTop -->
 		<!-- ================ -->
