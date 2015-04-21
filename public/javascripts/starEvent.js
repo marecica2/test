@@ -155,52 +155,56 @@ star.renderComments = function(data, dashboard){
 }
 
 star.initItems = function(prefix, urlParams){
-    $(document).ready(function(){
-        star[prefix] = {};
-        star[prefix].size = 9;
-        star[prefix].first = 0;
-        star[prefix].count = star[prefix].size;
-
-        // initial get elements
-        var url = "first="+star[prefix].first+"&count="+star[prefix].count+urlParams;
-        var params = {};
-        params.url = url;
-        params.prefix = prefix;
-        $("#moreResults"+prefix).hide();
-
-        starServices.getItems(prefix, params, function(data){
+    if($("#itemsList"+prefix).get(0)){
+        $(document).ready(function(){
+            star[prefix] = {};
+            star[prefix].size = 9;
+            star[prefix].first = 0;
+            star[prefix].count = star[prefix].size;
+    
+            $("#itemsList"+prefix).html("");
+            
+            // initial get elements
+            var url = "first="+star[prefix].first+"&count="+star[prefix].count+urlParams;
+            var params = {};
+            params.url = url;
+            params.prefix = prefix;
             $("#moreResults"+prefix).hide();
-            $("#spinner"+prefix).show();
-            var html = star.renderItems(data, prefix);
-            var f = function(html){
-                $("#spinner"+prefix).hide();
-                $(html).hide().appendTo($("#itemsList"+prefix)).fadeIn(500);
-                $("#moreResults"+prefix).show();
-                if(typeof FB !== "undefined")
-                    FB.Canvas.setSize();
-            }
-            f(html);
-        });
-
-        // append elements        
-        //$(window).unbind('scroll');
-        $(window).scroll(function() {
-            var diff = Math.abs($(window).scrollTop() - ($(document).height() - $(window).height()));
-            if(diff < 1) {
-                $("#moreResults"+prefix).click();              
-            }
-       }); 
-        
-       // event handlers
-       $("#moreResults"+prefix).off();
-       $("#moreResults"+prefix).click(function(){
-           star[prefix].first += star[prefix].size;
-           var url = "first="+star[prefix].first+"&count="+star[prefix].count+urlParams;
-           params.url = url;
-           star.loadItems(prefix, params);                  
-       });
-
-    });    
+    
+            starServices.getItems(prefix, params, function(data){
+                $("#moreResults"+prefix).hide();
+                $("#spinner"+prefix).show();
+                var html = star.renderItems(data, prefix);
+                var f = function(html){
+                    $("#spinner"+prefix).hide();
+                    $(html).hide().appendTo($("#itemsList"+prefix)).fadeIn(500);
+                    $("#moreResults"+prefix).show();
+                    if(typeof FB !== "undefined")
+                        FB.Canvas.setSize();
+                }
+                f(html);
+            });
+    
+            // append elements        
+            //$(window).unbind('scroll');
+            $(window).scroll(function() {
+                var diff = Math.abs($(window).scrollTop() - ($(document).height() - $(window).height()));
+                if(diff < 1) {
+                    $("#moreResults"+prefix).click();              
+                }
+           }); 
+            
+           // event handlers
+           $("#moreResults"+prefix).off();
+           $("#moreResults"+prefix).click(function(){
+               star[prefix].first += star[prefix].size;
+               var url = "first="+star[prefix].first+"&count="+star[prefix].count+urlParams;
+               params.url = url;
+               star.loadItems(prefix, params);                  
+           });
+    
+        });    
+    }
 };
 
 star.loadItems = function(prefix, urlParams){

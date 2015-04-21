@@ -8,6 +8,7 @@ import models.User;
 import play.Logger;
 import play.Play;
 import play.cache.Cache;
+import play.i18n.Lang;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Http.Header;
@@ -44,6 +45,14 @@ public class BaseController extends Controller
     public static String CONFIG_PAYPAL_ADAPTIVE_OPTIONS_URL = "star.configuration.paypal.adaptive.options.url";
     public static String CONFIG_PAYPAL_ADAPTIVE_DETAILS_URL = "star.configuration.paypal.adaptive.details.url";
     public static String CONFIG_PAYPAL_ADAPTIVE_REFUND_URL = "star.configuration.paypal.adaptive.refund.url";
+
+    public static boolean changeLocale()
+    {
+        String locale = request.params.get("locale");
+        if (locale != null)
+            Lang.change(locale);
+        return true;
+    }
 
     public static void redirectTo(String url)
     {

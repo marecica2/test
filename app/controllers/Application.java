@@ -36,6 +36,8 @@ public class Application extends BaseController
 
     public static void about()
     {
+        changeLocale();
+
         final User user = getLoggedUser();
         String uuid = RandomUtil.getUUID();
         params.put("uuid", uuid);
@@ -45,6 +47,8 @@ public class Application extends BaseController
 
     public static void contact(String id)
     {
+        changeLocale();
+
         final User user = getLoggedUser();
         final String uuid = RandomUtil.getUUID();
         final User usr = id != null ? User.getUserByLogin(id) : null;
@@ -96,7 +100,7 @@ public class Application extends BaseController
                 EmailNotificationBuilder eb = new EmailNotificationBuilder();
                 eb.setTo(recipient);
                 eb.setFrom(user)
-                        .setSubject(Messages.getMessage(recipient.locale, "somebody-wrote-you"))
+                        .setSubject(subject)
                         .setMessageWiki(body)
                         .send();
             }
@@ -212,31 +216,30 @@ public class Application extends BaseController
 
     public static void home()
     {
+        changeLocale();
+
         final User user = getLoggedUser();
-        Map<String, Object> ratings = initRatings();
-        render(user, ratings);
+        List<Listing> listings = Listing.getRandom(5);
+        System.err.println(listings);
+        String baseUrl = getBaseUrl();
+        render(user, listings, baseUrl);
     }
 
-    private static Map<String, Object> initRatings()
-    {
-        Map<String, Object> ratings = (Map<String, Object>) Cache.get("ratings");
-
-        //TODO update this condition
-        if (ratings == null || true)
-        {
-
-        }
-        return ratings;
-    }
-
-    //    public static void autocomplete(String query)
+    //    private static Map<String, Object> initRatings()
     //    {
-    //        List<String> result = Search.tags(query.toLowerCase());
-    //        renderJSON(result);
+    //        Map<String, Object> ratings = (Map<String, Object>) Cache.get("ratings");
+    //
+    //        //TODO update this condition
+    //        if (ratings == null || true)
+    //        {
+    //
+    //        }
+    //        return ratings;
     //    }
 
     public static void channels()
     {
+        changeLocale();
         final User user = getLoggedUser();
         render(user);
     }
@@ -268,6 +271,7 @@ public class Application extends BaseController
         if (user == null)
             home();
 
+        final Boolean displayHidden = true;
         final Boolean isOwner = true;
         final Boolean dashboard = true;
         final List<Contact> contacts = Contact.getContacts(user);
@@ -276,7 +280,7 @@ public class Application extends BaseController
         boolean displayMsg1 = false;
         if (!user.isPublisher())
             displayMsg1 = true;
-        render(user, listings, isOwner, contacts, dashboard, displayMsg1);
+        render(user, listings, isOwner, contacts, dashboard, displayMsg1, displayHidden);
     }
 
     public static void approvements()
@@ -319,6 +323,8 @@ public class Application extends BaseController
 
     public static void userProfile(String userLogin)
     {
+        changeLocale();
+
         final User user = getLoggedUser();
         final User usr = User.getUserByLogin(userLogin);
         final boolean userProfile = true;

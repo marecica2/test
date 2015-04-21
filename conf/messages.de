@@ -1,25 +1,24 @@
 #Accounts.java                                                   
 invalid-value=Ungültiger Wert
-error-default-message=Da lief was falsch. Ausnahme wurde anmeldet. Versuchen Sie es wieder.
-you-need-at-least-one-listing=Um ein Publisher werden müssen Sie  mindestens einen Kanal erstellen. <a href="/channel/new?action=edit&new=true"> Klicken Sie hier um eine </a> erstellen
-please-fill-in-information-about-you=Um ein Publisher werden Sie in Informationen über Sie zu füllen
-your-publisher-request-was-submited=Ihr Publisher Anfrage wurde abgeschickt. Lassen Sie uns etwas Zeit, um Ihre Anfrage zu bestätigen. Nach Abschluss der Überprüfung werden Sie per E-Mail benachrichtigt.
+error-default-message=Da ging etwas schief. Ausnahme wurde gespeichert.
+you-need-at-least-one-listing=Um ein Publisher werden müssen Sie  mindestens einen Kanal erstellen.<a href="/channel/new?action=edit&new=true"> Klicken Sie hier um eine erstellen</a>
+please-fill-in-information-about-you=Um ein Publisher müssen Sie in Informationen über Sie zu füllen.
+your-publisher-request-was-submited==Ihre Anbieter-Anfrage wurde geschickt. Bitte geben Sie uns etwas Zeit, um Ihre Anfrage zu überprüfen. Nach Abschluss der Überprüfung werden Sie per e-Mail benachrichtigt werden.
 #Admin.java                                                          
-publisher-request-approved-subject=Ihre Anfrage für Herausgeber wurde genehmigt 
-publisher-request-approved-message=h3. Ihre Anfrage für Publisher genehmigt wurde \ nVon jetzt alle Ihre Kanäle zu sehen sind und Sie können vollen Gebrauch von Ihrem Konto zu machen.
-publisher-request-declined-subject=Ihre Anfrage für Publisher wurde abgelehnt 
-publisher-request-declined-message=h3. Ihre Anfrage für Publisher wurde abgelehnt \ nBitte füllen Ihre persönlichen Daten und Kanäle und erneut versuchen. Denken Sie daran, Sie können immer fragen Sie uns, was in Ordnung korrigiert werden, um später erfolgreich genehmigt. [Stellen Sie eine Frage |%s]
-event-reminder-subject=Erinnerung Sitzung %s
-event-reminder-message=h3. Erinnerung Sitzung %s \nDiese Mitteilung wurde gesendet daran erinnern, dass Session [%s|%sevent/%s] wird am %s gestartet. \nWenn Sie nicht möchten, dass diese Benachrichtigungen zu erhalten, melden Sie sich an und gehen Widgr Seite Einstellungen, um Benachrichtigungen zu deaktivieren.
+publisher-request-approved-subject=Ihre Anfrage für Anbieter wurde genehmigt 
+publisher-request-approved-message=h3. Ihre Anfrage für Publisher wurde genehmigt \ nVon jetzt sind alle Ihre Kanäle zum sehen und Sie können Ihr Anbieter-Konto nutzen.
+publisher-request-declined-subject=Ihre Anfrage für Anbieter wurde abgelehnt 
+publisher-request-declined-message=h3. Ihre Anfrage für Anbieter wurde abgelehnt \ nBitte füllen Ihre persönlichen und Kanäle Daten  und versuchen Sie es wieder. Denken Sie daran, dass Sie uns immer Fragen können was muss korrigiert werden, um später erfolgreich genehmigt werden. [Stellen Sie Uns eine Frage |%s]
+event-reminder-subject=Erinnerung für Sitzung %s
+event-reminder-message=h3. Benachrichtigung für Sitzung %s \nDiese Benachrichtigung wurde Ihnen gesendet um Sie benachrigtigen, dass Siztung [%s|%sevent/%s] startet um %s. \nWenn Sie möchten keine neue Benachrichtigungen zu erhalten, melden Sie sich im Widgr an und gehen zur Einstellungen um Benachrichtigungen zu deaktivieren.
                                               
 #Application.java                                                    
-start-helping-others=Beginnen Sie, anderen zu helfen und werden Sie ein Publisher. <a href='/settings/request-publisher?authenticityToken=%s'> Beantragen Sie für ein Publisher-Konto </a> oder lesen Sie <a href="/help#publisher"> weitere Informationen </a>.
-click-and-drag-to-create-event=Wählen Sie einen freien Zeitschlitz und beginnen Sie zu ziehen, um eine Anfrage für eine neue Sitzung erstellen. <br/> <span style = "opacity: 0,5>. Session identifiziert mit schwarzen Farbe bedeutet dieses Zeitfenster ist schon reserviert </ span>
-somebody-wrote-you=Jemand schrieb Dir eine Nachricht
+start-helping-others=<h4>Drei Schritte zu einem Anbieter werden.</h4> Zum einem Anbieter werden, führen Sie die folgen Sie diese Schritte oder <a href="/help#publisher"> sehen Sie ein video Tutorial</a>, <ul><li><a href="/settings?edit=true#about">Füllen Sie Informationen über Sie</a></li> <li><a href="/channel/new?action=edit&new=true"> Erstellen Sie Ihre erste Kanal</a></li>, <li><a href='/settings/request-publisher?authenticityToken=%s'> Klicken Sie hier für Anbieter-Konto zu beantragen</a></li></ul>
+click-and-drag-to-create-event=Wählen Sie eine freie Zeitfenster und beginnen Sie zu ziehen, um eine Anforderung für eine neue Sitzung zu erstellen. <br/> <span style='opacity:0.5'> Sitzung Markiewith solider schwarzer Farbe bedeutet, dass dieses Zeitfenster bereits reserviert ist.</span>
                                               
 #Attendances.java                                                
-blocked-contact=Dieser Kontakt ist gesperrt
-you-are-blocked=Kann nicht gesendet werden
+blocked-contact=Dieser Kontakt ist blockiert
+you-are-blocked=Dieser Kontat hat Sie blockiert
                                               
 #BaseController.java                                             
                                               
@@ -29,23 +28,23 @@ you-are-blocked=Kann nicht gesendet werden
                                               
 #Contacts.java                                                   
 invalid-email=Ungültige E-Mail-Adresse
-send-invitation=Einladung senden
+send-invitation=E-Mail Einladung senden
 is-already-registered=Kontakt %s ist bereits registriert. <a href='/user/%s'> Profil besuchen </a>
 invited-you-to-widgr-subject=%s eingeladen Sie auf Widgr beitreten
 invitation-sent-to=Einladung wurde erfolgreich auf %s gesendet
 view-on-widgr=Zum Kontakt
                                                                      
 #Events.java                                                         
-limit-reached=Sie haben das monatliche Limit bezahlt Sessions erreicht. <a href='/about#pricing'> Weitere Informationen </a>
+limit-reached=Sie haben die Monatslimite für bezahlte Sitzungen erreicht. <a href='/about#pricing'> erfahren Sie mehr</a>
 event-created=Session wurde erfolgreich erstellt.
 event-left=Session wurde erfolgreich erstellt.
 invalid-price=Ungültige Preis
-invalid-time-range=Ungültige Zeitbereich
-setup-PayPal-account-warning=Bezahlt Sitzung zu erstellen müssen Sie zunächst bis Ihr PayPal-Konto. <a href='/settings?edit=true#PayPal'> Set up Ihr ​​PayPal-Konto hier </a>
-you-have-not-paid-for-current-month=Sie können keine bezahlten Sitzungen. Ihr Abonnement ist nicht aktiviert. <a href='/settings'> Aktivieren Sie Ihr Abonnement ersten </a>
-invalid-PayPal-account-warning=Bezahlt Sitzung zu erstellen müssen Sie zunächst bis Ihr PayPal-Konto. <a href='/settings?edit=true#PayPal'> Set up Ihr ​​PayPal-Konto hier </a>
-new-event-proposed-for-channel-subject=New Sitzungsanforderung für Channel %s
-new-event-proposed-for-channel-message=h3. New Sitzungsanforderung \n%s angefordert neue Sitzung [%s|%s]. Besuchen Sie bitte den Link zu überprüfen und zu genehmigen oder diesen Antrag abzulehnen.
+invalid-time-range=Ungültige Zeitspanne
+setup-PayPal-account-warning=Um bezahlte Sitzungen zu erstellen müssen Sie zunächst Ihre PayPal-Konto eingeben. <a href='/settings?edit=true#PayPal'> Set up Ihr ​​PayPal-Konto hier </a>
+you-have-not-paid-for-current-month=Sie können nicht bezahlte Sitzungen erstellen. Ihr Abonnement ist nicht aktiviert. <a href='/settings'> Aktivieren Sie Ihr Abonnement zunächst</a>
+invalid-PayPal-account-warning=Um bezahlte Sitzung zu erstellen müssen Sie zuerst Ihr PayPal-Konto festlegen. <a href='/settings?edit=true#PayPal'>Richten Sie Ihr PayPal-Konto hier</a>
+new-event-proposed-for-channel-subject=Neue Sitzungsanforderung für Kanal %s
+new-event-proposed-for-channel-message=h3. New Sitzungsanforderung \n%s angefordert neue Sitzung [%s|%s]. Besuchen Sie bitte den Link zu genehmigen oder diesen Anforderung abzulehnen.
 you-have-been-invited-subject=Einladung für%s
 you-have-been-invited-message=h3. Einladung für %s \n%s Sie eingeladen, Kursen teilnehmen [%s|%s]
 your-proposal-declined-subject=Ihre Sitzung Antrag abgelehnt
@@ -58,31 +57,31 @@ new-event-request-message=h3. New Sitzungsanforderung \n%s angefordert neue Inst
 #FileuploadController.java                                    
                                               
 #GoogleOAuth.java                                             
-oauth-successfull=Google Calendar Genehmigung erfolgreich
-oauth-error=Google Calendar Autorisierung fehlgeschlagen
+oauth-successfull=Google Calendar Autorisierung erfolgreich
+oauth-error=Google Calendar Autorisierung unerfolgreich
                                               
 #Hangout.java                                                   
-please-rating-subject=Möchtest du eine Bewertung für besuchte Sitzung
-please-rating-message=Bitte helfen Sie anderen, indem sie eine Bewertung für das besuchte Sitzung entscheiden, [%s|%s]
+please-rating-subject=Bitte geben Sie eine Bewertung für besuchten Sitzung
+please-rating-message=Bitte helfen Sie anderen, indem man ein Rating für die besuchten Sitzung [%s|%s] entscheiden.
 invitation-to-video-call-subject=Einladung zur Videoanruf
-invitation-to-video-call-message=h3. %s eingeladen Sie Videoanruf. \n[Klicken Sie hier, um dieses Video Anruf teilnehmen |%s]
+invitation-to-video-call-message=h3. %s ladet Sie zur Videoanruf ein. \n[Klicken Sie hier, um dieses Videoanruf offnen |%s]
                                               
 #Listings.java                                                       
-invalid-channel-data=Ungültige Daten zur Verfügung gestellt. Bitte prüfen und korrigieren alle Eingänge.
+invalid-channel-data=Ungültige Daten. Bitte korrigieren  Sie alle Eingaben wieder.
                                               
 #Notifications.java                                                  
-message-sent-error=Nachricht wurde nicht gesendet, bitte korrigieren ersten Eingang
-message-sent-successfully=Nachricht wurde gesendet
+message-sent-error=Nachricht wurde nicht gesendet, bitte korrigieren Sie alle Eingaben.
+message-sent-successfully=Nachricht wurde erfolgreich gesendet
                                               
 #PaymentController.java                                              
-event-payment-completed-subject=New Bezahlung Sitzung %s erhalten
-event-payment-completed-message=h3. New empfangenen Zahlung für Sitzung %s \n%s gesendete Sie eine Zahlung für %s. [Hier klicken, um Sitzungsdetails öffnen |%s]
-event-refund-request-subject=Antrag auf Rückerstattung von %s
-event-refund-request-message=h3. Erstattungsantrag \n%s beantragte Erstattung für die Sitzungs [%s|%s]. \n h4. Sie können Rückerstattung durch [%sErhaltene Zahlungen Seite] erlassen. Geld zurückzuzahlen Nachricht von Kunden \n%s
-event-refunded-request-subject=Genehmigt Erstattungsantrag für Session%s
-event-refunded-request-message=h3. Genehmigt Erstattungsantrag für Session%s \nIhre Erstattungsantrag für die Sitzungs [%s |%s] wurde genehmigt.
-invalid-parameters-try-again=Fehlende Zahlung id, bitte wiederholen
-paypal-error=Eine Ausnahme ist aufgetreten, während der Bearbeitung Ihrer Zahlung. <B> Begründung: </ b>%s
+event-payment-completed-subject=Sie haben neue Bezahlung für Sitzung %s erhaltet
+event-payment-completed-message=h3. Neue Bezahlung für Sitzung %s erhaltet. \n%s schickte Ihnen eine Zahlung für %s. [Klicken Sie hier, um Sitzungsdetails öffnen. |%s]
+event-refund-request-subject=Rückzahlung Anfrage von %s
+event-refund-request-message=h3. Rückzahlung Anfrage \n%s bittet Sie für Rückzahlung für die Sitzung [%s|%s]. \n h4. Sie können Rückzahlung durch [%sErhaltene Zahlungen Seite] senden. Hinweis vom Kunden \n%s
+event-refunded-request-subject=Genehmigt Erstattungsantrag für Sitzung %s
+event-refunded-request-message=h3. Genehmigte Rückzahlung für Sitzung %s \nIhre Anforderung für Rückzahlung für Sitzung [%s |%s] wurde genehmigt.
+invalid-parameters-try-again=Fehlende Daten. Bitte korrigieren  Sie alle Eingaben wieder.
+paypal-error=Eine Ausnahme ist aufgetreten während der bearbeitung Ihrer Zahlung. <B> Grund: </ b>%s
                                               
 #Public.java                                                         
                                               
@@ -91,19 +90,19 @@ paypal-error=Eine Ausnahme ist aufgetreten, während der Bearbeitung Ihrer Zahlu
 #Registration.java                                                   
 user-not-exists=Benutzer existiert nicht
 invalid-captcha=Ungültige captcha
-invalid-value=Ungültiger Wert
-bad-characters=Ungültige Zeichen im Eingabe
-password-min-length=Das Passwort muss mindestens 6 Zeichen lang sein
+invalid-value=Ungültiger Daten
+bad-characters=Ungültige Zeichen in der Eingabe
+password-min-length=Passwort muss mindestens 6 Zeichen lang sein
 password-reset-subject=Ihr Passwort wurde zurückgesetzt
-password-reset-message=h3. Ihr Passwort wurde zurückgesetzt \nNeue Passwort: *%s * \nEs ist sehr zu empfehlen [ändern Sie es sofort |%s]
+password-reset-message=h3. Ihr Passwort wurde zurückgesetzt \nNeue Passwort: *%s * \nEs wird dringend empfohlen, [es sofort zu ändern|%s]
 password-message=Passwort wurde zurückgesetzt. Überprüfen Sie nun Ihre E-Mail.
-login-already-used=Dieses Konto ist bereits vorhanden
-account-activation-subject=Ihr Konto erstellt wurde
-account-activation-message=h3. Willkommen bei Widgr! \nyou sind fast da! Bitte klicken Sie auf den Link unten an deine Widgr Konto zu bestätigen. \n [Kontoaktivierungslink |%sregistration / aktivieren uuid =%s?] \nHier gibt ein paar Dinge, um Ihnen den Einstieg erleichtern Breite Widgr: \n * [So Widgr verwenden |%shelp # Kunden] \n * [How einen Publisher zu werden |%shelp # Herausgeber] \n * [Wie Sie Ihr Konto verbinden Mit Facebook |%shelp # facebook] \n * [So Widgr Sitzungen mit Google Calendar synchronisieren |%shelp # google] \n * [How Einrichten PayPal-Zahlungen für Verlage |%shelp # PayPal]
-check-out-your-email-for-activating=Anmeldung erfolgreich! Schauen Sie sich Ihre E-Mail für die Aktivierung dieses Konto. <Strong> Bitte überprüfen Sie Junk-Ordner und </ strong>
+login-already-used=Konto %s ist bereits besetzt
+account-activation-subject=Aktivieren Sie Ihr Konto
+account-activation-message=h3. Willkommen bei Widgr! \n Sie sind fast am Ziel! Bitte klicken Sie auf den Link unten, um Ihr Konto zu bestätigen. \n [Konto aktivierungs link|%sregistration/activate?uuid=%s]
+check-out-your-email-for-activating=Registrierung erfolgreich! Schauen Sie sich Ihre e-Mails für dieses Konto zu aktivieren. <strong>Bitte überprüfen Sie auch die Junk-Mail Ordner</strong>
 account.activated-subject=Willkommen bei Widgr!
-account.activated-message=h3. Willkommen bei Widgr! \nIhre Konto wurde erfolgreich aktiviert. \nHier gibt ein paar Dinge, um Ihnen den Einstieg erleichtern Breite Widgr: \n * [So Widgr verwenden |%shelp # Kunden] \n * [Wie man einen Publisher zu werden |%shelp # Herausgeber] \n * [Anschließen Ihr Konto mit Facebook |%shelp # facebook] \n * [So Widgr Sitzungen mit Google Calendar synchronisieren |%shelp # google] \n * [Wie Einrichten von PayPal-Zahlungen für Verlage |%shelp # PayPal] \n * [ und mehr ... |%shelp]
-account-successfully-activated=Ihr Benutzerkonto wurde erfolgreich aktiviert
+account.activated-message=h3. Willkommen bei Widgr! \nIhre Konto [%s|%suser/%s] wurde erfolgreich aktiviert. Hier sind ein paar Dinge zu Ihnen mit Widgr beginnen:\n* [Wie für eine Sitzung anfordern|%shelp#request-session] \n* [Wie für ein Publisher-Konto anfordern|%shelp#publisher]\n* [Wie können Sie Ihr Konto mit Facebook verbinden|%shelp#facebook]\n* [Wie können Sie PayPal-Zahlungen für Verlage einrichten|%shelp#paypal] \n* [Wie Sie Ihre Sitzungen mit Google Kalender synchronisieren|%shelp#calendar] \n* [und mehr ...|%shelp]
+account-successfully-activated=Ihr Konto wurde erfolgreich aktiviert
                                               
 #Secure.java                                                         
 incorrect-login-or-password=Ungültige Anmeldeinformationen
@@ -186,16 +185,16 @@ you-have-been-logged-out=Sie wurden abgemeldet
 #Extensions.java                                                     
                                               
 #VelocityTemplate.java                                               
-you-have-been-invited-to-widgr=%s, Sie eingeladen, Widgr beitreten
-you-have-been-invited-to-event=Sie eingeladen, Sitzung beitreten%s
-regards-html=<br/> Mit Grüßen, Ihr <br/> Widgr Team
-regards=\n \nMit Grüße, \nIhr Widgr Team
-email-what-is-widgr=<H3> Was ist Widgr </ h3> Mit Widgr können Sie jederzeit Hilfe bekommen von Menschen mit Know-how in einer Reihe von Themen -?. Lehrer, Berater, Ärzte, Haus-Reparatur-Spezialisten, Personal Trainer, Hobby-Enthusiasten, und <br / > Sie können wählen, die Hilfe von auf der Grundlage Qualifikationen, Verfügbarkeit, Bewertungen und Beurteilungen erhalten. Außerdem können Sie wählen, um sofort oder planen Sie eine Tagung für später zu bekommen. <br/> Füllen Sie einfach einfache Registrierung und starten Sie mit Widgr auch heute noch. <a href='%sabout'> Erfahren Sie mehr über Widgr </a>
-email-footer=<H4> <strong> Wie erkenne ich, dies ist nicht eine gefälschte E-Mail </ strong> </ h4> <p style = "font-family: Arial, Helvetica; font-size: 12px">? Bitte beachten Sie, dass die E-Mail wirklich aus Widgr werden Sie nie nach sensiblen Informationen wie Ihr Passwort ein. Eine E-Mail, die dringend gebeten werden, sensible persönliche Informationen zu liefern in der Regel ein Betrugsversuch. Denken Sie daran, keine Links in E-Mails verdächtig aussehende klicken. </ P>
+you-have-been-invited-to-widgr=%s hat Sie zum Widgr eingeladet
+you-have-been-invited-to-event=hat Sie zur Sitzung %s eingeladet
+regards-html=<br/> Mit Grüßen, <br/> Widgr Team
+regards=\n\n Mit Grüße,\n Widgr Team
+email-what-is-widgr=<h3> Was ist Widgr?</h3> Mit Widgr können Sie jederzeit Hilfe von Experten in einem Spektrum von verschiedene Themen finden. Lehrer, Beratern, Ärzte, Heim-Reparatur-Spezialisten, Sport trainer, Hobby-Enthusiasten und mehr. <br/> Sie können wählen, ob Sie Hilfe von je nach Qualifikation, Verfügbarkeit, Bewertungen und Beurteilungen erhalten. Außerdem können Sie auch wählen ob, Sie die Hilfe sofort nehmen oder Sie planen eine Sitzung für später. <br/> Füllen Sie einfach einfache Registrierung und starten Sie mit Widgr noch heute. <a href='%sabout'>Erfahren Sie mehr über Widgr</a>
+email-footer=<h4> strong> Wie erkenne ich, dies ist nicht eine gefälschte E-Mail?</strong></h4> <p style="font-family: Arial, Helvetica; font-size: 12px">Bitte bittet beachten Sie, die e-Mail wirklich von Widgr fragt Sie nie um vertrauliche Daten wie Passwort ein. Eine Email, die dringend bittet Sie sensiblen persönlichen Daten angeben, ist in der Regel ein Betrugversuch. Denken Sie daran, keine verdächtig aussehende Links in E-Mail klicken.</p>
 register-now=Jetzt registrieren
 security=Datenschutz & Sicherheit
 help=Hilfe
-contact=In Kontakt Treten
+contact=Kontaktieren Sie uns
                                               
 #Constants.java                                                    
                                               
@@ -222,107 +221,100 @@ contact=In Kontakt Treten
 #WikiUtils.java                                                    
                                               
 #account.html                                                      
-connected-to=verbunden
+connected-to=verbunden mit
 change-profile-picture=Profilbild ändern 
-reminder-minutes=Benachrichtigen Sie mich
-reminder-minutes-desc=Minuten vor meiner Session beginnt
-reminder=Session Benachrichtigungen
-reminder-help=Aktivieren oder Deaktivieren von E-Mail-Benachrichtigung, bevor Session beginnt
+reminder-minutes=Benachrichtige mich in
+reminder-minutes-desc=Minuten vor meiner Sitzung beginnt
+reminder=Sitzungs Benachrichtigungen
+reminder-help=Aktivieren oder Deaktivieren E-Mail-Benachrichtigung, bevor Sitzung beginnt
 default-currency=Standardwährung
 google-calendar-id=Google Kalender-ID
 valid-to=Gültig bis
 events-left=Sessions zum aktuellen Abrechnungszeitraum links
 paypal-account=PayPal Konto
-paypal-info=Ihr PayPal Konto, eingehende Zahlungen bezahlt Sitzungen erhalten. Es muss ein verifizierter Geschäfts oder Premium PayPal-Konto
+paypal-info=Ihr PayPal-Konto für erhalten Zahlungen für kostenpflichtige Sitzungen. Es muss ein verifizierter Business oder Premium PayPal-Konto
 true=Aktiviert
-false=Behindert
+false=Deaktiviert
 learn-more=Mehr erfahren
 learn-more-about-pricing=Erfahren Sie mehr über Preise
-cancel-subscription=Abo kündigen
+cancel-subscription=Abonnement abbrechen
 upgrade-to-plan=Upgrade zu planen
 per-month=pro monat
 account-will-be-valid=Account Plan
 account-will-be-valid-2=aus angewendet werden
 your-subscription-not-activated=Ihr Abonnement für Plan%s ist noch nicht aktiviert. Um Ihr Abonnement zu aktivieren, gehen Sie bitte mit PayPal
 standard=Standard
-publisher=Herausgeber
+publisher=Anbieter
 receiver=Empfänger
 publisherReq=Standard
-edit=Bearbeiten
-cancel=Rückgängig Machen
-crop=Ernte
-close=Zu Schließen
-change-plan-to=Ändern Plan,
-will-be-applied-after=Wird nach angewandt werden
+edit=Editieren
+cancel=Abbrechen
+crop=Ausgeschnitten
+close=Schließen
+change-plan-to=Plan Ändern,
+will-be-applied-after=Wird angewendet nach
 account.account=Konto
 account-name=Kontobezeichnung
-account-plan=Konto Plan
+account-plan=Kontotyp
 account-type=Kontotyp
-publisher-waiting-for-approvement=Für Publisher Account angefordert
-become-a-publisher=Werden Sie ein Publisher
-Account Plan=Account Plan
+publisher-waiting-for-approvement=Für Anbieter-Konto angefordert
+become-a-publisher=Werden Sie ein Anbieter
+Account Plan=Kontotyp
 standard=Standard
-premium=Monatliche Premium-
-pro=Monatliche Pro
+premium=Monatlich Premium
+pro=Monatlich Pro
 user-preferences=Benutzereinstellungen
 display-name=Anzeigename
 password=Passwort
 change-your-password=Ändern Sie Ihr Passwort
-locale=Schauplatz
+locale=Sprache
 timezone=Zeitzone
 hrs=Stunden
 email-notifications=E-Mail-Benachrichtigungen
-enable-or-disable-email-notifications=Aktivieren oder deaktivieren Sie das Senden E-Mail-Benachrichtigungen. (In-Anwendung Meldungen immer noch aktiviert sein!)
-facebook-id=Verbinden Sie Facebook
-clear-facebook-id=Trennen Sie Facebook Konto
-connect-with-your-facebook-account=Schließen Widgr mit Ihrem Facebook. Sie werden in der Lage sein, um Widgr melden Sie sich mit Ihrem Facebook-Konto.
+enable-or-disable-email-notifications=Aktivieren oder deaktivieren Sie E-Mail-Benachrichtigungen.
+facebook-id=Verbinden Sie Ihr Konto mit Facebook
+clear-facebook-id=Deaktivieren Sie Facebook Konto
+connect-with-your-facebook-account=Verbinden Sie Widgr mit Ihrem Facebook Konto. Sie werden in Widgr mit Ihrem Facebook-Konto anmelden können
 install-widgr-app-to-your-facebook-page=Installieren Widgr App auf Ihrem Facebook-Seite
 first-name=Vorname
 last-name=Nachname
 language=Sprache
 email-notification=E-Mail-Benachrichtigung
 enabled=Aktiviert
-disabled=Behindert
+disabled=Deaktiviert
 About You=Über Sie
 about=Über Widgr
 experiences=Erfahrungen
 website=Webseite
 facebook=Facebook
-twitter=Zwitschern
+twitter=Twitter
 linkedIn=LinkedIn
 googlePlus=Google
-your-calendar=Ihr öffentlicher Kalender
-working-hours=Arbeitszeit
+your-calendar=Ihr Kalender
+working-hours=Arbeitszeit Stunden
 hidden-days=Freie Tage
-cal.sunday=Cal.sunday
-cal.monday=Cal.monday
-cal.tuesday=Cal.tuesday
-cal.wednesday=Cal.wednesday
-cal.thursday=Cal.thursday
-cal.friday=Cal.friday
-cal.saturday=Cal.saturday
-sync-with-google=Google Calendar
+sync-with-google=Google Kalender
 sync-with-google-cal=Sync mit Google
-enable-google-calendar-sync=Wenn sie aktiviert ist, werden Sie in der Lage, Ihre Sitzungen in ausgewählten Google Kalender synchronisieren
-enable-google-calendar=Verbindung zu Google Kalender
+enable-google-calendar-sync=Wenn aktiviert, werden Sie Ihre Sitzungen in ausgewählten Google Kalender synchronisieren können
+enable-google-calendar=Verbinden mit Google Kalender
 google-calendar-sync-with=Verbunden mit Kalender
 google-calendar-status=verbunden
 disable-google-calendar-sync=Trennen aktuellen Google-Kalender
 start-of-working-hours=Beginn der Arbeitszeit
 end-of-working-hours=Ende der Arbeitszeit
 PayPal-account=PayPal Konto
-PayPal-info=Um bezahlt Sitzungen müssen Sie gilt Premier- oder Geschäftskonto für Geld Annahme bieten zu schaffen.
-paypal-refund=Important! How to enable refundations
-paypal-refund-desc=By default you cannot use Widgr to make refundations to your customers. You would always need to do it through PayPal and do it manually. By granting API access to Widgr you can make then refunds to your customers just with a single click through <a href='/payments'>Received payments page</a> <h4>Steps to granting API access</h4> <ul><li>Go to <a target="_blank" href="https://www.paypal.com">paypal.com</a> and log into your PayPal account</li><li>Navigate to Home > Profile > My selling tools </li><li>Click on API access Update link</li><li>Click on Add or edit API permissions</li><li>Click on Add new Third Party button</li><li>Type <input type="text" value="sales_api1.wid.gr"> into "Third Party Permission Username field" and click "Lookup"</li><li>Check <strong>"Issue a refund for a specific transaction"</strong> option and click "Add"</li><li>And that's it</li></ul>
+PayPal-info=Für kostenpflichtige Sitzungen mussen Sie ein verifizierter Business oder Premium PayPal-Konto eingeben.
+paypal-refund=Wichtig! Wie Zurückzuzahlungen zu aktivieren
+paypal-refund-desc=Standardmäßig können Sie nicht mit Widgr Zurückzuzahlungen an Ihre Kunden zu machen. Sie müssten es immer durch PayPal manuell zu tun. Indem mit Widgr API-Zugriff Sie können dann Zurückzuzahlungen an Ihre Kunden sogar mit einem einzigen Klick Sie sich durch die <a href='/payments'> Seite "erhaltene Zahlungen"</a> <h4>Schritte zur API-Zugang aktivieren</h4> <ul><li>gehen zu <a target="_blank" href="https://www.paypal.com"> paypal.com</a> und melden Sie sich bei Ihrem PayPal-Konto</li> <li>Navigieren Sie: Home > Profile > My Selling tools</li><li>API access "Update" Link anklicken</li> <li>Klicken Sie auf "Add or edit API permissions"</li>, <li>Klicken Sie auf "Add new Third Party"</li> <li>Eingeben Sie <input type="text" value="sales_api1.wid.gr"> in "Third Party Permission Username" Feld und klicken Sie auf "Lookup"</li> <li>Markieren Sie <strong>"Issue a refund for a specific transaction"</strong> option und klicken Sie auf "Add"</li> <li>und das war's</li></ul>
 account.currency=Standardwährung
 currency=Währung
 save=Speichern
-about-you=Über dich
-about-you-section=Bearbeiten Sie über Sie Abschnitt
+about-you=Über Sie
+about-you-section=Editieren Sie über Sie Abschnitt
 about-you-section-info=Dieser Abschnitt ist in Ihrem Profil und jeden Kanal angezeigt
-working-hours-info=Hier können Sie angeben, wenn Sie verfügbar für Planungssitzungen
-working-days-info=Hier können Sie festlegen, an welchen Tagen Sie nicht verfügbar für die Planung Sitzungen
-account-info=Wenn gefüllt, werden Kontoname anstelle von vollständigen Namen verwenden
+working-hours-info=Hier können Sie angeben, wenn Sie verfügbar für Planung den Sitzungen
+working-days-info=Hier können Sie festlegen, an welchen Tagen Sie nicht verfügbar für die Planung den Sitzungen
+account-info=Wenn gefüllt, werde Kontoname anstelle von vollständigen Namen verwendet
 
 
                                               
@@ -337,7 +329,7 @@ payments.thisYear=Dieses Jahr
 payments.allTime=Alle Zeit
 from=Von
 to=Bis Zur
-submit=Einreichen
+submit=Senden
 payments.income=Einkommen
 payments.totalSales=Die Gesamterträge pro Tag
 payments.totalExpenses=Der Gesamtaufwand pro Tag
@@ -357,46 +349,46 @@ activities=Aktivitäten
 #users.html                                                       
                                               
 #about.html                                                       
-contact-us-text=Hilf uns besser zu Widgr! Im Falle von Fragen oder Problemen, kontaktieren Sie uns alles fragen. Wir freuen uns über Feedback von Ihnen. Verwenden Sie die E-Mail-Adresse ein oder das Web-Formular.
-pricing-for-customers=Die Preise für Grund Benutzer
-pricing-for-publishers=Die Preise für Widgr Publishers
-widgr-share-your-knowledge=widgr <small style="font-size: 0.6em"> &middot;Teilen Sie Ihre Erfahrungen</small>
-find-help-header=Hilfe über Themenspektrum finden
+contact-us-text=Helfen Sie uns die Widgr zu verbessern! Bei Fragen oder Problemen fühlen Sie sich frei uns nichts Fragen. Wir freuen uns über Feedback von Ihnen. Verwenden Sie die e-Mail-Adresse ein oder das Webformular.
+pricing-for-customers=Preise für Standard Benutzer
+pricing-for-publishers=Preise für Widgr Anbieter
+widgr-share-your-knowledge=widgr<small style="font-size:0.6em"> &middot; teilen Sie Ihr Wissen</small>
+find-help-header=Aufrufen der Hilfe über Themenvielfalt
 get-help-header=Erhalten Sie Hilfe von Experten mit einem Klick
-get-paid-header=Werden Sie ein Publisher und Hilfen Sie Anderen und werden Sie dafür bezahlt
-about-widgr=Über Widgr
-about-widgr-subtext=Teilen Sie Ihre Erfahrungen
-about-1=Widgr ist eine einfache und komfortable Möglichkeit, Fähigkeiten zu erlernen und erhalten Hilfe von Experten, über das Internet. Egal, wer du bist, wo du bist, oder wie spät es ist, können Sie an jemanden, der Ihnen helfen kann sprechen.
-about-2=Widgr ist ein Ort, wo man die Menschen mit Hilfe einer Vielzahl von Themen zu finden. Wir nennen sie Widgr Publishers. Diese Verlage können Einzelpersonen oder Unternehmen. Sie können die Hilfe, die Sie durch den Besuch der Widgr und Suche oder Surfen auf verschiedenen Kategorien zu finden.
-about-3=Mit Widgr können Sie jederzeit die Hilfe von Menschen bekommen mit Know-how in einer Reihe von Themen -. Lehrer, Berater, Ärzte, Haus-Reparatur-Spezialisten, Personal Trainer, Hobby-Enthusiasten und mehr <br/> Sie können wählen, die Hilfe von auf der Grundlage erhalten Qualifikationen, Bewertungen und Beurteilungen. Außerdem können Sie wählen, um Hilfe sofort erhalten oder planen Sie eine Tagung für später. Während einige Sitzungen sind kostenlos, müssen Sie für einige zu zahlen. Bezahlen ist einfach mit Paypal.
-why-choose-widgr=Eigenschaften
-why-choose-widgr-text=Warum widgr?
-widgr-feature-1=Live-interaktive Video
-widgr-feature-1-text=Widgr Sitzungen werden durch Live-Videoanrufe durchgeführt. Während der Sitzung können Sie Ihre Kamera darauf, zu zeigen, was Sie helfen mit, hochladen und Dateien, interaktive Zeichnungen Wenn Sie nicht möchten, dass der Herausgeber, dich zu sehen, immer ausschalten können Ihre Kamera benötigen. <a href="/instant" target="_blank"> Probieren Sie es jetzt </a>.
-widgr-feature-2=Flexibilität Scheduling
-widgr-feature-2-text=Es gibt zwei Möglichkeiten zu verbinden Sitzung zu erstellen - sofort oder zeitgesteuert. Wenn ein Verlags Kanal hat einen grünen "sofort verfügbar" -Symbol, sind Sie nur ein paar Klicks entfernt von, wie Sie Hilfe sofort. Vor der Einnahme von Session können Sie interaktive Chat-Box nutzen, um mehr Informationen zu Verfügung gestellt Kanal von Publisher zu bekommen. Ansonsten können Sie sehen, wenn Verlage sind in ihren Kalender und wählen Sie ein Zeitschlitz oder eine Nachricht an eine andere Zeit zu beantragen.
+get-paid-header=Werden Sie ein Anbieter und werden Sie dafür bezahlt, um anderen zu helfen
+about-widgr=Über Widgr Platform
+about-widgr-subtext=Teilen Sie Ihr Wissen
+about-1=Widgr ist eine einfache und komfortable Möglichkeit, Fähigkeiten zu erlernen und erhalten Sie Hilfe von Experten über das Internet. Egal wer Sie sind, wo Sie sind oder wie spät es ist, Sie mit jemandem reden können, die helfen Ihnen.
+about-2=Widgr ist ein Ort, wo Sie Menschen mit Hilfe einer Vielzahl von Themen finden. Wir nennen sie Widgr Verlage. Diese Verlage können Einzelpersonen oder Firmen sein. Hier finden Sie Hilfe, die Sie benötigen, durch den Besuch der Widgr und auf der Suche oder verschiedenen Kategorien durchsuchen.
+about-3=Mit Widgr erhalten Sie Hilfe zu jeder Zeit von Menschen mit Fachwissen in einem Spektrum von Themen - Lehrer, Berater, Ärzte, Heim-Reparatur-Spezialisten, personal trainer, Hobby-Enthusiasten und mehr. <br/>Sie können Hilfe nach Qualifikationen, Ratings und Bewertungen auswahlen. Sie auch können entscheiden ob Sie Hilfe sofort erhalten oder planen eine Sitzung für später. Während einige Sitzungen frei sind, müssen Sie für einige Zahlen. Bezahlen ist einfach mit PayPal.
+why-choose-widgr=Funktionen
+why-choose-widgr-text=Warum Widgr?
+widgr-feature-1=Live video anrufen
+widgr-feature-1-text=Widgr-Sitzungen werden durch live video Anrufen geführt. Während der Sitzung können Sie Ihre Kamera zeigen was Sie Hilfe benötigen, Sie konnen auch Screensharing und Datei teilen. Wenn Sie möchten nicht dass Anbieter Ihnen sehen wurde, können Sie die Kamera immer ausschalten. <a href="/instant" target="_blank">Try instant video call now</a>.
+widgr-feature-2=Planungsflexibilität
+widgr-feature-2-text=Es gibt zwei Möglichkeiten, sofortige und geplante Sitzungen erstellen. Wenn ein Anbieter ein grünes "Jetzt verfügbar" Symbol hat, sind Sie nur wenige Klicks von Hilfe entfernt. Vor der Sitzung können Sie interaktive Chat benutzen, um weitere Informationen vom Anbieter erhalten. Andernfalls können Sie Plannungszeiten von Anbieter ansichten und ein Zeitfenster wählen oder eine Nachricht senden zu einen anderen Zeitpunkt anfordern. <a class="link" href="/help#request-session">erfahren Sie mehr</a>
 widgr-feature-3=Preisoptionen
-widgr-feature-3-text=Sessions, die frei sind benötigen kein PayPal-Konto. Preise werden von den Verlagen festgelegt und kann frei oder von der Sitzung geladen werden. Einige Verlage könnte die erste Sitzung kostenlos anbieten. Alles, was Sie für die Zahlung einer Sitzung benötigen lediglich einen gültigen PayPal-Konto.
-widgr-feature-4=Einfache Zahlungen und Erstattungen im Zusammenhang mit PayPal
-widgr-feature-4-text=Alle Zahlungen werden derzeit über PayPal mit einfachem refundantion Politik getan. Wenn Sie als Kunde nicht zufrieden sein mit der Sitzung, die Sie für eine Rückerstattung mit nur wenigen Klicks an ist. <br/> Wenn Sie Widgr als Publisher und bieten bezahlten Sitzungen verwenden möchten, müssen Sie um eine überprüfte Premier haben oder Geschäftskonto in der Lage sein, Geld durch PayPal erhalten.
-widgr-feature-5=Die Integration mit Facebook
-widgr-feature-5-text=Sie können problemlos integrieren Ihre Widgr Konto mit bestehenden Facebook-Seite, dass Ihr Konto mehr zugänglich zu Ihrem Facebook-Gemeinschaft zu sein. Wenn Sie ein Facebook-Seite besitzen, können Sie Widgr App, benutzerdefinierte Registerkarte zu installieren. Bei dieser Option sind Ihre potenziellen Kunden nur wenigen Klicks mit Ihrer Dienstleistungen. <br/> <a href="https://www.facebook.com/add.php?api_key=731388346951866&pages"> Klicken Sie hier um Widgr App auf Ihrem Facebook-Seite </a> oder <a href = "https://www.facebook.com/add.php?api_key=731388346951866&pages"> mehr </a> zu dieser Funktion.
-widgr-feature-6=Integration mit Google Calendar
-widgr-feature-6-text=Sie können ganz einfach Ihr Widgr Konto mit Google Calendar. Mit Google Kalender können Sie planen und zu verwalten und über Ihre Sitzungen auf jedem Gerät, das Sie verwenden, zu melden.
+widgr-feature-3-text=Sitzungen, die frei sind erfordern kein PayPal-Konto. Preise sind von den Anbieter festgelegt. Einige Anbieter könnte die erste Sitzung kostenlos anbieten. Alles was Sie brauchen für die Zahlung einer Sitzungs ist ein gültiges PayPal-Konto.
+widgr-feature-4=Einfache Zahlungen und Zurückzahlungen mit PayPal
+widgr-feature-4-text=Alle Zahlungen für kostenpflichtige Sitzungen sind über PayPal durchgeführt. Wenn Sie als Kunde nicht zufrieden mit der Leistung der Anbieter sein, können Sie immer um Geld-zurück bitten. Wenn Sie planen, Widgr als Anbieter benutzer, alles was Sie brauchen ist ein verifiziertes "Premier" oder "Business" PayPal Konto haben und Sie können ein neues Geschäft sofort starten. <a class="link" href="/help#paypal">erfahren Sie mehr</a>
+widgr-feature-5=Integration mit Facebook
+widgr-feature-5-text=Wenn Sie eine Facebook-Seite besitzen, können Sie Widgr app in "Custom tab" installieren. Mit dieser Möglichkeit haben Sie alle Dienstleistungen auf einem Platz. <a class="link" href="/help#facebook">erfahren Sie mehr</a>
+widgr-feature-6=Integration mit Google Kalender
+widgr-feature-6-text=Sie können Ihr Widgr-Konto mit Google Kalender verbinden. Mit dieser Funktion erhalten Sie einen besseren Überblick über Ihre geplanten Sitzungen auf jedem Gerät, das Sie benutzen. <a class="link" href="/help#calendar">erfahren Sie mehr</a>
 pricing=Preise
 basic=Basic
 free=Kostenlos
-fee-per-paid-event-description=Kostenlose bleibt immer frei, allerdings bezahlt Sitzungen, gibt es eine kleine Gebühr angewendet. Diese Gebühr wird geschätzt, und von Ihrem Einkommen in der Zeit abgezogen, wenn Kunde zahlt für Ihre Sitzung.
-from-event-price=Vom Sitzungs Preis
+fee-per-paid-event-description=Kostenlos bleibt immer kostenlos, aber für bezahlte Sitzungen gibt es eine kleine Gebühr angewendet. Diese Gebühr wird geschätzt und Guthaben von Ihrem Einkommen in der Zeit als Kunde für Ihre Sitzung bezahlt.
+from-event-price=vom Sitzungs Preis
 fee-per-paid-event=aus dem Preis für jede bezahlte Sitzung
-security-description=Keeping Verborgene Geheimnis ist wichtig für uns. Deshalb ist jeder Anfrage werden Sie durchführen wird mit SSL verschlüsselt.
+security-description=Geheime Dinge zu halten ist wichtig für uns. Deshalb gesamte kommunikation die Sie durchführen wird mit SSL verschlüsselt.
 ssl=SSL-Verschlüsselung
-disk-space=Plattenspeicher verwendet, um Anlagen für Sitzungen speichern
-storage=Lagerung
-paid-events-per-month=Paid-Sitzungen pro Monat
+disk-space=Speicherplatz wird verwendet, um Anlagen für Sitzungen gespeichert
+storage=Speicherplatz
+paid-events-per-month=bezahlte Sitzungen pro Monat
 unlimited-paid-events=Unbegrenzte bezahlten Sitzungen
 unlimited-disk-space=Unbegrenzten Speicherplatz
-fill-in-quick-registration-and-start-using-widgr=Füllen Sie schnelle Registrierung und starten Sie mit widgr
+fill-in-quick-registration-and-start-using-widgr=Füllen Sie einfache Registrierung ein und starten Sie mit Widgr noch Heute
 widgr-footer-description=Widgr Fußzeile Beschreibung
 success=Erfolg
 contact-sent-message-success=Kontakt gesendeten Nachricht Erfolg
@@ -407,39 +399,39 @@ email-address=E-Mail-Addresse
 message=Nachricht
 send=Senden
 get-modern-browser=Kompatibilität
-compatibility=<p><strong> Um eine volle Erfahrung zu bekommen </strong> stellen Sie sicher, dass Sie mit up-to-date-Browser <br/> Widgr Sitzungen geschieht über Live-Video-Anrufe. Diese Video-Anrufe auf WebRTC Browser-Technologie, die sich noch in der Entwicklung und ist noch nicht vollständig von allen Browsern unterstützt wird. Stellen Sie sicher, dass Ihr Webbrowser WebRTC <a href="/instant"> durch Starten Testvideoanruf. </a> Sie sollten in der Lage, sich selbst auf dem Bildschirm zu sehen sein. Oder Sie können Ihre <a target="_blank" href="http://iswebrtcreadyyet.com/"> Browser-Unterstützung für WebRTC im Detail prüfen &raquo; </ p>
+compatibility=<p><strong> Um eine volle Erfahrung zu bekommen </strong> stellen Sie sicher, dass Sie haben aktuellste web-browser <br/> Widgr Sitzungen geschieht über Live-Video-Anrufe. Diese Video-Anrufe auf WebRTC Browser-Technologie, die sich noch in der Entwicklung und ist noch nicht vollständig von allen Browsern unterstützt wird. Stellen Sie sicher, dass Ihr Webbrowser WebRTC <a href="/instant"> durch Starten Testvideoanruf. </a> Sie sollten in der Lage, sich selbst auf dem Bildschirm zu sehen sein. Oder Sie können Ihre <a target="_blank" href="http://iswebrtcreadyyet.com/"> Browser-Unterstützung für WebRTC im Detail prüfen &raquo; </ p>
                                               
-#calendar.html                                                        # Calendar.html
-calendar-msg=<H4> Meine Termine </ h4> Auf dieser Seite können Sie alle Ihre geplanten Sitzungen anzuzeigen. Wenn Sie Publisher sind, können Sie neue Sitzung, indem Sie auf Kalender erstellen.
-show-google-calendar-events=Google Kalenderereignisse anzeigen
+#calendar.html
+calendar-msg=<h4>Mein Kalender</h4> Auf dieser Seite können Sie alle Ihre geplanten Sitzungen anzuzeigen. Wenn Sie Publisher sind, können Sie neue Sitzung erstellen, indem Sie auf den Kalender klicken.
+show-google-calendar-events=Google Kalender anzeigen
 for=Für
 minutes=Minuten
 free=Kostenlos
-first-event-is-free=Erste Sitzung ist gratis
+first-event-is-free=Erste Sitzung gratis
 start-time=Startzeit
 end-time=Endzeit
-dashboard.guests=Dashboard.guests
-view=Ansicht
-submit-for-approval=Zur Genehmigung einreichen
+dashboard.guests=Gäste
+view=Zeigen
+submit-for-approval=Anfrage senden
 approve=Genehmigen
 decline=Ablehnen
 delete=Löschen
                                               
 #channels.html
-search-title=Search available sessions                                                        
+search-title=Suche verfügbaren Sitzungen                                                       
 by-availability=Sortieren nach Verfügbarkeit
-search-channels=Suchen nach Kanälen
+search-channels=Anbieter suchen 
 search-string=Suchen
 category=Kategorie
 business=Unternehmen
 electronics=Elektronik
 education=Bildung
 health=Lifestyle & Gesundheit
-food=Cooking
+food=Kuchen
 fashion=Fashion
 art=Art & Music
 sport=Sport
-household=Haushalt, Garten, Heimwerken
+household=Haushalt, Garten
 18plus=Nur für Erwachsene
 sorting=Sortierung
 sort-by-reviews=Sortiert nach Bewertungen
@@ -447,67 +439,67 @@ sort-by-best-match=Nach bester Übereinstimmung
 search=Suchen
                                               
 #dashboard.html                                                      
-dashboard-description=<H4> Was ist Dasboard? </ H4> Auf dieser Seite können Sie Ihre Online-Kontakte sehen neuesten Aktivitäten, um Ihre Sitzungen bezogen, sehen neue Kommentare, Beiträge und Updates. Wenn Publisher Updates etwas auf dem geplanten Sitzung wird es hier zu erscheinen, so dass Sie nichts Wichtiges verpassen. <br/> Sie können sogar mit all Ihren Kontakten durch Beiträge hier zu kommunizieren wie auf Facebook. <br/> Beiträge an private bezogenen Sitzungen werden nur eingeladene Benutzer angezeigt werden
-lates-posts=Lates Beiträge
+dashboard-description=<h4>Was ist Dasboard? </h4> Auf dieser Seite können Sie Ihre Online-Kontakte, neuesten Aktivitäten, neue Kommentare, Beiträge und Updates sehen. Wenn Anbieter editiert etwas auf dem geplanten Sitzung wird es hier zu erscheinen, so dass Sie nichts Wichtiges verpassen. <br/> Sie können auch mit Ihren Kontakten durch Beiträge hier zu kommunizieren wie auf Facebook.<br/> Beiträge an private bezogenen Sitzungen werden nur fur eingeladene Benutzer angezeigt werden
+lates-posts=Letzte Beiträge
 upcoming-events=Die nächsten Sitzungen
-previous-events=Vergangenen Sessions
+previous-events=Vergangenen Sitzungen
                                               
 #upcoming.html                                                       
-upcoming-msg=<H4> Die nächsten Sitzungen </ h4> Auf dieser Seite aufgelistet sind alle geplanten Sitzungen, die Eigentümer oder dem Sie eingeladen worden sind.
-nothing-to-display=Es gibt nichts anzuzeigen
+upcoming-msg=<h4>Die nächsten Sitzungen </h4> Auf dieser Seite sind alle geplanten Sitzungen aufgelistet , fur die Sie Eigentümer oder eingeladen worden sind.
+nothing-to-display=Nichts zum zeigen
                                               
 #past.html                                                            
-previous-msg=<H4> Verkaufssitzungen </ h4> Auf dieser Seite aufgelistet sind alle zuvor geplanten Sitzungen, die Eigentümer oder, die Sie haben, eingeladen worden sind.
+previous-msg=<h4>Verkaufssitzungen </h4> Auf dieser Seite sind aufgelistet alle zuvor geplanten Sitzungen, fur die Sie Eigentümer sind oder, oder Sie eingeladen worden sind.
                                               
 #approvements.html                                                   
-approvements-msg=<H4> Angeforderte Sitzungen </ h4> Auf dieser Seite werden alle Sitzungen, die von Ihren Kunden angefordert wurden, aufgeführt. Klicken Sie auf einzelne Sitzung zu genehmigen, zu verschieben oder zu stornieren
+approvements-msg=<h4>Angeforderte Sitzungen </h4> Auf dieser Seite werden alle Sitzungen, die von Ihren Kunden angefordert wurden, aufgeführt. Klicken Sie auf einzelne Sitzung zu genehmigen, zu verschieben oder zu stornieren
 no-requests=Derzeit gibt es keine Sitzungsanforderungen für Sie.
                                               
 #manageChannels.html                                                 
-msgChannels-msg=<H4> Sender </ h4> Auf dieser Seite sehen und all deine Kanäle verwalten verwalten.
-no-listings=Sie haben kein Kanal erzeugt noch
+msgChannels-msg=<h4>Meine Kanäle</h4> Auf dieser Seite sehen und editieren alle Ihre Kanäle.
+no-listings=Sie haben noch kein Kanal erzeugt 
                                               
 #media.html                                                         
-msgMedia-msg=<H4> Mediathek </ h4> Auf dieser Seite können Sie alle Ihre hochgeladenen Dateien zu verwalten.
+msgMedia-msg=<h4>Mediathek</h4> Auf dieser Seite können Sie alle Ihre hochgeladenen Dateien zu verwalten.
                                               
 #home.html
-home-title=Widgr - share your knowledge. Instant video calls - Screen sharing - no installation.                                                          
+home-title=Widgr - teilen Sie Ihr wissen. Instant video-Telefonate - Screen-sharing - keine Installation.                                                          
 register=Jetzt registrieren
-for-customers=<Strong> widgr </ strong> für Kunden
-for-publishers=<Strong> widgr </ strong> für Verlage
+for-customers=<strong>widgr</strong> für Kunden
+for-publishers=<strong> widgr</strong> für Anbieter
 find-everything-on-one-place=Holen Sie sich Hilfe von Experten
 get-help-from-experts=Finden Sie alles auf einem Platz
 easy-use=Einfach zu bedienen
 and-much-more=Und vieles mehr
 offer-your-experience=Bieten Sie Ihr Know-how als neue Dienstleistung
 reach-your-community=Erreichen Sie Ihre Community in sozialen Netzwerken
-get-paid-for-helping=Anderen zu helfen bezahlt
+get-paid-for-helping=Werden Sie bezahlt, um anderen zu helfen
 feature31=Keine festen monatlichen Gebühren
 feature32=Einfache Zahlung mit PayPal
 feature33=Mobilfreundlich
                                               
-what-is=What is Widgr Marketplace?
-good-for=good for
-find-help=Search help
-find-help-message=With Widgr you can get help anytime from people with expertise across a range of topics. Teachers, computer experts, home repair specialists, personal trainers, hobby enthusiasts, and more. No matter who you are, no matter where you are and no matter what time it is, with Widgr you are just few click away from getting help.
-read-more=Read more
-get-help=Get help
-get-help-message=You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. While some Publishers offer free sessions, some may be charged. For those just simply use your PayPal to pay securely and fast. 
-get-paid=Get paid
-get-paid-message=When you know something what might be useful for others you can become a Widgr Publisher. Widgr will provide you a simple platform which will help you to connect to your customers. All you need is just PayPal account for receiving payments, and you are ready to start your business
-instant-video-calls=Instant video calls
-anonymous-peers-no-plugins=Anonymous. Peer-to-peer. No plugins, signup, or payment required.
-start-now=Start now
-you-are-on-the-right-place=Join us
-fill-in-quick-registration-and-start-using-widgr=Just fill in quick registration and start using Widgr now!
-channels-by-category=Channels by category
-view-all=View all
-group-video-chat=GROUP VIDEO CHAT
-group-video-chat-desc=Add up to 5 people to the conversation
+what-is=Was ist Widgr Marketplace?
+good-for=gut zu?
+find-help=Suchen Sie Hilfe
+find-help-message=Mit Widgr können Sie jederzeit von Menschen mit Know-how in einem Spektrum von Themen helfen. Lehrer, Computerexperten, Heim-Reparatur-Spezialisten, persönliche Trainer, Hobby-Enthusiasten und mehr. Egal, wer Sie sind, egal wo Sie sind und egal, wie spät es ist, sind Sie mit Widgr wenigen Klick Hilfe.
+read-more=Lesen Sie mehr
+get-help=Holen Sie sich Hilfe
+get-help-message=Wer von je nach Qualifikation, Verfügbarkeit, Ratings und Bewertungen helfen können. Darüber hinaus können Sie sofort Hilfe oder planen eine Sitzung für später. Während einige Verlage kostenlose Sitzungen anbieten, dürfen einige Lasten. Verwenden Sie für diese gerade Ihr PayPal-einfach, sicher und schnell bezahlen.
+get-paid=Werden Sie bezahlt
+get-paid-message=Wenn Sie etwas wissen, was für andere nützlich sein könnte, können Sie einen Widgr Anbieter werden. Widgr bietet Ihnen eine einfache Plattform, die Sie mit Verbindung mit Ihren Kunden hilft. Alles was Sie brauchen ist nur PayPal-Konto für den Empfang von Zahlungen, und Sie sind bereit, neue Dientsleistung zu starten
+instant-video-calls=Instant Videoanrufe
+anonymous-peers-no-plugins=Anonym. Peer-to-Peer. Keine Plugins, Anmeldung oder Zahlung nötig.
+start-now=Video anruf starten
+you-are-on-the-right-place=Besuchen Sie uns
+fill-in-quick-registration-and-start-using-widgr=Füllen Sie einfache Registrierung und beginnen Sie zu nutzen Widgr noch Heute!
+channels-by-category=Kanäle nach Kategorie
+view-all=Alle anzeigen
+group-video-chat=GROUP VIDEO ANRUFE
+group-video-chat-desc=Fügen Sie bis zu 5 Personen zum Gespräch
 screen-sharing=SCREEN SHARING
-screen-sharing-desc=Easily add anyone's screen to the conversation. Share files or use simple collaborative drawing tool
-no-installation=NO INSTALLATION
-no-installation-desc=You don't need to download or install anything
+screen-sharing-desc=Fügen Sie leicht jemandes Bildschirm zum Gespräch hinzu. Freigeben Sie Dateien oder verwenden Sie einfache Zeichentool
+no-installation=KEINE INSTALLATION
+no-installation-desc=Sie müssen nichts herunterladen oder installieren
                                               
 #comments.html                                                   
 media-library=Mediathek
@@ -515,7 +507,7 @@ plain-text=Plain&nbsp;Text
 upload-files=Laden Sie&nbsp;Dateien
 attach-media=Bringen Sie&nbsp;Medien
 paid-comment=Paid-Feed
-paid-comment-note=<P class = "bg-info" style = "padding: 10px;"> <i class = "fa fa-key"> </ i> Dieser Feed ist ausgeblendet. Futter wird nach der abgeschlossenen Zahlung angezeigt werden </p>
+paid-comment-note=<p class="bg-info" style="padding: 10px;"> <i class="fa fa-key"> </i> Dieser Feed ist ausgeblendet. Futter wird nach der abgeschlossenen Zahlung angezeigt werden</p>
 paid-comment-info=Dieser Feed ist nur für Kunden, die für die Session bezahlt angezeigt
 share-whats-new=Teilen Sie, was es Neues
 text=Text
@@ -524,16 +516,16 @@ text=Text
 latest-posts=Letzte Beiträge
                                               
 #contacts.html                                                       
-manage-contacts=Kontakte verwalten
-invite-new-user=Laden Sie Ihre Freunde per E-Mail
+manage-contacts=Kontakte editieren
+invite-new-user=Laden Sie Ihre Freunde bei E-Mail
 invite-by-email=Einladen bei E-Mail
-type-email=Typ E-Mail-Adresse
-invite=Laden
+type-email=E-Mail-Adresse
+invite=Einladen
 name=Name
 status=Status
 actions=Aktionen
 write-a-message=Nachricht schreiben
-blocked=Verstopft
+blocked=Blockiert
 following=Folgende
 unblock=Freigeben
 block=Block
@@ -559,17 +551,17 @@ join-vide-conference=Begleiten Sie Videoanruf
 your-name=Ihren Namen
 join=Beitreten
 or=oder
-sign-in=Anmelden
+sign-in=Einloggen
                                               
 #room.html                                                           
-posts-and-uploads=File-Sharing-
+posts-and-uploads=File-Sharing
 canvas=Leinwand
 paint=Bleistift
 eraser=Radiergummi
-undo=Rückgängig machen
-clear=Klar
-save-painting=Shop Malerei in Futtermitteln
-share=Mit anderen teilen
+undo=Undo
+clear=Löschen
+save-painting=Speichern
+share=Freigeben
 extension-needs-to-be-installed=In Erweiterung Chrome
 extension-needs-to-be-installed-message=Um Screensharing-Funktion verwenden, müssen Sie eine Erweiterung für Ihren Browser installieren. <A target = "_ blank" href="https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk">Click Sie hier, um auf die Chrome App Store </a> gehen
 share=Mit anderen teilen
@@ -582,29 +574,29 @@ mute=Stumm
 turn-mute=Mikrofon stumm schalten
 turn-camera-off=Schalten Sie die Kamera aus
 share-your-screen=Starten Sie Ihre Bildschirm (Chrom nur)
-refresh=Reload Anruf
-hang-up=End&nbsp;Anruf
+refresh=Reload Videoanruf
+hang-up=Videoanruf&nbsp;enden
                                               
 #header.html
 sitemap=Sitemap                                                    
-your-sessions=Mein Terminkalender
+your-sessions=Mein Kalender
 session-approval=Angeforderte Sitzungen
-waiting-for-approvement=Session angefordert
+waiting-for-approvement=Sitzungen angefordert
 manage-channels=Meine Kanäle
 share-your-knowledge=Teilen Sie Ihre Erfahrungen
 toggle-navigation=Toggle-Navigation
 received-new-message=Erhalten neue Nachricht
-dashboard=Armaturenbrett
+dashboard=Dashboard
 calendar=Kalender
-home=Nach Hause
+home=Home
 channels=Kanäle
 pricing=Preise
 features=Eigenschaften
 contact-us=Kontaktieren Sie uns
-start-instant-chat=Sofort&nbsp;Video&nbsp;Anruf&nbsp;starten
+start-instant-chat=Instant&nbsp;Video&nbsp;Anruf&nbsp;starten
 sign-out=Austragen
-profile=Öffentliches Profil
-notifications=Nachrichten
+profile=Mein Profil
+notifications=Benachrichtigen
 received-payments=Zahlungseingänge
 sent-payments=Gesendete Zahlungen
 settings=Einstellungen
@@ -616,45 +608,45 @@ settings=Einstellungen
                                               
 #leftPanel.html                                                   
 setup-camera=Einrichten der Kamera
-setup-camera-description=Wigdr Sitzungen geschehen über Videokonferenzen, so sicher sein, dass Ihnen einwandfrei funktioniert
+setup-camera-description=Wigdr Sitzungen geschehen über live Videokonferenzen, so seien Sie sicher, dass Ihr's funktioniert einwandfrei.
 checkout-tutorials=Schauen Sie sich Tutorials
 write-message-for=Nachricht schreiben für
 tips-for-first-timers=Tipps für Neulinge
 get-a-modern-browser=Holen Sie sich einen modernen Browser
-full-experience=Um zu korrekten Benutzererfahrung Bitte aktualisieren Sie Ihren Browser auf die neueste. Empfohlene Browser sind <a href="http://www.google.com/chrome/"> Google Chrome </a>, <a href = "https://www.mozilla.org/en-US/firefox/ neue / "> Mozilla Firefox </a> und <a href="http://www.opera.com/"> Opera </a>. Ansonsten können Sie <a href="/about#compatibility"> Kompatibilität Ihres Browsers hier </a> überprüfen.
+full-experience=Um zu korrekten Benutzererfahrung bitte aktualisieren Sie Ihren Browser auf die neueste. Empfohlene Browser sind <a href="http://www.google.com/chrome/"> Google Chrome </a>, <a href = "https://www.mozilla.org/en-US/firefox/ neue / "> Mozilla Firefox </a> und <a href="http://www.opera.com/"> Opera </a>. Ansonsten können Sie <a href="/about#compatibility"> Kompatibilität Ihres Browsers hier </a> überprüfen.
 set-up-your-camera=Einrichten der Kamera
 set-up-your-camera-desc=Wigdr Sitzungen geschehen über Videokonferenzen, so sicher sein, dass Ihnen richtig funktioniert. Sie können die Kamera, indem Sie einen <a target="_blank" href="/instant"> Test-Videoanruf </a> testen. Sie sollten in der Lage, um zu sehen und zu hören, selbst zu sein.
-video-tutorials=Video-Tutorials
+video-tutorials=Video Tutorials
                                               
 #edit.html                                                         
 session-type=Sitzungstyp
 preferred-language=Bevorzugte Sprache
-video-recorder-directly=Neues Einführungsvideo mit Youtube-Widget
-introduction-video=Link zu youtube / vimeo Einführungsvideo auf Session-Seite angezeigt
-p2p-description=Online-Video-Anruf
-broadcast-description=Rundfunk
+video-recorder-directly=Einführungs video mit Youtube-Widget erstellen
+introduction-video=Link zu Youtube / Vimeo einführungs Video
+p2p-description=Online Video Anruf
+broadcast-description=Broadcast
 hangout-description=Google Hangout Gespräch
 hangoutAir-description=Broadcasting via Google Hangout Air
-privacy-private-description=Session zugänglich nur für eingeladene Benutzer sein
-privacy-public-description=Session wird für alle Benutzer zugänglich sind
-charging-free-description=Free Session
+privacy-private-description=Sitzung wird zugänglich nur für eingeladene Benutzer
+privacy-public-description=Sitzung wird für alle Benutzer zugänglich
+charging-free-description=Freie Sitzung
 charging-paid-description=Kunden werden für den Zugriff auf den Sitzungs belastet
-charging-first-free=Kanal wird als erste freie gekennzeichnet werden. Sie können dann gegebenenfalls zunächst bieten bezahlt Session an den Kunden kostenlos.
+charging-first-free=Kanal wird als "erste Sitzung frei" gezeichnet. Sie können dann bieten erste Sitzung kostenlos.
 charging-time=Standard Ladezeitperiode
-comments-enable-disable=Aktivieren oder Deaktivieren von Kunden meinungen in Session-Seite
-chat-enable-disable=Aktivieren oder deaktivieren Sie interaktive Öffentliche Chatfenster in Session-Seite
+comments-enable-disable=Aktivieren oder Deaktivieren Sie kommentare von Kunden 
+chat-enable-disable=Aktivieren oder deaktivieren Sie interaktive Chat in Session-Seite
 event-date=Sitzungsdatum
 video-conference=Video-Konferenz
 live-broadcast=Live-Sendung
 google-hangout=Google Hangout
 google-hangout-air=Google Hangout Luft
-privacy=Privatleben
+privacy=Datenschutz
 private=Privat
-public=Öffentlichkeit
-charging=Laden
-paid=Bezahlt
-dashboard.price=Dashboard.price
-enable-chat=Öffentliche Chat aktivieren
+public=Offen
+charging=Aufladen
+paid=Zahlung
+dashboard.price=Preis
+enable-chat=Chat aktivieren
 enable-comments=Kommentare aktivieren
 upload-new-picture=Neues Bild hochladen
 title=Titel
@@ -663,49 +655,49 @@ other=Andere
 description=Beschreibung
 introduction-video-url=Einführungsvideo url
 url=URL
-channel-type=Kanaltyp
+channel-type=Kategorie
 instant-broadcast=Sofortige Sendung
 price=Preis
-first-free=Erste Sitzung kostenlos
+first-free=Erste Sitzung frei
                                               
 #editButtons.html                                                 
-website-embed=Diesen Kanal einbinden auf Ihrer Website
-embed-listing=Diesen Kanal einbinden auf Ihrer Website
-embed-listing-desc=Wenn Sie eine Website besitzen, können Sie dieses einfache HTML Code in Ihre Seite einbinden. Mit dieser Funktion können Sie Ihre Besucher in der Lage Ihnen widgr Verwendung mit einem Klick zu kontaktieren. <a href=""> Weitere Infos hier </a>
+website-embed=Kanal auf Ihrer Website einfügen
+embed-listing=Kanal auf Ihrer Website einfügen
+embed-listing-desc=Wenn Sie eine Website haben, können Sie dieses einfache HTML Code in Ihre Seite einfügen. Mit dieser Funktion können Sie Ihre Besucher und Ihnen sofort kontaktieren. <a href="/help#embedding">Weiter lesen</a>
 approved=Genehmigt
 you-can-pay-for-event-before-or-you-can-wait-until-event-starts=Sie können für die Sitzung, bevor zu bezahlen, oder Sie können warten, bis Sitzung beginnt
-pay-for-event-now=Pay&nbsp;für&nbsp;& nbsp Sitzung, vor&nbsp;es&nbsp;beginnt
-join-video-call=Join&nbsp;Session
+pay-for-event-now=Für&nbsp;Sitzung&nbsp;jetzt&nbsp;bezahlen
+join-video-call=Sitzung&nbsp;beitreten
 start-live-broadcast=Starten Sie Live-Übertragung
 stop-live-broadcast=Stoppen Sie Live-Übertragung
 stop-instant-broadcast=Stoppen Sie sofort Broadcast
-start-hangout=Starten Treffpunkt
-join-hangout=Registriert Treffpunkt
-edit-event=Bearbeiten&nbsp;Sitzung
+start-hangout=Starten Hangout
+join-hangout=Hangout beitreten
+edit-event=Sitzung&nbsp;editieren
 add-event=Neue Sitzung
 delete-selected-item=Bestätigen Sie Ihre Auswahl
-delete-event=Löschen&nbsp;Session
+delete-event=Sitzung&nbsp;löschen
 star-instant-broadcast=Starten Sie Instant-Broadcast
 go-to-private-room=Zum privaten Raum
-edit-channel=Kanal bearbeiten
-delete-channel=Archive&nbsp;Kanal
-enable-channel=Enable&nbsp;Kanal
+edit-channel=Kanal editieren
+delete-channel=Kanal deaktivieren
+enable-channel=Kanal aktivieren
                                               
 #listing.html
-turn-on-available-now=Whan activated, You can use simple chat box to communicate with your customers. And customers can create sessions for avaiable channel instantly. You will receive notification when new instant session will be created.                                                        
-setup-paypal-account-warning=Wenn Sie bezahlten Sitzungen erstellen möchten, müssen Sie zunächst Ihren PayPal-Account. <a href='/settings#paypal'> Gehen Sie hier, um PayPal-Konto </a> einrichten
-go-to-profile=Benutzer-Profile anzeigen
-available-now=Sofort verfügbar
-schedule-session=Planen Sie eine Sitzung
-schedule-session-desc=Wählen Sie einen freien Zeitschlitz und planen Sie eine Session später
+turn-on-available-now=Wenn aktiviert, können Sie durch einfache Chat mit Ihren Kunden kommunizieren. Wenn aktiviert, können Kunden anfordern und Sitzung sofort beitreten. Sie erhalten die Benachrichtigung, wenn eine neue Sitzung erstellt wird.
+setup-paypal-account-warning=Wenn Sie bezahlte Sitzungen erstellen möchten, müssen Sie zuerst Ihr PayPal-Konto einrichten. <a href='/settings#paypal'>Hier können Sie PayPal-Konto einrichten</a>
+go-to-profile=Benutzer Profile anzeigen
+available-now=Online
+schedule-session=Sitzung planen
+schedule-session-desc=Wählen Sie einen freien Zeitschlitz und planen Sie eine Session fur später
 join-session-now=Nehmen Sie eine Session jetzt
-open-chat=Mit & nbsp;; Öffnen&nbsp;& nbsp Chat Herausgeber
+open-chat=Chat&nbsp;mit&nbsp;Anbieter
 this-channel-is-free=Kostenlos
-media=Medien
-add-more-people=Mehr Lade Leute zu dieser Sitzung
+media=Media
+add-more-people=Mehr Leute zu dieser Sitzung einladen
 invite-press=Prüfen ausgewählte Benutzer und drücken Sie, um eine Einladung zu dieser Tagung
-check-me-as-available=Schalten Sie ab sofort verfügbar
-uncheck-me-as-available=Schalten Sie ab sofort verfügbar
+check-me-as-available=Schalten Sie ab "Sofort verfügbar"
+uncheck-me-as-available=Schalten Sie ab "Sofort verfügbar"
 available-description=Ist diese Option aktiviert, können die Kunden schreiben Sie leben Nachrichten mit einfachen Chat-Anwendung
 paid-on=Bezahlt
 refundation=Geld zurückzuzahlen
@@ -717,17 +709,17 @@ reason-required=Sie müssen wegen Geld zurückzuzahlen Anfrage eingeben
 write-reason=Write Grund, warum Sie fordern Geld zurückzuzahlen
 confirm-decline=Bestätigen Sie Ihre Auswahl
 create-new-channel=Neuer Kanal
-play-introduction=Spielen&nbsp;Einführung
+play-introduction=Einführung&nbsp;Video&nbsp;spielen
 total-price=Gesamtpreis
 min=Min
-request-for-event=Planen Sie eine Tagung
-request-for-event-instant=Nehmen Sie eine Session
+request-for-event=Sitzung planen
+request-for-event-instant=video Anruf beitreten
 guests=Gäste
-add-to-watchlist=Auf die Beobachtungsliste
+add-to-watchlist=Auf die Merkliste hinzufügen
 remove-from-watchlist=Aus Merkliste entfernen
 accepted=Akzeptiert
 declined=Abgesagt
-write-custom-message=Schreiben Sie benutzerdefinierte Nachricht
+write-custom-message=Schreiben Sie eine Nachricht
 notify=Benachrichtigen
 recent-events=Letzte Sitzungen
 all-channels-from=Alle Kanäle aus
@@ -738,18 +730,18 @@ send=Senden
 chat-box=Unterhaltung
                                               
 #listingsList.html                                                  
-anonymous=Gast
-available-activated=Jetzt erhältlich
+anonymous=Anonym
+available-activated="Jetzt verfügbar" aktiviert
 reviews=Bewertungen
 create-event=Neue Sitzung
-request-event=Termine Sitzung
-archived=Archived             
+request-event=Sitzung anfragen
+archived=Archiviert             
                                               
 #main.html                                                          
 online-users=Benutzer Online
 recipient=Nachricht an
 all=Alle
-chat=Diskutieren Sie mit
+chat=Chat mit
 follow-us=Folgen Sie uns auf
 select-page-to-display=Startseite
 channel=Kanal
@@ -757,8 +749,8 @@ select-channel=Kanal
 apply=Sich Bewerben
 policy=Politik
 contact=In Kontakt Treten
-read-more=Weiterlesen
-by=Von
+read-more=weiter lesen
+by=von
 all-rights-reserved=Alle Rechte vorbehalten
 terms=Nutzungsbedingungen
 about-widgr=Über Widgr
@@ -767,22 +759,22 @@ contact-us=Kontaktieren Sie uns
 #inbox.html                                                     
 system-notification=info@wid.gr
 invalid-user-name=Ungültiger Benutzername
-Inbox=Posteingang
-compose-new=Verfassen neuer
+Inbox=Inbox
+compose-new=Neue erstellen
 sent-messages=Gesendete Nachrichten
-subject=Gegenstand
-write-reply=Antwort schreiben
+subject=Betreff
+write-reply=Antworten
 message=Nachricht
 newer=Neuere
-older=Älter
+older=Ältere
                                               
 #payment.html                                                   
 important=Wichtig
 you-will-be-redirected-to-PayPal=Sie werden auf PayPal weitergeleitet, um die Zahlung zu verarbeiten
 PayPal-payment-message=Um Zahlungen zu senden benötigen Sie ein PayPal-Konto. Die Zahlungen werden von Ihrem PayPal-Konto, um die Empfänger-PayPal-Konto gesendet werden
-PayPal-payment-refund=Wenn Sie werden nicht mit der Leistung des Verlages können Sie jederzeit anfordern Geld zurückzuzahlen innerhalb von 72 Stunden nach Ausstellung der Zahlungs zufrieden sein.
-join-event=Der Zugang zu Sitzungs & bdquo;%s & rdquo; wird geladen
-PayPal-error=PayPal Kasse fehlgeschlagen. Bitte versuchen Sie es erneut.
+PayPal-payment-refund=Wenn Sie werden nicht zufrieden mit der Leistung des Anbieter, können Sie Refundation innerhalb von 72 Stunden nach der Ausstellung der Zahlung anfordern.
+join-event=Der Zugang zu Sitzungs &bdquo;%s&rdquo; wird geladen
+PayPal-error=PayPal Error. Bitte versuchen Sie es wieder.
 unit-price=Stückpreis
 total=Gesamtpreis
 checkout-with-PayPal=Mit PayPal bezahlen
@@ -792,28 +784,28 @@ pay-with-PayPal=Mit PayPal bezahlen
 #userProfile.html                                                
                                               
 #ratings.html                                                    
-user-reviews=User-Bewertungen
+user-reviews=Benutzer bewertungen
 five-stars=Fünf Sterne
 four-stars=Vier Sterne
 three-stars=Drei Sterne
 two-stars=Zwei Sterne
 one-star=Ein Stern
-write-your-review=Schreiben Sie eine Bewertung
+write-your-review=Schreiben Sie Bewertung
 add-comment=Kommentar hinzufügen
-was-this-review-helpful=War diese Kritik hilfreich
+was-this-review-helpful=War diese Bewertung hilfreich?
 no-reviews-yet=Noch keine Bewertungen
                                               
 #raw.html                                                            
                                               
 #password.html                                                       
-password-change=Kennwort ändern
-password.new=Neues Kennwort
+password-change=Passwort ändern
+password.new=Neues Passwort
 password-repeat=Neues Passwort wiederholen
 validation-invalidPassword=Falsches Passwort
                                               
 #passwordReset.html                                                  
-password-reset=Kennworts
-login=Einloggen
+password-reset=Passwort reset
+login=Login
 captcha=Captcha
                                               
 #registration.html                                                   
@@ -825,7 +817,7 @@ register-with-facebook=Registrieren Sie sich bei Facebook
 registration.login=Registration.login
 registration-login=Ihre E-Mail-Adresse als Login
 validation.login=Nicht gültige E-Mail-Adresse
-validation.required=Dieses Feld ist erforderlich
+validation.required=Dieses Feld ist nötig
 validation.passwordMatch=Kennwort nicht übereinstimmt
                                               
 #login.html                                                        
@@ -842,54 +834,20 @@ login.return=Login.return
 #userAbout.html                                                    
                                               
 #userTop.html                                                      
-follow-user=Durch die folgenden Benutzer Sie seine öffentlichen Beiträge auf Ihrem Dashboard sehen
-block-user=Durch die Blockade Benutzer, wird er nicht in der Lage, Sitzungen von Ihnen anfordern, laden Sie ein, seine Sitzungen, verbinden Sie Ihren öffentlichen Sitzungen oder lassen Sie Kommentare oder Nachrichten zu sein
-view-profile=Benutzer-Profile anzeigen
+follow-user=Durch Benutzer Folgen können Sie seine Beiträge auf Dashboard sehen
+block-user=Wenn Sie Benutzer blokieren, wird er nicht Sitzungen anfordern, lade Sie ein zu seinen Sitzungen, beitreten Ihren Sitzungen oder Kommentare und Nachrichten Ihnen senden.
+view-profile=Benutzer profil anzeigen
 online=Online
 offline=Offline
-edit-profile=Profil bearbeiten
+edit-profile=Profil editieren
 last-online=Zuletzt online
-public-calendar=Blick zur Verfügung stehende Zeit
+public-calendar=Kalendar ansichten
 followers=Verfolger
                                               
 #wiki.html                                                          
                                               
 #calendar.js                                                        
-app.confirmDeleteEvent=Bitte bestätigen
-cal.today=Cal.today
-cal.month=Cal.month
-cal.week=Cal.week
-cal.day=Cal.day
-cal.jan=Cal.jan
-cal.feb=Cal.feb
-cal.mar=Cal.mar
-cal.apr=Cal.apr
-cal.may=Cal.may
-cal.jun=Cal.jun
-cal.jul=Cal.jul
-cal.aug=Cal.aug
-cal.sep=Cal.sep
-cal.oct=Cal.oct
-cal.nov=Cal.nov
-cal.dec=Cal.dec
-cal.january=Cal.january
-cal.february=Cal.february
-cal.march=Cal.march
-cal.april=Cal.april
-cal.june=Cal.june
-cal.july=Cal.july
-cal.august=Cal.august
-cal.september=Cal.september
-cal.october=Cal.october
-cal.november=Cal.november
-cal.december=Cal.december
-cal.sun=Cal.sun
-cal.mon=Cal.mon
-cal.tue=Cal.tue
-cal.wed=Cal.wed
-cal.thu=Cal.thu
-cal.fri=Cal.fri
-cal.sat=Cal.sat
+app.confirmDeleteEvent=Bitte bestätigen Sie Ihre Wahl
 New event=Neue Sitzung
 add-google-event=Konvertieren Google Ereignis Widgr
                                               
@@ -948,15 +906,15 @@ unmute=Ton ein
 select-this-file=Wählen Sie diese Datei
 requested=Angeforderte
 new-message=Neue Nachricht
-attachments=Zubehör
+attachments=Anlage 
 write-a-reply=Antwort schreiben
-before=Vor
-starts-in=Starts in
+before=vor
+starts-in=Beggint in
 days=Tage
 p2p=Videoanruf
-broadcast=Broadcast-
+broadcast=Broadcast
 instant=Sofortige Sendung
-hangout=Aushängen
+hangout=Hangout
 hangoutAir=Hangout on Air
 app.admin=Admin
 you=Sie
@@ -971,26 +929,26 @@ reply=Antwort schreiben
 #utils.js                                                           
                                               
 # Activity list                                                     
-invitationCreated=Eingeladen <a class=popup-Event-Bearbeitung href=/user/%s>%s </a> Sitzung <a class=popup-Event-Bearbeitung href=/event/%s>%s </a>
-invitationAccepted=Akzeptierte Sitzung <a class=popup-Event-Bearbeitung href=/event/%s>%s </a>
-invitationDeclined=Abgesagt Sitzung <a class=popup-Ereignis-edit href=/event/%s>%s </a>
-eventDeleted=Abgesagt Sitzung <a class=popup-Ereignis-edit href=/event/%s>%s </a>
-eventDeletedCust=Abgesagt Sitzung <a class=popup-Ereignis-Bearbeitung von Daten-event=%s href=#>%s </a>
-eventCreatedUsr=Erstellt Sitzung <a class=popup-Event-Bearbeitung href=/event/%s>%s </a>
-eventCreatedCust=Angeforderte neue Sitzung für Kanal <a class=popup-Event-Bearbeitung href=/event/%s>%s </a>
-eventMoved=Geänderte Zeit für Sitzung <a class=popup-Event-Bearbeitung href=/event/%s>%s </a>
-eventUpdatedUsr=Aktualisiert Sitzung <a class=popup-Event-Bearbeitung href=/event/%s>%s </a>
-eventUpdatedCust=Aktualisiert Sitzung <a class=popup-Event-Bearbeitung href=/event/%s>%s </a>
-eventApproved=Genehmigt Sitzung <a class=popup-Event-Bearbeitung href=/event/%s>%s </a>
-eventDeclined=Abgelehnt Sitzung%s
-eventCommented=Hinzugefügt kommentieren Sitzung <a class=popup-Event-Bearbeitung href=/event/%s>%s </a>
-eventCommentedCust=Hinzugefügt kommentieren Sitzung <a class=popup-Event-Bearbeitung href=/event/%s>%s </a>
-eventStarted=Session <a class=popup-Event-Bearbeitung href=/event/%s>%s </a> gerade erst begonnen
+invitationCreated=Ladet <a class=popup-event-edit href=/user/%s>%s</a> zur Sitzung <a class=popup-event-edit href=/event/%s>%s</a> ein
+invitationAccepted=Akzeptiert Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
+invitationDeclined=Abgesagt Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
+eventDeleted=Abgesagt Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
+eventDeletedCust=Abgesagt Sitzung <a class=popup-event-edit data-event=%s href=#>%s</a>
+eventCreatedUsr=Erstellt Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
+eventCreatedCust=Angefordert neue Sitzung für <a class=popup-event-edit href=/event/%s>%s</a>
+eventMoved=Geänderte Zeit für Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
+eventUpdatedUsr= Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
+eventUpdatedCust=Aktualisierte Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
+eventApproved=Akzeptiert Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
+eventDeclined=Abgesagt Sitzung %s
+eventCommented=Kommentiert Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
+eventCommentedCust=Kommentiert Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
+eventStarted=Sitzung <a class=popup-event-edit href=/event/%s>%s</a> beggint
                                               
-cal.sun=Sonne
+cal.sun=Son
 cal.mon=Mon
-cal.tue=Di
-cal.wed=Heiraten
+cal.tue=Die
+cal.wed=Mit
 cal.thu=Do
 cal.fri=Fr
 cal.sat=Sa
@@ -1013,7 +971,7 @@ cal.september=September
 cal.october=Oktober
 cal.november=November
 cal.december=Dezember
-cal.jan=Jan
+cal.jan=Januar
 cal.feb=Februar
 cal.mar=Beschädigen
 cal.apr=April

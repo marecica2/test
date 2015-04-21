@@ -1,9 +1,24 @@
 #{list items:items, as:'item'}
-#{if item.deleted == null || (user != null && user.uuid == item.user.uuid) }
+#{if item.deleted == null || (user != null && user.uuid == item.user.uuid && displayHidden) }
 <div class="shadow-blur anchorlink" data-href="/channel/${item.uuid}" style="#{if item.deleted}opacity:0.4#{/if}; cursor:pointer;text-align:left;width:100% background: #fafafa; width:100%; margin:0 0 20px 0;">
 	<div>
    		<div class="listing-item-top shadow-inset-2" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
    		</div>
+		
+		<script type="application/ld+json">
+		{
+  			"@context": "http://schema.org",
+  			"@type": "NewsArticle",
+  			"author": "${item.user.getFullName()}",
+  			"url": "${baseUrl}/channel/${item.uuid}",
+  			"headline": "${item.title}",
+  			"alternativeHeadline": "${item.title}",
+  			"image": ["${baseUrl}${item.imageUrl}_128x128"],
+ 		 	"datePublished": "${item.created}",
+  			"description": "${item.title}",
+  			"articleBody": "${item.description}"
+		}
+		</script>
 
    		<div class="listing-item shadow-inset-2" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
    		</div>
@@ -59,7 +74,7 @@
 				#{/if}
 				
 				#{if !isOwner}
-					<a href="/user/${usr.login}/calendar?channel=${item.uuid}" class="btn btn-gray btn-sm btn-margin pull-right "><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
+					<a href="/user/${item.user.login}/calendar?channel=${item.uuid}" class="btn btn-gray btn-sm btn-margin pull-right "><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
 				#{/if}            		
 	
 				#{if !isOwner && item.isAvailable() && item.type == 'p2p'}

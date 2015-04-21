@@ -36,11 +36,11 @@
 	<div>
 		<a href="/user/${userDisplayed.login}#chat=open" target="_blank" rel="tooltip" data-original-title="&{'go-to-profile'}"><img style="height:40px" src="/${userDisplayed.avatarUrl}_64x64"></a>			
 		#{if listing.isAvailable()}
-			<a href="/channel/${item.uuid}#chat=open" target="_blank" class="btn btn-success btn-xl btn-short open-chat style-switcher" style="border-width:0px;" rel="tooltip" data-original-title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
+			<a href="/channel/${item.uuid}#chat=open" target="_blank" class="btn btn-default btn-xl btn-short open-chat style-switcher" style="border-width:0px;" rel="tooltip" data-original-title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
 		#{/if}		
 		#{if !isOwner}
 			#{if !isOwner && listing.isAvailable()}
-				<a href="/instant-room?id=${listing.uuid}&#{token /}" target="_blank" class="btn btn-success btn-xl btn-short no-schedule-start style-switcher" style="border-width:0px;"><i class="fa fa-play"></i> &{'request-for-event-instant'}</a>
+				<a href="/instant-room?id=${listing.uuid}&#{token /}" target="_blank" class="btn btn-default btn-xl btn-short no-schedule-start style-switcher" style="border-width:0px;"><i class="fa fa-play"></i> &{'request-for-event-instant'}</a>
 			#{/if}			
 			#{elseif user}
 				<a href="/mail?action=new&to=${listing.user.login}" target="_blank" class="btn btn-dark btn-xl btn-short open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-comments-o"></i></a>

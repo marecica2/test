@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
-<!--[if !IE]><!-->
 <html lang="en">
 <!--<![endif]-->
 	<head>
@@ -244,9 +242,9 @@
 			#{if (listing != null && listing.user.isAvailable()) || (usr != null && usr.isAvailable())}
 			<script type="text/javascript" src="@{'/public/style-switcher/style-switcher.js'}"></script>
 			<div class="style-switcher closed shadow-small style-switcher-container hidden" >
-				<div style="color:white; background: #5cb85c" class="header btn-success">
-					<a class="trigger btn-success" href="#"><i class="fa fa-comments-o"></i></a>
-					<h2 style="color:white; background: #5cb85c; font-size:1em" ><i class="fa fa-comments-o"></i> &{'chat'} ${usr.firstName}</h2>
+				<div class="header" style="background: #954db3">
+					<a class="trigger btn-default" href="#"><i class="fa fa-comments-o"></i></a>
+					<h2 style="color:white; font-size:1.1em" ><i class="fa fa-comments-o"></i> &{'chat'} ${usr.getFullName()}</h2>
 				</div>
 				<div style="background: #fafafa;padding:5px;font-size:0.9em; color:black" class="style-switcher-container-2">
 					#{if isOwner}
@@ -264,7 +262,7 @@
 						<input id="chat-text2" class="form-control" style="color:black" placeholder="&{'enter-your-message'}"> 
 						<input id="chat-name2" type="hidden" value="${name}"> 
 						<span class="input-group-btn">
-							<button id="chat-send2" class="btn btn-success btn-short" style="margin:0px;height:40px"><i class="fa fa-paper-plane-o"></i></button>
+							<button id="chat-send2" class="btn btn-default btn-short" style="margin:0px;height:40px"><i class="fa fa-paper-plane-o"></i></button>
 						</span>
 					</div>
 				</div>
@@ -356,6 +354,7 @@
 												<li class="twitter"><a target="_blank" href="http://twitter.com/widgrApp"><i class="fa fa-twitter"></i></a></li>
 												<li class="googleplus"><a target="_blank" href="https://plus.google.com/+WidGrApp"><i class="fa fa-google-plus"></i></a></li>
 												<li class="youtube"><a target="_blank" href="https://www.youtube.com/channel/UCWM6yey03-S3OYVEo3PC3Mg"><i class="fa fa-youtube"></i></a></li>
+												<li class="vimeo"><a target="_blank" href="https://vimeo.com/channels/widgr"><i class="icon-vimeo"></i></a></li>												
 											</ul>
 										</div>
 										
