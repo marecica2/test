@@ -3,17 +3,17 @@ invalid-value=Ungültiger Wert
 error-default-message=Da ging etwas schief. Ausnahme wurde gespeichert.
 you-need-at-least-one-listing=Um ein Publisher werden müssen Sie  mindestens einen Kanal erstellen.<a href="/channel/new?action=edit&new=true"> Klicken Sie hier um eine erstellen</a>
 please-fill-in-information-about-you=Um ein Publisher müssen Sie in Informationen über Sie zu füllen.
-your-publisher-request-was-submited==Ihre Anbieter-Anfrage wurde geschickt. Bitte geben Sie uns etwas Zeit, um Ihre Anfrage zu überprüfen. Nach Abschluss der Überprüfung werden Sie per e-Mail benachrichtigt werden.
+your-publisher-request-was-submited=Ihre Anbieter-Anfrage wurde geschickt. Bitte geben Sie uns etwas Zeit, um Ihre Anfrage zu überprüfen. Nach Abschluss der Überprüfung werden Sie per e-Mail benachrichtigt werden.
 #Admin.java                                                          
 publisher-request-approved-subject=Ihre Anfrage für Anbieter wurde genehmigt 
-publisher-request-approved-message=h3. Ihre Anfrage für Publisher wurde genehmigt \ nVon jetzt sind alle Ihre Kanäle zum sehen und Sie können Ihr Anbieter-Konto nutzen.
+publisher-request-approved-message=h3. Ihre Anfrage für Publisher wurde genehmigt \n Von jetzt sind alle Ihre Kanäle zum sehen und Sie können Ihr Anbieter-Konto nutzen.
 publisher-request-declined-subject=Ihre Anfrage für Anbieter wurde abgelehnt 
-publisher-request-declined-message=h3. Ihre Anfrage für Anbieter wurde abgelehnt \ nBitte füllen Ihre persönlichen und Kanäle Daten  und versuchen Sie es wieder. Denken Sie daran, dass Sie uns immer Fragen können was muss korrigiert werden, um später erfolgreich genehmigt werden. [Stellen Sie Uns eine Frage |%s]
+publisher-request-declined-message=h3. Ihre Anfrage für Anbieter wurde abgelehnt \n Bitte füllen Ihre persönlichen und Kanäle Daten  und versuchen Sie es wieder. Denken Sie daran, dass Sie uns immer Fragen können was muss korrigiert werden, um später erfolgreich genehmigt werden. [Stellen Sie Uns eine Frage |%s]
 event-reminder-subject=Erinnerung für Sitzung %s
-event-reminder-message=h3. Benachrichtigung für Sitzung %s \nDiese Benachrichtigung wurde Ihnen gesendet um Sie benachrigtigen, dass Siztung [%s|%sevent/%s] startet um %s. \nWenn Sie möchten keine neue Benachrichtigungen zu erhalten, melden Sie sich im Widgr an und gehen zur Einstellungen um Benachrichtigungen zu deaktivieren.
+event-reminder-message=h3. Benachrichtigung für Sitzung %s \n Diese Benachrichtigung wurde Ihnen gesendet um Sie benachrigtigen, dass Siztung [%s|%sevent/%s] startet um %s. \nWenn Sie möchten keine neue Benachrichtigungen zu erhalten, melden Sie sich im Widgr an und gehen zur Einstellungen um Benachrichtigungen zu deaktivieren.
                                               
 #Application.java                                                    
-start-helping-others=<h4>Drei Schritte zu einem Anbieter werden.</h4> Zum einem Anbieter werden, führen Sie die folgen Sie diese Schritte oder <a href="/help#publisher"> sehen Sie ein video Tutorial</a>, <ul><li><a href="/settings?edit=true#about">Füllen Sie Informationen über Sie</a></li> <li><a href="/channel/new?action=edit&new=true"> Erstellen Sie Ihre erste Kanal</a></li>, <li><a href='/settings/request-publisher?authenticityToken=%s'> Klicken Sie hier für Anbieter-Konto zu beantragen</a></li></ul>
+start-helping-others=<h4>Drei Schritte zu einem Anbieter werden.</h4> Zum einem Anbieter werden, führen Sie die folgen Sie diese Schritte oder <a href="/help#publisher"> schauen Sie ein video Tutorial an</a> <ul><li><a href="/settings?edit=true#about">Füllen Sie Informationen über Sie</a></li> <li><a href="/channel/new?action=edit&new=true">Erstellen Sie Ihre erste Kanal</a></li><li><a href='/settings/request-publisher?authenticityToken=%s'>Klicken Sie hier für Anbieter-Konto zu beantragen</a></li></ul>
 click-and-drag-to-create-event=Wählen Sie eine freie Zeitfenster und beginnen Sie zu ziehen, um eine Anforderung für eine neue Sitzung zu erstellen. <br/> <span style='opacity:0.5'> Sitzung Markiewith solider schwarzer Farbe bedeutet, dass dieses Zeitfenster bereits reserviert ist.</span>
                                               
 #Attendances.java                                                

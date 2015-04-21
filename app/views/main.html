@@ -282,9 +282,7 @@
 								
 								#{if user && request.cookies.msgPublisher == null && !user.isPublisher()}
 									<div class="shadow alert alert-info alert-dismissible" role="alert">
-									*{
 									  <button type="button" class="close" data-dismiss="alert" onclick="star.utils.dismiss('msgPublisher')"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
-									}*
 									  &{'start-helping-others', session.getAuthenticityToken()}
 									</div>
 								#{/if}

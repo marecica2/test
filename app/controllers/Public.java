@@ -21,114 +21,103 @@ import com.google.gson.JsonObject;
 import dto.ActivityDTO;
 import dto.ChatFeedDTO;
 
-public class Public extends BaseController
-{
-    public static void embed(String channel) throws Throwable
-    {
-        final User user = getLoggedUser();
-        final Listing listing = channel != null ? Listing.get(channel) : null;
-        final User userDisplayed = listing.user;
+public class Public extends BaseController {
+	public static void embed(String channel) throws Throwable {
+		final User user = getLoggedUser();
+		final Listing listing = channel != null ? Listing.get(channel) : null;
+		final User userDisplayed = listing.user;
+		final String baseUrl = getBaseUrl();
+		final List<Contact> followers = null;
+		final List<Contact> followees = null;
+		render(user, userDisplayed, listing, followers, followees, baseUrl);
+	}
 
-        final List<Contact> followers = Contact.getFollowers(userDisplayed);
-        final List<Contact> followees = Contact.getFollowing(userDisplayed);
-        render(user, userDisplayed, listing, followers, followees);
-    }
+	public static void checkConnection() {
+		User user = getLoggedUser();
+		if (user == null)
+			forbidden();
 
-    public static void checkConnection()
-    {
-        User user = getLoggedUser();
-        if (user == null)
-            forbidden();
+		user = getLoggedUserNotCache();
+		user.lastOnlineTime = new Date();
+		user.save();
 
-        user = getLoggedUserNotCache();
-        user.lastOnlineTime = new Date();
-        user.save();
+		JsonObject resp = new JsonObject();
+		resp.addProperty("logged", "true");
+		if (user.unreadMessages != null && user.unreadMessages)
+			resp.addProperty("email", "true");
+		renderJSON(resp.toString());
+	}
 
-        JsonObject resp = new JsonObject();
-        resp.addProperty("logged", "true");
-        if (user.unreadMessages != null && user.unreadMessages)
-            resp.addProperty("email", "true");
-        renderJSON(resp.toString());
-    }
+	public static void locale(String locale, String url) {
+		final User user = getLoggedUserNotCache();
+		if (user != null) {
+			user.locale = locale;
+			user.save();
+		}
+		Lang.change(locale);
+		redirectTo(url);
+	}
 
-    public static void locale(String locale, String url)
-    {
-        final User user = getLoggedUserNotCache();
-        if (user != null)
-        {
-            user.locale = locale;
-            user.save();
-        }
-        Lang.change(locale);
-        redirectTo(url);
-    }
+	public static void feeds(String event) {
+		final List<ChatFeed> feeds = ChatFeed.getByUuid(event);
+		final List<ChatFeedDTO> feedsDto = new ArrayList<ChatFeedDTO>();
+		for (ChatFeed chatFeed : feeds)
+			feedsDto.add(ChatFeedDTO.convert(chatFeed));
+		renderJSON(feedsDto);
+	}
 
-    public static void feeds(String event)
-    {
-        final List<ChatFeed> feeds = ChatFeed.getByUuid(event);
-        final List<ChatFeedDTO> feedsDto = new ArrayList<ChatFeedDTO>();
-        for (ChatFeed chatFeed : feeds)
-            feedsDto.add(ChatFeedDTO.convert(chatFeed));
-        renderJSON(feedsDto);
-    }
+	public static void feedsClear(String uuid, String url) {
+		User user = getLoggedUser();
+		Listing l = Listing.get(uuid);
+		if (l != null && !user.equals(l.user))
+			forbidden();
+		Event e = Event.get(uuid);
+		if (e != null && !user.equals(e.user))
+			forbidden();
 
-    public static void feedsClear(String uuid, String url)
-    {
-        User user = getLoggedUser();
-        Listing l = Listing.get(uuid);
-        if (l != null && !user.equals(l.user))
-            forbidden();
-        Event e = Event.get(uuid);
-        if (e != null && !user.equals(e.user))
-            forbidden();
+		checkAuthenticity();
 
-        checkAuthenticity();
+		final List<ChatFeed> feeds = ChatFeed.getByUuid(uuid);
+		for (ChatFeed chatFeed : feeds)
+			chatFeed.delete();
 
-        final List<ChatFeed> feeds = ChatFeed.getByUuid(uuid);
-        for (ChatFeed chatFeed : feeds)
-            chatFeed.delete();
+		redirectTo(url);
+	}
 
-        redirectTo(url);
-    }
+	public static void feedSave() {
+		final User user = getLoggedUser();
+		if (user == null)
+			forbidden();
 
-    public static void feedSave()
-    {
-        final User user = getLoggedUser();
-        if (user == null)
-            forbidden();
+		final JsonObject jo = JsonUtils.getJson(request.body);
+		ChatFeed feed = new ChatFeed();
+		feed = feedFromJson(jo, feed);
+		feed.saveFeed();
+		renderJSON(feed);
+	}
 
-        final JsonObject jo = JsonUtils.getJson(request.body);
-        ChatFeed feed = new ChatFeed();
-        feed = feedFromJson(jo, feed);
-        feed.saveFeed();
-        renderJSON(feed);
-    }
+	public static void activities(String id, int limit, String uuid) {
+		final User user = getLoggedUser();
+		if (user == null)
+			forbidden();
 
-    public static void activities(String id, int limit, String uuid)
-    {
-        final User user = getLoggedUser();
-        if (user == null)
-            forbidden();
+		final List<Activity> activities = Activity.getByUser(user, limit, uuid);
+		final List<ActivityDTO> aDto = new ArrayList<ActivityDTO>();
+		for (Activity activity : activities)
+			aDto.add(ActivityDTO.convert(activity, user));
+		renderJSON(aDto);
+	}
 
-        final List<Activity> activities = Activity.getByUser(user, limit, uuid);
-        final List<ActivityDTO> aDto = new ArrayList<ActivityDTO>();
-        for (Activity activity : activities)
-            aDto.add(ActivityDTO.convert(activity, user));
-        renderJSON(aDto);
-    }
+	public static void wiki() {
+		renderTemplate("wiki.html");
+	}
 
-    public static void wiki()
-    {
-        renderTemplate("wiki.html");
-    }
-
-    private static ChatFeed feedFromJson(final JsonObject jo, ChatFeed feed)
-    {
-        feed.uuid = StringEscapeUtils.escapeHtml(jo.get("uuid").getAsString());
-        feed.comment = StringEscapeUtils.escapeHtml(jo.get("comment").getAsString());
-        feed.name = StringEscapeUtils.escapeHtml(jo.get("name").getAsString());
-        feed.created = new Date();
-        return feed;
-    }
+	private static ChatFeed feedFromJson(final JsonObject jo, ChatFeed feed) {
+		feed.uuid = StringEscapeUtils.escapeHtml(jo.get("uuid").getAsString());
+		feed.comment = StringEscapeUtils.escapeHtml(jo.get("comment").getAsString());
+		feed.name = StringEscapeUtils.escapeHtml(jo.get("name").getAsString());
+		feed.created = new Date();
+		return feed;
+	}
 
 }
