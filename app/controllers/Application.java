@@ -214,13 +214,17 @@ public class Application extends BaseController
         render();
     }
 
+    public static void test()
+    {
+        render();
+    }
+
     public static void home()
     {
         changeLocale();
 
         final User user = getLoggedUser();
         List<Listing> listings = Listing.getRandom(5);
-        System.err.println(listings);
         String baseUrl = getBaseUrl();
         render(user, listings, baseUrl);
     }

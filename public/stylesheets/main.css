@@ -155,7 +155,6 @@ img {
 
 
 /* various */
-
 .pointer {
 	cursor: pointer;
 }
@@ -275,8 +274,13 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
 	}	
 }
 
-
 @media screen and (min-width: 767px) {
+	.listing-image {
+		min-height:500px;
+	}	
+	.padding30 {
+		padding:30px;
+	}	
 	.banner-search {
 		max-width:400px;
 		position:absolute;
@@ -287,11 +291,14 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
 		width:300px;
 	}
 }
+
 @media screen and (max-width: 767px) {
 	div.banner {
 		//display:none;	
 	}
-	
+	.listing-image {
+		min-height:200px;
+	}	
 	.input-block {
 		width:100%;
 	}
@@ -584,10 +591,22 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
 	text-shadow: 1px 2px 2px rgba(0, 0, 0, 1);
 }
 
+.shadow-inset {
+	-webkit-box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 0.3);
+	box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 0.3);
+}	
+
+.shadow-outset {
+	-webkit-box-shadow: 0px 0px 90px 49px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 0px 90px 49px rgba(0, 0, 0, 0.5);
+	box-shadow:  0px 0px 90px 49px rgba(0, 0, 0, 0.5);
+}
+
 .shadow-inset-2 {
-	-webkit-box-shadow: inset -20px -45px 100px -34px rgba(0,0,0,1);
-	-moz-box-shadow: inset -20px -45px 100px -34px rgba(0,0,0,1);
-	box-shadow: inset -20px -45px 100px -34px rgba(0,0,0,1);	
+	-webkit-box-shadow: inset -20px -45px 100px -34px rgba(0,0,0,0.5);
+	-moz-box-shadow: inset -20px -45px 100px -34px rgba(0,0,0,0.5);
+	box-shadow: inset -20px -45px 100px -34px rgba(0,0,0,0.5);	
 }
 
 .shadow-small {
@@ -609,28 +628,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
 }
 
 
-@media screen and (min-width: 767px) {
-	.listing-image {
-		min-height:500px;
-	}
-}
-.shadow-inset {
-	-webkit-box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 0.8);
-	-moz-box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 0.8);
-	box-shadow: inset 0px 0px 90px 49px rgba(0, 0, 0, 0.8);
-}	
-
-.shadow-outset {
-	-webkit-box-shadow: 0px 0px 90px 49px rgba(0, 0, 0, 0.5);
-	-moz-box-shadow: 0px 0px 90px 49px rgba(0, 0, 0, 0.5);
-	box-shadow:  0px 0px 90px 49px rgba(0, 0, 0, 0.5);
-}	
-
-@media screen and (max-width: 767px) {
-	.listing-image {
-		min-height:200px;
-	}
-}
 
 
 

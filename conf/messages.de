@@ -578,6 +578,7 @@ refresh=Reload Videoanruf
 hang-up=Videoanruf&nbsp;enden
                                               
 #header.html
+tour=Tour
 sitemap=Sitemap                                                    
 your-sessions=Mein Kalender
 session-approval=Angeforderte Sitzungen
@@ -713,7 +714,7 @@ play-introduction=Einführung&nbsp;Video&nbsp;spielen
 total-price=Gesamtpreis
 min=Min
 request-for-event=Sitzung planen
-request-for-event-instant=video Anruf beitreten
+request-for-event-instant=Instant Videoanruf
 guests=Gäste
 add-to-watchlist=Auf die Merkliste hinzufügen
 remove-from-watchlist=Aus Merkliste entfernen

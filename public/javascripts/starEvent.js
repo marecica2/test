@@ -155,8 +155,8 @@ star.renderComments = function(data, dashboard){
 }
 
 star.initItems = function(prefix, urlParams){
-    if($("#itemsList"+prefix).get(0)){
-        $(document).ready(function(){
+    $(document).ready(function(){
+        if($("#itemsList"+prefix).get(0)){
             star[prefix] = {};
             star[prefix].size = 9;
             star[prefix].first = 0;
@@ -202,9 +202,8 @@ star.initItems = function(prefix, urlParams){
                params.url = url;
                star.loadItems(prefix, params);                  
            });
-    
-        });    
-    }
+        }
+    });    
 };
 
 star.loadItems = function(prefix, urlParams){
@@ -235,38 +234,32 @@ star.renderItems = function(data, prefix){
         else
             url = "/event/"+item.uuid;
         
-        html += "<div itemscope itemtype='http://schema.org/Event' class='anchorlink pointer event-box2 shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-href='"+url+"' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
-        html += "   <div class='overlay-container'>";
+        html += "<div class='anchorlink pointer event-box2 shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-href='"+url+"' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
         
+        html += "   <div class='overlay-container'>";
         html += "       <a href='"+url+"'>";
         html += "       <div style='background:url(\"/"+item.imageUrl+"_128x128\"); height:128px; width:100%; background-size: cover' class='shadow-inset-2'></div>";
-        html += "       <span style='display:none' itemprop='url'>"+url+"</span>";
-        html += "       <span style='display:none' itemprop='startDate'>2016-01-01</span>";
         html += "       <div style='position:absolute;bottom:5px;right:0px;width:270px'>";
-        html += "           <div style='font-weight:bold;' class='white' itemprop='name'>"+star.utils.trimTo(item.title, 50)+"</div>";
+        html += "           <div style='font-weight:bold;' class='white'>"+star.utils.trimTo(item.title, 50)+"</div>";
         html += "       </div>";            
         html += "       </a>";            
-
         html += "   </div>";
         
-        html += "   <meta itemprop='image' content='https://wid.gr/public/"+item.imageUrl+"_128x128'>";
         html += "   <div class='image-box-body' style='position:relative'>";
-        
         html += "       <div style='position:absolute;top: -34px; width:100%'>";
         html += "           <img class='avatar64 img-circle' style='border:3px solid #fafafa; float:left; margin-right:10px' href='"+url+"' src='/"+item.createdByAvatarUrl+"_64x64'>"
         html += "       </div>";
-        
         html += "       <div style='position:absolute;top:0px;right:0px;width:270px'>";
         if(item.available)
             html += "       <i class='fa fa-circle' style='color:green'></i>";            
-        html += "           <small itemprop='performer' itemscope itemtype='http://schema.org/Person'><strong><a href='/user/"+item.createdByLogin+"' itemprop='name'>"+item.createdByName+"</a></strong></small>";
+        html += "           <small><strong><a href='/user/"+item.createdByLogin+"' itemprop='name'>"+item.createdByName+"</a></strong></small>";
         if(item.language != null) 
             html += "       &middot; <img src='/public/images/flags/"+item.language+".gif'>"; 
         html += "           &middot; <small>"+i18n(item.category)+"</small>"
         html += "       </div>";
         
         if(listing)
-            html += "       <p class='left' itemprop='description' style='font-size:0.9em;margin-top:20px'>" + star.utils.trimTo(item.description, 90) + "</p>";
+            html += "       <p class='left' style='font-size:0.9em;margin-top:20px'>" + star.utils.trimTo(item.description, 90) + "</p>";
         else
             html += starEvent.renderEventBody(item);
         
@@ -275,12 +268,11 @@ star.renderItems = function(data, prefix){
             html += "<strong>"+i18n("free")+"</strong>";
         }
         
-        html += "<span itemprop='offers' itemscope itemtype='http://schema.org/Offer'>";
         if(item.charging != 'free'){
             if(listing)
-                html += i18n("from")+"&nbsp;<strong itemprop='price'>"+item.price+"</strong>&nbsp;"+item.currency+"&nbsp;";
+                html += i18n("from")+"&nbsp;<strong>"+item.price+"</strong>&nbsp;"+item.currency+"&nbsp;";
             else
-                html += "<strong itemprop='price'>"+item.priceTotal+"</strong>&nbsp;"+item.currency+"&nbsp;"+i18n("for")+" "+item.chargingTime+ " "+i18n("min") + " ";
+                html += "<strong>"+item.priceTotal+"</strong>&nbsp;"+item.currency+"&nbsp;"+i18n("for")+" "+item.chargingTime+ " "+i18n("min") + " ";
             if(item.firstFree != undefined && item.firstFree == true){
                 html += "<small class='label default-bg'>First free</small>";
             }       

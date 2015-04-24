@@ -62,6 +62,7 @@ public class Secure extends BaseController
 
     public static void login()
     {
+
         User user = getLoggedUser();
         Http.Cookie remember = request.cookies.get("rememberme");
         if (remember != null && remember.value.indexOf("-") > 0)
@@ -165,9 +166,12 @@ public class Secure extends BaseController
     public static void logout() throws Throwable
     {
         User user = getLoggedUserNotCache();
-        user.available = null;
-        user.lastOnlineTime = null;
-        user.save();
+        if (user != null)
+        {
+            user.available = null;
+            user.lastOnlineTime = null;
+            user.save();
+        }
 
         Security.invoke("onDisconnect");
         session.clear();

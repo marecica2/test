@@ -47,6 +47,7 @@
 					<input type="text" class="form-control" id="login" name="login" value="#{if request.params.email}${request.params.email}#{/if}#{else}${params.login}#{/else}" placeholder="&{'registration-login'}" /> <input type="hidden" class="form-control" id="token" name="token" value="${request.params.token}" /> 
 					<input type="hidden" class="form-control" id="invitation" name="invitation"	value="${request.params.invitation}" /> 
 					<input type="hidden" class="form-control" id="facebook" name="facebook" /> 
+					<input type="hidden" class="form-control" id="facebook" name="url" value="${params.url}" /> 
 					<input type="hidden" class="form-control" id="facebookName" name="facebookName" />
 					<div class="error">#{error 'login' /}</div>
 				</div>

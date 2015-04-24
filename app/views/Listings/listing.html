@@ -144,11 +144,14 @@
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
+	      	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">&{'cancel'}</span></button>
 	        <h3 class="modal-title" id="myModalLabel"><i class="fa fa-code"></i> &{'embed-listing'}</h3>
 	      </div>
 	      <div class="modal-body">
 	      	<label>&{'embed-listing-desc'}</label>
-	      	<textarea rows="4" class="form-control" name="reason" maxlength="500" onclick="javascript:$(this).select();"><iframe width="100%" height="200px" frameBorder="0" src="${baseUrl}/embed/channel/${listing.uuid}"></iframe></textarea>
+	      	<textarea rows="4" class="form-control" name="reason" maxlength="500" onclick="javascript:$(this).select();">
+	      	<script type="text/javascript" src="${baseUrl}/public/javascripts/embed.js"></script>
+	      	<iframe id="widgr-embedded-container" data-bs="${baseUrl}" data-ws="${socketIo}" data-usr="${usr.getFullName()}" data-room="${usr.uuid}" width="100%" height="200px" src="${baseUrl}/embed/channel/${listing.uuid}" seamless frameBorder="0" scrolling="no" style="overflow: hidden; height:465px; width:465px"></iframe></textarea>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default btn-short" data-dismiss="modal">&{'close'}</button>
@@ -191,12 +194,12 @@
 	   	
 	   		#{if event}
 				#{if item && item.charging == 'free'}
-					<span class="label label-success">&{'free'}</span>
+					<span class="label btn-dark">&{'free'}</span>
 				#{/if}
 				#{else}
-					<span class="label default-bg">&{'price'}: ${event.getTotalPrice()} ${event.currency}</span>							
+					<span class="label btn-dark">&{'price'}: ${event.getTotalPrice()} ${event.currency}</span>							
 					#{if !fromEvent && listing.firstFree}
-						<span class="label label-success">&{'first-event-is-free'}</span>
+						<span class="label btn-dark">&{'first-event-is-free'}</span>
 					#{/if}
 				#{/else}
 	   		   	#{if event.charging != null && attendance && !event.isFree()}
@@ -220,12 +223,12 @@
 	   		
 	   		#{elseif listing}
   				#{if listing.charging == 'free'}
-					<span class="label label-success">&{'price'}: &{'free'}</span>
+					<span class="label btn-dark">&{'price'}: &{'free'}</span>
 				#{/if}						
 				#{else}
 					<span class="label default-bg">&{'price'}: &{'from'} ${listing.price} ${item.currency} &{'for'} ${listing.chargingTime} &{'min'}</span>
 					#{if listing.firstFree}
-						<span class="label label-success">&{'first-event-is-free'}</span>
+						<span class="label btn-dark">&{'first-event-is-free'}</span>
 					#{/if}
 				#{/else}
 	   		#{/elseif}
@@ -373,7 +376,7 @@
 
 <!-- parallax -->
 #{if !edit}
-<div class="section parallax default-translucent-bg parallax-bg-3" style="padding:20px; background-image: url('/images/page-about-banner-3.jpg');">
+<div class="section parallax dark-translucent-bg parallax-bg-3" style="padding:20px; background-image: url('/images/page-about-banner-3.jpg');">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-7">
@@ -421,7 +424,7 @@
 						<a class="btn btn-success btn-lg btn-short2" href="/available-stop?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}">&{'uncheck-me-as-available'}</a>
 					#{/if}		
 					#{if isOwner && user.isPublisher() && !listing.isAvailable() && listing.type == 'p2p'}
-						<a class="btn btn-dark btn-lg btn-short2" href="/available-start?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-original-title="&{'turn-on-available-now'}">&{'check-me-as-available'}</a>
+						<a class="btn btn-default btn-lg btn-short2" href="/available-start?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-original-title="&{'turn-on-available-now'}">&{'check-me-as-available'}</a>
 					#{/if}
 					
 					#{if listing.isAvailable()}
@@ -434,13 +437,13 @@
 							<a href="/instant-room?id=${listing.uuid}&#{token /}" class="btn btn-success btn-lg btn-short2 no-schedule-start style-switcher hidden" rel="tooltip" data-original-title="&{'join-session-now'}">&{'request-for-event-instant'}</a>
 						#{/if}			
 						#{elseif user}
-							<a href="/mail?action=new&to=${listing.user.login}&url=${request.url}" class="btn btn-dark btn-lg btn-short2 open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-comments-o"></i></a>
+							<a href="/mail?action=new&to=${listing.user.login}&url=${request.url}" class="btn btn-default btn-lg btn-short2 open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-comments-o"></i></a>
 						#{/elseif}
 						#{else}
-							<a href="/contact?id=${listing.user.login}" class="btn btn-dark btn-lg btn-short2 open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-comments-o"></i></a>
+							<a href="/contact?id=${listing.user.login}" class="btn btn-default btn-lg btn-short2 open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-comments-o"></i></a>
 						#{/else}
 						
-						<a href="/user/${usr.login}/calendar?channel=${listing.uuid}&#{token /}" class="btn btn-dark btn-lg" rel="tooltip" data-original-title="&{'schedule-session-desc'}"><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
+						<a href="/user/${usr.login}/calendar?channel=${listing.uuid}&#{token /}" class="btn btn-default btn-lg" rel="tooltip" data-original-title="&{'schedule-session-desc'}"><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
 					#{/if}
 				</div>
 			</div>
@@ -454,7 +457,7 @@
 	
 #{if !edit}
 <div class="container">		
-	<div class="row">
+	<div class="row padding30">
 
 		<div class="col-md-4 col-md-push-8">
 
@@ -679,7 +682,7 @@
     	   		#{if listing && listing.tags}
 	    		    #{set tags = listing.tags.split(",") /}
 	    	    	#{list items:tags, as:'tag'}
-	    	    		<a href="/channels?search=${tag}" style="font-size:0.8em" class="label label-default">${tag}</a>
+	    	    		<a href="/search?q=${tag}" style="font-size:0.8em" class="label label-default">${tag}</a>
 	    	    	#{/list}
     	    	#{/if}
     	    	<br/>

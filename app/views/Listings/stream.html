@@ -65,20 +65,17 @@
 
 
 <div id="image" class="listing-image" style="position:relative; overflow:hidden; width:100%; background: #{if displayBackground}url('/${listing.imageUrl}') #{/if} black center; background-size: cover;text-align:center">
+	
 	<div class="shadow-inset" style="height:110%; width:100%; top:-5%; position:absolute;">
 		#{if listing && listing.video}
 			<a class="popup-iframe text-shadow medium-hide" style="position:absolute;top:40%;left:45%;font-size:3em;z-index: 1000" href="${listing.video}" rel="tooltip" data-original-title="&{'play-introduction'}"><i class="fa fa-youtube-play"></i></a>
 		#{/if}	
 	</div>
 	
-
 	<div class="container">	
 		<div class="row">
 			<div class="col-md-12">
-			
 				<div class="row">
-				
-
 				
 					#{if (obj.type == 'broadcast' || obj.type == 'instant') && isOwner && obj.started}
 						<div class="col-md-${cols}" style="padding:0px;">
@@ -118,25 +115,6 @@
 					#{/if}
 	
 	
-					*{
-					<!-- 
-					#{if obj.type == 'p2p' && !displayIntroduction}
-						<div class="col-md-${cols}" style="padding-top:50px;padding-bottom:50px; text-align: center; opacity:0.7; #{if displayChat}height:500px;#{/if}#{else}height:200px#{/else}">
-						 	<a class="anchor text-default" style="text-decoration: none;" href="/room?id=${event.uuid}&secret=${event.roomSecret}" target="_blank" >
-						 		<i style="font-size:4em" class="fa fa-comments"></i><br/><span style="font-size:1.5em"> &{'join'}</span>
-						 	</a>
-						</div>	
-					#{/if}
-					
-					
-					#{if displayIntroduction && listing && listing.video}
-						<div class="col-md-${cols}" style="padding-top:50px;padding-bottom:50px; text-align: center; opacity:0.7">
-							<a style="text-decoration:none;" class="popup-iframe text-shadow" href="${listing.video}"><i class="fa fa-youtube-play fa-3x"></i><br/><span style="font-size:1.6em">&{'play-introduction'}</span></a>
-						</div>
-					#{/if}				
-					 -->
-					}*
-					
 					<!-- chat box-->
 					#{if displayChat}
 						<div class="col-md-${12-cols} col-md-offset-${cols} shadow-outset" style="height:500px; max-height:500px; background: rgba(0, 0, 0, 0.5)">
@@ -169,7 +147,6 @@
 							</div>
 						</div>
 					#{/if}
-					
 				</div>
 			</div>
 		</div>

@@ -124,7 +124,6 @@ public class Rating extends Model
                 sum = sum + r.stars;
             }
 
-            stats.put("totalStars", total);
             final long avg = Math.round(sum / total);
             stats.put("avgStars", avg);
             stats.put("oneStars", oneStars);
@@ -138,6 +137,7 @@ public class Rating extends Model
             stats.put("fiveStars", fiveStars);
             stats.put("fiveStarsPercent", (fiveStars * 1.0) / total * 100.0);
         }
+        stats.put("totalStars", total);
         return stats;
     }
 

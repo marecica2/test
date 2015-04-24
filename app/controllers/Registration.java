@@ -96,13 +96,17 @@ public class Registration extends BaseController
     public static void registration()
     {
         String uuid = RandomUtil.getUUID();
+        String url = request.params.get("url");
         params.put("uuid", uuid);
+        if (url != null)
+            params.put("url", url);
         params.flash();
         render(uuid);
     }
 
     public static void registrationPost(
         String login,
+        String url,
         String password,
         String passwordRepeat,
         String firstName,
@@ -177,7 +181,10 @@ public class Registration extends BaseController
 
             flash.success(Messages.get("check-out-your-email-for-activating"));
             flash.keep();
-            Secure.login();
+
+            if (url != null)
+                redirect("/login?url=" + url);
+            redirect("/login");
         } else
         {
             params.flash();

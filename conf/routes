@@ -24,6 +24,7 @@ GET 	/contact								Application.contact
 POST 	/contact-us								Application.contactUs
 GET 	/user/{userLogin}						Application.userProfile
 GET 	/public/user							Application.userProfile
+GET 	/test									Application.test
 
 GET		/login									Secure.login
 GET		/login/									Secure.login

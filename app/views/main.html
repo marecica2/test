@@ -166,22 +166,8 @@
 			"boxed": boxed layout mode e.g. <body class="boxed">
 			"pattern-1 ... pattern-9": background patterns for boxed layout mode e.g. <body class="boxed pattern-1"> 
 	-->
-	<body class="wide *{pattern-8}* ${switcherBody}" style="background: black">
+	<body class="boxed pattern-2">
 	
-<script type="application/ld+json">
-{ 
-	"@context" : "http://schema.org",
-  	"@type" : "WebSite",
-  	"url" : "http://wid.gr",
-   	"potentialAction": {
-     	"@type": "SearchAction",
-     	"target": "https://wid.gr/search?q={search_term_string}",
-     	"query-input": "required name=search_term_string"
-   	}
-}
-</script>	
-
-
 		<!-- scrollToTop -->
 		<!-- ================ -->
 		<div class="scrollToTop"><i class="icon-up-open-big"></i></div>
@@ -241,7 +227,7 @@
 			<!-- Chat box -->
 			#{if (listing != null && listing.user.isAvailable()) || (usr != null && usr.isAvailable())}
 			<script type="text/javascript" src="@{'/public/style-switcher/style-switcher.js'}"></script>
-			<div class="style-switcher closed shadow-small style-switcher-container hidden" >
+			<div class="style-switcher closed shadow-small style-switcher-container" style="display:none">
 				<div class="header" style="background: #954db3">
 					<a class="trigger btn-default" href="#"><i class="fa fa-comments-o"></i></a>
 					<h2 style="color:white; font-size:1.1em" ><i class="fa fa-comments-o"></i> &{'chat'} ${usr.getFullName()}</h2>
@@ -262,7 +248,7 @@
 						<input id="chat-text2" class="form-control" style="color:black" placeholder="&{'enter-your-message'}"> 
 						<input id="chat-name2" type="hidden" value="${name}"> 
 						<span class="input-group-btn">
-							<button id="chat-send2" class="btn btn-default btn-short" style="margin:0px;height:40px"><i class="fa fa-paper-plane-o"></i></button>
+							<button id="chat-send2" class="btn btn-default btn-short" style="margin:0px;height:40px"><i class="fa fa-share"></i></button>
 						</span>
 					</div>
 				</div>

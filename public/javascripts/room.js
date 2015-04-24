@@ -1230,6 +1230,7 @@ if(webrtc == null){
 
     socket.on('chatroom_update', function(data) {
         var isAdminOnline = false;
+        var logins = [];
         star.chatroomusers = JSON.parse(data)[star.chatRoom];
         var html = "";
         for(var i = 0; i < star.chatroomusers.length; i++){
@@ -1237,17 +1238,20 @@ if(webrtc == null){
                 isAdminOnline = true;
             }
 
-            if(star.chatroomusers[i].user != star.user){
-                if(star.chatroomusers[i].avatar != null)
-                    html += '<a href="#" data-id="'+star.chatroomusers[i].client+'" data-avatar="'+star.chatroomusers[i].avatar+'" data-name="'+star.chatroomusers[i].user+'" class="chatroom-user"><img class="avatar16" style="margin:1px;" src="/'+star.chatroomusers[i].avatar+'_32x32">' + star.chatroomusers[i].user+ '</a>';
-                else
-                    html += '<a href="#" data-id="'+star.chatroomusers[i].client+'" data-avatar="public/images/avatar" data-name="'+star.chatroomusers[i].user+'" class="chatroom-user"><img class="avatar16" style="margin:1px;" src="/images/avatar_32x32">' + star.chatroomusers[i].user+ '</a>';
+            if(logins.indexOf(star.chatroomusers[i].user) == -1){
+                logins.push(star.chatroomusers[i].user);
+                if(star.chatroomusers[i].user != star.user){
+                    if(star.chatroomusers[i].avatar != null)
+                        html += '<a href="#" data-id="'+star.chatroomusers[i].client+'" data-avatar="'+star.chatroomusers[i].avatar+'" data-name="'+star.chatroomusers[i].user+'" class="chatroom-user"><img class="avatar16" style="margin:1px;" src="/'+star.chatroomusers[i].avatar+'_32x32">' + star.chatroomusers[i].user+ '</a>';
+                    else
+                        html += '<a href="#" data-id="'+star.chatroomusers[i].client+'" data-avatar="public/images/avatar" data-name="'+star.chatroomusers[i].user+'" class="chatroom-user"><img class="avatar16" style="margin:1px;" src="/images/avatar_32x32">' + star.chatroomusers[i].user+ '</a>';
+                }
             }
         }
         if(isAdminOnline)
-            $(".style-switcher").removeClass("hidden");
+            $(".style-switcher").show();
         else
-            $(".style-switcher").addClass("hidden");
+            $(".style-switcher").hide();
         
         if(star.isOwner){
             $(".chat-avatars2").html(html);

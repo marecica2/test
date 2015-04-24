@@ -578,6 +578,7 @@ refresh=Reload call
 hang-up=End&nbsp;call
 
 #header.html
+tour=Tour
 sitemap=Sitemap
 your-sessions=My schedule
 session-approval=Requested sessions
@@ -661,8 +662,8 @@ price=Price
 first-free=First Session free
 
 #editButtons.html
-website-embed=Embed this channel on your website
-embed-listing=Embed this channel on your website
+website-embed=Embed this channel into your website
+embed-listing=Embed this channel into your website
 embed-listing-desc=If you own a site, you can embed this simple html snippet into your site. With this feature your visitors could be able to contact you using Widgr just with one click. <a href="/help#embedding">Learn more here</a>
 approved=Approved
 you-can-pay-for-event-before-or-you-can-wait-until-event-starts=You can pay for session before or you can wait until session starts
@@ -687,11 +688,11 @@ enable-channel=Enable&nbsp;channel
 turn-on-available-now=When activated, You can use simple chat box to communicate with your customers. When activated, customers can request and join session instantly. You will receive notification when new session will be created.
 setup-paypal-account-warning=If you want to create paid sessions, you need to set up your PayPal account first. <a href='/settings#paypal'>Go here to set up PayPal account</a>
 go-to-profile=View profile
-available-now=Available now
+available-now=Online
 schedule-session=Schedule a session
 schedule-session-desc=Pick a free time slot and schedule a Session later
 join-session-now=Join video call now
-open-chat=Open&nbsp;chat&nbsp;with&nbsp;Publisher
+open-chat=Open&nbsp;chat&nbsp;with&nbsp;
 this-channel-is-free=Free
 media=Media
 add-more-people=Invite more people to this session
@@ -713,7 +714,7 @@ play-introduction=Play&nbsp;introduction
 total-price=Total price
 min=Min
 request-for-event=Schedule a Session
-request-for-event-instant=Join video call now
+request-for-event-instant=Instant videocall
 guests=Guests
 add-to-watchlist=Add to watchlist
 remove-from-watchlist=Remove from watchlist
@@ -731,7 +732,7 @@ chat-box=Chat
 
 #listingsList.html
 anonymous=Guest
-available-activated=Available Now
+available-activated=Online
 reviews=Reviews
 create-event=New session
 request-event=Schedule session
