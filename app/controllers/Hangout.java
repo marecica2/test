@@ -23,6 +23,7 @@ public class Hangout extends BaseController
     //@Before(only = { "createRoom" })
     static void checkAccess()
     {
+        BaseController.getRandomChannels();
         checkAuthorizedAccess();
     }
 
@@ -68,7 +69,7 @@ public class Hangout extends BaseController
         final String room = id;
         final String baseUrl = getBaseUrl().substring(0, getBaseUrl().length() - 1);
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
-        render(user, name, room, socketIo, baseUrl, event, isOwner);
+        render(user, name, room, socketIo, baseUrl, event, isOwner, e);
     }
 
     public static void joinRoom(String id)

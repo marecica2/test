@@ -16,7 +16,9 @@ import models.User;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import play.i18n.Lang;
+import play.i18n.Messages;
 import utils.JsonUtils;
+import utils.RandomUtil;
 
 import com.google.gson.JsonObject;
 
@@ -36,7 +38,15 @@ public class Public extends BaseController
         final List<Contact> followers = null;
         final List<Contact> followees = null;
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
-        render(user, userDisplayed, listing, followers, followees, baseUrl, socketIo, ratings, stats);
+        final String name = user != null ? user.getFullName() : Messages.get("anonymous") + RandomUtil.getRandomDigits(5);
+        final String room = listing != null ? listing.uuid : null;
+        final Boolean isOwner = listing != null ? listing.user.equals(user) : false;
+
+        if (request.params.get("facebook") != null)
+        {
+        }
+
+        render(user, userDisplayed, listing, followers, followees, baseUrl, socketIo, ratings, stats, name, room, isOwner);
     }
 
     public static void checkConnection()
@@ -58,6 +68,7 @@ public class Public extends BaseController
 
     public static void locale(String locale, String url)
     {
+        System.err.println("locale" + locale);
         final User user = getLoggedUserNotCache();
         if (user != null)
         {

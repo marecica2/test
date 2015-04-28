@@ -122,6 +122,11 @@ public class Listing extends Model
         return Listing.find("from Listing where user = ? order by deleted desc nulls first ", user).fetch(500);
     }
 
+    public static List<Listing> getForUserAvailable(User user)
+    {
+        return Listing.find("from Listing where user = ? and deleted is null ", user).fetch(500);
+    }
+
     public static List<Listing> getRandom(int number)
     {
         return Listing.find("from Listing where 1 = 1 and deleted is null order by random() ").fetch(number);

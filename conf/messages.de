@@ -69,7 +69,9 @@ invitation-to-video-call-message=h3. %s ladet Sie zur Videoanruf ein. \n[Klicken
 #Listings.java                                                       
 invalid-channel-data=Ungültige Daten. Bitte korrigieren  Sie alle Eingaben wieder.
                                               
-#Notifications.java                                                  
+#Notifications.java      
+new-message-subject=Neue Nachricht von %s
+new-message-message=h3. %s \n %s                                           
 message-sent-error=Nachricht wurde nicht gesendet, bitte korrigieren Sie alle Eingaben.
 message-sent-successfully=Nachricht wurde erfolgreich gesendet
                                               
@@ -194,7 +196,7 @@ email-footer=<h4> strong> Wie erkenne ich, dies ist nicht eine gefälschte E-Mai
 register-now=Jetzt registrieren
 security=Datenschutz & Sicherheit
 help=Hilfe
-contact=Kontaktieren Sie uns
+contact=Kontakt
                                               
 #Constants.java                                                    
                                               
@@ -283,7 +285,7 @@ email-notification=E-Mail-Benachrichtigung
 enabled=Aktiviert
 disabled=Deaktiviert
 About You=Über Sie
-about=Über Widgr
+about=Über
 experiences=Erfahrungen
 website=Webseite
 facebook=Facebook
@@ -328,7 +330,7 @@ payments.thisMonth=Dieser Monat
 payments.thisYear=Dieses Jahr
 payments.allTime=Alle Zeit
 from=Von
-to=Bis Zur
+to=Zur
 submit=Senden
 payments.income=Einkommen
 payments.totalSales=Die Gesamterträge pro Tag
@@ -363,7 +365,7 @@ about-2=Widgr ist ein Ort, wo Sie Menschen mit Hilfe einer Vielzahl von Themen f
 about-3=Mit Widgr erhalten Sie Hilfe zu jeder Zeit von Menschen mit Fachwissen in einem Spektrum von Themen - Lehrer, Berater, Ärzte, Heim-Reparatur-Spezialisten, personal trainer, Hobby-Enthusiasten und mehr. <br/>Sie können Hilfe nach Qualifikationen, Ratings und Bewertungen auswahlen. Sie auch können entscheiden ob Sie Hilfe sofort erhalten oder planen eine Sitzung für später. Während einige Sitzungen frei sind, müssen Sie für einige Zahlen. Bezahlen ist einfach mit PayPal.
 why-choose-widgr=Funktionen
 why-choose-widgr-text=Warum Widgr?
-widgr-feature-1=Live video anrufen
+widgr-feature-1=Interaktive Live-video-anrufen
 widgr-feature-1-text=Widgr-Sitzungen werden durch live video Anrufen geführt. Während der Sitzung können Sie Ihre Kamera zeigen was Sie Hilfe benötigen, Sie konnen auch Screensharing und Datei teilen. Wenn Sie möchten nicht dass Anbieter Ihnen sehen wurde, können Sie die Kamera immer ausschalten. <a href="/instant" target="_blank">Try instant video call now</a>.
 widgr-feature-2=Planungsflexibilität
 widgr-feature-2-text=Es gibt zwei Möglichkeiten, sofortige und geplante Sitzungen erstellen. Wenn ein Anbieter ein grünes "Jetzt verfügbar" Symbol hat, sind Sie nur wenige Klicks von Hilfe entfernt. Vor der Sitzung können Sie interaktive Chat benutzen, um weitere Informationen vom Anbieter erhalten. Andernfalls können Sie Plannungszeiten von Anbieter ansichten und ein Zeitfenster wählen oder eine Nachricht senden zu einen anderen Zeitpunkt anfordern. <a class="link" href="/help#request-session">erfahren Sie mehr</a>
@@ -375,6 +377,8 @@ widgr-feature-5=Integration mit Facebook
 widgr-feature-5-text=Wenn Sie eine Facebook-Seite besitzen, können Sie Widgr app in "Custom tab" installieren. Mit dieser Möglichkeit haben Sie alle Dienstleistungen auf einem Platz. <a class="link" href="/help#facebook">erfahren Sie mehr</a>
 widgr-feature-6=Integration mit Google Kalender
 widgr-feature-6-text=Sie können Ihr Widgr-Konto mit Google Kalender verbinden. Mit dieser Funktion erhalten Sie einen besseren Überblick über Ihre geplanten Sitzungen auf jedem Gerät, das Sie benutzen. <a class="link" href="/help#calendar">erfahren Sie mehr</a>
+widgr-feature-7=Webseite Einfügen
+widgr-feature-7-text=Mit dieser Funktion können Sie das Gespräch-Widget direkt auf Ihrer Website ohne jegliche Anstrengung einschließen. Chat-Widget können Sie sofort sprechen Sie mit Ihren Besuchern, ihnen zu helfen und ihre Fragen beantworten. Mit dieser Funktion werden Ihre Besucher zu Ihnen per live-Video in wenigen Klicks verbinden können.
 pricing=Preise
 basic=Basic
 free=Kostenlos
@@ -543,6 +547,9 @@ remove=Entfernen
                                               
 #eventsList.html                                                     
 waiting=Warten
+
+#embed.html
+embed-login-message=Für die Planung und Zahlung für Sitzungen benötigen Sie ein Konto. <a href="/login">Log in</a> oder erstellen Sie ein. Es ist kostenlos! <a href="/registration">Registrieren Sie hier</a>
                                               
 #joinRoom.html                                                       
 canvas-name=Canvas Namen
@@ -563,11 +570,11 @@ clear=Löschen
 save-painting=Speichern
 share=Freigeben
 extension-needs-to-be-installed=In Erweiterung Chrome
-extension-needs-to-be-installed-message=Um Screensharing-Funktion verwenden, müssen Sie eine Erweiterung für Ihren Browser installieren. <A target = "_ blank" href="https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk">Click Sie hier, um auf die Chrome App Store </a> gehen
+extension-needs-to-be-installed-message=Um Screensharing-Funktion verwenden, müssen Sie eine Erweiterung für Ihren Browser installieren. <a target="_ blank" href="https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk">Click Sie hier, um auf die Chrome App Store </a> gehen
 share=Mit anderen teilen
 share-with-more=Teilen Sie diese Video-Anruf mit anderen
-share-via-link=Share via Link <small style = "font-weight: normal"> Copy & Paste mit anderen teilen </ small>
-send-notification=Kontakt hinzufügen Namen oder die E-Mail-
+share-via-link=Share via Link <small style="font-weight:normal"> Copy & Paste mit anderen teilen</small>
+send-notification=Kontakt hinzufügen Namen oder die E-Mail
 contact-name-or-email=Kontaktnamen oder E-Mail
 add=Hinzufügen
 mute=Stumm
@@ -593,7 +600,7 @@ home=Home
 channels=Kanäle
 pricing=Preise
 features=Eigenschaften
-contact-us=Kontaktieren Sie uns
+contact-us=Kontakt
 start-instant-chat=Instant&nbsp;Video&nbsp;Anruf&nbsp;starten
 sign-out=Austragen
 profile=Mein Profil
@@ -614,7 +621,7 @@ checkout-tutorials=Schauen Sie sich Tutorials
 write-message-for=Nachricht schreiben für
 tips-for-first-timers=Tipps für Neulinge
 get-a-modern-browser=Holen Sie sich einen modernen Browser
-full-experience=Um zu korrekten Benutzererfahrung bitte aktualisieren Sie Ihren Browser auf die neueste. Empfohlene Browser sind <a href="http://www.google.com/chrome/"> Google Chrome </a>, <a href = "https://www.mozilla.org/en-US/firefox/ neue / "> Mozilla Firefox </a> und <a href="http://www.opera.com/"> Opera </a>. Ansonsten können Sie <a href="/about#compatibility"> Kompatibilität Ihres Browsers hier </a> überprüfen.
+full-experience=Um zu korrekten Benutzererfahrung bitte aktualisieren Sie Ihren Browser auf die neueste. Empfohlene Browser sind <a href="http://www.google.com/chrome/"> Google Chrome </a>, <a href="https://www.mozilla.org">Mozilla Firefox</a> und <a href="http://www.opera.com/">Opera</a>. Ansonsten können Sie <a href="/about#compatibility">Kompatibilität Ihres Browsers hier</a> überprüfen.
 set-up-your-camera=Einrichten der Kamera
 set-up-your-camera-desc=Wigdr Sitzungen geschehen über Videokonferenzen, so sicher sein, dass Ihnen richtig funktioniert. Sie können die Kamera, indem Sie einen <a target="_blank" href="/instant"> Test-Videoanruf </a> testen. Sie sollten in der Lage, um zu sehen und zu hören, selbst zu sein.
 video-tutorials=Video Tutorials
@@ -648,7 +655,7 @@ charging=Aufladen
 paid=Zahlung
 dashboard.price=Preis
 enable-chat=Chat aktivieren
-enable-comments=Kommentare aktivieren
+enable-comments=Benutzer Kommentare aktivieren
 upload-new-picture=Neues Bild hochladen
 title=Titel
 tags=Schlagworte
@@ -688,7 +695,7 @@ enable-channel=Kanal aktivieren
 turn-on-available-now=Wenn aktiviert, können Sie durch einfache Chat mit Ihren Kunden kommunizieren. Wenn aktiviert, können Kunden anfordern und Sitzung sofort beitreten. Sie erhalten die Benachrichtigung, wenn eine neue Sitzung erstellt wird.
 setup-paypal-account-warning=Wenn Sie bezahlte Sitzungen erstellen möchten, müssen Sie zuerst Ihr PayPal-Konto einrichten. <a href='/settings#paypal'>Hier können Sie PayPal-Konto einrichten</a>
 go-to-profile=Benutzer Profile anzeigen
-available-now=Online
+available-now=Jetzt verfügbar
 schedule-session=Sitzung planen
 schedule-session-desc=Wählen Sie einen freien Zeitschlitz und planen Sie eine Session fur später
 join-session-now=Nehmen Sie eine Session jetzt
@@ -697,8 +704,8 @@ this-channel-is-free=Kostenlos
 media=Media
 add-more-people=Mehr Leute zu dieser Sitzung einladen
 invite-press=Prüfen ausgewählte Benutzer und drücken Sie, um eine Einladung zu dieser Tagung
-check-me-as-available=Schalten Sie ab "Sofort verfügbar"
-uncheck-me-as-available=Schalten Sie ab "Sofort verfügbar"
+check-me-as-available=Schalten Sie an "Jetzt verfügbar"
+uncheck-me-as-available=Schalten Sie ab "Jetzt verfügbar"
 available-description=Ist diese Option aktiviert, können die Kunden schreiben Sie leben Nachrichten mit einfachen Chat-Anwendung
 paid-on=Bezahlt
 refundation=Geld zurückzuzahlen
@@ -723,7 +730,7 @@ declined=Abgesagt
 write-custom-message=Schreiben Sie eine Nachricht
 notify=Benachrichtigen
 recent-events=Letzte Sitzungen
-all-channels-from=Alle Kanäle aus
+all-channels-from=Alle Kanäle von
 enter-your-message=Nachricht schreiben
                                               
 #stream.html                                                        
@@ -738,7 +745,15 @@ create-event=Neue Sitzung
 request-event=Sitzung anfragen
 archived=Archiviert             
                                               
-#main.html                                                          
+#main.html
+facebook-header=Facebook custom tab Einstellungen <small>(Sichtbar nur für Sie)</small>
+your-profile=Mein Profil
+my-calendar=Mein Kalender
+my-channel=Mein Kanal
+create-instant-session=Instant Sitzung erzeugen
+visitors=Besucher
+latest-channels=Neueste Kanale
+links=Linke                                                          
 online-users=Benutzer Online
 recipient=Nachricht an
 all=Alle
@@ -755,9 +770,9 @@ by=von
 all-rights-reserved=Alle Rechte vorbehalten
 terms=Nutzungsbedingungen
 about-widgr=Über Widgr
-contact-us=Kontaktieren Sie uns
                                               
-#inbox.html                                                     
+#inbox.html
+link=Link zur Sitzung                                                     
 system-notification=info@wid.gr
 invalid-user-name=Ungültiger Benutzername
 Inbox=Inbox
@@ -784,8 +799,10 @@ pay-with-PayPal=Mit PayPal bezahlen
                                               
 #userProfile.html                                                
                                               
-#ratings.html                                                    
-user-reviews=Benutzer bewertungen
+#ratings.html
+yes=Ja
+no=Nein                                                    
+user-reviews=Benutzer Bewertungen
 five-stars=Fünf Sterne
 four-stars=Vier Sterne
 three-stars=Drei Sterne
@@ -809,7 +826,8 @@ password-reset=Passwort reset
 login=Login
 captcha=Captcha
                                               
-#registration.html                                                   
+#registration.html       
+or-use-registration-form=Or use registration form                                            
 agreement=Mit dem Absenden Registrierung erklären Sie sich mit <a href="/terms" target="_blank"> Nutzungsbedingungen </a>
 password-label=mindestens 8 Zeichen mit einer Ziffer und zwei upper
 password-error=Ungültiges Passwort
@@ -900,10 +918,13 @@ add-google-event=Konvertieren Google Ereignis Widgr
                                               
 #typeahead.js                                                    
                                               
-#room.js                                                         
+#room.js
+left-conversation=ließ das Gespräch
+select-user=Benutzer wählen
 unmute=Ton ein
                                               
-#starEvent.js                                                    
+#starEvent.js     
+waiting-for-approved=Wartet auf Genehmigung
 select-this-file=Wählen Sie diese Datei
 requested=Angeforderte
 new-message=Neue Nachricht
@@ -938,7 +959,7 @@ eventDeletedCust=Abgesagt Sitzung <a class=popup-event-edit data-event=%s href=#
 eventCreatedUsr=Erstellt Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
 eventCreatedCust=Angefordert neue Sitzung für <a class=popup-event-edit href=/event/%s>%s</a>
 eventMoved=Geänderte Zeit für Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
-eventUpdatedUsr= Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
+eventUpdatedUsr=Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
 eventUpdatedCust=Aktualisierte Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
 eventApproved=Akzeptiert Sitzung <a class=popup-event-edit href=/event/%s>%s</a>
 eventDeclined=Abgesagt Sitzung %s

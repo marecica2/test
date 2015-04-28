@@ -90,8 +90,8 @@
 									  <dt><strong>&{'to'}</strong></dt>
 									  <dd><nobr><img class="img-circle avatar16" src="/${item.toUser.avatarUrl}_32x32" height="16px"> <a href="/user/${item.toUser.login}">${item.toUser.fullName}</a></nobr></dd>
 									  #{if user.isAdmin()}
-									  <dt><strong>&{'link'}</strong></dt>
-									  <dd><nobr><a href="${item.url}">&{'link'}</a></nobr></dd>
+									  <dt></dt>
+									  <dd><strong><a href="${item.url}">&{'link'}</a></strong></dd>
 									  #{/if}
 								</dl>
 							   ${item.getHtmlBody().raw()}

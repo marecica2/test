@@ -229,9 +229,15 @@ public class User extends Model
 
     public String getFullName()
     {
-        if (this.account != null && StringUtils.getStringOrNull(this.account.name) != null)
-            return account.name;
         return firstName + " " + lastName;
+    }
+
+    public String getFullNameAccount()
+    {
+        String acc = "";
+        if (this.account != null && StringUtils.getStringOrNull(this.account.name) != null)
+            acc = ", " + account.name;
+        return firstName + " " + lastName + acc;
     }
 
     public Boolean isPublisher()

@@ -2,17 +2,26 @@
 #{set 'title'}
 	${listing.title} - ${userDisplayed.fullName}
 #{/set}
-#{set raw: true /}
-		
+
+#{if request.params.facebook == null}
+	#{set raw: true /}
+#{/if}
+#{else}
+	#{set facebook: true /}
+#{/else}
+
+
 <!-- include from listings list -->
 #{set item: listing /}
 #{set usr: userDisplayed /}
 
-<div id="embed-item">
+
+<div id="embed-item" #{if facebook}style="position:relative; max-width: 665px; margin: 60px auto;" class="shadow-small" #{/if}>
 	<input type="hidden" id="data-bs" value="${baseUrl}">
 	<input type="hidden" id="data-ws" value="${socketIo}">
 	#{if user}
 		<div style="display:none">
+		<input type="text" id="data-lg-user-ui" value="${user.uuid}">
 		<input type="text" id="data-lg-user" value="${user.getFullName()}">
 		<input type="text" id="data-lg-user-ava" value="${user.avatarUrl}">
 		<input type="text" id="data-lg-user-lg" value="${user.login}">
@@ -21,49 +30,56 @@
 	<input type="hidden" id="data-room" value="${item.user.uuid}">
 	<input type="hidden" id="data-usr" value="${item.user.getFullName()}">
 	<input type="hidden" id="data-usr-ava" value="${item.user.avatarUrl}">
-	<div>
+	
+	<a href="/channel/${item.uuid}" target="_blank">
+	<div style="position:relative">
 	  	<span class="listing-item-top shadow-inset-2" style="display:block; background: url('/${item.imageUrl}') no-repeat center; background-size:cover;position:relative">
 			#{if item.video}
-				<a class="text-shadow" style="font-size:3em; color:white;position:absolute;top:25%;left:45%" href="${item.video}" target="_blank" title="&{'play-introduction'}"><i class="fa fa-youtube-play"></i></a>
+				<a class="text-shadow" style="font-size:3em; color:white;position:absolute;top:30%;left:45%" href="${item.video}" target="_blank" title="&{'play-introduction'}"><i class="fa fa-youtube-play"></i></a>
 			#{/if}
-	        <span style='position:absolute;bottom:5px;font-size:16px;right:0px;width:350px'>
-	        	<span style='font-weight:bold;' class='white'>${item.title}</span>
-	        </span>		
+			
+			<a href="/channel/${item.uuid}" target="_blank">
+		        <span style='position:absolute;bottom:5px;font-size:18px;right:10px;width:75%'>
+		        	<span style='font-weight:bold;' class='white'>${item.title}</span>
+		        </span>		
+	        </a>
+	        
 			<a href="/user/${userDisplayed.login}#chat=open" style="position:absolute;left:20px;top:130px" target="_blank"  data-original-title="&{'go-to-profile'}"><img class="img-circle" style="border:5px solid white" src="/${userDisplayed.avatarUrl}_64x64"></a>			
 	  	</span>
 	</div>
+	</a>
+	
   	<div style="position:relative">
-  		<div style='position:absolute;top:5px;right:0px;width:350px'>
+  		<div style='position:absolute;top:5px;right:10px;width:75%'>
 	  		#{if userDisplayed.isOnline()}
+	  			&{'online'}
 	  			<span><i class="icon-record" style="color:#5cb85c"></i></span>
 			#{/if}
 			#{else}
 	  			&{'offline'}
 	  			<span><i class="icon-record" style="color:gray"></i></span>
 			#{/else}
-			${item.user.getFullName()}
-			&middot;
-			&{item.category}
+			${item.user.getFullNameAccount()}
 		</div>		
 		<br/>	
 		
 		<div class="centered" style="padding: 15px">
-			<div><a class="" target="_blank" href="/channel/${item.uuid}">${item.description.trimDot(105)}</a></div>
+			<div><a class="" target="_blank" href="/channel/${item.uuid}">${item.description.trimDot(160).raw()}</a></div>
 			#{if listing.isAvailable() && false}
 				<a href="/channel/${item.uuid}#chat=open" target="_blank" class="btn btn-default open-chat style-switcher " style="border-width:0px;"  title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
 			#{/if}		
 			#{if !isOwner}
 				#{if !isOwner && listing.isAvailable()}
-					<a href="#chat" class="btn btn-light-gray btn-short" id="widgr-open-chat" style="border-width:0px;"  title="&{'open-chat'} ${listing.user.getFullName()}"><i class="fa fa-comments-o"></i></a>
+					<a href="#chat" class="btn btn-gray btn-short" id="widgr-open-chat" style="border-width:0px;"  title="&{'open-chat'} ${listing.user.getFullName()}"><i class="fa fa-comments-o"></i></a>
 					<a href="/instant-room?id=${listing.uuid}&#{token /}" target="_blank" class="btn btn-gray btn-short no-schedule-start style-switcher " style="border-width:0px;"><i class="fa fa-video-camera fa-flip-horizontal"></i> &nbsp; &{'request-for-event-instant'}</a>
 				#{/if}			
 				#{elseif user}
-					<a href="/mail?action=new&to=${listing.user.login}" target="_blank" class="btn btn-light-gray btn-short open-chat " style="border-width:0px;"  title="&{'write-message-for'} ${listing.user.getFullName()}"><i class="fa fa-envelope-o"></i></a>
+					<a href="/mail?action=new&to=${listing.user.login}" target="_blank" class="btn btn-gray btn-short open-chat " style="border-width:0px;"  title="&{'write-message-for'} ${listing.user.getFullName()}"><i class="fa fa-envelope-o"></i></a>
 				#{/elseif}
 				#{else}
-					<a href="/contact?id=${listing.user.login}" target="_blank" class="btn btn-light-gray btn-short " style="border-width:0px;"  title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-envelope-o"></i></a>
+					<a href="/contact?id=${listing.user.login}" target="_blank" class="btn btn-gray btn-short " style="border-width:0px;"  title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-envelope-o"></i></a>
 				#{/else}
-				<a href="/user/${usr.login}/calendar?channel=${listing.uuid}&#{token /}" target="_blank" class="btn btn-light-gray btn-short "  title="&{'schedule-session'}"><i class="fa fa-calendar"></i>#{if !userDisplayed.isAvailable()} #{/if}</a>
+				<a href="/user/${usr.login}/calendar?channel=${listing.uuid}&#{token /}" target="_blank" class="btn btn-gray btn-short "  title="&{'schedule-session'}"><i class="fa fa-calendar"></i>#{if !userDisplayed.isAvailable()} &{'schedule-session'} #{/if}</a>
 			#{/if}
 
 			<div>
@@ -92,11 +108,44 @@
 				&{'from'} ${stats.get("totalStars")} <a class="" target="_blank" href="/channel/${item.uuid}#reviews">&{'reviews'}</a>
 			</div>
 			<hr/>	
-
-			<small><i>Powered by </i> <a href="/" target="_blank"><img style="height: 30px" src="/public/images/logo_purple.png"></a> @2015</small>
+		    <div style="text-align:center;padding:10px;font-size:12px">
+				#{if user == null}
+			    	&{'embed-login-message', request.url.urlEncode(), request.url.urlEncode()}
+			    	<br/><br/>
+				#{/if}
+			    <a target="_blank" class="black-link" href="${baseUrl}"><img style="vertical-align: middle;height: 30px" alt="widgr" src="/public/images/logo_purple.png"></a>
+		    </div>
 		</div>  	
   	</div>
 </div>
+
+
+#{if facebook}
+	<script>
+	    star.room = '${listing.uuid}';
+		star.chatRoom = '${listing.user.uuid}';
+	   	star.ownerName = '${listing.user.getFullName().escapeJavaScript()}';
+	    star.server_host = '${socketIo}';
+	    star.livestream = true;
+	    star.peerId = null;
+		star.listing = '${listing.uuid}';
+		star.user = '${name.escapeJavaScript()}';
+		star.isOwner = false;
+		#{if isOwner}
+	   		star.isOwner = true;
+	   	#{/if}
+		#{if user}
+			star.userAvatar = '${user.avatarUrl}';
+	    	star.userUuid = '${user.uuid}';
+		#{/if}    
+		#{else}
+			star.userAvatar = 'public/images/avatar';
+			star.userUuid = '${new Date().getTime()}';
+		#{/else}	
+	</script>
+	<script src="${socketIo}/socket.io/socket.io.js"></script>
+	<script src="@{'/public/javascripts/room.js'}" type="text/javascript"></script>
+#{/if}
 
 
 

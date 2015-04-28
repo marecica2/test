@@ -2,16 +2,14 @@
 	<div class="container container-xs-height">
 		<div class="row row-xs-height">
 			<div class="col-lg-3 col-sm-3 col-xs-height">
-				<div class="box-style-1 gray-bg team-member">
-					<div class="overlay-container">
-						<img src="/${usr.avatarUrl}">
-					</div>
+				<div class="box-style-1 gray-bg team-member" style="padding:5px">
+					<img src="/${usr.avatarUrl}">
 				</div>
 			</div>
 			
-			<div class="col-lg-5 col-sm-5 col-xs-height col-top">
+			<div class="col-lg-5 col-sm-7 col-xs-height col-top">
 				<h3 class="margin-top-clear">
-					<a class="anchor" href="/user/${usr.login}">${usr.fullName}</a>
+					<a class="anchor" href="/user/${usr.login}">${usr.getFullNameAccount()}</a>
 						<span>
 					    	#{if user && isOwner}
 					    		<a href="/settings?edit=true" class="btn btn-light-gray btn-sm controls"><i class="fa fa-pencil"></i> &{'edit'}</a> 
@@ -65,12 +63,13 @@
 					#{/if}
 					
 					<li><i class="fa fa-calendar pr-5"></i><a href="/user/${usr.login}/calendar/public" class="">&{'public-calendar'}</a></li>
-					#{if user && user.isPublisher()}
+					#{if user && user.isPublisher() && !isOwner}
 						<li><i class="fa fa-bar-chart-o pr-5"></i><a href="/payments?sender=${usr.login}" class="">&{'payments-receivedPayments-for-this-user'} ${usr.firstName}</a></li>
 					#{/if}
 					<li><i class="fa fa-clock-o"></i>&{'timezone'} #{if usr.timezone < 0}+#{/if} ${usr.timezone/-60}:00 &{'hrs'}</li>
 				</ul>
-				<ul class="social-links light">
+				
+				<ul class="social-links light" style="margin-top:5px">
 					#{if usr.facebook}<li class="facebook"><a target="_blank" href="${usr.facebook}"><i class="fa fa-facebook"></i></a></li>#{/if}
 					#{if usr.twitter}<li class="twitter"><a target="_blank" href="${usr.twitter}"><i class="fa fa-twitter"></i></a></li>#{/if}
 					#{if usr.linkedIn}<li class="linkedin"><a target="_blank" href="${usr.linkedIn}"><i class="fa fa-linkedin"></i></a></li> #{/if}
@@ -78,7 +77,7 @@
 				</ul>			
 			</div>
 	
-			<div class="col-lg-4 col-sm-4 col-xs-height col-top">
+			<div class="col-lg-5 col-sm-2 col-xs-height col-top">
 				<div class="vertical-divider-left-lg side">
 					<h5 class="title margin-clear">&{'followers'}</h5>
 					#{if followers}

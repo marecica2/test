@@ -15,13 +15,17 @@ import models.User;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
 
+import play.Logger;
 import play.cache.Cache;
 import play.i18n.Messages;
 import play.mvc.Before;
+import play.mvc.Http;
 import utils.RandomUtil;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 import email.EmailNotificationBuilder;
 
@@ -120,11 +124,32 @@ public class Application extends BaseController
 
     public static void facebook() throws IOException
     {
+        Logger.info("rendering facebook");
+
         final User user = getLoggedUser();
         final String param = request.params.get("signed_request");
         String userId = null;
         String pageId = null;
         Boolean admin = false;
+
+        // generate listing cookie
+        if (user != null)
+        {
+            final List<Listing> listings = Listing.getForUserAvailable(user);
+            JsonArray ja = new JsonArray();
+            for (Listing listing : listings)
+            {
+                JsonObject jo = new JsonObject();
+                jo.add("title", new JsonPrimitive(listing.title));
+                jo.add("uuid", new JsonPrimitive(listing.uuid));
+                ja.add(jo);
+            }
+            Http.Cookie c = new Http.Cookie();
+            c.name = "channels";
+            c.path = "/";
+            c.value = ja.toString();
+            response.cookies.put("channels", c);
+        }
 
         if (param != null)
         {
@@ -137,6 +162,8 @@ public class Application extends BaseController
                 pageId = jo.get("page").getAsJsonObject().get("id").getAsString();
             if (jo.get("page") != null && jo.get("page").getAsJsonObject().get("admin") != null)
                 admin = jo.get("page").getAsJsonObject().get("admin").getAsBoolean();
+
+            Logger.info("facebook request params: admin-" + admin + " user_id:" + userId);
 
             // if owner opens tab
             if (user != null && userId != null && userId.equals(user.facebookId) && admin != null && admin)
@@ -151,7 +178,6 @@ public class Application extends BaseController
 
         if (admin && user == null)
             redirect("/login?url=" + request.url);
-
         if (pageId == null)
             pageId = session.get("pageId");
 
@@ -163,9 +189,10 @@ public class Application extends BaseController
             if (displayedUser.facebookPageType.equals("profile"))
                 redirect("/user/" + displayedUser.login);
             if (displayedUser.facebookPageType.equals("channel"))
-                redirect("/channel/" + displayedUser.facebookPageChannel);
+                redirect("/embed/channel/" + displayedUser.facebookPageChannel + "?facebook=true");
         }
-        redirect("/");
+
+        redirect("/user/" + user.login);
     }
 
     public static void facebookPost(String id, String type, String channel) throws IOException
@@ -219,12 +246,28 @@ public class Application extends BaseController
         render();
     }
 
+    public static void test2()
+    {
+        render();
+    }
+
+    public static void i18n()
+    {
+        response.contentType = "application/javascript";
+        renderTemplate("Application/i18n.html");
+    }
+
     public static void home()
     {
         changeLocale();
 
         final User user = getLoggedUser();
-        List<Listing> listings = Listing.getRandom(5);
+        List<Listing> listings = (List<Listing>) Cache.get("listings");
+        if (listings == null)
+        {
+            listings = Listing.getRandom(9);
+            Cache.set("listings", listings, "20s");
+        }
         String baseUrl = getBaseUrl();
         render(user, listings, baseUrl);
     }
@@ -233,7 +276,6 @@ public class Application extends BaseController
     //    {
     //        Map<String, Object> ratings = (Map<String, Object>) Cache.get("ratings");
     //
-    //        //TODO update this condition
     //        if (ratings == null || true)
     //        {
     //
@@ -348,7 +390,7 @@ public class Application extends BaseController
         final Map<String, Object> stats = Rating.calculateStats(ratings);
 
         final String name = user != null ? user.getFullName() : Messages.get("anonymous") + RandomUtil.getRandomDigits(5);
-        final String room = usr != null ? usr.uuid : null;
+        final String room = null;
         final String rmtp = getProperty(CONFIG_RMTP_PATH);
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
 

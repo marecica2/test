@@ -9,6 +9,70 @@ License URI: http://wrapbootstrap.com
 File Description: Purple Skin
 */
 
+/* 1 Extension
+----------------------------------------------------------------------------- */
+.widgr-bub 
+{
+	word-wrap: break-word;
+	margin:5px;
+	position: relative;
+	left:15px;
+	width: 250px;
+	min-height: 30px;
+	padding: 10px;
+	font-size:14px;
+	background: rgba(149, 77, 179, 0.3);
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+}
+
+.widgr-bubble-right{
+	word-wrap: break-word;
+	margin:5px;
+	position: relative;
+	left:40px;
+	width: 250px;
+	min-height: 30px;
+	padding: 10px;
+	font-size:14px;
+	background: rgba(30, 30, 30, 0.1);
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;	
+}
+
+.widgr-bub:after 
+{
+	content: '';
+	position: absolute;
+	border-style: solid;
+	border-width: 7px 10px 7px 0;
+	border-color: transparent rgba(149, 77, 179, 0.3);
+	display: block;
+	width: 0;
+	z-index: 1;
+	left: -10px;
+	top: 13px;
+}
+
+.widgr-bubble-right:after {
+	content: '';
+	position: absolute;
+	border-style: solid;
+	border-width: 7px 0 7px 10px;
+	border-color: transparent rgba(30, 30, 30, 0.1);
+	display: block;
+	width: 0;
+	z-index: 1;
+	right: -10px;
+	top: 13px;
+}
+
+
+
+
+
 /* 1 Typography
 ----------------------------------------------------------------------------- */
 a, .text-default {

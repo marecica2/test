@@ -18,6 +18,7 @@ import models.Rating;
 import models.User;
 import play.i18n.Messages;
 import play.mvc.Before;
+import play.mvc.Scope;
 import utils.NumberUtils;
 import utils.RandomUtil;
 import utils.StringUtils;
@@ -28,6 +29,7 @@ public class Listings extends BaseController
     @Before(unless = { "listing", "listingsRest" })
     static void checkAccess()
     {
+        BaseController.getRandomChannels();
         checkAuthorizedAccess();
     }
 
@@ -356,6 +358,21 @@ public class Listings extends BaseController
     {
         checkAuthenticity();
         final User user = getLoggedUserNotCache();
+        Event e = instantRoomGenerate(id, user);
+        redirectTo("/room?id=" + e.uuid);
+    }
+
+    public static void instantRoomRest(String id, String uuid)
+    {
+        checkAuthenticity();
+        final User user = User.getUserByUUID(uuid);
+        Event e = instantRoomGenerate(id, user);
+        String url = getBaseUrl() + "room?id=" + e.uuid + "&secret=" + e.roomSecret + "&authenticityToken=" + Scope.Params.current().get("authenticityToken");
+        renderJSON("{\"url\":\"" + url + "\"}");
+    }
+
+    private static Event instantRoomGenerate(String id, User user)
+    {
         final Listing l = Listing.get(id);
 
         if (l == null)
@@ -375,6 +392,7 @@ public class Listings extends BaseController
         e.eventStart = new Date();
         e.eventEnd = new Date(e.eventStart.getTime() + (1000 * 60 * l.chargingTime));
 
+        e.language = l.language;
         e.charging = l.charging;
         e.price = l.price;
         e.currency = l.currency;
@@ -385,7 +403,7 @@ public class Listings extends BaseController
         e.state = Event.EVENT_STATE_USER_CREATED;
         e.chatEnabled = true;
         e.commentsEnabled = false;
-        e.privacy = Event.EVENT_VISIBILITY_PRIVATE;
+        e.privacy = Event.EVENT_VISIBILITY_PUBLIC;
         e.type = l.type;
         e.created = new Date();
         e.user = l.user;
@@ -397,7 +415,7 @@ public class Listings extends BaseController
         l.save();
 
         Attendance.createDefaultAttendances(l.user, user, e, true, true);
-        redirectTo("/room?id=" + e.uuid);
+        return e;
     }
 
     public static void stop(String id, String url)

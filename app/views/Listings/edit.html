@@ -200,6 +200,7 @@
 			</div>				
 		</div>			
 		
+		*{
 		<div class="form-group ">
 			<div class="" > 
 				<label class="" style="font-weight:100;" rel="tooltip" data-original-title="&{'chat-enable-disable'}"> 
@@ -207,6 +208,7 @@
 				</label> &nbsp;&nbsp;&nbsp;
 			</div>
 		</div>											
+		}*
 		
 		<div class="form-group ">
 			<div class="" > 
@@ -269,7 +271,7 @@
 		
 		<label class="control-label">Title *</label>
 		<div class="form-group" >
-			<input type="text" class="form-control " id="event-title" maxlength="50" name="title" placeholder="&{'title'}" value="${params.title}"/>
+			<input type="text" class="form-control " id="event-title" maxlength="80" name="title" placeholder="&{'title'}" value="${params.title}"/>
 			<div class="error">#{error 'title' /}</div>
 		</div>
 
@@ -483,6 +485,7 @@
 			</div>	
 		</div>			
 		
+		*{
 		<br/>
 		<div class="form-group ">
 			<div class="" > 
@@ -492,6 +495,7 @@
 			</div>
 			<div class="error">#{error 'chatEnabled' /}</div>
 		</div>
+		}*
 		
 		<div class="form-group ">
 			<div class="" > 

@@ -8,7 +8,7 @@
    		</div>
    		<div class="listing-item-right" style="background: #fafafa">
 			<p style="width: 100%;">
-				<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
+				<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32">&nbsp; 
 				<strong>${item.user.fullName}</strong>  &middot; 
 				&{item.category}  
 				
@@ -17,14 +17,14 @@
 				#{/if}
 			</p>
 			
-			<h4 class="margin-clear">${item.title.trimDot(90)}
-			#{if user && item.isAvailable() && item.user.uuid == user.uuid}
-				<small class="label label-success pull-right" style="font-size:0.6em">&{'available-activated'}</small>
-			#{/if}			
+			<h6 class="margin-clear" style="font-size:1.0em">
+			<a href="/channel/${item.uuid}">
+				${item.title.trimDot(90)}
+			</a>
 			#{if user && item.user.uuid == user.uuid && item.deleted}
 				<small class="label label-default pull-right" style="font-size:0.6em">&{'archived'}</small>
 			#{/if}			
-			</h4>
+			</h6>
 			<br/>
 			
 			<span class="truncate">${item.getDescriptionHtml().trimDot(90).raw()}</span>
@@ -37,7 +37,7 @@
    				<strong class="">&{'free'}</strong>
    			#{/else}
    			#{if item.firstFree}
-   				<span class="label default_bg">&{'first-free'}</span>
+   				<span class="label label-default">&{'first-free'}</span>
    			#{/if}
    			</p>
    			
@@ -53,16 +53,8 @@
            	
            	#{if item.deleted == null}
 				#{if isOwner && user && user.account.type == "publisher"}
-					<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&listingId=${item.uuid}" class="btn btn-gray btn-sm btn-margin pull-right"><i class="fa fa-plus"></i> &{'create-event'}</a>
+					<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&listingId=${item.uuid}" class="btn btn-light-gray btn-sm btn-margin pull-right"><i class="fa fa-plus"></i> &{'create-event'}</a>
 				#{/if}
-				
-				#{if !isOwner}
-					<a href="/user/${item.user.login}/calendar?channel=${item.uuid}" class="btn btn-gray btn-sm btn-margin pull-right "><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
-				#{/if}            		
-	
-				#{if !isOwner && item.isAvailable() && item.type == 'p2p'}
-					<a href="/channel/${item.uuid}" class="btn btn-success btn-sm btn-margin pull-right"><i class="fa fa-play"></i> &{'request-for-event-instant'}</a>
-				#{/if}	
 			#{/if}	
 			<div class="clearfix"></div>			
    		</div>

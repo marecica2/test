@@ -322,7 +322,11 @@ starEvent.renderEventBody = function(item){
     var minutes = Math.abs(Math.floor( (distance % _hour) / _minute ));
     var seconds = Math.abs(Math.floor( (distance % _minute) / _second ));
     var html = "";
+    
+    
     html += "<div style='margin-top:20px;font-size:0.9em'>";
+    if(item.state == "customer_created")
+        html += "<span class='label label-danger'>"+i18n('waiting-for-approved')+"</span><br/>";
     html += "<span>"+starUtils.formatDate(item.eventStart)+"</span> ";
     html += "<span>"+starUtils.formatTime(item.eventStart)+"</span> - ";
     html += "<span>"+starUtils.formatTime(item.eventEnd)+"</span>";                

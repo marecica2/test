@@ -9,6 +9,7 @@ import play.i18n.Messages;
 import play.mvc.With;
 import utils.RandomUtil;
 import utils.StringUtils;
+import email.EmailNotificationBuilder;
 
 @With(Secure.class)
 public class Notifications extends BaseController
@@ -61,6 +62,18 @@ public class Notifications extends BaseController
             m.isMessage = true;
             m.owner = userTo;
             m.saveMessage();
+
+            if (userTo.emailNotification)
+            {
+                final String sub = Messages.getMessage(userTo.locale, "new-message-subject", userFrom.getFullName());
+                final String message = Messages.getMessage(userTo.locale, "new-message-message", subject, emailBody);
+                new EmailNotificationBuilder()
+                        .setWidgrFrom()
+                        .setTo(userTo)
+                        .setSubject(sub)
+                        .setMessageWiki(message)
+                        .send();
+            }
 
             flash.success(Messages.get("message-sent-successfully"));
             flash.keep();

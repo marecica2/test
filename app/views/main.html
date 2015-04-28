@@ -69,22 +69,21 @@
 			star.baseUrl = "${baseUrl}";	
 	    </script>
 		<script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>
+		<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>
+		#{i18n /}
 		<script>
-			// init time zone
-			var tz = star.utils.getCookie("timezoneJs");
-	    	if(tz != undefined){
-	    	    star.utils.setCookie("timezoneJs", timezoneOffset);
-	    	}
-			
 	    	$(document).ready(function(){
-	    	    $(document).on("click", ".anchorlink", function(){
-	    	        document.location = $(this).attr("data-href");
-	    	    });
-	    	    
+				// init time zone
+				var tz = star.utils.getCookie("timezoneJs");
+		    	if(tz != undefined){
+		    	    star.utils.setCookie("timezoneJs", timezoneOffset);
+		    	}
+
 	    	    // if running in iframe
 		    	if(window.self !== window.top){
 		    	    $(".logo-header").hide();
 		    	    $(".about-header").hide();
+		    	    //$(".header-top").hide();
 		    	    $("footer").hide();
 		    	    $("body").addClass("wide");
 		    	    $("body").removeClass("boxed");
@@ -93,23 +92,16 @@
 		    	    $("body").css("background", "white");
 		    	    $(window).unbind("scroll");
 		    		$(".parallax").addClass("iframe");
-		    		
-		    		//stylesheet = "orange";
-		    		//var link = $('link[data-style="styles"]');
-		    		//link.attr('href', 'css/skins/' + stylesheet + '.css');
-		    		//document.getElementById("logo").src="images/logo_" + stylesheet + ".png";
 		    	}
 	    	    
 	    	    #{if user}
 		    	    // check user status
 		  	        var prev = document.title;
 		    	    var playedSound = false;
-		  	      	
 		    	    var titleBlink = function(){
 			  	      	var title = i18n("new-message"); 
 			  	    	document.title = (document.title == i18n("new-message") ? prev : i18n("new-message"));
 			  	    }
-		    	    
 			    	var check = function(){
 		    	        $.ajax({
 		    	            type: "GET",
@@ -135,21 +127,16 @@
 		    	    
 		    	    // blink speed in millis
 		  	      	var titleBlinkI = new star.utils.Interval(titleBlink , 1000);
-			    	
 		    	    // check interval millis
 		    	    var checkI = new star.utils.Interval(check , 20000);
 			    	checkI.start();
-			    	
 				    #{if user && user.unreadMessages}
 		    	    	playedSound = true;
 		    	    	titleBlinkI.start();
 	    	    	#{/if}
     	    	#{/if}
-    	    	
 	    	});		
 			</script>
-			<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>	
-			#{i18n /}
 	        #{get 'moreScripts' /}       
 	</head>
 
@@ -162,10 +149,6 @@
 
 
 #{else}	
-	<!-- body classes: 
-			"boxed": boxed layout mode e.g. <body class="boxed">
-			"pattern-1 ... pattern-9": background patterns for boxed layout mode e.g. <body class="boxed pattern-1"> 
-	-->
 	<body class="boxed pattern-2">
 	
 		<!-- scrollToTop -->
@@ -176,13 +159,15 @@
 		<!-- ================ -->
 		<div class="page-wrapper">
 
+			#{include 'header.html' /}
+
 			<!-- facebook header -->
 			#{if session && session.facebookTab && user}
-			*{<span class="hidden">${session.remove('facebookTab')}</span>}*
-			<div class="section clearfix " id="facebook-tab-manager" style="display:none">
+			<div class="section dark-bg" id="facebook-tab-manager" style="display:none">
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
+							<h3>&{'facebook-header'}</h3>
 							<form action="/facebook-save" method="post" role="form" class="form-inline">
 								<input type="hidden" name="id" value="${user.uuid}">
 								<div class="form-group">
@@ -190,9 +175,9 @@
 										<div class="col-lg-12">
 											<label>&{'select-page-to-display'}</label>
 											<select name="type" class="form-control">
-												<option #{if user && user.facebookPageType =='calendar'} selected #{/if} value="calendar">&{'calendar'}</option>
-												<option #{if user && user.facebookPageType =='profile'} selected #{/if}  value="profile">&{'profile'}</option>
-												<option #{if user && user.facebookPageType =='channel'} selected #{/if}  value="channel">&{'channel'}</option>
+												<option #{if user && user.facebookPageType =='calendar'} selected #{/if} value="calendar">&{'my-calendar'}</option>
+												<option #{if user && user.facebookPageType =='profile'} selected #{/if}  value="profile">&{'my-profile'}</option>
+												<option #{if user && user.facebookPageType =='channel'} selected #{/if}  value="channel">&{'my-channel'}</option>
 											</select>
 										</div>
 									</div>
@@ -201,13 +186,19 @@
 									<div class="row" >
 										<div class="col-lg-12">
 											<label>&nbsp;&nbsp;&nbsp; &{'select-channel'}</label>
-											<select name="channel" class="form-control" style="width:200px">
-												#{list items:listings, as:'item'}
-													#{if item.deleted == null}
-													<option value="${item.uuid}">${item.title}</option>
-													#{/if}
-												#{/list}
+											<select name="channel" class="form-control" style="width:200px" id="facebook-channel-list">
 											</select>
+											<script>
+												var cookie = star.utils.getCookie("channels");
+												cookie = cookie.substring(1, cookie.length-1);
+												cookie = cookie.replace(/\\"/g, '"');
+												cookie = $.parseJSON(cookie);
+												var html = "";
+												for(var i = 0; i < cookie.length; i++){
+												    html += "<option value="+cookie[i].uuid+">"+cookie[i].title+"</option>";
+												}
+												$("#facebook-channel-list").html(html);
+											</script>
 										</div>
 									</div>
 								</div>
@@ -222,7 +213,7 @@
 			#{/if}
 			<!-- facebook header -->
 			
-			#{include 'header.html' /}
+
 			
 			<!-- Chat box -->
 			#{if (listing != null && listing.user.isAvailable()) || (usr != null && usr.isAvailable())}
@@ -230,23 +221,27 @@
 			<div class="style-switcher closed shadow-small style-switcher-container" style="display:none">
 				<div class="header" style="background: #954db3">
 					<a class="trigger btn-default" href="#"><i class="fa fa-comments-o"></i></a>
-					<h2 style="color:white; font-size:1.1em" ><i class="fa fa-comments-o"></i> &{'chat'} ${usr.getFullName()}</h2>
+					<span style="position:relative;color:white; font-size:17px;"><img class="img-circle" style="height:16px" src="/${usr.avatarUrl}_32x32"> ${usr.getFullName()}</span>
 				</div>
-				<div style="background: #fafafa;padding:5px;font-size:0.9em; color:black" class="style-switcher-container-2">
+				<div style="padding:5px;" class="style-switcher-container-2">
 					#{if isOwner}
-						<div class="">
-							<strong>&{'online-users'}: </strong>
-							<span class="chat-avatars2"></span>
-						</div>
-						<p>
-							<strong>&{'recipient'}:</strong>
-							<span class="chatroom-user-select"></span> <a href="#" style="display:none" class="chatroom-user-clear"><i class="fa fa-times"></i></a>
-						</p>					
+				        <div class="btn-group btn-block chat-dropdown">
+				        	<button type="button" class="btn btn-block dropdown-toggle lowercase" data-toggle="dropdown">
+				        		<span data-bind="label" class="chat-user-label">&{'select-user'}</span>&nbsp;<span class="caret"></span> &nbsp; <span class="pull-right badge">&{'visitors'}: <span class="users-count">0</span></span>
+				        	</button>
+				        	<ul class="dropdown-menu selectable chat-avatars2" role="menu">
+				        	</ul>
+				        </div> 					
 					#{/if}
-					<div id="content2" class="" style="height:385px; overflow-y: auto; overflow-x:hidden; text-align:left; color:black"></div>
-					<div class="input-group">
-						<input id="chat-text2" class="form-control" style="color:black" placeholder="&{'enter-your-message'}"> 
+					<div id="content2" class="" style="height:385px; margin-bottom:5px; overflow-y: auto; overflow-x:hidden; text-align:left; color:black"></div>
+					<div class="input-group chat-message-form">
 						<input id="chat-name2" type="hidden" value="${name}"> 
+						#{if isOwner && listing}
+						<span class="input-group-btn">
+							<button id="create-instant-room" class="btn btn-light-gray btn-short" style="margin:0px;height:40px" title="&{'create-instant-session'}"><i class="fa fa-video-camera"></i></button>
+						</span>
+						#{/if}
+						<input id="chat-text2" class="form-control" style="color:black" placeholder="&{'enter-your-message'}"> 
 						<span class="input-group-btn">
 							<button id="chat-send2" class="btn btn-default btn-short" style="margin:0px;height:40px"><i class="fa fa-share"></i></button>
 						</span>
@@ -304,7 +299,6 @@
 							</div>
 						</div>
 					</div>
-					
 			    	#{doLayout /}
 				</div>
 			</div>  
@@ -320,46 +314,64 @@
 				<div class="footer">
 					<div class="container">
 						<div class="row">
-							<div class="col-md-12">
+							<div class="col-sm-5">
 								<div class="footer-content">
-									<div class="logo-footer"><img id="logo-footer" src="/images/logo_purple_footer.png" style=""></div>
-									<div class="row">
-										<div class="col-sm-8">
-											<p>
-												&{'about-1'} <a href="/about" class="link"><span>&{'read-more'}</span></a>
-											</p>
-											<p>
-												<i class="fa fa-envelope-o pr-10"></i> info@wid.gr
-											</p>
-											
-											&{'follow-us'}
-											<ul class="social-links circle">
-												<li class="facebook"><a target="_blank" href="http://www.facebook.com/widgr"><i class="fa fa-facebook"></i></a></li>
-												<li class="twitter"><a target="_blank" href="http://twitter.com/widgrApp"><i class="fa fa-twitter"></i></a></li>
-												<li class="googleplus"><a target="_blank" href="https://plus.google.com/+WidGrApp"><i class="fa fa-google-plus"></i></a></li>
-												<li class="youtube"><a target="_blank" href="https://www.youtube.com/channel/UCWM6yey03-S3OYVEo3PC3Mg"><i class="fa fa-youtube"></i></a></li>
-												<li class="vimeo"><a target="_blank" href="https://vimeo.com/channels/widgr"><i class="icon-vimeo"></i></a></li>												
-											</ul>
-										</div>
-										
-										<div class="col-sm-4">
-											<div class="footer-content">
-												<nav>
-													<ul class="nav nav-pills nav-stacked">
-														<li><a href="/home">&{'home'}</a></li>
-														<li><a href="/about">&{'about'}</a></li>
-														<li><a href="/terms">&{'terms'}</a></li>
-														<li><a href="/privacy">&{'privacy'}</a></li>
-														<li><a href="/help">&{'help'}</a></li>
-														<li><a href="/faq">&{'faq'}</a></li>
-														<li><a href="/contact">&{'contact-us'}</a></li>
-													</ul>
-												</nav>
-											</div>
-										</div>										
-									</div>
+									<div class="logo-footer"><img id="logo-footer" src="/images/logo_purple_footer.png" style="height: 35px"></div>
+									<p>
+										&{'about-1'} <a href="/about" class="link"><span>&{'read-more'}</span></a>
+									</p>
+									<p>
+										<i class="fa fa-envelope-o pr-10"></i> info@wid.gr
+									</p>
+									
+									&{'follow-us'}
+									<ul class="social-links circle">
+										<li class="facebook"><a target="_blank" href="http://www.facebook.com/widgr"><i class="fa fa-facebook"></i></a></li>
+										<li class="twitter"><a target="_blank" href="http://twitter.com/widgrApp"><i class="fa fa-twitter"></i></a></li>
+										<li class="googleplus"><a target="_blank" href="https://plus.google.com/+WidGrApp"><i class="fa fa-google-plus"></i></a></li>
+										<li class="youtube"><a target="_blank" href="https://www.youtube.com/channel/UCWM6yey03-S3OYVEo3PC3Mg"><i class="fa fa-youtube"></i></a></li>
+										<li class="vimeo"><a target="_blank" href="https://vimeo.com/channels/widgr"><i class="icon-vimeo"></i></a></li>												
+									</ul>
 								</div>
 							</div>
+										
+							<div class="col-sm-3">
+								<div class="footer-content">
+									<h2>&{'links'}</h2>
+									<nav>
+										<ul class="nav nav-pills nav-stacked">
+											<li><a href="/home">&{'home'}</a></li>
+											<li><a href="/about">&{'about'}</a></li>
+											<li><a href="/terms">&{'terms'}</a></li>
+											<li><a href="/privacy">&{'privacy'}</a></li>
+											<li><a href="/help">&{'help'}</a></li>
+											<li><a href="/faq">&{'faq'}</a></li>
+											<li><a href="/contact">&{'contact-us'}</a></li>
+										</ul>
+									</nav>
+								</div>
+							</div>	
+										
+							<div class="col-sm-4">
+								<div class="footer-content">
+									<h2>&{'latest-channels'}</h2>
+									<div class="gallery row">
+										#{list items:random, as:'item'}
+										#{if item.imageUrl != null && !item.imageUrl.contains("default")}
+										<div class="gallery-item col-xs-4">
+											<div class="overlay-container">
+												<img src="/${item.imageUrl}_64x64" alt="${item.title}">
+												<a href="/channel/${item.uuid}" class="overlay small">
+													<i class="fa fa-link"></i>
+												</a>
+											</div>
+										</div>
+										#{/if}
+										#{/list}
+									</div>
+								</div>
+							</div>		
+																			
 						</div>
 						<div class="space-bottom hidden-lg hidden-xs"></div>
 					</div>
@@ -440,6 +452,9 @@
         <!-- init bootstrap tooltips -->
         <script>
         $(document).ready(function(){
+	    	$(document).on("click", ".anchorlink", function(){
+    	        document.location = $(this).attr("data-href");
+    	    });            
 			if ($("[rel=tooltip]").length) {
 	        	$("[rel=tooltip]").tooltip({'delay': { show: 1000, hide: 0 }});
 	        	

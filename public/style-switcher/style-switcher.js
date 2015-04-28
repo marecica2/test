@@ -11,6 +11,7 @@
 jQuery(document).ready(function($) {
 		style_switcher = $('.style-switcher'),
 		panelWidth = style_switcher.outerWidth(true);
+
 		$('.style-switcher .trigger').on("click", function(){
 			var $this = $(this);
 			if ($(".style-switcher.closed").length>0) {

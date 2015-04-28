@@ -40,6 +40,7 @@ public class Events extends BaseController
     @Before(unless = { "events", "event" })
     static void checkAccess()
     {
+        BaseController.getRandomChannels();
         checkAuthorizedAccess();
     }
 

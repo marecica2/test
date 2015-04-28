@@ -155,6 +155,22 @@ img {
 
 
 /* various */
+.margin-top-clear {
+	margin-top:0px;
+}
+
+.blur {
+  -webkit-filter: blur(15px);
+  -moz-filter: blur(15px);
+  -o-filter: blur(15px);
+  -ms-filter: blur(15px);
+  filter: blur(15px);
+}
+
+.lowercase {
+	  text-transform: none;
+}
+
 .pointer {
 	cursor: pointer;
 }
@@ -274,9 +290,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
 	}	
 }
 
+.listing-image {
+	min-height:100px;
+}	
 @media screen and (min-width: 767px) {
 	.listing-image {
-		min-height:500px;
+		min-height:340px;
 	}	
 	.padding30 {
 		padding:30px;
@@ -296,9 +315,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
 	div.banner {
 		//display:none;	
 	}
-	.listing-image {
-		min-height:200px;
-	}	
 	.input-block {
 		width:100%;
 	}
@@ -478,12 +494,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
 }
 
 
-.black {
-	color:black;
-}
-
 .white {
 	color:white;
+}
+
+.black {
+	color:black;
 }
 
 .black:hover {
@@ -506,6 +522,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
 
 .white-link:hover {
 	color:white;
+	text-decoration: none;
 }
 
 .spinner-small {
@@ -734,8 +751,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
         display:table-cell;
         float:none;
     }
-}
-@media (min-width: 992px) {
     .container-md-height {
         display:table;
     }
@@ -749,6 +764,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
     }
 }
 @media (min-width: 1200px) {
+	.slider-height {
+		height: 520px
+	}	
     .container-lg-height {
         display:table;
     }
@@ -1065,3 +1083,6 @@ object {
 .eg-output img {
   max-height: 214px;
 }
+
+
+

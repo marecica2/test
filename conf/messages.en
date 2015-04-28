@@ -70,6 +70,8 @@ invitation-to-video-call-message=h3. %s invited you to video call. \n[Click here
 invalid-channel-data=Invalid data provided. Please review and correct all inputs.
 
 #Notifications.java
+new-message-subject=New message received from %s
+new-message-message=h3. %s \n %s
 message-sent-error=Message has not been sent, please correct input first
 message-sent-successfully=Message has been sent
 
@@ -363,7 +365,7 @@ about-2=Widgr is a place where you can find people offering help on a wide varie
 about-3=With Widgr you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.<br/>You can choose who to get help from based on qualifications, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. While some sessions are free, you'll need to pay for some. Paying is easy using PayPal.
 why-choose-widgr=Features
 why-choose-widgr-text=Why choose Widgr?
-widgr-feature-1=Interaktive Live-video
+widgr-feature-1=Interactive live video calls
 widgr-feature-1-text=Widgr sessions are conducted through live video calls. During the session, you can point your camera to show what you need help with, upload and share files, interactive drawings, If you don't want the Publisher to see you, you can always turn off your camera. <a href="/instant" target="_blank">Try instant video call now</a>.
 widgr-feature-2=Scheduling flexibility
 widgr-feature-2-text=There are two ways to create join session -- instant and scheduled. If a publisher's channel has a green "Available now" icon, you are just a few clicks away from getting help instantly. Before taking Session you can use interactive chat box to get more information about provided Channel from Publisher. Otherwise, you can see when publishers are available in their calendar and pick a time slot or send a message to request a different time. <a class="link" href="/help#request-session">Learn more</a>
@@ -371,10 +373,12 @@ widgr-feature-3=Pricing options
 widgr-feature-3-text=Sessions that are free don't require a PayPal account. Prices are set by the publishers and can be free or charged by the session. Some publishers might offer the first session for free. All you need for paying a session is a valid PayPal account.
 widgr-feature-4=Easy payments and refunds with PayPal
 widgr-feature-4-text=All payments for paid sessions are currently done through PayPal. If you as a Customer will not be satisfied with the performance of paid session, you can ask for a refund with just few clicks. If you plan to use Widgr as a Publisher and offer paid Sessions, all you need is to have a verified Premier or Business account and you can start a new business right away. <a class="link" href="/help#paypal">Learn more</a>
-widgr-feature-5=Integration with Facebook
-widgr-feature-5-text=You can easily integrate your Widgr account with existing Facebook page, that your account will be more accesible to your Facebook community. If you own a Facebook page, you can install Widgr app to custom tab. With this option, your potential customers are just few clicks away using your services. <a class="link" href="/help#facebook">Learn more</a>
+widgr-feature-5=Facebook embedding
+widgr-feature-5-text=Similarly as with Website embedding you can easily integrate your Widgr account with existing Facebook page, to make Widgr account to be more accesible to your existing Facebook community. If you own a Facebook page, you can install Widgr app to custom tab. With this option, your potential customers are just few clicks away using your services. <a class="link" href="/help#facebook">Learn more</a>
 widgr-feature-6=Integration with Google Calendar
 widgr-feature-6-text=You can easily connect your Widgr account with your Google calendar. With this feature you can better manage your sessions and keep your schedule up to date on every device you use. <a class="link" href="/help#calendar">Learn more</a>
+widgr-feature-7=Website embedding
+widgr-feature-7-text=With this feature you can include talk widget directly in your site without any effort. You can use chat widget to talk instantly to your visitors to assist them and answer their questions. With this feature your visitors will be able to connect to you over live video within few clicks.
 pricing=Pricing
 basic=Basic
 free=Free
@@ -544,6 +548,9 @@ remove=Remove
 #eventsList.html
 waiting=Waiting
 
+#embed.html
+embed-login-message=For scheduling and paying for paid sessions must be registered. <strong><a href="/login?url=%s">Log in</a></strong> or <strong><a href="/registration" target="_blank">register here</a></strong>. Payments for paid sessions are secured by <i><a href="http://www.paypal.com" target="_blank">PayPal</a></i>
+
 #joinRoom.html
 canvas-name=Canvas name
 open-canvas=Collaborative drawing
@@ -648,7 +655,7 @@ charging=Charging
 paid=Paid
 dashboard.price=Dashboard.price
 enable-chat=Enable Public chat
-enable-comments=Enable comments
+enable-comments=Enable customer comments
 upload-new-picture=Upload new picture
 title=Title
 tags=Tags
@@ -688,7 +695,7 @@ enable-channel=Enable&nbsp;channel
 turn-on-available-now=When activated, You can use simple chat box to communicate with your customers. When activated, customers can request and join session instantly. You will receive notification when new session will be created.
 setup-paypal-account-warning=If you want to create paid sessions, you need to set up your PayPal account first. <a href='/settings#paypal'>Go here to set up PayPal account</a>
 go-to-profile=View profile
-available-now=Online
+available-now=Available
 schedule-session=Schedule a session
 schedule-session-desc=Pick a free time slot and schedule a Session later
 join-session-now=Join video call now
@@ -698,7 +705,7 @@ media=Media
 add-more-people=Invite more people to this session
 invite-press=Check selected users and press to submit an invitation to this Session
 check-me-as-available=Turn on Available Now
-uncheck-me-as-available=Turn off Available Now
+uncheck-me-as-available=Turn off Available
 available-description=With this option enabled, customers can write you live messages using simple chat application
 paid-on=Paid on
 refundation=Refundation
@@ -732,19 +739,27 @@ chat-box=Chat
 
 #listingsList.html
 anonymous=Guest
-available-activated=Online
+available-activated=Available
 reviews=Reviews
 create-event=New session
 request-event=Schedule session
 archived=Archived
 
 #main.html
+facebook-header=Facebook custom tab Settings <small>(Visible only to you)</small>
+my-profile=My public profile
+my-calendar=My schedule
+my-channel=My channel
+create-instant-session=Create instant session
+visitors=Visitors
+latest-channels=Latest channels
+links=Links
 online-users=Online Users
 recipient=Message to
 all=All
 chat=Chat with 
 follow-us=Follow us on
-select-page-to-display=Home page
+select-page-to-display=Page to display
 channel=Channel
 select-channel=Channel
 apply=Apply
@@ -755,9 +770,9 @@ by=By
 all-rights-reserved=All rights reserved
 terms=Terms of Use
 about-widgr=About Widgr
-contact-us=Contact us
 
 #inbox.html
+link=Link to session
 system-notification=info@wid.gr
 invalid-user-name=Invalid user name
 Inbox=Inbox
@@ -785,6 +800,8 @@ pay-with-PayPal=Checkout with PayPal
 #userProfile.html
 
 #ratings.html
+yes=Yes
+yes=No
 user-reviews=User reviews
 five-stars=Five stars
 four-stars=Four stars
@@ -810,6 +827,7 @@ login=Login
 captcha=Captcha
 
 #registration.html
+or-use-registration-form=Or use registration form
 agreement=By submitting registration you agree with <a href="/terms" target="_blank">Terms of Use</a>
 password-label=at least 8 characters with one digit and two uppercases
 password-error=Invalid password
@@ -901,9 +919,12 @@ add-google-event=Convert Google event to Widgr
 #typeahead.js
 
 #room.js
+left-conversation=left the conversation
+select-user=Select User
 unmute=Unmute
 
 #starEvent.js
+waiting-for-approved=Waiting for approvement
 select-this-file=Select this file
 requested=Requested
 new-message=New message

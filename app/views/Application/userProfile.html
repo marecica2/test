@@ -14,12 +14,13 @@
 
 <div class="container" >				
 	<div class="row padding30">
-		<div class="col-md-12">
+		<div class="col-md-8">
 			<div>
 				#{set usr:usr /}
 				#{include 'userAbout.html' /}
 			</div>
 			
+			<br/>
 			#{if listings && (usr.isPublisher()) || (user != null  && user.isAdmin()) }
 				<h2>&{'all-channels-from'} ${usr.firstName}</h2>
 				<div class="separator-2"></div>
@@ -34,23 +35,34 @@
 			</div>
 		</div>	  	
 		
+		<div class="col-md-4">
+			#{include 'leftPanel.html' /}
+		</div>
 	</div>
 </div>
 
 
 <script>
-	star.user = '${name}';
-    star.room = '${room}';
+	star.room = '${room}';
 	star.chatRoom = '${usr.uuid}';
-    #{if user}
-		star.avatar = '${user.avatarUrl}';
+		star.ownerName = '${usr.getFullName().escapeJavaScript()}';
+	star.server_host = '${socketIo}';
+	star.livestream = true;
+	star.peerId = null;
+	
+	star.user = '${name.escapeJavaScript()}';
+	star.isOwner = false;
+	#{if isOwner}
+			star.isOwner = true;
+		#{/if}
+	#{if user}
+		star.userAvatar = '${user.avatarUrl}';
+		star.userUuid = '${user.uuid}';
 	#{/if}    
-   	#{if isOwner}
-   		star.isOwner = true;
-   	#{/if}
-    star.server_host = '${socketIo}';
-    star.livestream = true;
-    star.peerId = null;
+	#{else}
+		star.userAvatar = 'public/images/avatar';
+		star.userUuid = '${new Date().getTime()}';
+	#{/else}
 </script>
 <script src="${socketIo}/socket.io/socket.io.js"></script>
 <script src="@{'/public/javascripts/room.js'}" type="text/javascript"></script>

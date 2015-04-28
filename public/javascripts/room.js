@@ -39,9 +39,11 @@ if(star.userInRoom){
 var usr = {};
 usr.user = star.user;
 usr.room = star.room;
+usr.avatar = star.userAvatar;
 usr.avatar = star.avatar;
 usr.admin = star.isOwner;
 usr.login = star.login;
+usr.uuid = star.userUuid;
 if(webrtc == null)
     socket.emit('user_joined', usr);
 
@@ -102,8 +104,6 @@ socket.on('socket_message', function(data) {
  });
 
 if(webrtc != null){
-    
-    
     webrtc.on('readyToCall', function () {
         if(webrtc != null)
             usr.peer = getPeerId();
@@ -1208,190 +1208,255 @@ if(star.userInRoom){
 
 //
 //
-// Chat services
+// Embedded Chat 
 //
 //
-
 star.chatroomusers = [];
 if(webrtc == null){
     var usr = {};
-    usr.user = star.user;
     usr.room = star.chatRoom;
-    usr.avatar = star.avatar;
+    usr.user = star.user;
+    usr.userAvatar = star.userAvatar;
     usr.admin = star.isOwner;
-    star.chatRoomRecipientUser = star.ownerName;
-    if(webrtc == null)
-        socket.emit('chatroom_joined', usr);    
+    usr.userUuid = star.userUuid;
+    if(!star.isOwner)
+        star.chatRoomRecipientUser = star.ownerName;
+    else
+        $(".chat-message-form").hide();
+    socket.emit('chatroom_joined', usr);    
     
-    socket.on('user_update', function(data) {
-        star.users = JSON.parse(data)[star.room];
-        usersChatRender(".chat-avatars", data);
-    });
+    $(document).ready(function(){
+        $(".open-chat").click(function() {
+            if ($(".style-switcher.closed").length>0) 
+                $('.style-switcher .trigger').click();
+        });
 
-    socket.on('chatroom_update', function(data) {
-        var isAdminOnline = false;
-        var logins = [];
-        star.chatroomusers = JSON.parse(data)[star.chatRoom];
-        var html = "";
-        for(var i = 0; i < star.chatroomusers.length; i++){
-            if(star.chatroomusers[i].admin == true){
-                isAdminOnline = true;
-            }
-
-            if(logins.indexOf(star.chatroomusers[i].user) == -1){
-                logins.push(star.chatroomusers[i].user);
-                if(star.chatroomusers[i].user != star.user){
-                    if(star.chatroomusers[i].avatar != null)
-                        html += '<a href="#" data-id="'+star.chatroomusers[i].client+'" data-avatar="'+star.chatroomusers[i].avatar+'" data-name="'+star.chatroomusers[i].user+'" class="chatroom-user"><img class="avatar16" style="margin:1px;" src="/'+star.chatroomusers[i].avatar+'_32x32">' + star.chatroomusers[i].user+ '</a>';
-                    else
-                        html += '<a href="#" data-id="'+star.chatroomusers[i].client+'" data-avatar="public/images/avatar" data-name="'+star.chatroomusers[i].user+'" class="chatroom-user"><img class="avatar16" style="margin:1px;" src="/images/avatar_32x32">' + star.chatroomusers[i].user+ '</a>';
+        $("#widgr-open-chat").click(function() {
+            $(".style-switcher-container .trigger").click();
+        });
+        
+        function chatSend2(){
+            var data = {};
+            data.room = star.chatRoom;
+            data.message = $("#chat-text2").val();
+            data.client = getSessionId();
+            data.sender = getRecipient(star.user).id;
+            data.senderUuid = star.userUuid;
+            data.senderName = star.user;
+            data.senderAvatar = star.userAvatar;
+            data.recipient = getRecipient(star.chatRoomRecipientUser).id;
+            data.recipientUuid = getRecipient(star.chatRoomRecipientUser).userUuid;
+            data.recipientName = star.chatRoomRecipientUser;
+            data.recipientAvatar = getRecipient(star.chatRoomRecipientUser).userAvatar;
+            socket.emit('chatRoom-message', data);
+            
+            $("#chat-text2").val("");
+            $("#chat-text2").focus();
+            return false;
+        }
+        
+        function getRecipient(name){
+            for(var i = 0; i < star.chatroomusers.length; i++){
+                if(star.chatroomusers[i].user == name){
+                    return star.chatroomusers[i];
                 }
             }
-        }
-        if(isAdminOnline)
-            $(".style-switcher").show();
-        else
-            $(".style-switcher").hide();
+            return null;
+        };
         
-        if(star.isOwner){
-            $(".chat-avatars2").html(html);
-        }
-    });
-    
-    socket.on('user_disconnect', function(data) {
-        data =  JSON.parse(data);
-        $(".avatar_"+data.client).remove();
-    });
-    
-    socket.on('chatRoom-message-render', function(data) {
-        if (data.message) {
+        $(document).on("click", "#chat-send2", function(){
+            chatSend2();
+        });
+
+        $(document).on("keyup", "#chat-text2", function(e){
+            if(e.keyCode == 13)
+                chatSend2();
+        });
+        
+        $(".chatroom-user-clear").click(function(){
+            $(this).hide();
+            $(".chatroom-user-select").html("");
+            star.chatRoomRecipient = null;
+            star.chatRoomRecipientUser = null;
+        });
+
+        $("#create-instant-room").click(function(){
+            var user = getRecipient(star.chatRoomRecipientUser);
+            if(user.userUuid.length > 0 && star.listing.length > 0)
+            var params = "id="+star.listing+"&uuid="+user.userUuid+"&"+star.token;
+            roomServices.instantRoom(params, function(data){
+                console.log(data);
+                $("#chat-text2").val(data.url);
+                chatSend2();
+            });
+        });
+        
+        $(".style-switcher-container").on("click", ".chatroom-user", function(event){
+            if(star.isOwner){
+                var id = $(this).attr("data-id");
+                var user = $(this).attr("data-name");
+                var avatar = $(this).attr("data-avatar");
+                var uuid = $(this).attr("data-uuid");
+                star.chatRoomRecipient = id;
+                star.chatRoomRecipientUser = user;
+                star.chatRoomRecipientAvatar = avatar;
+                $(".chat-message-form").show();
+                $(".chat-user-label").html("<img src='/"+avatar+"_32x32' class='avatar16 img-circle'> " +  user);
+                $(".user-containers").hide();
+                var container = $(".user-containers[data-usr*='"+uuid+"']");
+                container.show();
+            }
+        });     
+        
+        socket.on('chatroom_update', function(data) {
+            var isAdminOnline = false;
+            star.chatroomusers = JSON.parse(data)[star.chatRoom];
+            
             var html = '';
-            if(data.avatar != undefined)
-                html += "<img class='avatar16' src='/"+data.avatar+"_32x32'> ";
+            for(var i = 0; i < star.chatroomusers.length; i++){
+                if(star.chatroomusers[i].admin == true){
+                    isAdminOnline = true;
+                }
+                if(star.chatroomusers[i].user != star.user){
+                    html += '<li><a href="#" data-id="'+star.chatroomusers[i].client+'" data-uuid="'+star.chatroomusers[i].userUuid+'" data-avatar="'+star.chatroomusers[i].userAvatar+'" data-name="'+star.chatroomusers[i].user+'" class="black-link chatroom-user"><img class="img-circle avatar16" style="margin:1px;" src="/'+star.chatroomusers[i].userAvatar+'_32x32"> ' + star.chatroomusers[i].user+ '</a></li>';
+                }
+            }
+            if(isAdminOnline)
+                $(".style-switcher").show();
             else
-                html += "<img class='avatar16' src='/public/images/avatar_32x32'> ";
-            html += '<a href="#" data-id="'+data.client+'" data-name="'+data.user+'" data-avatar="'+data.avatar+'" class="chatroom-user" >' + data.user.replace(/>/g, '&gt;') + '</a> ';
-            if(star.isOwner && data.recipientName != undefined && data.recipientName != null)
-                html += " &gt; " + data.recipientName + " ";
-            html += " ";
-            var message = linkify(data.message);
-            html += message + '<br/>';
-            $("#content2").append(html);
-        }
-        $("#content2")[0].scrollTop =  $("#content2")[0].scrollHeight;
+                $(".style-switcher").hide();
+            if(star.isOwner){
+                $(".chat-avatars2").html(html);
+            }
+            $(".users-count").html(star.chatroomusers.length-1);
+        });
         
-        if ($(".style-switcher.closed").length>0) 
-            $('.style-switcher .trigger').click();
+        socket.on('chatroom_disconnect', function(data) {
+            if(star.isOwner){
+                if(star.chatRoomRecipientUser == data.user){
+                    $(".chat-user-label").html(i18n("select-user"));
+                    star.chatRoomRecipientUser = null;
+                    var usr = getRecipient(data.user);
+                    $(".chat-message-form").hide();
+                    
+                    var container = $(".user-containers[data-usr*='"+usr.userUuid+"']");
+                    var html = '<div>';
+                    html += '<div style="padding:5px; margin:5px;"> ' + usr.user + " " + i18n("left-conversation");
+                    html += '</div>';
+                    html += '</div>';
+                    container.append(html);                    
+
+                    // scrolling
+                    $("#content2")[0].scrollTop =  $("#content2")[0].scrollHeight;
+                }
+                
+            }
+        });
         
-        var audio = new Audio('/public/images/ring.mp3');
-        audio.play();
+        socket.on('chatRoom-message-render', function(data) {
+            var topContent = $("#content2");
+            $(".user-containers").hide();
+            var uuid = data.recipientUuid == star.userUuid ? data.senderUuid : data.recipientUuid;
+            var name = data.recipientName == star.user ? data.senderName : data.recipientName;
+            var avatar = data.recipientAvatar == star.userAvatar ? data.senderAvatar : data.recipientAvatar;
+            var container = $(".user-containers[data-usr*='"+uuid+"']");
+            var style = data.senderName != star.user ? "widgr-bubble-right" : "widgr-bub";
+            var now = new Date();
+            var time = starUtils.formatTime2(now);
+            
+            if(container[0] == undefined)
+                topContent.append("<div class='user-containers' data-usr='"+uuid+"_"+star.userUuid+"'></div>");
+            container = $(".user-containers[data-usr*='"+uuid+"']");
+            var html = '<div>';
+            html += '<span style="line-height:32px; font-size:13px; color:gray" ><img class="img-circle avatar32" style="vertical-align:middle" src="/'+data.senderAvatar+'_32x32"> ' + data.senderName + '<span style="float:right;margin-right:10px">'+time+"</span></span>";
+            html += '<div class="'+style+'">';
+            html += linkify(data.message.replace(/>/g, '&gt;'));
+            html += '</div>';
+            html += '</div>';
+            container.append(html);
+            container.show();
+
+            // switch the user selector
+            if(star.chatRoomRecipientUser != name){
+                star.chatRoomRecipientUser = name;
+                $(".chat-user-label").html("<img src='/"+avatar+"_32x32' class='avatar16 img-circle'> " +  name);
+            }
+            $(".chat-message-form").show();
+            
+            // scrolling and notification
+            $("#content2")[0].scrollTop =  $("#content2")[0].scrollHeight;
+            if ($(".style-switcher.closed").length>0) 
+                $('.style-switcher .trigger').click();
+            var audio = new Audio('/public/images/ring.mp3');
+            audio.play();
+        });        
     });
 }
 
-socket.on('message', function(data) {
-    if (data.message) {
-        var html = '';
-        if(data.username != undefined)
-            html += '<strong>' + data.username.replace(/>/g, '&gt;') + '</strong>: ';
-        var message = linkify(data.message);
-        html += message + '<br/>';
-        $("#content").append(html);
-        var elm = $("#chat-container");
-        if(star.chatMimized){
-            elm.animate({right:'0px'},100);
-            star.chatMimized = false;
-        }
-    }
-    $("#content").scrollTop[0] = content.scrollHeight;
-});
 
 
-$(document).ready(function(){
-    
-    $("#chat-slider").click(function() {
-        var elm = $("#chat-container");
-        if(star.chatMimized){
-            elm.animate({right:'0px'},100);
-            star.chatMimized = false;
-        } else {
-            elm.animate({right:'-325px'},100);
-            star.chatMimized = true;
+
+//
+//
+// Hangout Chat 
+//
+//
+if(webrtc != null){
+    socket.on('message', function(data) {
+        if (data.message) {
+            var html = '';
+            if(data.username != undefined)
+                html += '<strong>' + data.username.replace(/>/g, '&gt;') + '</strong>: ';
+            var message = linkify(data.message);
+            html += message + '<br/>';
+            $("#content").append(html);
+            var elm = $("#chat-container");
+            if(star.chatMimized){
+                elm.animate({right:'0px'},100);
+                star.chatMimized = false;
+            }
         }
+        $("#content").scrollTop[0] = content.scrollHeight;
     });
     
-    $(".open-chat").click(function() {
-        if ($(".style-switcher.closed").length>0) 
-            $('.style-switcher .trigger').click();
-    });
     
-    $("#chat-send").click(function() {
-        var comment = $("#chat-text").val();
-        send_chat(comment, $("#chat-name").val());
-        $("#chat-text").val("");
-        var data = {};
-        data.uuid = star.room;
-        data.name = star.user;
-        data.comment = comment;
-        roomServices.saveFeed(data, function(){
+    $(document).ready(function(){
+        
+        // init room feeds
+        roomServices.getFeeds("event="+star.room, function(data){
+            var html = "";
+            for(var i = data.length-1; i >= 0; i--){
+                var date = new Date(data[i].created).toLocaleString();
+                html += "<b title='"+date+"' >"+data[i].name+": </b>"+linkify(data[i].comment)+"<br/>";
+            }
+            $("#content").html(html);
+        });        
+        
+        $("#chat-slider").click(function() {
+            var elm = $("#chat-container");
+            if(star.chatMimized){
+                elm.animate({right:'0px'},100);
+                star.chatMimized = false;
+            } else {
+                elm.animate({right:'-325px'},100);
+                star.chatMimized = true;
+            }
         });
-        return false;
+        
+        $("#chat-send").click(function() {
+            var comment = $("#chat-text").val();
+            send_chat(comment, $("#chat-name").val());
+            $("#chat-text").val("");
+            var data = {};
+            data.uuid = star.room;
+            data.name = star.user;
+            data.comment = comment;
+            roomServices.saveFeed(data, function(){
+            });
+            return false;
+        });
     });
-    
-    
-    function chatSend2(){
-        var data = {};
-        data.client = getSessionId();
-        data.user = star.user;
-        data.avatar = star.avatar;
-        data.message = $("#chat-text2").val();
-        data.room = star.chatRoom;
-        data.recipient = getRecipient(star.chatRoomRecipientUser);
-        data.recipientName = star.chatRoomRecipientUser;
-        data.recipientAvatar = star.chatRoomRecipientAvatar;
-        socket.emit('chatRoom-message', data);
-        $("#chat-text2").val("");
-        $("#chat-text2").focus();
-        return false;
-    }
-    
-    function getRecipient(name){
-        for(var i = 0; i < star.chatroomusers.length; i++){
-            if(star.chatroomusers[i].user == name)
-                return star.chatroomusers[i].id;
-        }
-        return null;
-    };
-    
-    $("#chat-send2").click(function(){
-        chatSend2();
-    });    
-    
-    $("#chat-text2").keyup(function(e){
-        if(e.keyCode == 13)
-            chatSend2();
-    });
-    
-    $(".chatroom-user-clear").click(function(){
-        $(this).hide();
-        $(".chatroom-user-select").html("");
-        star.chatRoomRecipient = null;
-        star.chatRoomRecipientUser = null;
-    });
-    
-    $(".style-switcher-container").on("click", ".chatroom-user", function(event){
-        if(star.isOwner){
-            var id = $(this).attr("data-id");
-            var user = $(this).attr("data-name");
-            var avatar = $(this).attr("data-avatar");
-            star.chatRoomRecipient = id;
-            star.chatRoomRecipientUser = user;
-            star.chatRoomRecipientAvatar = avatar;
-            
-            $(".chatroom-user-select").html("<img class='avatar16' src='/"+avatar+"_32x32'> "+user);
-            $(".chatroom-user-clear").show();
-        }
-    });
-});
+}
 
 
 var roomServices = {};
@@ -1406,7 +1471,6 @@ roomServices.saveFeed = function(data, success, error){
  });
 };
 
-
 roomServices.getFeeds = function(params, success, error){
  $.ajax({
      type: "GET",
@@ -1417,36 +1481,17 @@ roomServices.getFeeds = function(params, success, error){
  });
 };
 
-
-$(document).ready(function(){
-    roomServices.getFeeds("event="+star.room, function(data){
-        var html = "";
-        for(var i = data.length-1; i >= 0; i--){
-            var date = new Date(data[i].created).toLocaleString();
-            html += "<b title='"+date+"' >"+data[i].name+": </b>"+linkify(data[i].comment)+"<br/>";
-        }
-        $("#content").html(html);
-    });
-});
-
-
-function usersChatRender(container, data){
-    data = JSON.parse(data);
-    var html = "";
-    users = [];
-    for ( var index in data) {
-        var row = data[index];
-        var avatars = [];
-        for ( var usr in row) {
-            if(row[usr].room == star.room && $.inArray(row[usr].avatar, avatars) == -1 && row[usr].avatar != undefined){
-                html += "<img src='/"+row[usr].avatar+"_32x32' id="+row[usr].avatar+" class='avatar22 avatar_"+row[usr].id+"' title='"+row[usr].user+"' style='margin-right:1px'>";
-                avatars.push(row[usr].avatar);
-            }
-        }
-    }
-    $(container).html(html);
-}
-
+roomServices.instantRoom = function(params, success, error){
+    var data = {};
+    $.ajax({
+        type: "POST",
+        url: "/instant-room-rest?"+params,
+        data: JSON.stringify(data),
+        success: success,
+        error: error,
+        contentType: "application/json"
+    });    
+};
 
 
 

@@ -7,11 +7,11 @@
 		
 			#{if ratings && ratings.size() > 0}
 			<div class="row">
-				<div class="col-md-5">
+				<div class="col-md-6">
 					<a id="reviews"></a>
 					<h2 class="margin-top-clear">&{'user-reviews'}</h2>
 									
-					<p>
+					<p class="left">
 			       		#{list items:1..5, as:'i'} 
 			       			#{if stats.get("avgStars") >= i}
 							    <i class="fa fa-star fa-2x text-default" data-value="1"></i>
@@ -23,7 +23,7 @@
 						<span style="position:relative;bottom:5px">&{'from'} ${stats.get("totalStars")} &{'reviews'}</span>
 					</p>
 				</div>
-				<div class="col-md-7">
+				<div class="col-md-6">
 					<dl class="dl-horizontal">
 						<dt>&{'five-stars'} (${stats.get("fiveStars")})</dt>
 						<dd>
@@ -141,8 +141,8 @@
 				    				       		<p>
 					    				       		&{'was-this-review-helpful'}?
 													<span class="btn-group pull-right">
-													  <a href="/rating/${item.uuid}/vote?url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-short">Yes</a>
-													  <a href="/rating/${item.uuid}/unvote?url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-short">No</a>
+													  <a href="/rating/${item.uuid}/vote?url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-short">&{'yes'}</a>
+													  <a href="/rating/${item.uuid}/unvote?url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-short">&{'no'}</a>
 													</span>
 				    				       		</p>  
 											#{/if}					       			

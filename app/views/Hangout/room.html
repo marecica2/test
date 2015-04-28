@@ -1,6 +1,11 @@
 #{extends 'main.html' /} 
 #{set raw: true /}
 
+#{set 'title'}
+	#{if e} ${e.listing.title} #{/if}
+#{/set}
+
+
 #{set 'moreStyles'}
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
         <style>
@@ -260,14 +265,14 @@
 
 
 <script>
-    star.user = '${name}';
-    star.room = '${room}';
+    star.user = '${name.escapeJavaScript()}';
+    star.room = '${room.escapeJavaScript()}';
     #{if user}
-    	star.login = '${user.login}';
-    	star.avatar = '${user.avatarUrl}';
+    	star.login = '${user.login.escapeJavaScript()}';
+    	star.avatar = '${user.avatarUrl.escapeJavaScript()}';
     #{/if}
     star.userInRoom = true;
-    star.server_host = '${socketIo}';
+    star.server_host = '${socketIo.escapeJavaScript()}';
     star.livestream = true;
     star.peerId = null;
 </script>

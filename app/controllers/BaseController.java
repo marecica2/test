@@ -1,14 +1,17 @@
 package controllers;
 
+import java.util.List;
 import java.util.Map;
 
 import models.Attendance;
 import models.Event;
+import models.Listing;
 import models.User;
 import play.Logger;
 import play.Play;
 import play.cache.Cache;
 import play.i18n.Lang;
+import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Http.Header;
@@ -45,6 +48,18 @@ public class BaseController extends Controller
     public static String CONFIG_PAYPAL_ADAPTIVE_OPTIONS_URL = "star.configuration.paypal.adaptive.options.url";
     public static String CONFIG_PAYPAL_ADAPTIVE_DETAILS_URL = "star.configuration.paypal.adaptive.details.url";
     public static String CONFIG_PAYPAL_ADAPTIVE_REFUND_URL = "star.configuration.paypal.adaptive.refund.url";
+
+    @Before
+    public static void getRandomChannels()
+    {
+        List<Listing> listings = (List<Listing>) Cache.get("random");
+        if (listings == null)
+        {
+            listings = Listing.getRandom(9);
+            Cache.set("random", listings, "1h");
+        }
+        renderArgs.put("random", listings);
+    }
 
     public static boolean changeLocale()
     {

@@ -154,8 +154,8 @@ public class Secure extends BaseController
         {
             user.lastLoginTime = new Date();
             user.lastOnlineTime = new Date();
-            session.put("username", user.login);
             user.save();
+            session.put("username", user.login);
 
             String url = getRedirectUrl();
             url = getBaseUrlWithoutSlash() + url;

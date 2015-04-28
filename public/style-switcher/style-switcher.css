@@ -74,41 +74,6 @@ div.style-switcher a.trigger {
 div.style-switcher.opened a.trigger {
 	right: -1px;
 }
-div.style-switcher ul {
-	list-style: none;
-	margin: 0;
-	padding: 5px 0 0 0;
-	font-size: 0;
-}
-div.style-switcher ul li {
-	width: 35px;
-	height: 35px;
-	position: relative;
-	display: inline-block;
-	cursor: pointer;
-	margin: 0 3px 3px 0;
-	-webkit-transition: all linear 0.3s;
-	-moz-transition: all linear 0.3s;
-	-o-transition: all linear 0.3s;
-	-ms-transition: all linear 0.3s;
-	transition: all linear 0.3s;
-	-webkit-border-radius: 100%;
-	-moz-border-radius: 100%;
-	border-radius: 100%;
-}
-div.style-switcher ul.layoutChange li {
-	width: 45%;
-	margin-right: 5px;
-	color: #666666;
-	background-color: #f1f1f1;
-	border: 1px solid #f3f3f3;
-	-webkit-border-radius: 0; 
-	-moz-border-radius: 0; 
-	border-radius: 0;
-	font-size: 13px;
-	text-align: center;
-	padding-top: 7px;
-}
 div.style-switcher ul.layoutChange li i {
 	color: #cccccc;
 	font-size: 11px;
