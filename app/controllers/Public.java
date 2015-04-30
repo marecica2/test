@@ -34,7 +34,7 @@ public class Public extends BaseController
         final List<Rating> ratings = listing != null ? Rating.getByObject(listing.uuid) : null;
         final Map<String, Object> stats = listing != null ? Rating.calculateStats(ratings) : null;
         final User userDisplayed = listing.user;
-        final String baseUrl = getBaseUrl();
+        final String baseUrl = getBaseUrlWithoutSlash();
         final List<Contact> followers = null;
         final List<Contact> followees = null;
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
@@ -68,7 +68,6 @@ public class Public extends BaseController
 
     public static void locale(String locale, String url)
     {
-        System.err.println("locale" + locale);
         final User user = getLoggedUserNotCache();
         if (user != null)
         {

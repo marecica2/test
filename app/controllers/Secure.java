@@ -245,6 +245,7 @@ public class Secure extends BaseController
         {
             password = Crypto.encryptAES(password);
             User user = User.getUserByLogin(username);
+            clearUserFromCache();
 
             if (user != null && !user.activated)
             {

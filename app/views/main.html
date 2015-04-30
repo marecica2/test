@@ -29,7 +29,6 @@
 		<link href="@{'/public/bootstrap/css/bootstrap.css'}" rel="stylesheet">
 
 		<!-- Font Awesome CSS -->
-		<link href="@{'/public/fonts/font-awesome/css/font-awesome.css'}" rel="stylesheet">
 
 		<!-- Fontello CSS -->
 		<link href="@{'/public/fonts/fontello/css/fontello.css'}" rel="stylesheet">
@@ -47,15 +46,16 @@
 		<!-- My styles -->
         <link href="@{'/public/css/cropper.min.css'}" rel="stylesheet">
         <link href="@{'/public/css/font-awesome.min.css'}" rel="stylesheet">
+        <link href="@{'/public/fonts/embedded.css'}" rel="stylesheet">
         <link href="@{'/public/css/datepicker.css'}" rel="stylesheet" media="screen">
-		<link href="@{'/public/css/custom.css'}" rel="stylesheet">
-		<link href="@{'public/css/skins/purple.css'}"  rel="stylesheet" data-style="styles">
+		<link href="@{'/public/css/skins/purple.css'}"  rel="stylesheet" data-style="styles">
         <link href="@{'/public/stylesheets/main.css'}" rel="stylesheet" media="screen">		
 		<link href="@{'/public/style-switcher/style-switcher.css'}" rel="stylesheet">
          #{get 'moreStyles' /}       
          
         <!-- Jquery and Bootstap core js files -->
-		<script type="text/javascript" src="@{'/public/plugins/jquery.js'}"></script>
+		#{i18n /}
+		<script type="text/javascript" src="@{'/public/plugins/jquery.min.js'}"></script>
 		<script type="text/javascript" src="@{'/public/bootstrap/js/bootstrap.min.js'}"></script>
 		<script src="@{'/public/javascripts/lib/bootstrap-typeahead.js'}" type="text/javascript"></script>
 		<script>
@@ -69,8 +69,7 @@
 			star.baseUrl = "${baseUrl}";	
 	    </script>
 		<script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>
-		<script src="@{'/public/javascripts/starEvent.js'}" type="text/javascript"></script>
-		#{i18n /}
+		<script src="@{'/public/javascripts/widgr.js'}" type="text/javascript"></script>
 		<script>
 	    	$(document).ready(function(){
 				// init time zone
@@ -79,11 +78,9 @@
 		    	    star.utils.setCookie("timezoneJs", timezoneOffset);
 		    	}
 
-	    	    // if running in iframe
 		    	if(window.self !== window.top){
 		    	    $(".logo-header").hide();
 		    	    $(".about-header").hide();
-		    	    //$(".header-top").hide();
 		    	    $("footer").hide();
 		    	    $("body").addClass("wide");
 		    	    $("body").removeClass("boxed");
@@ -95,7 +92,6 @@
 		    	}
 	    	    
 	    	    #{if user}
-		    	    // check user status
 		  	        var prev = document.title;
 		    	    var playedSound = false;
 		    	    var titleBlink = function(){
@@ -124,10 +120,7 @@
 		    	            contentType: "application/json"
 		    	        });	    	        
 		    	    };
-		    	    
-		    	    // blink speed in millis
 		  	      	var titleBlinkI = new star.utils.Interval(titleBlink , 1000);
-		    	    // check interval millis
 		    	    var checkI = new star.utils.Interval(check , 20000);
 			    	checkI.start();
 				    #{if user && user.unreadMessages}
@@ -225,26 +218,34 @@
 				</div>
 				<div style="padding:5px;" class="style-switcher-container-2">
 					#{if isOwner}
+						<span style="font-size:12px;line-height: 12px;">
+							#{if listing && !listing.isFree()}
+								<label style="font-weight: normal"><input type="checkbox" id="create-instant-room-charging" value="true"> Free Instant Session</label> &nbsp;
+							#{/if}					        				
+							<label style="font-weight: normal"><input type="checkbox" id="auto-switch-off" value="true"> Auto user switch off</label>
+						</span>
 				        <div class="btn-group btn-block chat-dropdown">
 				        	<button type="button" class="btn btn-block dropdown-toggle lowercase" data-toggle="dropdown">
 				        		<span data-bind="label" class="chat-user-label">&{'select-user'}</span>&nbsp;<span class="caret"></span> &nbsp; <span class="pull-right badge">&{'visitors'}: <span class="users-count">0</span></span>
 				        	</button>
 				        	<ul class="dropdown-menu selectable chat-avatars2" role="menu">
 				        	</ul>
-				        </div> 					
+				        </div> 	
 					#{/if}
 					<div id="content2" class="" style="height:385px; margin-bottom:5px; overflow-y: auto; overflow-x:hidden; text-align:left; color:black"></div>
-					<div class="input-group chat-message-form">
-						<input id="chat-name2" type="hidden" value="${name}"> 
-						#{if isOwner && listing}
-						<span class="input-group-btn">
-							<button id="create-instant-room" class="btn btn-light-gray btn-short" style="margin:0px;height:40px" title="&{'create-instant-session'}"><i class="fa fa-video-camera"></i></button>
-						</span>
-						#{/if}
-						<input id="chat-text2" class="form-control" style="color:black" placeholder="&{'enter-your-message'}"> 
-						<span class="input-group-btn">
-							<button id="chat-send2" class="btn btn-default btn-short" style="margin:0px;height:40px"><i class="fa fa-share"></i></button>
-						</span>
+					
+					<div class="chat-message-form">
+						<div class="input-group">
+							<input id="chat-text2" class="form-control" style="color:black" placeholder="&{'enter-your-message'}"> 
+							<span class="input-group-btn">
+								<button id="chat-send2" class="btn btn-default btn-short" style="margin:0px;height:40px"><i class="fa fa-share"></i></button>
+							</span>
+							#{if isOwner && listing}
+								<span class="input-group-btn">
+									<button id="create-instant-room" class="btn btn-gray btn-short" style="margin:0px;height:40px" title="&{'create-instant-session'}"><i class="fa fa-video-camera"></i></button>
+								</span>
+							#{/if}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -361,7 +362,7 @@
 										<div class="gallery-item col-xs-4">
 											<div class="overlay-container">
 												<img src="/${item.imageUrl}_64x64" alt="${item.title}">
-												<a href="/channel/${item.uuid}" class="overlay small">
+												<a href="/listing/${item.uuid}" class="overlay small">
 													<i class="fa fa-link"></i>
 												</a>
 											</div>
@@ -435,20 +436,12 @@
 		<script type="text/javascript" src="@{'/public/js/template.js'}"></script>
 
 		<!-- Custom Scripts -->
-		<script type="text/javascript" src="@{'/public/js/custom.js'}"></script>
-
         <script src="@{'/public/javascripts/lib/bootstrap-datepicker.js'}" type="text/javascript" ></script>
 
         <script src="@{'/public/javascripts/lib/cropper.min.js'}" type="text/javascript"></script>
 
         <script src="@{'/public/javascripts/lib/tags.js'}" type="text/javascript"></script>
 
-        <script src="@{'/public/javascripts/lib/i18next-1.7.2.min.js'}" type="text/javascript"></script>
-
-        <!-- init facebook -->
-        <div id="fb-root"></div>
-        <script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
-        
         <!-- init bootstrap tooltips -->
         <script>
         $(document).ready(function(){
@@ -458,11 +451,11 @@
 			if ($("[rel=tooltip]").length) {
 	        	$("[rel=tooltip]").tooltip({'delay': { show: 1000, hide: 0 }});
 	        	
-	            $(document).ajaxStop(function () {
-	                if(typeof FB !== "undefined"){
+                if(typeof FB !== "undefined"){
+		            $(document).ajaxStop(function () {
 		                FB.Canvas.setSize({ width: 640, height: $(window.document).height() });
-	                }
-	            });
+		            });
+                }
 	        }
         });	
         </script>

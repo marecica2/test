@@ -1,6 +1,6 @@
 #{extends 'main.html' /} 
 #{set 'title'}
-	&{'dashboard'}
+	&{'manage-channels'}
 #{/set}
 
 #{set 'moreScripts'}
@@ -20,8 +20,8 @@
 	
 		<div class="col-md-12 col-xs-height col-top">
 			<h2>
-				<i class="fa fa-share-alt"></i> &{'manage-channels'}
-				<a href="/channel/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray margin-clear btn-sm"><i class="fa fa-plus"></i> &{'create-channel'}</a>
+				<i class="fa fa-share3"></i> &{'manage-channels'}
+				<a href="/listing/new?action=edit&new=true&url=${request.url.urlEncode()}" class="btn btn-light-gray margin-clear btn-sm"><i class="fa fa-plus"></i> &{'create-channel'}</a>
 			</h2>
 			<br/>	
 			#{if listings && listings.size > 0}

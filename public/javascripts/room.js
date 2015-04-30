@@ -1212,6 +1212,7 @@ if(star.userInRoom){
 //
 //
 star.chatroomusers = [];
+star.chatfirst = true;
 if(webrtc == null){
     var usr = {};
     usr.room = star.chatRoom;
@@ -1284,8 +1285,10 @@ if(webrtc == null){
             var user = getRecipient(star.chatRoomRecipientUser);
             if(user.userUuid.length > 0 && star.listing.length > 0)
             var params = "id="+star.listing+"&uuid="+user.userUuid+"&"+star.token;
+            if($("#create-instant-room-charging").is(":checked")){
+                params += "&free=true";
+            }
             roomServices.instantRoom(params, function(data){
-                console.log(data);
                 $("#chat-text2").val(data.url);
                 chatSend2();
             });
@@ -1332,7 +1335,7 @@ if(webrtc == null){
         });
         
         socket.on('chatroom_disconnect', function(data) {
-            if(star.isOwner){
+            if(star.isOwner && data != null){
                 if(star.chatRoomRecipientUser == data.user){
                     $(".chat-user-label").html(i18n("select-user"));
                     star.chatRoomRecipientUser = null;
@@ -1349,13 +1352,11 @@ if(webrtc == null){
                     // scrolling
                     $("#content2")[0].scrollTop =  $("#content2")[0].scrollHeight;
                 }
-                
             }
         });
         
         socket.on('chatRoom-message-render', function(data) {
             var topContent = $("#content2");
-            $(".user-containers").hide();
             var uuid = data.recipientUuid == star.userUuid ? data.senderUuid : data.recipientUuid;
             var name = data.recipientName == star.user ? data.senderName : data.recipientName;
             var avatar = data.recipientAvatar == star.userAvatar ? data.senderAvatar : data.recipientAvatar;
@@ -1365,29 +1366,39 @@ if(webrtc == null){
             var time = starUtils.formatTime2(now);
             
             if(container[0] == undefined)
-                topContent.append("<div class='user-containers' data-usr='"+uuid+"_"+star.userUuid+"'></div>");
+                topContent.append("<div class='user-containers' data-usr='"+uuid+"_"+star.userUuid+"' style='display:none'></div>");
             container = $(".user-containers[data-usr*='"+uuid+"']");
-            var html = '<div>';
-            html += '<span style="line-height:32px; font-size:13px; color:gray" ><img class="img-circle avatar32" style="vertical-align:middle" src="/'+data.senderAvatar+'_32x32"> ' + data.senderName + '<span style="float:right;margin-right:10px">'+time+"</span></span>";
+            var html = '';
+            html += '<span style="line-height:32px; font-size:13px; color:gray" ><img class="img-circle avatar32" style="vertical-align:middle" src="'+star.baseUrl+"/"+data.senderAvatar+'_32x32"> ' + data.senderName + '<span style="float:right;margin-right:10px">'+time+"</span></span>";
             html += '<div class="'+style+'">';
             html += linkify(data.message.replace(/>/g, '&gt;'));
             html += '</div>';
-            html += '</div>';
-            container.append(html);
-            container.show();
-
-            // switch the user selector
-            if(star.chatRoomRecipientUser != name){
-                star.chatRoomRecipientUser = name;
-                $(".chat-user-label").html("<img src='/"+avatar+"_32x32' class='avatar16 img-circle'> " +  name);
+            if(star.chatfirst && star.isOwner == false && star.user == data.senderName){
+                star.chatfirst = false;
+                html += '<br/>';
+                html += '<div class="widgr-bubble-right">';
+                html +=  "Operator will available for you in few seconds, please wait.";
+                html += '</div>';
             }
-            $(".chat-message-form").show();
+            
+            container.append(html);
+
+            if(!$("#auto-switch-off").is(":checked")){
+                $(".user-containers").hide();
+                container.show();
+                // switch the user selector
+                if(star.chatRoomRecipientUser != name){
+                    star.chatRoomRecipientUser = name;
+                    $(".chat-user-label").html("<img src='/"+avatar+"_32x32' class='avatar16 img-circle'> " +  name);
+                }
+                $(".chat-message-form").show();
+            }
             
             // scrolling and notification
             $("#content2")[0].scrollTop =  $("#content2")[0].scrollHeight;
             if ($(".style-switcher.closed").length>0) 
                 $('.style-switcher .trigger').click();
-            var audio = new Audio('/public/images/ring.mp3');
+            var audio = new Audio(star.baseUrl+'/public/images/ring.mp3');
             audio.play();
         });        
     });

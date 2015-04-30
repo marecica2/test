@@ -151,7 +151,7 @@
 	      	<label>&{'embed-listing-desc'}</label>
 	      	<textarea rows="4" class="form-control" name="reason" maxlength="500" onclick="javascript:$(this).select();">
 	      	<script type="text/javascript" src="${baseUrl}/public/javascripts/embed.js"></script>
-	      	<iframe id="widgr-embedded-container" class="shadow" src="${baseUrl}/embed/channel/${listing.uuid}" seamless frameBorder="0" scrolling="no" style="overflow: hidden; height:465px; width:465px"></iframe></textarea>
+	      	<iframe id="widgr-embedded-container" class="shadow" src="${baseUrl}/embed/listing/${listing.uuid}" seamless frameBorder="0" scrolling="no" style="overflow: hidden; height:465px; width:465px"></iframe></textarea>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default btn-short" data-dismiss="modal">&{'close'}</button>
@@ -177,7 +177,7 @@
 		   			<i>&{'create-new-channel'}</i>
 		   		#{/else}
 		   		#{if event && fromEvent}
-			   		<i style="font-size: 0.6em"> &middot;&nbsp;
+			   		<i style="font-size: 0.7em"> &middot;&nbsp;
 				   		<span><i class="fa fa-calendar"></i> ${event.eventStart.format("d MMM yyyy")} </span> &nbsp;
 				   		<span><i class="fa fa-clock-o"></i> #{time time:event.eventStart/}</span>  
 				   		<span>#{time time:event.eventEnd/}</span> &middot;		   		
@@ -191,6 +191,7 @@
 			#{include 'Listings/editButtons.html' /}
 		
 			<!-- social -->
+			#{if !edit}
 		   	<div style="float:right; display: inline-block;margin-top:5px;">
 				<ul class="social-links light clearfix" style="margin:0px; display: inline-block;">
 					<li class="dribbble"><a href="" data-toggle="modal" data-target="#myModal" ><i class="fa fa-link"></i></a></li>
@@ -268,7 +269,7 @@
 				</script>	 
 				#{/if}  					
 		   	</div>
-
+			#{/if}  					
 		</div>
 		</div>
 	</div>
@@ -313,7 +314,7 @@
 		
 			#{if !edit && listing}
 			<div class="col-md-4 text-center" style="padding:20px">
-				<h3 class="title"><a class="anchor2" href="/channel/${listing.uuid}">${listing.title}</a></h3>
+				<h3 class="title"><a class="anchor2" href="/listing/${listing.uuid}">${listing.title}</a></h3>
 				<a href="/user/${usr.login}"><img style="height:60px;width:60px" class="img-circle" src="/${usr.avatarUrl}_64x64"></a>
 				<h4><a href="/user/${usr.login}">${usr.getFullNameAccount()}</a></h4>
 				
@@ -578,25 +579,23 @@
 	 	    	   	#{/if}
     	   	   	</h2>
     	   	   	<div class="separator-2"></div>
-    	   	   	<strong><a href="/user/${listing.user.login}"><img class="avatar16 img-circle" src="/${listing.user.avatarUrl}_32x32"> <span>${listing.user.fullName}</span></a></strong> 
-    	   	 	&middot;
-    	   	 	
+    	   	   	<strong><a href="/user/${listing.user.login}"><img class="avatar16 img-circle" src="/${listing.user.avatarUrl}_32x32"> <span>${listing.user.getFullNameAccount()}</span></a></strong> 
 
  	    	   	<span>
 					#{if fromEvent && event}
 		
 						#{if event.privacy == 'private'}
-							<span class="labels " rel="tooltip" data-original-title="&{'privacy-private-description'}"><i class="fa fa-lock"></i> &{event.privacy}</span> &middot;
+							&middot; <span class="labels " rel="tooltip" data-original-title="&{'privacy-private-description'}"><i class="fa fa-lock"></i> &{event.privacy}</span> 
 						#{/if}
 						
 						#{if event.privacy == 'public'}
-							<span class="labels " rel="tooltip" data-original-title="&{'privacy-public-description'}"><i class="fa fa-unlock"></i> &{event.privacy}</span> 
+							&middot; <span class="labels " rel="tooltip" data-original-title="&{'privacy-public-description'}"><i class="fa fa-unlock"></i> &{event.privacy}</span> 
 						#{/if}
 						
-						<span class="labels " rel="tooltip" data-original-title="&{ event.type+'-description'}"><i class="fa fa-comments"></i> &{event.type}</span> &middot;  
+						&middot; <span class="labels " rel="tooltip" data-original-title="&{ event.type+'-description'}"><i class="fa fa-video-camera"></i> &{event.type}</span>  
 						
 						#{if event.language}
-		    	   	 		<img class="inline" src='/public/images/flags/${event.language}.gif' rel="tooltip" data-original-title="&{'preferred-language'}"> 
+		    	   	 		&middot; <img style="position:relative;bottom:2px;" src='/public/images/flags/${event.language}.gif' rel="tooltip" data-original-title="&{'preferred-language'}"> 
 						#{/if}
 					#{/if}		 	    	   	
 					#{else}
@@ -612,7 +611,7 @@
 						<span class="labels "><i class="fa fa-comments"></i> &{listing.type}</span> &middot;
 
 						#{if listing.language}
-							<img class="inline" src='/public/images/flags/${listing.language}.gif' rel="tooltip" data-original-title="&{'preferred-language'}"> 
+							<img style="position:relative;bottom:2px;" src='/public/images/flags/${listing.language}.gif' rel="tooltip" data-original-title="&{'preferred-language'}"> 
 						#{/if}
 					#{/else}		    	   
 	    	   	</span>

@@ -15,7 +15,6 @@ import models.User;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
 
-import play.Logger;
 import play.cache.Cache;
 import play.i18n.Messages;
 import play.mvc.Before;
@@ -124,8 +123,6 @@ public class Application extends BaseController
 
     public static void facebook() throws IOException
     {
-        Logger.info("rendering facebook");
-
         final User user = getLoggedUser();
         final String param = request.params.get("signed_request");
         String userId = null;
@@ -163,8 +160,6 @@ public class Application extends BaseController
             if (jo.get("page") != null && jo.get("page").getAsJsonObject().get("admin") != null)
                 admin = jo.get("page").getAsJsonObject().get("admin").getAsBoolean();
 
-            Logger.info("facebook request params: admin-" + admin + " user_id:" + userId);
-
             // if owner opens tab
             if (user != null && userId != null && userId.equals(user.facebookId) && admin != null && admin)
             {
@@ -189,7 +184,7 @@ public class Application extends BaseController
             if (displayedUser.facebookPageType.equals("profile"))
                 redirect("/user/" + displayedUser.login);
             if (displayedUser.facebookPageType.equals("channel"))
-                redirect("/embed/channel/" + displayedUser.facebookPageChannel + "?facebook=true");
+                redirect("/embed/listing/" + displayedUser.facebookPageChannel + "?facebook=true");
         }
 
         redirect("/user/" + user.login);
@@ -238,16 +233,6 @@ public class Application extends BaseController
     public static void sitemapXml()
     {
         response.setContentTypeIfNotSet("application/xml");
-        render();
-    }
-
-    public static void test()
-    {
-        render();
-    }
-
-    public static void test2()
-    {
         render();
     }
 

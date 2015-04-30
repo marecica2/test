@@ -357,23 +357,8 @@ public class Listings extends BaseController
     public static void instantRoom(String id)
     {
         checkAuthenticity();
-        final User user = getLoggedUserNotCache();
-        Event e = instantRoomGenerate(id, user);
-        redirectTo("/room?id=" + e.uuid);
-    }
-
-    public static void instantRoomRest(String id, String uuid)
-    {
-        checkAuthenticity();
-        final User user = User.getUserByUUID(uuid);
-        Event e = instantRoomGenerate(id, user);
-        String url = getBaseUrl() + "room?id=" + e.uuid + "&secret=" + e.roomSecret + "&authenticityToken=" + Scope.Params.current().get("authenticityToken");
-        renderJSON("{\"url\":\"" + url + "\"}");
-    }
-
-    private static Event instantRoomGenerate(String id, User user)
-    {
         final Listing l = Listing.get(id);
+        final User user = getLoggedUserNotCache();
 
         if (l == null)
             forbidden();
@@ -382,8 +367,34 @@ public class Listings extends BaseController
         if (l.user.hasBlockedContact(user))
             forbidden();
 
+        Event e = instantRoomGenerate(l, user, null);
+        redirectTo("/room?id=" + e.uuid);
+    }
+
+    public static void instantRoomRest(String id, String uuid, String free)
+    {
+        checkAuthenticity();
+        final Listing l = Listing.get(id);
+        final User user = getLoggedUser();
+        final User customer = User.getUserByUUID(uuid);
+        final Boolean isFree = free != null ? true : false;
+
+        if (l == null)
+            forbidden();
+        if (user == null)
+            forbidden();
+        if (!user.equals(l.user))
+            forbidden();
+
+        Event e = instantRoomGenerate(l, customer, isFree);
+        String url = getBaseUrl() + "room?id=" + e.uuid + "&secret=" + e.roomSecret + "&authenticityToken=" + Scope.Params.current().get("authenticityToken");
+        renderJSON("{\"url\":\"" + url + "\"}");
+    }
+
+    private static Event instantRoomGenerate(Listing l, User customer, Boolean isFree)
+    {
         Event e = new Event();
-        e.customer = user;
+        e.customer = customer;
         e.listing = l;
         e.privateRoom = true;
         e.listing_uuid = l.uuid;
@@ -394,6 +405,9 @@ public class Listings extends BaseController
 
         e.language = l.language;
         e.charging = l.charging;
+        if (isFree != null)
+            e.charging = Event.EVENT_CHARGING_FREE;
+
         e.price = l.price;
         e.currency = l.currency;
         e.chargingTime = l.chargingTime;
@@ -414,7 +428,7 @@ public class Listings extends BaseController
         l.instantBroadcast = e.uuid;
         l.save();
 
-        Attendance.createDefaultAttendances(l.user, user, e, true, true);
+        Attendance.createDefaultAttendances(l.user, customer, e, true, true);
         return e;
     }
 

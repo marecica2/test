@@ -70,7 +70,7 @@ star.renderComments = function(data, dashboard){
             html += "               </div>";
             html += "               <div class='overlay'>";
             html += "                   <div class='overlay-links'>";
-            html += "                       <a href='/channel/"+item.listing+"'><i class='fa fa-link'></i></a>";
+            html += "                       <a href='/listing/"+item.listing+"'><i class='fa fa-link'></i></a>";
             html += "                   </div>";
             html += "               </div>";
             html += "           </div>";
@@ -230,7 +230,7 @@ star.renderItems = function(data, prefix){
     
         var url = "";
         if(listing)
-            url = "/channel/"+item.uuid;
+            url = "/listing/"+item.uuid;
         else
             url = "/event/"+item.uuid;
         
@@ -373,11 +373,7 @@ starEvent.selectFile = function(elm){
     starEvent.library.push($(elm).attr("data-uuid"));
     $("#fileUploadComments").val($(elm).attr("data-uuid"));
     $("#typeComments").val("library");
-    if($(elm).attr("data-contentType").indexOf("image") != -1){
-        $("#images").append("<img class='img-thumbnail' style='height:100px;margin:4px' src='/public/uploads/"+$(elm).attr("data-url")+"_thumb'>");
-    } else {
         $("#images").append("<span class='label default_bg'><i class='fa fa-file'></i> "+$(elm).attr("data-file")+"</span><br/>");
-    }    
 };
 
 starEvent.renderFiles = function(data){
@@ -746,7 +742,7 @@ starServices.inviteEvent = function(data, success, error){
 starServices.getItems = function(prefix, params, success, error){
     var url = "events";
     if(prefix.indexOf("Listing") != -1)
-        url = "channels-get";
+        url = "listings-get";
     $.ajax({
         type: "GET",
         url: "/"+url+"?"+star.token+"&"+params.url,

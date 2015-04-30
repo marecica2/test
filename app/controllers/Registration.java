@@ -215,7 +215,7 @@ public class Registration extends BaseController
             validation.addError("login", Messages.get("login-already-used", login));
         checkUser = User.getUserByFacebook(facebook);
         if (checkUser != null)
-            validation.addError("login", Messages.get("login-already-used", facebook));
+            validation.addError("login", Messages.get("login-already-used", login));
 
         if (!validation.hasErrors())
         {
@@ -382,7 +382,7 @@ public class Registration extends BaseController
     {
         Account account = new Account();
         account.key = RandomUtil.getUUID();
-        account.name = firstName + " " + lastName;
+        account.name = null;
         account.type = Account.TYPE_STANDARD;
         account.created = new Date();
         account.save();

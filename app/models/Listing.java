@@ -63,7 +63,7 @@ public class Listing extends Model
 
     public String video;
 
-    @Column(length = 1500)
+    @Column(length = 3000)
     public String description;
 
     public String color;
@@ -264,5 +264,10 @@ public class Listing extends Model
     public boolean isAvailable()
     {
         return this.user.isAvailable();
+    }
+
+    public Boolean isFree()
+    {
+        return this.charging.equals(EVENT_CHARGING_FREE);
     }
 }

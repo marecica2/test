@@ -283,7 +283,7 @@
 					$('#event-tags').tagsinput({
 					    typeahead: {                  
 					        source: function(query) {
-					          return $.get('/channels/tags?query='+query);
+					          return $.get('/listings/tags?query='+query);
 					        }
 					    }
 					});
@@ -314,7 +314,7 @@
 
 		<label class="control-label">&{'about'} *</label>
 		<div class="form-group has-feedback">
-			<textarea class="form-control event-description event-edit" rows="12" id="event-description" maxlength="1000" name="description" placeholder="&{'description'}">${params.description}</textarea>
+			<textarea class="form-control event-description event-edit" rows="12" id="event-description" maxlength="3000" name="description" placeholder="&{'description'}">${params.description}</textarea>
 			<div class="error">#{error 'description' /}</div>
 			#{include 'help.html' /}
 		</div>

@@ -86,7 +86,7 @@ public class ListingDTO
         else
             l.commentsEnabled = false;
         l.createdBy = listing.user != null ? listing.user.uuid : null;
-        l.createdByName = listing.user != null ? listing.user.getFullName() : null;
+        l.createdByName = listing.user != null ? listing.user.getFullNameAccount() : null;
         l.createdByLogin = listing.user != null ? listing.user.login : null;
         l.createdByAvatarUrl = listing.user != null ? listing.user.avatarUrl : null;
         return l;

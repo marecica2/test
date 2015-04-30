@@ -9,7 +9,7 @@ GET     /approvements		                    Application.approvements
 GET     /calendar                               Application.calendar
 GET     /user/{login}/calendar		      		Application.calendarUser
 GET     /user/{login}/calendar/{public}    		Application.calendarUser
-GET     /manage-channels						Application.manageChannels
+GET     /listings								Application.manageChannels
 *	    /facebook								Application.facebook
 *	    /facebook/edit							Application.facebook
 POST    /facebook-save							Application.facebookPost
@@ -24,8 +24,6 @@ GET 	/contact								Application.contact
 POST 	/contact-us								Application.contactUs
 GET 	/user/{userLogin}						Application.userProfile
 GET 	/public/user							Application.userProfile
-GET 	/test									Application.test
-GET 	/test2									Application.test2
 GET 	/i18n.js								Application.i18n
 
 GET		/login									Secure.login
@@ -37,15 +35,15 @@ GET	   	/logout									Secure.logout
 GET	   	/google									GoogleOauth.authorize
 GET   	/google-oauth							GoogleOauth.callback
 
-GET 	/channel/{uuid}							Listings.listing
-POST	/channel/{uuid}							Listings.listingPost
-GET 	/channel-delete							Listings.deleteListing
-GET 	/channel-enable							Listings.enableListing
-GET     /channel-reset-image					Listings.resetImage
-GET     /channels-get							Listings.listingsRest
-GET     /channels/tags							Listings.tagsRest
-GET     /channel-start            				Listings.start
-GET     /channel-stop            				Listings.stop
+GET 	/listing/{uuid}							Listings.listing
+POST	/listing/{uuid}							Listings.listingPost
+GET 	/listing-delete							Listings.deleteListing
+GET 	/listing-enable							Listings.enableListing
+GET     /listing-reset-image					Listings.resetImage
+GET     /listings-get							Listings.listingsRest
+GET     /listings/tags							Listings.tagsRest
+GET     /listing-start            				Listings.start
+GET     /listing-stop            				Listings.stop
 GET     /create-room            				Listings.privateRoom
 GET     /instant-room            				Listings.instantRoom
 POST    /instant-room-rest         				Listings.instantRoomRest
@@ -110,7 +108,7 @@ GET 	/public/activities						Public.activities
 GET 	/public/facebook/registration			Public.facebookRegistration
 GET 	/wiki									Public.wiki
 GET     /check-connection	                  	Public.checkconnection
-GET     /embed/channel/{channel}           		Public.embed
+GET     /embed/listing/{channel}           		Public.embed
 
 GET		/remove-upload							FileuploadController.removeFile	
 POST    /fileupload								FileuploadController.uploadFile

@@ -17,28 +17,49 @@
 
 
 <div id="embed-item" #{if facebook}style="position:relative; max-width: 665px; margin: 60px auto;" class="shadow-small" #{/if}>
-	<input type="hidden" id="data-bs" value="${baseUrl}">
-	<input type="hidden" id="data-ws" value="${socketIo}">
-	#{if user}
-		<div style="display:none">
-		<input type="text" id="data-lg-user-ui" value="${user.uuid}">
-		<input type="text" id="data-lg-user" value="${user.getFullName()}">
-		<input type="text" id="data-lg-user-ava" value="${user.avatarUrl}">
-		<input type="text" id="data-lg-user-lg" value="${user.login}">
-		</div>
+
+	#{if facebook == null}
+	<script>
+		var params = {};
+		params["data-bs"] = "${baseUrl}";
+		params["data-ws"] = "${socketIo}";
+		#{if user}
+			params["data-lg-user-ui"] = "${user.uuid}";
+			params["data-lg-user"] = "${user.getFullName()}";
+			params["data-lg-user-ava"] = "${user.avatarUrl}";
+			params["data-lg-user-lg"] = "${user.login}";
+		#{/if}
+		params["data-room"] = "${item.user.uuid}";
+		params["data-usr"] = "${item.user.getFullName()}";
+		params["data-usr-ava"] = "${item.user.avatarUrl}";
+		
+		params["type"] = "init";
+		parent.postMessage(JSON.stringify(params),"*");  
+		
+		$(document).ready(function(){
+		    var params = {};
+			params["height"] = $("#embed-item").height();
+			params["type"] = "resize";
+			parent.postMessage(JSON.stringify(params),"*");    
+			
+			$("#widgr-open-chat").click(function(){
+			    var params = {};
+				params["type"] = "chat-open";
+				parent.postMessage(JSON.stringify(params),"*"); 		    
+			});
+		});
+		
+	</script>	
 	#{/if}
-	<input type="hidden" id="data-room" value="${item.user.uuid}">
-	<input type="hidden" id="data-usr" value="${item.user.getFullName()}">
-	<input type="hidden" id="data-usr-ava" value="${item.user.avatarUrl}">
 	
-	<a href="/channel/${item.uuid}" target="_blank">
+	<a href="/listing/${item.uuid}" target="_blank">
 	<div style="position:relative">
 	  	<span class="listing-item-top shadow-inset-2" style="display:block; background: url('/${item.imageUrl}') no-repeat center; background-size:cover;position:relative">
 			#{if item.video}
 				<a class="text-shadow" style="font-size:3em; color:white;position:absolute;top:30%;left:45%" href="${item.video}" target="_blank" title="&{'play-introduction'}"><i class="fa fa-youtube-play"></i></a>
 			#{/if}
 			
-			<a href="/channel/${item.uuid}" target="_blank">
+			<a href="/listing/${item.uuid}" target="_blank">
 		        <span style='position:absolute;bottom:5px;font-size:18px;right:10px;width:75%'>
 		        	<span style='font-weight:bold;' class='white'>${item.title}</span>
 		        </span>		
@@ -64,9 +85,9 @@
 		<br/>	
 		
 		<div class="centered" style="padding: 15px">
-			<div><a class="" target="_blank" href="/channel/${item.uuid}">${item.description.trimDot(160).raw()}</a></div>
+			<div><a class="" target="_blank" href="/listing/${item.uuid}">${item.description.trimDot(160).raw()}</a></div>
 			#{if listing.isAvailable() && false}
-				<a href="/channel/${item.uuid}#chat=open" target="_blank" class="btn btn-default open-chat style-switcher " style="border-width:0px;"  title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
+				<a href="/listing/${item.uuid}#chat=open" target="_blank" class="btn btn-default open-chat style-switcher " style="border-width:0px;"  title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
 			#{/if}		
 			#{if !isOwner}
 				#{if !isOwner && listing.isAvailable()}
@@ -105,7 +126,7 @@
 					    <i class="fa fa-star-o" data-value="1"></i>
 	       			#{/else}
 				#{/list}
-				&{'from'} ${stats.get("totalStars")} <a class="" target="_blank" href="/channel/${item.uuid}#reviews">&{'reviews'}</a>
+				&{'from'} ${stats.get("totalStars")} <a class="" target="_blank" href="/listing/${item.uuid}#reviews">&{'reviews'}</a>
 			</div>
 			<hr/>	
 		    <div style="text-align:center;padding:10px;font-size:12px">
@@ -146,6 +167,5 @@
 	<script src="${socketIo}/socket.io/socket.io.js"></script>
 	<script src="@{'/public/javascripts/room.js'}" type="text/javascript"></script>
 #{/if}
-
 
 

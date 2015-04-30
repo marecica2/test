@@ -158,7 +158,8 @@ public class BaseController extends Controller
     public static boolean clearUserFromCache()
     {
         final String userLogin = getUserLogin();
-        Cache.delete(userLogin);
+        if (userLogin != null)
+            Cache.delete(userLogin);
         return true;
     }
 
