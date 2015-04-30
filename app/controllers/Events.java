@@ -448,6 +448,7 @@ public class Events extends BaseController
         event.price = listing.price;
         event.charging = listing.charging;
         event.chargingTime = listing.chargingTime;
+        event.language = listing.language;
         event.chatEnabled = listing.chatEnabled;
         event.commentsEnabled = listing.commentsEnabled;
 

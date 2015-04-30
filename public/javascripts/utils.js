@@ -181,7 +181,10 @@ star.utils.uploadFiles = function(url, files, clbk) {
 
 star.utils.setCookie = function(name,value,days) {
     var date = new Date();
-    date.setTime(date.getTime()+(9999*24*60*60*1000));
+    if(days == undefined)
+        date.setTime(date.getTime()+(9999*24*60*60*1000));
+    else
+        date.setTime(date.getTime()+(days*24*60*60*1000));
     var expires = "; Expires="+date.toGMTString();
     document.cookie = name+"="+value+expires+"; Path=/";
 }

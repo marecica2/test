@@ -405,7 +405,7 @@ public class Listings extends BaseController
 
         e.language = l.language;
         e.charging = l.charging;
-        if (isFree != null)
+        if (isFree != null && isFree)
             e.charging = Event.EVENT_CHARGING_FREE;
 
         e.price = l.price;

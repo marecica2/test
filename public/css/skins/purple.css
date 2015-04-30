@@ -69,6 +69,19 @@ File Description: Purple Skin
 	top: 13px;
 }
 
+.widgr-tooltip:after {
+	content: '';
+	position: absolute;
+	border-style: solid;
+	border-width: 0 8px 9px;
+	border-color: rgba(149, 77, 179, 1) transparent;
+	display: block;
+	width: 0;
+	z-index: 1;
+	top: -9px;
+	left: 10px;
+}
+
 
 
 

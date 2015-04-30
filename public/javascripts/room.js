@@ -1237,22 +1237,24 @@ if(webrtc == null){
         });
         
         function chatSend2(){
-            var data = {};
-            data.room = star.chatRoom;
-            data.message = $("#chat-text2").val();
-            data.client = getSessionId();
-            data.sender = getRecipient(star.user).id;
-            data.senderUuid = star.userUuid;
-            data.senderName = star.user;
-            data.senderAvatar = star.userAvatar;
-            data.recipient = getRecipient(star.chatRoomRecipientUser).id;
-            data.recipientUuid = getRecipient(star.chatRoomRecipientUser).userUuid;
-            data.recipientName = star.chatRoomRecipientUser;
-            data.recipientAvatar = getRecipient(star.chatRoomRecipientUser).userAvatar;
-            socket.emit('chatRoom-message', data);
-            
-            $("#chat-text2").val("");
-            $("#chat-text2").focus();
+            if($("#chat-text2").val() != null && $("#chat-text2").val().length > 0){
+                var data = {};
+                data.room = star.chatRoom;
+                data.message = $("#chat-text2").val();
+                data.client = getSessionId();
+                data.sender = getRecipient(star.user).id;
+                data.senderUuid = star.userUuid;
+                data.senderName = star.user;
+                data.senderAvatar = star.userAvatar;
+                data.recipient = getRecipient(star.chatRoomRecipientUser).id;
+                data.recipientUuid = getRecipient(star.chatRoomRecipientUser).userUuid;
+                data.recipientName = star.chatRoomRecipientUser;
+                data.recipientAvatar = getRecipient(star.chatRoomRecipientUser).userAvatar;
+                socket.emit('chatRoom-message', data);
+                
+                $("#chat-text2").val("");
+                $("#chat-text2").focus();
+            }
             return false;
         }
         
@@ -1324,10 +1326,15 @@ if(webrtc == null){
                     html += '<li><a href="#" data-id="'+star.chatroomusers[i].client+'" data-uuid="'+star.chatroomusers[i].userUuid+'" data-avatar="'+star.chatroomusers[i].userAvatar+'" data-name="'+star.chatroomusers[i].user+'" class="black-link chatroom-user"><img class="img-circle avatar16" style="margin:1px;" src="/'+star.chatroomusers[i].userAvatar+'_32x32"> ' + star.chatroomusers[i].user+ '</a></li>';
                 }
             }
-            if(isAdminOnline)
+            if(isAdminOnline){
                 $(".style-switcher").show();
-            else
+                if(star.utils.getCookie("widgr-tooltip") == ""){
+                    $(".widgr-tooltip").show();
+                }
+            }
+            else {
                 $(".style-switcher").hide();
+            }
             if(star.isOwner){
                 $(".chat-avatars2").html(html);
             }
@@ -1364,20 +1371,23 @@ if(webrtc == null){
             var style = data.senderName != star.user ? "widgr-bubble-right" : "widgr-bub";
             var now = new Date();
             var time = starUtils.formatTime2(now);
-            
-            if(container[0] == undefined)
+
+            var firstMessage = false;
+            if(container[0] == undefined){
                 topContent.append("<div class='user-containers' data-usr='"+uuid+"_"+star.userUuid+"' style='display:none'></div>");
+                firstMessage = true;
+            }
             container = $(".user-containers[data-usr*='"+uuid+"']");
             var html = '';
             html += '<span style="line-height:32px; font-size:13px; color:gray" ><img class="img-circle avatar32" style="vertical-align:middle" src="'+star.baseUrl+"/"+data.senderAvatar+'_32x32"> ' + data.senderName + '<span style="float:right;margin-right:10px">'+time+"</span></span>";
             html += '<div class="'+style+'">';
             html += linkify(data.message.replace(/>/g, '&gt;'));
             html += '</div>';
-            if(star.chatfirst && star.isOwner == false && star.user == data.senderName){
+            if(star.chatfirst && star.isOwner == false && star.user == data.senderName && firstMessage){
                 star.chatfirst = false;
                 html += '<br/>';
                 html += '<div class="widgr-bubble-right">';
-                html +=  "Operator will available for you in few seconds, please wait.";
+                html +=  "Operator will available for you in few seconds. Please wait.";
                 html += '</div>';
             }
             

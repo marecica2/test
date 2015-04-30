@@ -316,7 +316,7 @@ about-you-section=Edit about you section
 about-you-section-info=This section is displayed in your profile and every listing
 working-hours-info=Here you can specify when you are avaible for scheduling sessions
 working-days-info=Here you can specify which days you are not avaiable for scheduling sessions
-account-info=If filled, account name will be used instead of full name
+account-info=If filled, account name will be appended to your full name
 
 
 

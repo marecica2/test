@@ -9,6 +9,10 @@
 	#{/if}
 #{/set}
 
+<!-- init facebook -->
+<div id="fb-root"></div>
+<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
+
 #{set 'moreScripts'}
 	<script>
 	starCalendar.aspectRatio = 2.5;
@@ -151,7 +155,7 @@
 	      	<label>&{'embed-listing-desc'}</label>
 	      	<textarea rows="4" class="form-control" name="reason" maxlength="500" onclick="javascript:$(this).select();">
 	      	<script type="text/javascript" src="${baseUrl}/public/javascripts/embed.js"></script>
-	      	<iframe id="widgr-embedded-container" class="shadow" src="${baseUrl}/embed/listing/${listing.uuid}" seamless frameBorder="0" scrolling="no" style="overflow: hidden; height:465px; width:465px"></iframe></textarea>
+	      	<iframe id="widgr-embedded-container" class="shadow" src="${baseUrl}/embed/listing/${listing.uuid}" seamless frameBorder="0" scrolling="no" style="overflow: hidden; height:500px; width:500px"></iframe></textarea>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default btn-short" data-dismiss="modal">&{'close'}</button>

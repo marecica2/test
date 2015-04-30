@@ -13,6 +13,9 @@ jQuery(document).ready(function($) {
 		panelWidth = style_switcher.outerWidth(true);
 
 		$('.style-switcher .trigger').on("click", function(){
+            $(".widgr-tooltip").hide();
+            star.utils.setCookie("widgr-tooltip", "true", 10);
+            
 			var $this = $(this);
 			if ($(".style-switcher.closed").length>0) {
 				style_switcher.animate({"left" : "0px"});

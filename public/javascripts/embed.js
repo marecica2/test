@@ -30,38 +30,27 @@ eventer(star.messageEvent,function(e) {
             star.userUuid = (new Date()).getTime()+"";
         }    
     }
-    
     if(params.type == "chat-open"){
         star.chatOpen();
     }
-
     if(params.type == "resize"){
         star.resize(params);
     }
-    
+    if(params.type == "reload"){
+        document.location.reload();
+    }
 },false);
 
 
 star.embedInit = function(){
     star.container = $("#widgr-embedded-container");
     star.container.load(function() {
-
+        //console.log($.fn.jquery);
         star.container[0].contentWindow.postMessage("widgr-frame-ready", '*');
-        // Create IE + others compatible event handler
-
-        // reload for refresh
-        if($(".style-switcher-container")[0] != undefined && star.container.contents()[0].location.href.indexOf("embed/listing") != -1){
-            console.log("reload");
-            window.location.reload();
-        }
-
-        console.log($.fn.jquery);
-        
         $('head').append('<link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,300&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">');
         $('head').append('<link rel="stylesheet" type="text/css" href="'+star.baseUrl+'/public/fonts/embedded.css">');
         $('head').append('<link rel="stylesheet" type="text/css" href="'+star.baseUrl+'/public/stylesheets/embed.css">');
         $('head').append('<link rel="stylesheet" type="text/css" href="'+star.baseUrl+'/public/css/skins/purple.css">');
-
 
         $.getScript(star.server_host+"/socket.io/socket.io.js", function() {
             $.getScript(star.baseUrl+"/public/javascripts/utils.js", function(){
@@ -69,7 +58,13 @@ star.embedInit = function(){
                     // add chat box if not exist
                     if($(".style-switcher-container")[0] == undefined)
                         $('body').append(star.chatContent(star));
-
+      
+                    // tooltip
+                    $(document).on("click", ".widgr-tooltip", function(){
+                        $(".widgr-tooltip").hide();
+                        star.utils.setCookie("widgr-tooltip", "true", 10);
+                    });                    
+                    
                     $.getScript(star.baseUrl+"/public/style-switcher/style-switcher.js", function(){
                     });    
                 });    
@@ -83,18 +78,21 @@ star.chatOpen = function(){
 };
 
 star.resize = function(data){
-    star.container.height(data.height);
-    $(window).resize(function() {
-        if(this.resizeTO) 
-            clearTimeout(this.resizeTO);
-        this.resizeTO = setTimeout(function(){
-            star.container.height(data.height);
-        }, 200);
-    });    
+    if(data != undefined){
+        star.container.height(data.height);
+        $(window).resize(function() {
+            if(this.resizeTO) 
+                clearTimeout(this.resizeTO);
+            this.resizeTO = setTimeout(function(){
+                star.container.height(data.height);
+            }, 200);
+        });    
+    }
 }
 
 star.chatContent = function(star){
     var html = '';
+    html += '<span class="widgr-tooltip default-bg shadow" style="display:none"><strong class="blink">We are online now!</strong><i style="float:right;" class="fa fa-times tooltip-close"></i><br/>Click to open the live chat</span>';
     html += '<div class="style-switcher shadow closed shadow-small style-switcher-container" style="display:none; font-family:\'Open Sans\', sans-serif;">';
     html += '<div class="header" style="background: #954db3">';
     html += '<a class="trigger btn-default" href="#chat" style="height:25px"><i class="fa fa-comments-o" style="position:relative;top:-2px"></i></a>';
@@ -103,8 +101,8 @@ star.chatContent = function(star){
     html += '<div style="padding:5px;" class="style-switcher-container-2">';
     html += '<div id="content2" class="" style="height:385px; margin-bottom:5px; overflow-y: auto; overflow-x:hidden; text-align:left; color:black"></div>';
     html += '<div class="">';
-    html += '<input id="chat-text2" class="form-control" style="width:78%;height:30px" placeholder="Your message">';
-    html += '<button id="chat-send2" class="btn btn-default btn-short" style="width:14%;height:44px;margin-top:6px;"><i class="fa fa-share fa-flip-horizontal"></i></button>';
+    html += '<input id="chat-text2" class="form-control" style="margin:0px; width:85%;height:45px" placeholder="Your message">';
+    html += '<button id="chat-send2" class="btn btn-default btn-short" style="margin:0px; width:15%;height:45px;"><i class="fa fa-share fa-flip-horizontal"></i></button>';
     html += '</div>';
     
     html += '<div style="text-align:center;padding:10px;font-size:12px">';

@@ -50,9 +50,12 @@ public class Comments extends BaseController
         }
 
         List<CommentDTO> commentsDto = new ArrayList<CommentDTO>();
-        for (Comment comment : comments)
-            commentsDto.add(CommentDTO.convert(comment, user));
+        if (comments != null)
+        {
+            for (Comment comment : comments)
+                commentsDto.add(CommentDTO.convert(comment, user));
 
+        }
         renderJSON(commentsDto);
     }
 
