@@ -3,9 +3,6 @@
 	&{'settings'}
 #{/set}
 
-<!-- init facebook -->
-<div id="fb-root"></div>
-<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
 
 #{set 'moreStyles'}
 	<link rel="stylesheet" href="@{'/public/css/jquery.Jcrop.min.css'}" type="text/css" />
@@ -319,7 +316,6 @@
 						#{/if}
 						#{else}
 							<div class="fb-login-button" data-max-rows="1" data-scope="public_profile" data-size="large" data-show-faces="false" data-auto-logout-link="false" style="inline-block"></div>
-						  	<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
 							<script>
 							  star.fbClbck = function() {
 							      FB.api('/me', function(response) {
@@ -335,7 +331,6 @@
 							</script>		
 						#{/else}				
 						<a href="/help#facebook">&{'learn-more'}</a>
-						<div id="fb-root"></div>							
 			      	</div>
 			    </div>
 			</div>			
@@ -441,11 +436,13 @@
 			
 			<div class="form-group">
 				<label class="col-sm-3 control-label">
+					<i class="icon-info tip" rel="tooltip" data-placement="left" data-original-title="&{'paypal-currency-note'}"></i>
 					&{'account.currency'}
 				</label>
 			    <div class="col-sm-9">
 			      	<p class="form-control-static">
 			      		${user.account.currency}
+			      		<span class="pointer label label-danger" rel="tooltip" data-original-title="&{'paypal-currency-note'}">&{'important'}</span>
 			      	</p>
 			    </div>
 			</div>

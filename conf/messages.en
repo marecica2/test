@@ -223,6 +223,7 @@ contact=Contact
 #WikiUtils.java
 
 #account.html
+paypal-currency-note=Please note that all currencies you will use, must be set up as accepting currencies in your PayPal account
 connected-to=connected to
 change-profile-picture=Change profile picture
 reminder-minutes=Notify me
@@ -333,8 +334,9 @@ from=From
 to=To
 submit=Submit
 payments.income=Income
-payments.totalSales=Total income per day
-payments.totalExpenses=Total expenses per day
+payments.totalSales=Total income
+payments.totalExpenses=Total expenses
+per-day=per day
 payments.fee=Fee
 payments.transactions=Transaction history
 customer=Customer
@@ -351,7 +353,7 @@ activities=Activities
 #users.html
 
 #about.html
-about-title=Widgr - share your knowledge. Instant video calls - Screen sharing - No installation. Widgr marketplace - Online tutoring - search help - get help - get paid for helping others
+about-title=Widgr - Instant video calls - Remote consultations - Screen sharing -- Marketplace - Online mentoring
 contact-us-text=Help us improve Widgr! In case of any questions or issues, feel free to ask us anything. We appreciate feedback from You. Use the email address below or the web form.
 pricing-for-customers=Pricing for basic Users
 pricing-for-publishers=Pricing for Widgr Providers
@@ -361,9 +363,9 @@ get-help-header=Get help from Experts in one click
 get-paid-header=Become a provider and get paid for helping others
 about-widgr=About Widgr
 about-widgr-subtext=Sharing your knowledge
-about-1=Widgr is an easy and comfortable way to learn skills and get help from experts over the Internet. No matter who you are, where you are, or what time it is, you can talk to someone who can help you. 
-about-2=Widgr is a place where you can find people offering help on a wide variety of subjects. We call them Widgr Providers. These providers can be individuals or companies. You can find the help you need by visiting the Widgr and searching or browsing various categories.
-about-3=With Widgr you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.<br/>You can choose who to get help from based on qualifications, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. While some sessions are free, you'll need to pay for some. Paying is easy using PayPal.
+about-1=Widgr is an easy and comfortable way to learn skills and get consultations from experts over the Internet. No matter who you are, where you are, or what time it is, you can talk to someone who can help you. 
+about-2=Widgr is a place where you can find people offering consultations on a wide variety of subjects. We call them Widgr Providers. These providers can be individuals or companies. You can find the help you need by visiting the Widgr and searching or browsing various categories.
+about-3=With Widgr you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.<br/>You can choose who to get help from based on qualifications, ratings and reviews. Also, you can choose to get consultation right away or schedule a session for later. While some sessions are free, you'll need to pay for some. Paying is easy using PayPal.
 why-choose-widgr=Features
 why-choose-widgr-text=Why choose Widgr?
 widgr-feature-1=Interactive live video calls
@@ -469,17 +471,17 @@ no-listings=You have not created any listing yet
 msgMedia-msg=<h4>Media library</h4>On this page you can manage all your uploaded files.
 
 #home.html
-home-title=Widgr - share your knowledge. Instant video calls - Screen sharing - No installation. Widgr marketplace - Online tutoring - search help - get help - get paid for helping others
+home-title=Widgr - Instant video calls - Screen sharing - Remote consultations - Marketplace - Online mentoring
 register=Register Now
 for-customers=<strong>widgr</strong> for Customers
 for-publishers=<strong>widgr</strong> for Providers
 find-everything-on-one-place=Get help from experts
 get-help-from-experts=Find everything on one place
-easy-use=Easy to use
+easy-use=Online video calls
 and-much-more=And much more
-offer-your-experience=Offer your expertise as a new service
-reach-your-community=Reach your community on Social networks
-get-paid-for-helping=Get paid for helping others
+offer-your-experience=Offer remote consultations as new Service
+reach-your-community=Embed widgr instant chat to your website or Facebook
+get-paid-for-helping=Get paid for giving consultations
 feature31=No fixed monthly fees
 feature32=Easy payments with PayPal
 feature33=Mobile friendly
@@ -487,14 +489,14 @@ feature33=Mobile friendly
 what-is=What is Widgr Marketplace?
 good-for=good for
 find-help=Search help
-find-help-message=With Widgr you can get help anytime from people with expertise across a range of topics. Teachers, computer experts, home repair specialists, personal trainers, hobby enthusiasts, and more. No matter who you are, no matter where you are and no matter what time it is, with Widgr you are just few click away from getting help.
+find-help-message=With Widgr you can get help anytime from people with expertise across a range of topics. Advisors, mentors, teachers, computer experts, home repair specialists and more. No matter who you are, no matter where you are and no matter what time it is, with Widgr you are just few click away from getting help.
 read-more=Read more
 get-help=Get help
 get-help-message=You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. While some Providers offer free sessions, some may be charged. For those just simply use your PayPal to pay securely and fast. 
 get-paid=Get paid
-get-paid-message=When you know something what might be useful for others you can become a Widgr Provider. Widgr will provide you a simple platform which will help you to connect to your customers. All you need is just PayPal account for receiving payments, and you are ready to start your business
-instant-video-calls=Instant video calls
-anonymous-peers-no-plugins=Anonymous. Peer-to-peer. No plugins, signup, or payment required.
+get-paid-message=When you know something what might be useful for others you can become a Widgr Provider. Widgr will provide you a simple platform which will help you to connect to your customers. All you need is just PayPal account for receiving payments, and you are ready to start your business by giving remote consultations using Widgr
+instant-video-calls=Instant chat & video calls
+anonymous-peers-no-plugins=Anonymous. Peer-to-peer. No plugins, signup, or payment required.<br/>Supported browsers
 start-now=Start now
 you-are-on-the-right-place=Join us, it's free
 fill-in-quick-registration-and-start-using-widgr=Just fill in quick registration and start using Widgr now!
@@ -551,7 +553,7 @@ remove=Remove
 waiting=Waiting
 
 #embed.html
-embed-login-message=For scheduling and paying for paid sessions must be registered. <strong><a href="/login?url=%s">Log in</a></strong> or <strong><a href="/registration" target="_blank">register here</a></strong>. Payments for paid sessions are secured by <i><a href="http://www.paypal.com" target="_blank">PayPal</a></i>
+embed-login-message=For scheduling and paying for paid sessions must be registered. <strong><a href="/login?url=%s">Log in</a></strong> or <strong><a href="/registration?url=%s">register here</a></strong>. Payments for paid sessions are secured by <i><a href="http://www.paypal.com" target="_blank">PayPal</a></i>
 
 #joinRoom.html
 canvas-name=Canvas name
@@ -629,6 +631,7 @@ set-up-your-camera-desc=Wigdr sessions happen over video conferencing, so be sur
 video-tutorials=Video tutorials
 
 #edit.html
+invalid-paypal-account-warning=You must provide valid Premier or Business PayPal account to create paid Sessions. <a href="/settings?edit=true#paypal">Click here to add PayPal account</a>
 session-type=Session type
 preferred-language=Preferred language
 video-recorder-directly=Create Introductory video using Youtube widget
@@ -699,6 +702,7 @@ setup-paypal-account-warning=If you want to create paid sessions, you need to se
 go-to-profile=View profile
 available-now=Available
 schedule-session=Schedule a session
+schedule-session-later=Schedule session
 schedule-session-desc=Pick a free time slot and schedule a Session later
 join-session-now=Join video call now
 open-chat=Open&nbsp;chat&nbsp;with&nbsp;
@@ -759,7 +763,7 @@ links=Links
 online-users=Online Users
 recipient=Message to
 all=All
-chat=Chat with 
+chat=Open chat 
 follow-us=Follow us on
 select-page-to-display=Page to display
 channel=Listing
@@ -795,6 +799,7 @@ join-event=Access to session &bdquo;%s&rdquo; is charged
 PayPal-error=PayPal checkout failed. Please try again.
 unit-price=Unit price
 total=Total price
+total2=Total
 checkout-with-PayPal=Checkout with PayPal
 subscribe-with-PayPal=Subscribe with PayPal
 pay-with-PayPal=Checkout with PayPal

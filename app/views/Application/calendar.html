@@ -103,10 +103,10 @@
 			<br/>
 			<div class="anchorLink shadow-blur" data-href="/listing/${item.uuid}" style="cursor:pointer;text-align:left;width:100%; background: #fafafa; width:100%; margin:0 0 20px 0;">
 			   		
-		   		<div class="listing-item-top" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
+		   		<div class="listing-item-top shadow-inset-2" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
 		   		</div>
 		
-		   		<div class="listing-item" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
+		   		<div class="listing-item shadow-inset-2" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
 		   		</div>				   		
 		   		
 		   		<div style="display:table-cell;vertical-align:top;padding:15px;position:relative;">
@@ -117,7 +117,7 @@
 					</p>
 					<h4>${item.title}</h4>
 					
-					<span class="truncate">${item.getDescriptionHtml().trimDot(500).raw()}</span>
+					<span class="truncate">${item.getDescriptionHtml().trimDot(200).raw()}</span>
 		   			<p>
 		   			#{if item.charging != 'free'}
 		   				<strong>&{'from'} ${item.price} <small>${item.currency}</small></strong>

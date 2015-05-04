@@ -80,39 +80,46 @@
 				</script>
 			</form>
 			
-			<br/>
-			
 			#{if request.params.sent}
 				<h3>&{'payments.totalExpenses'}</h3>
 			#{/if}
 			#{else}
 				<h3>&{'payments.totalSales'}</h3>
 			#{/else}
+			#{list items:mapTotal, as:'p'}
+				#{set sum: 0 /}
+				#{list items:p.value, as:'t'}
+					#{set sum:sum += t.value /}
+				#{/list}	
+				${sum} ${p.key}
+			#{/list}			
+
+			#{if request.params.sent}
+				<h3>&{'payments.totalExpenses'} &{'per-day'}</h3>
+			#{/if}
+			#{else}
+				<h3>&{'payments.totalSales'} &{'per-day'}</h3>
+			#{/else}
 			
-			
-			<br/>
 			<div id="chartContainer" style="height: 300px; width: 90%;">
-			</div>			
-			<script>
+			</div>		
 			
+			<script>
 			window.onload = function () {
 				var chart = new CanvasJS.Chart("chartContainer",
 				{
-
 					title:{
 						text: "",
 						fontSize: 30
 					},
 					axisX:{
-
 						gridColor: "Silver",
 						tickColor: "silver",
 						valueFormatString: "DD. MMM hh"
-
 					},                        
-		                        toolTip:{
-		                          shared:true
-		                        },
+                    toolTip:{
+                      shared:true
+                    },
 					theme: "theme2",
 					axisY: {
 						gridColor: "Silver",
@@ -127,9 +134,8 @@
 					{        
 						type: "line",
 						showInLegend: true,
-						name: "${p.key}",
-						lineThickness: 2,
-
+						name: "&{'payments.totalSales'} - ${p.key}",
+						lineThickness: 4,
 						dataPoints: [
 						#{list items:p.value, as:'t'}
 							{ x: new Date(${t.key}), y: ${t.value} },
@@ -139,16 +145,7 @@
 					#{/list}						             
 					],
 		          legend:{
-		            cursor:"pointer",
-		            itemclick:function(e){
-		              if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-		              	e.dataSeries.visible = false;
-		              }
-		              else{
-		                e.dataSeries.visible = true;
-		              }
-		              chart.render();
-		            }
+		            cursor:"pointer"
 		          }
 				});
 

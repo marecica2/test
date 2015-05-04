@@ -113,9 +113,9 @@ public class FileuploadController extends BaseController
 
         if ("listing".equals(type))
         {
-            // aspect ration 2.5
-            File destinationThumb1 = new File(PATH_TO_UPLOADS_FILESYSTEM + fu.getUrl() + "_128x128");
-            Images.resize(destination, destinationThumb1, 320, 128, true);
+            // aspect ration 1.8
+            File destinationThumb1 = new File(PATH_TO_UPLOADS_FILESYSTEM + fu.getUrl() + "_256x256");
+            Images.resize(destination, destinationThumb1, 460, 256, true);
             File destinationThumb3 = new File(PATH_TO_UPLOADS_FILESYSTEM + fu.getUrl() + "_64x64");
             Images.resize(destination, destinationThumb3, 160, 64, true);
             File destinationThumb2 = new File(PATH_TO_UPLOADS_FILESYSTEM + fu.getUrl() + "_32x32");
@@ -262,6 +262,12 @@ public class FileuploadController extends BaseController
             if (f.exists())
                 f.delete();
             f = new File(PATH_TO_UPLOADS_FILESYSTEM + fu.url + "_thumb");
+            if (f.exists())
+                f.delete();
+            f = new File(PATH_TO_UPLOADS_FILESYSTEM + fu.url + "_256x256");
+            if (f.exists())
+                f.delete();
+            f = new File(PATH_TO_UPLOADS_FILESYSTEM + fu.url + "_128x128");
             if (f.exists())
                 f.delete();
             f = new File(PATH_TO_UPLOADS_FILESYSTEM + fu.url + "_64x64");

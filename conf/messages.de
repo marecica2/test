@@ -222,7 +222,8 @@ contact=Kontakt
                                               
 #WikiUtils.java                                                    
                                               
-#account.html                                                      
+#account.html
+paypal-currency-note=Bitte beachten Sie, dass alle Währungen, die Sie verwenden, muss festgelegt werden, als Annahme Währungen in Ihrem PayPal-Konto einrichten.                                                      
 connected-to=verbunden mit
 change-profile-picture=Profilbild ändern 
 reminder-minutes=Benachrichtige mich in
@@ -333,8 +334,9 @@ from=Von
 to=Zur
 submit=Senden
 payments.income=Einkommen
-payments.totalSales=Die Gesamterträge pro Tag
-payments.totalExpenses=Der Gesamtaufwand pro Tag
+payments.totalSales=Die Gesamterträge
+payments.totalExpenses=Der Gesamtaufwand
+per-day=pro Tag
 payments.fee=Gebühr
 payments.transactions=Transaktionshistorie
 customer=Kunde
@@ -628,7 +630,8 @@ set-up-your-camera=Einrichten der Kamera
 set-up-your-camera-desc=Wigdr Sitzungen geschehen über Videokonferenzen, so sicher sein, dass Ihnen richtig funktioniert. Sie können die Kamera, indem Sie einen <a target="_blank" href="/instant"> Test-Videoanruf </a> testen. Sie sollten in der Lage, um zu sehen und zu hören, selbst zu sein.
 video-tutorials=Video Tutorials
                                               
-#edit.html                                                         
+#edit.html        
+invalid-paypal-account-warning=Sie müssen gültiges Premier oder Business-PayPal-Konto angeben um bezahlte Sitzungen bezahlt zu erstellen. <a href="/settings?edit=true#paypal">Klicken Sie hier um PayPal konto angeben</a>                                                 
 session-type=Sitzungstyp
 preferred-language=Bevorzugte Sprache
 video-recorder-directly=Einführungs video mit Youtube-Widget erstellen
@@ -699,6 +702,7 @@ setup-paypal-account-warning=Wenn Sie bezahlte Sitzungen erstellen möchten, mü
 go-to-profile=Benutzer Profile anzeigen
 available-now=Jetzt verfügbar
 schedule-session=Sitzung planen
+schedule-session-later=Planen
 schedule-session-desc=Wählen Sie einen freien Zeitschlitz und planen Sie eine Session fur später
 join-session-now=Nehmen Sie eine Session jetzt
 open-chat=Chat&nbsp;mit&nbsp;Anbieter
@@ -723,7 +727,7 @@ play-introduction=Einführung&nbsp;Video&nbsp;spielen
 total-price=Gesamtpreis
 min=Min
 request-for-event=Sitzung planen
-request-for-event-instant=Instant Videoanruf
+request-for-event-instant=Jetzt anrufen
 guests=Gäste
 add-to-watchlist=Auf die Merkliste hinzufügen
 remove-from-watchlist=Aus Merkliste entfernen
@@ -759,7 +763,7 @@ links=Linke
 online-users=Benutzer Online
 recipient=Nachricht an
 all=Alle
-chat=Chat mit
+chat=Chat
 follow-us=Folgen Sie uns auf
 select-page-to-display=Startseite
 channel=Kleinanzeige
@@ -795,6 +799,7 @@ join-event=Der Zugang zu Sitzungs &bdquo;%s&rdquo; wird geladen
 PayPal-error=PayPal Error. Bitte versuchen Sie es wieder.
 unit-price=Stückpreis
 total=Gesamtpreis
+total2=Gesamt
 checkout-with-PayPal=Mit PayPal bezahlen
 subscribe-with-PayPal=Abonnieren mit PayPal
 pay-with-PayPal=Mit PayPal bezahlen

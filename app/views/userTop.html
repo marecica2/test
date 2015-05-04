@@ -14,10 +14,10 @@
 					    	#{if user && isOwner}
 					    		<a href="/settings?edit=true" class="btn btn-light-gray btn-sm controls"><i class="fa fa-pencil"></i> &{'edit'}</a> 
 					    	#{/if}		
-							#{if isOwner && user.isAvailable()}
+							#{if isOwner && user.isAvailable() && false}
 								<a class="btn btn-success btn-sm btn-short controls" href="/available-stop?url=${request.url.urlEncode()}&#{token /}">&{'uncheck-me-as-available'}</a>
 							#{/if}		
-							#{if isOwner && user.isPublisher() && !user.isAvailable()}
+							#{if isOwner && user.isPublisher() && !user.isAvailable() && false}
 								<a class="btn btn-light-gray btn-sm btn-short controls" href="/available-start?url=${request.url.urlEncode()}&#{token /}">&{'check-me-as-available'}</a>
 							#{/if}	
 					    		

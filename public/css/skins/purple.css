@@ -11,7 +11,7 @@ File Description: Purple Skin
 
 /* 1 Extension
 ----------------------------------------------------------------------------- */
-.widgr-bub 
+.widgr-bubble-left 
 {
 	word-wrap: break-word;
 	margin:5px;
@@ -42,7 +42,7 @@ File Description: Purple Skin
 	border-radius: 8px;	
 }
 
-.widgr-bub:after 
+.widgr-bubble-left:after 
 {
 	content: '';
 	position: absolute;

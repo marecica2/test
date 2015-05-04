@@ -129,7 +129,34 @@ public class Listing extends Model
 
     public static List<Listing> getRandom(int number)
     {
-        return Listing.find("from Listing where 1 = 1 and deleted is null order by random() ").fetch(number);
+        Query q = Listing.em().createNativeQuery("SELECT s.uuid, title, s.firstname, s.lastname, s.avatarUrl, "
+                + "s.category, s.privacy, s.charging, s.price, s.currency, s.imageUrl, "
+                + "s.description from search_index s where 1 = 1 order by random()");
+        q.setMaxResults(number);
+        q.getResultList();
+        List<Object> result = q.getResultList();
+        List<Listing> listings = new LinkedList<Listing>();
+        for (Object object : result)
+        {
+            Object[] item = (Object[]) object;
+            Listing l = new Listing();
+            User u = new User();
+            l.uuid = (String) item[0];
+            l.title = (String) item[1];
+            u.firstName = (String) item[2];
+            u.lastName = (String) item[3];
+            u.avatarUrl = (String) item[4];
+            l.category = (String) item[5];
+            l.privacy = (String) item[6];
+            l.charging = (String) item[7];
+            l.price = (BigDecimal) item[8];
+            l.currency = (String) item[9];
+            l.imageUrl = (String) item[10];
+            l.description = (String) item[11];
+            l.user = u;
+            listings.add(l);
+        }
+        return listings;
     }
 
     public static List<Listing> getSearch(Integer first, Integer count, ListingFilter filter)
@@ -238,7 +265,6 @@ public class Listing extends Model
             query += " and CONCAT(l.title, l.tags) like :search ";
 
         query += " order by l.created desc";
-        //Logger.error(query);
         TypedQuery<Listing> q = Listing.em().createQuery(query, Listing.class);
 
         if (listing.category != null)

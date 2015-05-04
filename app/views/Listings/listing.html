@@ -9,13 +9,9 @@
 	#{/if}
 #{/set}
 
-<!-- init facebook -->
-<div id="fb-root"></div>
-<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
-
 #{set 'moreScripts'}
 	<script>
-	starCalendar.aspectRatio = 2.5;
+	starCalendar.aspectRatio = 1.8;
 	star.dashboard = false;
 	#{if user}
 		star.user = "${user.uuid}";
@@ -208,12 +204,11 @@
 						<a id="linkedin-share-button" href="#" ><i class="fa fa-linkedin"></i></a>
 					</li>
 					<li class="googleplus">
-						<a href="https://plus.google.com/share?url=${baseUrl+request.url}" onclick="javascript:window.open(this.href,
-						  '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"><i class="fa fa-google-plus"></i></a>					
+						<a href="https://plus.google.com/share?url=${baseUrl+request.url}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"><i class="fa fa-google-plus"></i></a>					
 					</li>
 					
 					<li class="googleplus">
-						<a href="/mail?action=new&url=${request.url.urlEncode()}&to=info@wid.gr" rel="tooltip" data-original-title="Report a problem"><i class="icon-megaphone"></i> </a>
+						<a href="/mail?action=new&url=${request.url.urlEncode()}&to=info@wid.gr" rel="tooltip" data-original-title="Report a problem"><i class="fa fa-question"></i> </a>
 					</li>
 				
 					#{if listing && listing.video}
@@ -286,7 +281,7 @@
 
 
 <!-- header image -->
-<div class="section gray-bg" style="padding:0px;position:relative">
+<div class="section gray-bg" style="padding:0px">
 
 	<div class="container">	
 		<div class="row">
@@ -320,7 +315,15 @@
 			<div class="col-md-4 text-center" style="padding:20px">
 				<h3 class="title"><a class="anchor2" href="/listing/${listing.uuid}">${listing.title}</a></h3>
 				<a href="/user/${usr.login}"><img style="height:60px;width:60px" class="img-circle" src="/${usr.avatarUrl}_64x64"></a>
-				<h4><a href="/user/${usr.login}">${usr.getFullNameAccount()}</a></h4>
+				<h4>		
+					#{if usr.isOnline()}
+						<i class=" icon-record" style="color:#5cb85c;"></i>
+					#{/if}
+					#{else}
+						<i class=" icon-record" style="color:gray"></i>
+					#{/else}
+					<a href="/user/${usr.login}">${usr.getFullNameAccount()}</a>
+				</h4>
 				
 				#{if stats}
 					<span style="font-size:1.0em">
@@ -371,26 +374,29 @@
 				<div class="text-center">
 					<br/>
 					#{if isOwner && listing.isAvailable()}
-						<a class="btn btn-success btn-mdm btn-short" href="/available-stop?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}">&{'uncheck-me-as-available'}</a>
+						<a class="btn btn-success btn-md btn-short" href="/available-stop?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}">&{'uncheck-me-as-available'}</a>
 					#{/if}		
 					#{if isOwner && user.isPublisher() && !listing.isAvailable() && listing.type == 'p2p'}
-						<a class="btn btn-default btn-mdm btn-short" href="/available-start?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-original-title="&{'turn-on-available-now'}">&{'check-me-as-available'}</a>
+						<a class="btn btn-default btn-md btn-short" href="/available-start?id=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-original-title="&{'turn-on-available-now'}">&{'check-me-as-available'}</a>
 					#{/if}
+					
 					#{if listing.isAvailable()}
-						<a href="#" class="btn btn-success btn-mdm btn-short open-chat style-switcher hidden" style="border-width:0px;" rel="tooltip" data-original-title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
+						<a href="#" class="btn btn-default btn-md btn-short open-chat style-switcher" style="display:none;" rel="tooltip" data-original-title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
 					#{/if}
 					
 					#{if !isOwner}
-						#{if !isOwner && listing.isAvailable()}
-							<a href="/instant-room?id=${listing.uuid}&#{token /}" class="btn btn-success btn-mdm btn-short no-schedule-start style-switcher hidden" rel="tooltip" data-original-title="&{'join-session-now'}">&{'request-for-event-instant'}</a>
+						#{if listing.user.isAvailable()}
+							<a href="/instant-room?id=${listing.uuid}&#{token /}" class="btn btn-default btn-short btn-md no-schedule-start style-switcher" style="display:none" rel="tooltip" data-original-title="&{'join-session-now'}"><i class="fa fa-arrow-right"></i> &{'request-for-event-instant'}</a>
 						#{/if}			
-						#{elseif user}
-							<a href="/mail?action=new&to=${listing.user.login}&url=${request.url}" class="btn btn-default btn-mdm btn-short open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-envelope-o"></i></a>
-						#{/elseif}
+						
+						<a href="/user/${usr.login}/calendar?channel=${listing.uuid}&#{token /}" class="btn btn-gray btn-short btn-md" rel="tooltip" data-original-title="&{'schedule-session-desc'}"><i class="fa fa-calendar"></i> &{'schedule-session'}</a>
+						
+						#{if user}
+							<a href="/mail?action=new&to=${listing.user.login}&url=${request.url}" class="btn btn-gray btn-short btn-md" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-envelope-o"></i></a>
+						#{/if}
 						#{else}
-							<a href="/contact?id=${listing.user.login}" class="btn btn-default btn-mdm btn-short open-chat" style="border-width:0px;" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-envelope-o"></i></a>
+							<a href="/contact?id=${listing.user.login}" class="btn btn-gray btn-short btn-md open-chat" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-envelope-o"></i></a>
 						#{/else}
-						<a href="/user/${usr.login}/calendar?channel=${listing.uuid}&#{token /}" class="btn btn-default btn-mdm" rel="tooltip" data-original-title="&{'schedule-session-desc'}"><i class="fa fa-calendar"></i> &{'request-for-event'}</a>
 					#{/if}
 				</div>
 			</div>
@@ -605,17 +611,17 @@
 					#{else}
 					
 						#{if listing.privacy == 'private'}
-							<span class="labels "><i class="fa fa-lock"></i> &{listing.privacy}</span> &middot;
+							&middot; <span class="labels "><i class="fa fa-lock"></i> &{listing.privacy}</span> 
 						#{/if}
 						
 						#{if listing.privacy == 'public'}
-							<span class="labels "><i class="fa fa-unlock"></i> &{listing.privacy}</span> &middot;
+							&middot; <span class="labels "><i class="fa fa-unlock"></i> &{listing.privacy}</span>
 						#{/if}
 						
-						<span class="labels "><i class="fa fa-comments"></i> &{listing.type}</span> &middot;
+						&middot; <span class="labels "><i class="fa fa-comments"></i> &{listing.type}</span> 
 
 						#{if listing.language}
-							<img style="position:relative;bottom:2px;" src='/public/images/flags/${listing.language}.gif' rel="tooltip" data-original-title="&{'preferred-language'}"> 
+							&middot; <img style="position:relative;bottom:2px;" src='/public/images/flags/${listing.language}.gif' rel="tooltip" data-original-title="&{'preferred-language'}"> 
 						#{/if}
 					#{/else}		    	   
 	    	   	</span>

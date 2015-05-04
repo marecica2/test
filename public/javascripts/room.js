@@ -1368,7 +1368,7 @@ if(webrtc == null){
             var name = data.recipientName == star.user ? data.senderName : data.recipientName;
             var avatar = data.recipientAvatar == star.userAvatar ? data.senderAvatar : data.recipientAvatar;
             var container = $(".user-containers[data-usr*='"+uuid+"']");
-            var style = data.senderName != star.user ? "widgr-bubble-right" : "widgr-bub";
+            var style = data.senderName != star.user ? "widgr-bubble-right" : "widgr-bubble-left";
             var now = new Date();
             var time = starUtils.formatTime2(now);
 

@@ -45,21 +45,33 @@ public class User extends Model
 
     public String lastName;
 
-    public String avatarId;
-
     public String avatarUrl;
+
+    public Date created;
 
     public Boolean unreadMessages;
 
     public Boolean emailNotification;
 
-    public Boolean reminder;
-
-    public Integer reminderMinutes;
-
     public Boolean activated;
 
     public Boolean blocked;
+
+    public Date lastLoginTime;
+
+    public Date lastOnlineTime;
+
+    // random secret uuid token for invitations
+    public String referrerToken;
+
+    // identifies user who invited this user
+    public String registrationToken;
+
+    // user settings
+
+    public Boolean reminder;
+
+    public Integer reminderMinutes;
 
     public Boolean available;
 
@@ -68,12 +80,6 @@ public class User extends Model
     public String workingHourStart;
 
     public String workingHourEnd;
-
-    public Date lastLoginTime;
-
-    public Date lastOnlineTime;
-
-    public Date created;
 
     @Column(length = 2000)
     public String userAbout;
@@ -96,6 +102,14 @@ public class User extends Model
 
     public String facebookPageChannel;
 
+    public String googleAccessToken;
+
+    public String googleRefreshToken;
+
+    public Date googleTokenExpires;
+
+    public String googleCalendarId;
+
     public String googlePlus;
 
     public String googlePlusId;
@@ -105,24 +119,6 @@ public class User extends Model
     public String twitter;
 
     public String skype;
-
-    public String stylesheet;
-
-    public String googleAccessToken;
-
-    public String googleRefreshToken;
-
-    public Date googleTokenExpires;
-
-    public String googleCalendarId;
-
-    // random secret uuid token for invitations
-    public String referrerToken;
-
-    // identifies user who invited this user
-    public String registrationToken;
-
-    public Boolean hideInfoPublisher;
 
     public static User getUserByLogin(String login)
     {

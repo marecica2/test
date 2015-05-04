@@ -238,7 +238,7 @@ star.renderItems = function(data, prefix){
         
         html += "   <div class='overlay-container'>";
         html += "       <a href='"+url+"'>";
-        html += "       <div style='background:url(\"/"+item.imageUrl+"_128x128\"); height:128px; width:100%; background-size: cover' class='shadow-inset-2'></div>";
+        html += "       <div style='background:url(\"/"+item.imageUrl+"_256x256\"); height:128px; width:100%; background-size: cover' class='shadow-inset-2'></div>";
         html += "       <div style='position:absolute;bottom:5px;right:0px;width:270px'>";
         html += "           <div style='font-weight:bold;' class='white'>"+star.utils.trimTo(item.title, 50)+"</div>";
         html += "       </div>";            

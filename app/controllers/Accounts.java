@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -175,12 +176,8 @@ public class Accounts extends BaseController
             user.skype = skype;
             if (googleCalendarId != null)
                 user.googleCalendarId = googleCalendarId;
-
             if (imageUrl != null)
-            {
                 user.avatarUrl = imageUrl;
-                user.avatarId = imageId;
-            }
             user.workingHourEnd = workingHourEnd;
             user.workingHourStart = workingHourStart;
             String hidden = "";
@@ -298,7 +295,7 @@ public class Accounts extends BaseController
         Map<String, BigDecimal> totals = new HashMap<String, BigDecimal>();
         Map<String, BigDecimal> providers = new HashMap<String, BigDecimal>();
         Map<String, BigDecimal> fees = new HashMap<String, BigDecimal>();
-        Map<String, Map<Long, BigDecimal>> mapTotal = new HashMap<String, Map<Long, BigDecimal>>();
+        Map<String, Map<Long, BigDecimal>> mapTotal = new LinkedHashMap<String, Map<Long, BigDecimal>>();
         for (Attendance attendance : payments)
         {
             if (attendance.refunded == null || !attendance.refunded)
@@ -306,7 +303,7 @@ public class Accounts extends BaseController
                 // init
                 if (!totals.containsKey(attendance.currency))
                 {
-                    mapTotal.put(attendance.currency, new HashMap<Long, BigDecimal>());
+                    mapTotal.put(attendance.currency, new LinkedHashMap<Long, BigDecimal>());
                     totals.put(attendance.currency, new BigDecimal(0));
                     providers.put(attendance.currency, new BigDecimal(0));
                     fees.put(attendance.currency, new BigDecimal(0));
@@ -317,7 +314,8 @@ public class Accounts extends BaseController
                     BigDecimal val = attendance.providerPrice;
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(attendance.paypalTransactionDate);
-                    cal.set(Calendar.HOUR, 12);
+                    cal.set(Calendar.AM_PM, Calendar.AM);
+                    cal.set(Calendar.HOUR_OF_DAY, 0);
                     cal.set(Calendar.MINUTE, 0);
                     cal.set(Calendar.SECOND, 0);
                     cal.set(Calendar.MILLISECOND, 0);
@@ -353,14 +351,5 @@ public class Accounts extends BaseController
         user.facebook = null;
         user.save();
         redirectTo("/settings");
-    }
-
-    public static void publisherInfoDismiss(String url)
-    {
-        User user = getLoggedUserNotCache();
-        user.hideInfoPublisher = true;
-        user.save();
-        redirectTo(url);
-        clearUserFromCache();
     }
 }

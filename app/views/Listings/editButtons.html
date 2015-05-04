@@ -21,14 +21,6 @@
 			#{/if}
 		#{/if}
 
-		#{if isOwner && (event.state == 'customer_created' )}
-			<a class="btn btn-success  btn-social margin-clear" href="/event-approve?event=${event.uuid}&url=${request.url.urlEncode()}&#{token /}"><i class="fa fa-check"></i> &{'approve'}</a>
-			<a class="btn btn-danger  btn-social margin-clear" href="/event-decline?event=${request.params.uuid}&#{token /}&url=${'/listing/'+listing.uuid.urlEncode()}" 
-				onclick="if(confirm('&{'confirm-decline'}')){return true;} else {return false;}">
-				<i class="dialog-event-edit fa fa-times fa-1x"></i> &{'decline'}
-			</a>
-	   	#{/if} 				
-		
 		
 		#{if isOwner && !edit && event.type == 'broadcast'}
 			#{if event.started == null}
@@ -101,6 +93,15 @@
 				&{'cancel'}
 			</a>		
 		#{/if}	
+		
+		#{if isOwner && (event.state == 'customer_created' )}
+			<a class="btn btn-success  btn-social margin-clear" href="/event-approve?event=${event.uuid}&url=${request.url.urlEncode()}&#{token /}"><i class="fa fa-check"></i> &{'approve'}</a>
+			<a class="btn btn-danger  btn-social margin-clear" href="/event-decline?event=${request.params.uuid}&#{token /}&url=${'/listing/'+listing.uuid.urlEncode()}" 
+				onclick="if(confirm('&{'confirm-decline'}')){return true;} else {return false;}">
+				<i class="dialog-event-edit fa fa-times fa-1x"></i> &{'decline'}
+			</a>
+	   	#{/if} 		
+	   			
 	#{/if}	
 	
 	

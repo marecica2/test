@@ -175,6 +175,8 @@ public class Application extends BaseController
             redirect("/login?url=" + request.url);
         if (pageId == null)
             pageId = session.get("pageId");
+        else
+            session.put("pageId", pageId);
 
         User displayedUser = pageId != null ? User.getUserByFacebookPage(pageId) : null;
         if (displayedUser != null && displayedUser.facebookPageType != null)
@@ -184,10 +186,9 @@ public class Application extends BaseController
             if (displayedUser.facebookPageType.equals("profile"))
                 redirect("/user/" + displayedUser.login);
             if (displayedUser.facebookPageType.equals("channel"))
-                redirect("/embed/listing/" + displayedUser.facebookPageChannel + "?facebook=true");
+                redirect("/listing/" + displayedUser.facebookPageChannel + "?facebook=true");
         }
-
-        redirect("/user/" + user.login);
+        redirect("/");
     }
 
     public static void facebookPost(String id, String type, String channel) throws IOException

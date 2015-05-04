@@ -57,7 +57,7 @@
 							#{/if}
 						</td>
 						<td>
-							${item.created}
+							 ${item.created.format("dd.MM.yyyy")}
 						</td>
 						<td>
 							<a href="/mail?action=new&to=${item.login}">&nbsp;<i class="fa fa-envelope-o"></i></a> &middot;
@@ -69,9 +69,6 @@
 							#{if item.blocked == null}
 							<a href="/admin/block?uuid=${item.uuid}&url=${request.url.urlEncode()}" class="btn btn-white btn-sm btn-margin">Block</a>
 							#{/if}
-							<a href="/admin/deny?uuid=${item.uuid}&url=${request.url.urlEncode()}" class="btn btn-white btn-sm btn-short btn-margin">Deny</a>
-							<a href="/admin/approve?uuid=${item.uuid}&url=${request.url.urlEncode()}" class="btn btn-default btn-sm btn-short btn-margin">Approve</a>
-							
 						</td>
 					</tr>				
 				#{/list}				

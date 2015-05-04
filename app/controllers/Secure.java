@@ -89,6 +89,7 @@ public class Secure extends BaseController
         // Check tokens
         Boolean allowed = false;
         allowed = (Boolean) Security.invoke("authenticate", username, password);
+
         if (validation.hasErrors() || !allowed)
         {
             flash.keep("url");
@@ -258,6 +259,7 @@ public class Secure extends BaseController
             {
                 user.lastLoginTime = new Date();
                 user.lastOnlineTime = new Date();
+                user.available = false;
                 final Cookie cookie = request.cookies.get("timezoneJs");
                 if (cookie != null)
                     user.timezone = NumberUtils.parseInt(cookie.value);
@@ -268,6 +270,7 @@ public class Secure extends BaseController
             {
                 user.lastLoginTime = new Date();
                 user.lastOnlineTime = new Date();
+                user.available = false;
                 final Cookie cookie = request.cookies.get("timezoneJs");
                 if (cookie != null)
                     user.timezone = NumberUtils.parseInt(cookie.value);

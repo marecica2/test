@@ -6,16 +6,27 @@
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
 
-
-  window.fbAsyncInit = function() {
-      
-      FB.Canvas.setSize({ width: 640, height: $(window.document).height() });
-      FB.Event.subscribe('auth.authResponseChange', function(response) {
+window.fbAsyncInit = function() {
+    if($(".page-wrapper")[0] != undefined){
+        FB.Canvas.setSize({ width: 640, height: $(".page-wrapper").height() + 200});
+        $(document).ready(function(){
+            FB.Canvas.setSize({ width: 640, height: $(".page-wrapper").height() + 200});
+        });
+    }
+    
+    FB.Event.subscribe('auth.authResponseChange', function(response) {
         if (response.status === 'connected') {
            star.fbClbck(response);
         } else if (response.status === 'not_authorized') {
         } else {
         }
-      });
-  };
+    });
+};
   
+$(document).ajaxStop(function () {
+    if(typeof FB !== "undefined"){
+        if($(".page-wrapper")[0] != undefined){
+            FB.Canvas.setSize({ width: 640, height: $(".page-wrapper").height() + 200});
+        }
+    }
+});      

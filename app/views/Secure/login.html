@@ -3,25 +3,25 @@
 	&{'login'}
 #{/set}
 
-<!-- init facebook -->
-<div id="fb-root"></div>
-<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
-
 #{set 'moreScripts'}
 	<script>
-	  star.fbClbck = function(resp) {
-	      FB.api('/me', function(response) {
-	        $.post("/login/facebook?id="+response.id+"&signedRequest="+resp.authResponse.signedRequest+"&authenticityToken="+$("input[name='authenticityToken']").val(), function(redirect){
-	            
-	            var params = {};
-				params["height"] = $("#embed-item").height();
-				params["type"] = "reload";
-				parent.postMessage(JSON.stringify(params),"*");    
-	            
-	            window.location = redirect;
-	        });
-	      });
-	  }
+		star.fbClbck = function(resp) {
+	    	FB.api('/me', function(response) {
+	        	$.post("/login/facebook?id="+response.id+"&signedRequest="+resp.authResponse.signedRequest+"&authenticityToken="+$("input[name='authenticityToken']").val(), function(redirect){
+	            	var params = {};
+					params["height"] = $(".embed-item").height();
+					params["type"] = "reload";
+					parent.postMessage(JSON.stringify(params),"*");    
+		            window.location = redirect;
+	        	});
+	      	});
+		}
+		$(document).ready(function(){
+	    	var params = {};
+			params["height"] = $(".embed-item").height();
+			params["type"] = "resize";
+			parent.postMessage(JSON.stringify(params),"*");    
+		});	  
 	</script>
 #{/set}
 
@@ -37,7 +37,7 @@
 			<form role="form" action="#{if isPublic}/public#{/if}/login#{if isPublic}?id=${request.params.id}#{/if}" method="POST">
 			    #{authenticityToken /}
 			    
-			    <h2 class=""><i class="fa fa-power-off"></i> &{'sign-in'}</h2>
+			    <h2><img src="/images/logo_purple.png" style="height:40px"> &{'sign-in'}</h2>
 			    <div class="separator-2"></div>
 			    
 				<div class="form-group">

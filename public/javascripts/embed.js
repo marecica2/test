@@ -34,13 +34,13 @@ eventer(star.messageEvent,function(e) {
         star.chatOpen();
     }
     if(params.type == "resize"){
+        console.log(params);
         star.resize(params);
     }
     if(params.type == "reload"){
         document.location.reload();
     }
 },false);
-
 
 star.embedInit = function(){
     star.container = $("#widgr-embedded-container");
@@ -50,7 +50,6 @@ star.embedInit = function(){
         $('head').append('<link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,300&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">');
         $('head').append('<link rel="stylesheet" type="text/css" href="'+star.baseUrl+'/public/fonts/embedded.css">');
         $('head').append('<link rel="stylesheet" type="text/css" href="'+star.baseUrl+'/public/stylesheets/embed.css">');
-        $('head').append('<link rel="stylesheet" type="text/css" href="'+star.baseUrl+'/public/css/skins/purple.css">');
 
         $.getScript(star.server_host+"/socket.io/socket.io.js", function() {
             $.getScript(star.baseUrl+"/public/javascripts/utils.js", function(){
@@ -63,6 +62,11 @@ star.embedInit = function(){
                     $(document).on("click", ".widgr-tooltip", function(){
                         $(".widgr-tooltip").hide();
                         star.utils.setCookie("widgr-tooltip", "true", 10);
+                    });                    
+
+                    $(document).on("click", ".widgr-iframe-btn", function(){
+                        $(".widgr-chat-noiframe").hide();
+                        $(".widgr-chat-iframe").show();
                     });                    
                     
                     $.getScript(star.baseUrl+"/public/style-switcher/style-switcher.js", function(){
@@ -79,6 +83,7 @@ star.chatOpen = function(){
 
 star.resize = function(data){
     if(data != undefined){
+        $(".widgr-chat-iframe").height(data.height);
         star.container.height(data.height);
         $(window).resize(function() {
             if(this.resizeTO) 
@@ -91,30 +96,38 @@ star.resize = function(data){
 }
 
 star.chatContent = function(star){
-    var html = '';
-    html += '<span class="widgr-tooltip default-bg shadow" style="display:none"><strong class="blink">We are online now!</strong><i style="float:right;" class="fa fa-times tooltip-close"></i><br/>Click to open the live chat</span>';
-    html += '<div class="style-switcher shadow closed shadow-small style-switcher-container" style="display:none; font-family:\'Open Sans\', sans-serif;">';
-    html += '<div class="header" style="background: #954db3">';
-    html += '<a class="trigger btn-default" href="#chat" style="height:25px"><i class="fa fa-comments-o" style="position:relative;top:-2px"></i></a>';
-    html += '<span style="position:relative;top:10px;left:10px; color:white; font-size:17px;"><img class="img-circle" style="height:16px" src="'+star.baseUrl+"/"+star.ownerAvatar+'_32x32"> '+star.ownerName+'</span>';
-    html += '</div>';
-    html += '<div style="padding:5px;" class="style-switcher-container-2">';
-    html += '<div id="content2" class="" style="height:385px; margin-bottom:5px; overflow-y: auto; overflow-x:hidden; text-align:left; color:black"></div>';
-    html += '<div class="">';
-    html += '<input id="chat-text2" class="form-control" style="margin:0px; width:85%;height:45px" placeholder="Your message">';
-    html += '<button id="chat-send2" class="btn btn-default btn-short" style="margin:0px; width:15%;height:45px;"><i class="fa fa-share fa-flip-horizontal"></i></button>';
-    html += '</div>';
+    var html = '<div id="widgr-container">';
     
-    html += '<div style="text-align:center;padding:10px;font-size:12px">';
-    html += '<a target="_blank" class="black-link" href="'+star.baseUrl+'"><img style="vertical-align: middle;height: 30px" src="'+star.baseUrl+'/public/images/logo_purple.png"></a>';
-    html += '</div>';
+    html += '<div class="style-switcher shadow closed shadow-small style-switcher-container" style="display:none;">';
+    html += '   <span class="widgr-tooltip default-bg shadow" style="display:nones"><strong class="blink">'+star.ownerName+" "+i18n('we-are-online')+'</strong>&nbsp; <i style="float:right;" class="fa fa-times tooltip-close"></i><br/>'+i18n('click-to-open-chat')+'</span>';
+    html += '   <div class="header" style="text-align:center">';
+    html += '       <a class="trigger btn-default" href="#chat" style=""><i class="fa fa-comments-o"></i></a>';
+    html += '       <strong style="color:white;">'+i18n("chat-with")+'</strong>';
+    html += '   </div>';
+    html += '   <div style="padding:5px;">';
+    html += '       <div style="float:left"><img style="border-radius:5px;margin:0 7px 0px 0;height:50px;border:1px solid gray" src="'+star.baseUrl+"/"+star.ownerAvatar+'_32x32"></div>'+star.ownerName+'<br/> Accounting';
+    html += '       <small style="display:inline-block" class="widgr-iframe-btn widgr-chat-noiframe">Please provide your name or <a href="#">sign in with Facebook</a></small>';
+    html += '       <input type="text" class="form-control radius widgr-chat-noiframe" style="width:100%;margin-top:5px" placeholder="'+i18n('your-name')+'">';
+    html += '       <iframe class="widgr-chat-iframe" style="margin:5px 0px;width:100%;display:none" src="'+star.baseUrl+'/login" seamless frameBorder="0"></iframe>';
+    html += '       <div class="widgr-chat-noiframe">';
+    html += '           <div id="content2" class="chat-window" style=""></div>';
+    html += '           <table style="width:100%; border-collapse:collapse"><tr>';
+    html += '               <td style="width:100%"><input id="chat-text2" class="form-control left-radius" maxlength="400" style="width:100%" placeholder="Message"></td>';
+    html += '               <td><button id="chat-send2" class="btn btn-default btn-short right-radius" style="width:40px;height:35px;"><i class="fa fa-share fa-flip-horizontal"></i></button></td>';
+    html += '           </tr></table>';
+    html += '       </div>';
+    html += '       <div class="widgr-chat-noiframe" style="text-align:center;padding:10px;font-size:12px">';
+    html += '           <a target="_blank" class="black-link" href="'+star.baseUrl+'"><img style="vertical-align: middle;height: 30px" src="'+star.baseUrl+'/public/images/logo_purple.png"></a>';
+    html += '       </div>';
+    html += '   </div>';
     html += '</div>';
     return html;
 };
 
-star.i18n = function(code) {
+i18n = function(code) {
     var locale = navigator.language;
-    var message = i18nMessages && i18nMessages[code] || code;
+    locale = locale.substring(0, 2);
+    var message = star.i18nMessages && star.i18nMessages[locale][code] || code;
     // Encode %% to handle it later
     message = message.replace(/%%/g, "\0%\0");
     if (arguments.length > 1) {
@@ -139,6 +152,22 @@ star.i18n = function(code) {
         }
     }
     return message;
+};
+
+star.i18nMessages = {};
+star.i18nMessages.en = {
+        "message":"Message", 
+        "your-name":"Enter your name", 
+        "chat-with":"Chat with",
+        "click-to-open-chat":"Open chat",
+        "we-are-online":"is available"
+};
+star.i18nMessages.de = {
+        "message":"Nachricht", 
+        "your-name":"Ihre Name", 
+        "chat-with":"Chat mit",
+        "click-to-open-chat":"Chat offnen",
+        "we-are-online":"ist online"
 };
 
 star.loadScript = function(path, clbck){

@@ -10,13 +10,13 @@
 	#{set facebook: true /}
 #{/else}
 
-
 <!-- include from listings list -->
 #{set item: listing /}
 #{set usr: userDisplayed /}
 
 
-<div id="embed-item" #{if facebook}style="position:relative; max-width: 665px; margin: 60px auto;" class="shadow-small" #{/if}>
+<div id="fb-root"></div>
+<div id="embed-item page-wrapper" #{if facebook}style="position:relative; max-width: 665px; margin: 60px auto;" class="shadow-small" #{/if}>
 
 	#{if facebook == null}
 	<script>
@@ -70,7 +70,7 @@
 	</div>
 	</a>
 	
-  	<div style="position:relative">
+  	<div style="position:relative" class="shadow-inset">
   		<div style='position:absolute;top:5px;right:10px;width:75%'>
 	  		#{if userDisplayed.isOnline()}
 	  			&{'online'}
@@ -80,28 +80,25 @@
 	  			&{'offline'}
 	  			<span><i class="icon-record" style="color:gray"></i></span>
 			#{/else}
-			${item.user.getFullNameAccount()}
+			<strong>
+				${item.user.getFullNameAccount()}
+			</strong>
 		</div>		
 		<br/>	
 		
 		<div class="centered" style="padding: 15px">
 			<div><a class="" target="_blank" href="/listing/${item.uuid}">${item.description.trimDot(160).raw()}</a></div>
-			#{if listing.isAvailable() && false}
-				<a href="/listing/${item.uuid}#chat=open" target="_blank" class="btn btn-default open-chat style-switcher " style="border-width:0px;"  title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
-			#{/if}		
-			#{if !isOwner}
-				#{if !isOwner && listing.isAvailable()}
-					<a href="#chat" class="btn btn-gray btn-short" id="widgr-open-chat" style="border-width:0px;"  title="&{'open-chat'} ${listing.user.getFullName()}"><i class="fa fa-comments-o"></i></a>
-					<a href="/instant-room?id=${listing.uuid}&#{token /}" target="_blank" class="btn btn-gray btn-short no-schedule-start style-switcher " style="border-width:0px;"><i class="fa fa-video-camera fa-flip-horizontal"></i> &nbsp; &{'request-for-event-instant'}</a>
+				#{if listing.isAvailable()}
+					<a href="#chat" id="widgr-open-chat" class="btn btn-gray btn-short open-chat style-switcher" title="&{'open-chat'} ${listing.user.getFullName()}"><i class="fa fa-comments-o"></i></a>
+					<a href="/instant-room?id=${listing.uuid}&#{token /}" target="_blank" class="btn btn-gray btn-short no-schedule-start style-switcher " style="display:none"><i class="fa fa-arrow-right"></i> &{'request-for-event-instant'}</a>
 				#{/if}			
 				#{elseif user}
-					<a href="/mail?action=new&to=${listing.user.login}" target="_blank" class="btn btn-gray btn-short open-chat " style="border-width:0px;"  title="&{'write-message-for'} ${listing.user.getFullName()}"><i class="fa fa-envelope-o"></i></a>
+					<a href="/mail?action=new&to=${listing.user.login}" target="_blank" class="btn btn-gray btn-short" title="&{'write-message-for'} ${listing.user.getFullName()}"><i class="fa fa-envelope-o"></i></a>
 				#{/elseif}
 				#{else}
-					<a href="/contact?id=${listing.user.login}" target="_blank" class="btn btn-gray btn-short " style="border-width:0px;"  title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-envelope-o"></i></a>
+					<a href="/contact?id=${listing.user.login}" target="_blank" class="btn btn-gray btn-short " title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-envelope-o"></i></a>
 				#{/else}
-				<a href="/user/${usr.login}/calendar?channel=${listing.uuid}&#{token /}" target="_blank" class="btn btn-gray btn-short "  title="&{'schedule-session'}"><i class="fa fa-calendar"></i>#{if !userDisplayed.isAvailable()} &{'schedule-session'} #{/if}</a>
-			#{/if}
+				<a href="/user/${usr.login}/calendar?channel=${listing.uuid}&#{token /}" target="_blank" class="btn btn-gray btn-short"  title="&{'schedule-session'}"><i class="fa fa-calendar"></i> &{'schedule-session'}</a>
 
 			<div>
 			&{'price'}:
@@ -129,7 +126,7 @@
 				&{'from'} ${stats.get("totalStars")} <a class="" target="_blank" href="/listing/${item.uuid}#reviews">&{'reviews'}</a>
 			</div>
 			<hr/>	
-		    <div style="text-align:center;padding:10px;font-size:12px">
+		    <div style="text-align:center;padding:10px;font-size:13px">
 				#{if user == null}
 			    	&{'embed-login-message', request.url.urlEncode(), request.url.urlEncode()}
 			    	<br/><br/>

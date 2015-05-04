@@ -402,25 +402,25 @@ public class Listings extends BaseController
         e.roomSecret = RandomUtil.getUUID();
         e.eventStart = new Date();
         e.eventEnd = new Date(e.eventStart.getTime() + (1000 * 60 * l.chargingTime));
-
         e.language = l.language;
-        e.charging = l.charging;
-        if (isFree != null && isFree)
-            e.charging = Event.EVENT_CHARGING_FREE;
-
         e.price = l.price;
         e.currency = l.currency;
         e.chargingTime = l.chargingTime;
         e.started = new Date();
-
         e.createdByUser = true;
         e.state = Event.EVENT_STATE_USER_CREATED;
         e.chatEnabled = true;
         e.commentsEnabled = false;
-        e.privacy = Event.EVENT_VISIBILITY_PUBLIC;
         e.type = l.type;
         e.created = new Date();
         e.user = l.user;
+
+        e.charging = l.charging;
+        if (isFree != null && isFree)
+            e.charging = Event.EVENT_CHARGING_FREE;
+        e.privacy = l.privacy;
+        if (customer == null)
+            e.privacy = Event.EVENT_VISIBILITY_PUBLIC;
         e.save();
 
         l.started = new Date();

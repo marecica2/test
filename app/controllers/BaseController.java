@@ -146,9 +146,9 @@ public class BaseController extends Controller
                 u.password = null;
                 u.referrerToken = null;
                 u.registrationToken = null;
-                u.stylesheet = null;
                 u.twitter = null;
-                Cache.set(userLogin, u);
+                Cache.set(userLogin, u, "2mn");
+
                 return u;
             }
         }
