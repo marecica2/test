@@ -16,11 +16,15 @@ eventer(star.messageEvent,function(e) {
         star.chatRoom = params["data-room"]; 
         star.ownerName = params["data-usr"]; 
         star.ownerAvatar = params["data-usr-ava"]; 
-        star.user = "Guest"+ Math.floor(Math.random()*900) ;
+        star.ownerId = params["data-usr-id"]; 
+        star.ownerComp = params["data-usr-comp"]; 
+        star.user = "Guest"+ Math.floor(Math.random()*900);
         star.avatar = 'public/images/avatar';
         star.isOwner = false;
+        star.logged = false;
         
         if(params["data-lg-user"] != undefined){
+            star.logged = true;
             star.userUuid = params["data-lg-user-ui"]; 
             star.user = params["data-lg-user"]; 
             star.userAvatar = params["data-lg-user-ava"]; 
@@ -34,7 +38,6 @@ eventer(star.messageEvent,function(e) {
         star.chatOpen();
     }
     if(params.type == "resize"){
-        console.log(params);
         star.resize(params);
     }
     if(params.type == "reload"){
@@ -53,32 +56,58 @@ star.embedInit = function(){
 
         $.getScript(star.server_host+"/socket.io/socket.io.js", function() {
             $.getScript(star.baseUrl+"/public/javascripts/utils.js", function(){
-                $.getScript(star.baseUrl+"/public/javascripts/room.js", function(){
-                    // add chat box if not exist
-                    if($(".style-switcher-container")[0] == undefined)
-                        $('body').append(star.chatContent(star));
-      
-                    // tooltip
-                    $(document).on("click", ".widgr-tooltip", function(){
-                        $(".widgr-tooltip").hide();
-                        star.utils.setCookie("widgr-tooltip", "true", 10);
-                    });                    
+                
+                // add chat box if not exist
+                if($(".style-switcher-container")[0] == undefined)
+                    $('body').append(star.chatContent(star));
+  
+                // tooltip
+                $(document).on("click", ".widgr-tooltip", function(){
+                    $(".widgr-tooltip").hide();
+                    star.utils.setCookie("widgr-tooltip", "true", 10);
+                });                    
 
-                    $(document).on("click", ".widgr-iframe-btn", function(){
-                        $(".widgr-chat-noiframe").hide();
-                        $(".widgr-chat-iframe").show();
-                    });                    
-                    
-                    $.getScript(star.baseUrl+"/public/style-switcher/style-switcher.js", function(){
+                $(document).on("click", ".widgr-iframe-btn", function(){
+                    $(".widgr-chat-noiframe").hide();
+                    $(".widgr-chat-iframe").show();
+                });                    
+
+                star.visible = true;
+                $(document).on("click", ".style-switcher-trigger", function(){
+                    if(star.visible){
+                        $(".style-switcher-content").show();
+                        $(".style-switcher").addClass("opened");
+                        star.visible = false;
+                    } else {
+                        $(".style-switcher-content").hide();
+                        $(".style-switcher").removeClass("opened");
+                        star.visible = true;
+                    }
+                });    
+                
+                // start chat
+                $(document).on("click", ".widgr-startchat-btn", function(){
+                    star.user = $(".widgr-custom-name").val();
+                    $.getScript(star.baseUrl+"/public/javascripts/room.js", function(){
+                        $(".widgr-custom-name").hide();
+                        $(".widgr-chat-input").show();
+                        $(".widgr-startchat-btn").hide();
                     });    
                 });    
+                
+                $.getScript(star.baseUrl+"/public/javascripts/room.js", function(){
+                    if(star.logged){
+                        $(".widgr-chat-input").show();
+                    }
+                });
+            
             });    
         });
     });
 };
 
 star.chatOpen = function(){
-    $(".style-switcher-container .trigger").click();
+    $(".style-switcher-trigger").click();
 };
 
 star.resize = function(data){
@@ -96,28 +125,34 @@ star.resize = function(data){
 }
 
 star.chatContent = function(star){
-    var html = '<div id="widgr-container">';
+    var html = '<div id="widgr-container" class="">';
     
-    html += '<div class="style-switcher shadow closed shadow-small style-switcher-container" style="display:none;">';
-    html += '   <span class="widgr-tooltip default-bg shadow" style="display:nones"><strong class="blink">'+star.ownerName+" "+i18n('we-are-online')+'</strong>&nbsp; <i style="float:right;" class="fa fa-times tooltip-close"></i><br/>'+i18n('click-to-open-chat')+'</span>';
-    html += '   <div class="header" style="text-align:center">';
-    html += '       <a class="trigger btn-default" href="#chat" style=""><i class="fa fa-comments-o"></i></a>';
-    html += '       <strong style="color:white;">'+i18n("chat-with")+'</strong>';
+    html += '<div class="style-switcher shadow">';
+    html += '   <div class="header style-switcher-trigger" style="text-align:center">';
+    html += '       <a class="trigger" href="#chat"><i class="fa fa-comments-o"></i></a>';
+    html += '       <strong style="color:white;">'+i18n("chat-with")+' '+star.ownerName+'</strong>';
     html += '   </div>';
-    html += '   <div style="padding:5px;">';
-    html += '       <div style="float:left"><img style="border-radius:5px;margin:0 7px 0px 0;height:50px;border:1px solid gray" src="'+star.baseUrl+"/"+star.ownerAvatar+'_32x32"></div>'+star.ownerName+'<br/> Accounting';
-    html += '       <small style="display:inline-block" class="widgr-iframe-btn widgr-chat-noiframe">Please provide your name or <a href="#">sign in with Facebook</a></small>';
-    html += '       <input type="text" class="form-control radius widgr-chat-noiframe" style="width:100%;margin-top:5px" placeholder="'+i18n('your-name')+'">';
+    html += '   <div class="style-switcher-content" style="padding:5px;display:none">';
+    html += '       <div style="margin-bottom:14px;"><img style="float:left;margin:0 7px 0px 0;height:42px;" class="img-circle" src="'+star.baseUrl+"/"+star.ownerAvatar+'_64x64"><a target="_blank" href="'+star.baseUrl+"/user/id/"+star.ownerId+'">'+star.ownerName+'</a><br/>'+star.ownerComp+'</div>';
+    
+    if(!star.logged){
+        html += '   <div class="widgr-iframe-btn widgr-chat-noiframe" style="clear:both;"><small>You are not logged in. <a href="#">Sign in or register. Fastest with Facebook</a></small></div>';
+        html += '   <table class="widgr-chat-noiframe" style="width:100%; border-collapse:collapse"><tr>';
+        html += '       <td style="width:100%"><input type="text" class="form-control left-radius widgr-custom-name" maxlength="40" style="width:100%;" placeholder="'+i18n('your-name')+'"></td>';
+        html += '       <td><button class="widgr-startchat-btn btn btn-default right-radius" style="width:100px;height:35px;">Start chat</button></td>';
+        html += '   </tr></table>';
+    }
+    
     html += '       <iframe class="widgr-chat-iframe" style="margin:5px 0px;width:100%;display:none" src="'+star.baseUrl+'/login" seamless frameBorder="0"></iframe>';
-    html += '       <div class="widgr-chat-noiframe">';
+    html += '       <div class="widgr-chat-noiframe widgr-chat-input" style="display:none">';
     html += '           <div id="content2" class="chat-window" style=""></div>';
     html += '           <table style="width:100%; border-collapse:collapse"><tr>';
-    html += '               <td style="width:100%"><input id="chat-text2" class="form-control left-radius" maxlength="400" style="width:100%" placeholder="Message"></td>';
+    html += '               <td style="width:100%"><input id="chat-text2" class="form-control left-radius" maxlength="400" style="width:100%" placeholder="'+i18n('message')+'"></td>';
     html += '               <td><button id="chat-send2" class="btn btn-default btn-short right-radius" style="width:40px;height:35px;"><i class="fa fa-share fa-flip-horizontal"></i></button></td>';
     html += '           </tr></table>';
     html += '       </div>';
-    html += '       <div class="widgr-chat-noiframe" style="text-align:center;padding:10px;font-size:12px">';
-    html += '           <a target="_blank" class="black-link" href="'+star.baseUrl+'"><img style="vertical-align: middle;height: 30px" src="'+star.baseUrl+'/public/images/logo_purple.png"></a>';
+    html += '       <div class="widgr-chat-noiframe" style="text-align:left;padding:4px;font-size:12px">';
+    html += '           <i>Powered by </i><a target="_blank" class="black-link" style="opacity:1" href="'+star.baseUrl+'"><img style="height:17px; vertical-align:middle" src="'+star.baseUrl+'/public/images/logo_purple.png"></a>';
     html += '       </div>';
     html += '   </div>';
     html += '</div>';
@@ -156,17 +191,19 @@ i18n = function(code) {
 
 star.i18nMessages = {};
 star.i18nMessages.en = {
-        "message":"Message", 
-        "your-name":"Enter your name", 
+        "message":"Write your message", 
+        "your-name":"Or enter your name", 
         "chat-with":"Chat with",
         "click-to-open-chat":"Open chat",
+        "join-vide-conference":"Join video call",
         "we-are-online":"is available"
 };
 star.i18nMessages.de = {
-        "message":"Nachricht", 
-        "your-name":"Ihre Name", 
+        "message":"Schreiben Sie eine Nachricht", 
+        "your-name":"Oder eingeben Sie Ihre Name", 
         "chat-with":"Chat mit",
         "click-to-open-chat":"Chat offnen",
+        "join-vide-conference":"Join Videoanruf",
         "we-are-online":"ist online"
 };
 

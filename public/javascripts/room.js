@@ -1239,6 +1239,7 @@ if(webrtc == null){
         function chatSend2(){
             if($("#chat-text2").val() != null && $("#chat-text2").val().length > 0){
                 var data = {};
+                data.type = "message";
                 data.room = star.chatRoom;
                 data.message = $("#chat-text2").val();
                 data.client = getSessionId();
@@ -1290,8 +1291,22 @@ if(webrtc == null){
             if($("#create-instant-room-charging").is(":checked")){
                 params += "&free=true";
             }
-            roomServices.instantRoom(params, function(data){
-                $("#chat-text2").val(data.url);
+            roomServices.instantRoom(params, function(resp){
+                var data = {};
+                data.type = "room";
+                data.room = star.chatRoom;
+                data.message = resp.url;
+                data.client = getSessionId();
+                data.sender = getRecipient(star.user).id;
+                data.senderUuid = star.userUuid;
+                data.senderName = star.user;
+                data.senderAvatar = star.userAvatar;
+                data.recipient = getRecipient(star.chatRoomRecipientUser).id;
+                data.recipientUuid = getRecipient(star.chatRoomRecipientUser).userUuid;
+                data.recipientName = star.chatRoomRecipientUser;
+                data.recipientAvatar = getRecipient(star.chatRoomRecipientUser).userAvatar;
+                socket.emit('chatRoom-message', data);                
+                
                 chatSend2();
             });
         });
@@ -1379,10 +1394,21 @@ if(webrtc == null){
             }
             container = $(".user-containers[data-usr*='"+uuid+"']");
             var html = '';
-            html += '<span style="line-height:32px; font-size:13px; color:gray" ><img class="img-circle avatar32" style="vertical-align:middle" src="'+star.baseUrl+"/"+data.senderAvatar+'_32x32"> ' + data.senderName + '<span style="float:right;margin-right:10px">'+time+"</span></span>";
+            
+            // header
+            html += '<span style="line-height:32px; font-size:13px; color:gray" ><img class="img-circle avatar32" style="vertical-align:middle" src="'+star.baseUrl+"/"+data.senderAvatar+'_32x32"> <a target="_blank" href="'+star.baseUrl+"/user/id/"+data.senderUuid+'">' + data.senderName + '</a> <span style="float:right;margin-right:10px">'+time+"</span></span>";
+            
+            // content
             html += '<div class="'+style+'">';
-            html += linkify(data.message.replace(/>/g, '&gt;'));
+            if(data.type == "room"){
+                html += "<a href='"+data.message+"' target='_blank'><i class='fa fa-video-camera'></i> "+i18n("join-vide-conference")+"</a>";
+            }
+            if(data.type == "message"){
+                html += linkify(data.message.replace(/>/g, '&gt;'));
+            }
             html += '</div>';
+            
+            // first message
             if(star.chatfirst && star.isOwner == false && star.user == data.senderName && firstMessage){
                 star.chatfirst = false;
                 html += '<br/>';
@@ -1390,7 +1416,6 @@ if(webrtc == null){
                 html +=  "Operator will available for you in few seconds. Please wait.";
                 html += '</div>';
             }
-            
             container.append(html);
 
             if(!$("#auto-switch-off").is(":checked")){

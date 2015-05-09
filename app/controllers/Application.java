@@ -353,12 +353,14 @@ public class Application extends BaseController
         render(user, isOwner, contacts, dashboard);
     }
 
-    public static void userProfile(String userLogin)
+    public static void userProfile(String userLogin, String id)
     {
         changeLocale();
 
         final User user = getLoggedUser();
-        final User usr = User.getUserByLogin(userLogin);
+        User usr = User.getUserByLogin(userLogin);
+        if (id != null)
+            usr = User.getUserByUUID(id);
         final boolean userProfile = true;
 
         if (usr == null)

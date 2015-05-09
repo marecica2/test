@@ -23,7 +23,7 @@ GET 	/about									Application.about
 GET 	/contact								Application.contact
 POST 	/contact-us								Application.contactUs
 GET 	/user/{userLogin}						Application.userProfile
-GET 	/public/user							Application.userProfile
+GET 	/user/id/{id}							Application.userProfile
 GET 	/i18n.js								Application.i18n
 
 GET		/login									Secure.login

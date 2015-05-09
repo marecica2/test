@@ -32,7 +32,8 @@
 		params["data-room"] = "${item.user.uuid}";
 		params["data-usr"] = "${item.user.getFullName()}";
 		params["data-usr-ava"] = "${item.user.avatarUrl}";
-		
+		params["data-usr-id"] = "${item.user.uuid}";
+		params["data-usr-comp"] = "${item.user.account.name}";
 		params["type"] = "init";
 		parent.postMessage(JSON.stringify(params),"*");  
 		

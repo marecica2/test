@@ -297,7 +297,7 @@ your-calendar=Your public calendar
 working-hours=Working hours
 hidden-days=Free days
 sync-with-google=Google Calendar
-sync-with-google-cal=Sync mit Google
+sync-with-google-cal=Sync with Google
 enable-google-calendar-sync=When enabled, you will be able to synchronize your sessions in selected google calendar
 enable-google-calendar=Connect to Google calendar
 google-calendar-sync-with=Connected to calendar 
@@ -839,7 +839,7 @@ agreement=By submitting registration you agree with <a href="/terms" target="_bl
 password-label=at least 8 characters with one digit and two uppercases
 password-error=Invalid password
 registration=Registration
-register-with-facebook=Register with facebook
+register-with-facebook=Register with Facebook
 registration.login=Registration.login
 registration-login=Your email address as login
 validation.login=Not valid email address

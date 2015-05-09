@@ -21,13 +21,15 @@
             e.preventDefault();
         });
     }
-    
 	$(document).ready(function(){
-	    var params = {};
-		params["height"] = $(document).height();
+    	var params = {};
+    	var height = $(".embed-item").height();
+    	if(height > 800)
+    	    height = 800;
+		params["height"] = height;
 		params["type"] = "resize";
 		parent.postMessage(JSON.stringify(params),"*");    
-	});
+	});	  
 </script>
 
 

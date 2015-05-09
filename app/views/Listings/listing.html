@@ -381,7 +381,7 @@
 					#{/if}
 					
 					#{if listing.isAvailable()}
-						<a href="#" class="btn btn-default btn-md btn-short open-chat style-switcher" style="display:none;" rel="tooltip" data-original-title="&{'open-chat'}"><i class="fa fa-comments-o"></i></a>
+						<a href="#" class="btn btn-default btn-md btn-short open-chat style-switcher" style="display:none;" rel="tooltip" data-original-title="&{'open-chat'} ${listing.user.getFullName()}"><i class="fa fa-comments-o"></i></a>
 					#{/if}
 					
 					#{if !isOwner}

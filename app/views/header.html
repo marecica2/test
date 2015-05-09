@@ -124,6 +124,9 @@
 								<div class="collapse navbar-collapse" id="navbar-collapse-1">
 									<ul class="nav navbar-nav navbar-right">
 									
+									 	#{if user == null}
+								  	  		<li><a href="/"><i class="fa fa-home"></i> &{'home'}</a></li>
+										#{/if}			
 
 									 	#{if user}
 											<li class="header-notification #{if user && user.unreadMessages}#{/if}#{else}hidden#{/else}" style="padding-left:30px">
@@ -132,7 +135,9 @@
 										 	#{if user.unreadMessages == null}
 								  	  		<li class="header-notification2"><a href="/mail" style="padding-right:0px"><i class="fa fa-envelope-o"></i></a></li>
 											#{/if}							  	  		
-										#{/if}							  	  		
+										#{/if}			
+										
+														  	  		
 
    								  	   	<li #{if request.url.indexOf("seach")>=0}class="active"#{/if}><a href="/search" id="public-btn-logout">&{'search'}</a></li>
 
