@@ -9,7 +9,6 @@
 	    	FB.api('/me', function(response) {
 	        	$.post("/login/facebook?id="+response.id+"&signedRequest="+resp.authResponse.signedRequest+"&authenticityToken="+$("input[name='authenticityToken']").val(), function(redirect){
 	            	var params = {};
-					params["height"] = $(".embed-item").height();
 					params["type"] = "reload";
 					parent.postMessage(JSON.stringify(params),"*");    
 		            window.location = redirect;
@@ -18,17 +17,18 @@
 		}
 		$(document).ready(function(){
 	    	var params = {};
-			params["height"] = $(".embed-item").height();
+	    	params["selector"] = ".widgr-embedded-iframe";
+	    	var height = $(".embed-item").height();
+	    	if(height > 600)
+	    	    height = 600;
+			params["height"] = height;
 			params["type"] = "resize";
 			parent.postMessage(JSON.stringify(params),"*");    
 		});	  
 	</script>
 #{/set}
 
-
-
-
-
+#{set noheader:true /}
 
 <div class="container embed-item">
 	<div class="row">
@@ -36,7 +36,6 @@
 		<div class="col-md-6">
 			<form role="form" action="#{if isPublic}/public#{/if}/login#{if isPublic}?id=${request.params.id}#{/if}" method="POST">
 			    #{authenticityToken /}
-			    
 			    <h2><img src="/images/logo_purple.png" style="height:40px"> &{'sign-in'}</h2>
 			    <div class="separator-2"></div>
 			    

@@ -1,9 +1,10 @@
 var star = {};
+star.loaded = false;
+star.visible = true;
 star.eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
 star.messageEvent = star.eventMethod == "attachEvent" ? "onmessage" : "message";
 eventer = window[star.eventMethod];
 
-// Listen to message from child window
 eventer(star.messageEvent,function(e) {
     var key = e.message ? "message" : "data";
     var params = e.data;
@@ -12,27 +13,34 @@ eventer(star.messageEvent,function(e) {
     // init params
     if(params.type == "init"){
         star.baseUrl = params["data-bs"];
-        star.server_host = params["data-ws"]; 
+        star.sHost = params["data-ws"]; 
         star.chatRoom = params["data-room"]; 
-        star.ownerName = params["data-usr"]; 
-        star.ownerAvatar = params["data-usr-ava"]; 
-        star.ownerId = params["data-usr-id"]; 
-        star.ownerComp = params["data-usr-comp"]; 
-        star.user = "Guest"+ Math.floor(Math.random()*900);
-        star.avatar = 'public/images/avatar';
+
+        star.listingTitle = params["data-listingTitle"]; 
+        star.listingImage = params["data-listingImage"]; 
+        star.listingCharging = params["data-listingCharging"]; 
+        star.listingPrice = params["data-listingPrice"]; 
+        star.listingDuration = params["data-listingDuration"]; 
+        star.listingCurrency = params["data-listingCurrency"]; 
+        star.listingFirstFree = params["data-listingFirstFree"]; 
+        
+        star.ownerName = params["data-owner"]; 
+        star.ownerAvatar = params["data-owner-avatar"]; 
+        star.ownerUuid = params["data-owner-uuid"]; 
+        star.ownerCompany = params["data-owner-company"]; 
         star.isOwner = false;
         star.logged = false;
-        
+        star.userAvatar = "public/images/avatar";
+        star.userUuid = star.uuid();
+        star.userName = "Guest"+ Math.floor(Math.random()*900);
         if(params["data-lg-user"] != undefined){
             star.logged = true;
             star.userUuid = params["data-lg-user-ui"]; 
-            star.user = params["data-lg-user"]; 
+            star.userName = params["data-lg-user"]; 
             star.userAvatar = params["data-lg-user-ava"]; 
-            star.lg = params["data-lg-user-lg"];
-        } else {
-            star.userAvatar = "public/images/avatar";
-            star.userUuid = (new Date()).getTime()+"";
+            star.userLogin = params["data-lg-user-lg"];
         }    
+        star.embedInit();  
     }
     if(params.type == "chat-open"){
         star.chatOpen();
@@ -45,34 +53,103 @@ eventer(star.messageEvent,function(e) {
     }
 },false);
 
+
 star.embedInit = function(){
-    star.container = $("#widgr-embedded-container");
-    star.container.load(function() {
-        //console.log($.fn.jquery);
-        star.container[0].contentWindow.postMessage("widgr-frame-ready", '*');
-        $('head').append('<link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,300&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">');
-        $('head').append('<link rel="stylesheet" type="text/css" href="'+star.baseUrl+'/public/fonts/embedded.css">');
-        $('head').append('<link rel="stylesheet" type="text/css" href="'+star.baseUrl+'/public/stylesheets/embed.css">');
+    star.container = $(".widgr-embed-container");
+    if(star.loaded)
+        return;
+    
+    star.container[0].contentWindow.postMessage("widgr-frame-ready", '*');
+    $('head').append('<link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,300&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">');
+    $('head').append('<link rel="stylesheet" type="text/css" href="'+star.baseUrl+'/public/fonts/embedded.css">');
+    $('head').append('<link rel="stylesheet" type="text/css" href="'+star.baseUrl+'/public/stylesheets/embed.css">');
+    $('head').append('<link rel="stylesheet" type="text/css" href="'+star.baseUrl+'/public/stylesheets/embed-red.css">');
 
-        $.getScript(star.server_host+"/socket.io/socket.io.js", function() {
-            $.getScript(star.baseUrl+"/public/javascripts/utils.js", function(){
+    $.getScript(star.sHost+"/socket.io/socket.io.js", function() {
+        $.getScript(star.baseUrl+"/public/javascripts/utils.js", function(){
+            star.loaded = true;
+            
+            // add chat box if not exist
+            if($(".style-switcher-container")[0] == undefined){
+                $('body').append(star.chatContent(star));
                 
-                // add chat box if not exist
-                if($(".style-switcher-container")[0] == undefined)
-                    $('body').append(star.chatContent(star));
+                var widgr_int2 = setInterval(function(){
+                        $("#widgr-container").show();
+                        clearInterval(widgr_int2);
+                    }, 1000);                    
+            }
   
-                // tooltip
-                $(document).on("click", ".widgr-tooltip", function(){
-                    $(".widgr-tooltip").hide();
-                    star.utils.setCookie("widgr-tooltip", "true", 10);
-                });                    
+            // read user name from cookie
+            var name = star.utils.getCookie("widgr-name");
+            if(!star.logged && name != ""){
+                star.userName = name;
+                star.userUuid = star.utils.getCookie("widgr-user-uuid");
+                $(".widgr-custom-name").val(star.userName);
+                $(".widgr-custom-name").hide();
+                $(".widgr-chat-input").show();
+                $(".widgr-startchat-btn").hide();
+            }
+            
+            $(document).on("click", ".widgr-iframe-btn", function(){
+                $(".widgr-chat-noiframe").hide();
+                $(".widgr-chat-iframe").show();
+            });                    
 
-                $(document).on("click", ".widgr-iframe-btn", function(){
-                    $(".widgr-chat-noiframe").hide();
-                    $(".widgr-chat-iframe").show();
-                });                    
+            $.getScript(star.baseUrl+"/public/javascripts/room.js", function(){
+                
+                // send msg
+                $(document).on("click", ".widgr-send-msg-btn", function(){
+                    var valid = true;
+                    var msg = {};
+                    msg.type = "msg";
+                    msg.sender = $(".widgr-email-sender").val();
+                    msg.subject = $(".widgr-email-subject").val();
+                    msg.body = $(".widgr-email-body").val();
+                    if(!msg.sender)
+                        valid = false;
+                    if(!msg.subject)
+                        valid = false;
+                    if(!msg.body)
+                        valid = false;
+                    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+                    if(!re.test(msg.sender))
+                        valid = false;
+                    
+                    if(valid){
+                        star.container[0].contentWindow.postMessage(JSON.stringify(msg), '*');
+                        var html = "<p>Your message has been sent</p>";
+                        html += "<p>"+msg.subject+"<br/>";
+                        html += msg.body+"</p>";
+                        $(".widgr-email").html(html);
+                        $(".widgr-email-validation").hide();
+                    } else {
+                        $(".widgr-email-validation").show();
+                    }
+                });                     
 
-                star.visible = true;
+                // start chat btn
+                $(document).on("click", ".widgr-startchat-btn", function(){
+                    star.userName = $(".widgr-custom-name").val();
+                    star.utils.setCookieMinutes("widgr-name", $(".widgr-custom-name").val(), 15);
+                    star.utils.setCookieMinutes("widgr-user-uuid", star.userUuid, 15);
+                    
+                    var usr = {};
+                    usr.room = star.chatRoom;
+                    usr.userName = star.userName;
+                    usr.userUuid = star.userUuid;
+                    usr.userAvatar = star.userAvatar;
+                    usr.admin = star.isOwner;
+                    socket.emit('chatroom_reconnect', usr);  
+                    
+                    $(".widgr-custom-name").hide();
+                    $(".widgr-chat-input").show();
+                    $(".widgr-startchat-btn").hide();
+                });                     
+                
+                if(star.logged){
+                    $(".widgr-chat-input").show();
+                }
+                
                 $(document).on("click", ".style-switcher-trigger", function(){
                     if(star.visible){
                         $(".style-switcher-content").show();
@@ -83,28 +160,13 @@ star.embedInit = function(){
                         $(".style-switcher").removeClass("opened");
                         star.visible = true;
                     }
-                });    
+                });   
                 
-                // start chat
-                $(document).on("click", ".widgr-startchat-btn", function(){
-                    star.user = $(".widgr-custom-name").val();
-                    $.getScript(star.baseUrl+"/public/javascripts/room.js", function(){
-                        $(".widgr-custom-name").hide();
-                        $(".widgr-chat-input").show();
-                        $(".widgr-startchat-btn").hide();
-                    });    
-                });    
-                
-                $.getScript(star.baseUrl+"/public/javascripts/room.js", function(){
-                    if(star.logged){
-                        $(".widgr-chat-input").show();
-                    }
-                });
-            
-            });    
-        });
+            });
+        
+        });    
     });
-};
+}
 
 star.chatOpen = function(){
     $(".style-switcher-trigger").click();
@@ -112,49 +174,71 @@ star.chatOpen = function(){
 
 star.resize = function(data){
     if(data != undefined){
-        $(".widgr-chat-iframe").height(data.height);
-        star.container.height(data.height);
-        $(window).resize(function() {
-            if(this.resizeTO) 
-                clearTimeout(this.resizeTO);
-            this.resizeTO = setTimeout(function(){
-                star.container.height(data.height);
-            }, 200);
-        });    
+        $(data.selector).height(data.height);
     }
 }
 
 star.chatContent = function(star){
-    var html = '<div id="widgr-container" class="">';
+    var html = '';
     
+    html += '<div id="widgr-container" style="display:none">';
     html += '<div class="style-switcher shadow">';
+    
     html += '   <div class="header style-switcher-trigger" style="text-align:center">';
     html += '       <a class="trigger" href="#chat"><i class="fa fa-comments-o"></i></a>';
-    html += '       <strong style="color:white;">'+i18n("chat-with")+' '+star.ownerName+'</strong>';
+    html += '       <strong style="margin-left:55px;margin-right:15px;">'+i18n("chat-with")+' '+'</strong> <small style="opacity:0;float:right;font-size:10px;margin-right:5px;color:rgba(255,255,255,0.9)" class="blink widgr-available">'+i18n('available')+'</small>';
     html += '   </div>';
-    html += '   <div class="style-switcher-content" style="padding:5px;display:none">';
-    html += '       <div style="margin-bottom:14px;"><img style="float:left;margin:0 7px 0px 0;height:42px;" class="img-circle" src="'+star.baseUrl+"/"+star.ownerAvatar+'_64x64"><a target="_blank" href="'+star.baseUrl+"/user/id/"+star.ownerId+'">'+star.ownerName+'</a><br/>'+star.ownerComp+'</div>';
+    
+    html += '   <div class="style-switcher-content" style="padding:15px;display:none">';
+    //html += '   <div class="shadow-inset" style="background:url(\''+star.baseUrl + "/" + star.image+'\'); background-size:cover;height:100px;width:170px;float:left;vertical-align:middle"></div>'
+    html += '   <div class="widgr-chat-noiframe" style="margin-bottom:20px;"><img style="float:left; margin-right: 10px; height:50px;" class="img-circle" src="'+star.baseUrl+"/"+star.ownerAvatar+'_64x64"><a target="_blank" href="'+star.baseUrl+"/user/id/"+star.ownerUuid+'">'+star.ownerName+'</a><br/>'+star.ownerCompany+'</div>';
+    
+    html += '   <iframe class="widgr-chat-iframe widgr-embedded-iframe" style="margin:5px 0px;min-width:100%;display:none" src="'+star.baseUrl+'/login" seamless frameBorder="0"></iframe>';
+    
+    html += '   <div class="widgr-chat-noiframe">';
+    html += '       <div class="widgr-chat">';
+    html += '           <div id="content2" class="chat-window widgr-chat-input widgr-chat-content" style="display:none"></div>';
     
     if(!star.logged){
-        html += '   <div class="widgr-iframe-btn widgr-chat-noiframe" style="clear:both;"><small>You are not logged in. <a href="#">Sign in or register. Fastest with Facebook</a></small></div>';
-        html += '   <table class="widgr-chat-noiframe" style="width:100%; border-collapse:collapse"><tr>';
-        html += '       <td style="width:100%"><input type="text" class="form-control left-radius widgr-custom-name" maxlength="40" style="width:100%;" placeholder="'+i18n('your-name')+'"></td>';
-        html += '       <td><button class="widgr-startchat-btn btn btn-default right-radius" style="width:100px;height:35px;">Start chat</button></td>';
-        html += '   </tr></table>';
-    }
+        html += '       <div class="widgr-chat-noiframe">';
+        html += '           <table class="widgr-start-chat-container" style="width:100%; border-collapse:collapse">';
+        html += '               <tr>';
+        html += '                   <td style="padding:0px;width:100%"><input type="text" class="form-control left-radius widgr-custom-name" maxlength="40" style="width:100%;" placeholder="'+i18n('your-name')+'"></td>';
+        html += '                   <td style="padding:0px;"><button class="widgr-startchat-btn btn btn-default right-radius" style="width:100px;height:36px;">'+i18n('start-chat')+'</button></td>';
+        html += '               </tr>';
+        html += '           </table>';
+        html += '       </div>';
+    }    
     
-    html += '       <iframe class="widgr-chat-iframe" style="margin:5px 0px;width:100%;display:none" src="'+star.baseUrl+'/login" seamless frameBorder="0"></iframe>';
-    html += '       <div class="widgr-chat-noiframe widgr-chat-input" style="display:none">';
-    html += '           <div id="content2" class="chat-window" style=""></div>';
-    html += '           <table style="width:100%; border-collapse:collapse"><tr>';
-    html += '               <td style="width:100%"><input id="chat-text2" class="form-control left-radius" maxlength="400" style="width:100%" placeholder="'+i18n('message')+'"></td>';
-    html += '               <td><button id="chat-send2" class="btn btn-default btn-short right-radius" style="width:40px;height:35px;"><i class="fa fa-share fa-flip-horizontal"></i></button></td>';
-    html += '           </tr></table>';
+    html += '           <table class="widgr-chat-input" style="display:none; width:100%; border-collapse:collapse;">';
+    html += '               <tr>';
+    html += '                   <td style="width:100%;padding:0px;"><input id="chat-text2" class="form-control left-radius" maxlength="400" style="width:100%" placeholder="'+i18n('message')+'"></td>';
+    html += '                   <td style="padding:0px;"><button id="chat-send2" class="btn btn-default btn-short right-radius" style="width:40px;height:36px;"><i class="fa fa-share fa-flip-horizontal"></i></button></td>';
+    html += '               </tr>';
+    html += '           </table>';
+    
     html += '       </div>';
-    html += '       <div class="widgr-chat-noiframe" style="text-align:left;padding:4px;font-size:12px">';
+    
+    html += '       <div class="widgr-email">';
+    html += '           <span class="vertical-padding">'+star.ownerName+ " "+i18n('not-available-now')+'</span><br/><br/>';
+    html += '           <p class="widgr-email-validation" style="color:red;display:none">Please correct your input</p>'
+    if(!star.logged){
+        html += '       <input id="chat-text2" class="form-control radius vertical-padding widgr-email-sender" maxlength="50" style="width:100%" placeholder="'+i18n('your-email')+'">';
+    }
+    html += '           <input id="chat-text2" class="form-control radius vertical-padding widgr-email-subject" maxlength="100" style="width:100%" placeholder="'+i18n('subject')+'">';
+    html += '           <textarea id="chat-text2" class="form-control radius vertical-padding widgr-email-body" maxlength="400" style="width:100%;height:100px;" placeholder="'+i18n('message')+'"></textarea>';
+    html += '           <button class="btn btn-default radius widgr-send-msg-btn" style="width:100%;height:35px;"><i class="fa fa-envelope"></i> '+i18n('submit')+'</button>';
+    html += '       </div>';
+    
+    html += '       <div style="text-align:center;padding:4px;font-size:12px">';
+    if(!star.logged)
+        html += '<div class="widgr-chat-noiframe" style="text-align:center;font-size:12px;padding:10px;">'+i18n('not-logged')+'</div>';    
     html += '           <i>Powered by </i><a target="_blank" class="black-link" style="opacity:1" href="'+star.baseUrl+'"><img style="height:17px; vertical-align:middle" src="'+star.baseUrl+'/public/images/logo_purple.png"></a>';
     html += '       </div>';
     html += '   </div>';
+
+
+    html += '</div>';
     html += '</div>';
     return html;
 };
@@ -191,21 +275,48 @@ i18n = function(code) {
 
 star.i18nMessages = {};
 star.i18nMessages.en = {
+        "submit":"Submit", 
+        "available":"Available", 
+        "your-email":"Your email", 
+        "subject":"Subject", 
         "message":"Write your message", 
-        "your-name":"Or enter your name", 
+        "your-name":"Enter your name", 
         "chat-with":"Chat with",
         "click-to-open-chat":"Open chat",
         "join-vide-conference":"Join video call",
+        "start-chat":"Start chat",
+        "not-logged":"You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in or register.</a> Learn more <a href='https://wid.gr' target='_blank'>about Widgr.</a>",
+        "not-available-now":"is not online now, you can leave him message and he will reply you later.",
+        "sign-in":"Sign in or register. Fastest with Facebook",
+        "learn-more":"or learn <a href='' target='_blank'>more about Widgr.</a>",
         "we-are-online":"is available"
 };
 star.i18nMessages.de = {
+        "submit":"Submit", 
+        "available":"Available", 
+        "your-email":"Your email", 
+        "subject":"Subject", 
+        "message":"Write your message",         
         "message":"Schreiben Sie eine Nachricht", 
-        "your-name":"Oder eingeben Sie Ihre Name", 
+        "your-name":"Eingeben Sie Ihre Name", 
         "chat-with":"Chat mit",
         "click-to-open-chat":"Chat offnen",
         "join-vide-conference":"Join Videoanruf",
+        "start-chat":"Start chat",
+        "not-logged":"You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in or register. </a> Learn more <a href='https://wid.gr' target='_blank'>about Widgr.</a>",
+        "not-available-now":"is not online now, you can leave him message and he will reply you later.",
+        "sign-in":"Sign in or register. Fastest with Facebook",
         "we-are-online":"ist online"
 };
+
+star.uuid = function() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
+}
 
 star.loadScript = function(path, clbck){
     var script = document.createElement("SCRIPT");
@@ -224,4 +335,5 @@ star.loadScript = function(path, clbck){
         clbck();
     });    
 }
-star.loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js", star.embedInit);
+
+star.loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js");

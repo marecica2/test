@@ -189,6 +189,16 @@ star.utils.setCookie = function(name,value,days) {
     document.cookie = name+"="+value+expires+"; Path=/";
 }
 
+star.utils.setCookieMinutes = function(name,value,minutes) {
+    var date = new Date();
+    if(minutes == undefined)
+        date.setTime(date.getTime()+(9999*24*60*60*1000));
+    else
+        date.setTime(date.getTime()+(minutes*60*1000));
+    var expires = "; Expires="+date.toGMTString();
+    document.cookie = name+"="+value+expires+"; Path=/";
+}
+
 star.utils.getCookie = function(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');

@@ -24,17 +24,17 @@
 	$(document).ready(function(){
     	var params = {};
     	var height = $(".embed-item").height();
-    	if(height > 800)
-    	    height = 800;
+    	if(height > 600)
+    	    height = 600;
 		params["height"] = height;
+		params["selector"] = ".widgr-embedded-iframe";
 		params["type"] = "resize";
 		parent.postMessage(JSON.stringify(params),"*");    
 	});	  
 </script>
-
-
-
 #{/set}
+
+#{set noheader:true /}
 
 <div id="fb-root"></div>
 
@@ -116,7 +116,7 @@
 
 				<div class="form-group">
 					<input type="hidden" value="${params.uuid}" name="uuid" /> 
-					<input type="text" placeholder="&{'captcha'}" class="form-control" style="display: inline !important; width: 20%" name="captcha" />
+					<input type="text" placeholder="&{'captcha'}" class="form-control" style="display: inline !important; width: 120px" name="captcha" />
 					<img src="/captcha?uuid=${params.uuid}">
 					<div class="error">#{error 'captcha' /}</div>
 				</div>
@@ -127,7 +127,6 @@
 				
 				<div class="form-group">
 					<button class="btn btn-default pull-left">&{'submit'}</button>
-					<a class="btn btn-light-gray pull-right" href="#{if request.params.url}${request.params.url}#{/if}#{else}/home#{/else}">&{'cancel'}</a>
 				</div>
 				<div class="clearfix"></div>
 				

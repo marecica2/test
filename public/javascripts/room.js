@@ -1211,17 +1211,18 @@ if(star.userInRoom){
 // Embedded Chat 
 //
 //
-star.chatroomusers = [];
-star.chatfirst = true;
 if(webrtc == null){
+    star.chatroomusers = [];
+    star.chatfirst = true;
+    
     var usr = {};
     usr.room = star.chatRoom;
-    usr.user = star.user;
+    usr.userName = star.userName;
     usr.userAvatar = star.userAvatar;
     usr.admin = star.isOwner;
     usr.userUuid = star.userUuid;
     if(!star.isOwner)
-        star.chatRoomRecipientUser = star.ownerName;
+        star.chatRoomRecipientUser = star.ownerUuid;
     else
         $(".chat-message-form").hide();
     socket.emit('chatroom_joined', usr);    
@@ -1243,14 +1244,14 @@ if(webrtc == null){
                 data.room = star.chatRoom;
                 data.message = $("#chat-text2").val();
                 data.client = getSessionId();
-                data.sender = getRecipient(star.user).id;
+                data.sender = getRecipientByUuid(star.userUuid).id;
                 data.senderUuid = star.userUuid;
-                data.senderName = star.user;
+                data.senderName = star.userName;
                 data.senderAvatar = star.userAvatar;
-                data.recipient = getRecipient(star.chatRoomRecipientUser).id;
-                data.recipientUuid = getRecipient(star.chatRoomRecipientUser).userUuid;
-                data.recipientName = star.chatRoomRecipientUser;
-                data.recipientAvatar = getRecipient(star.chatRoomRecipientUser).userAvatar;
+                data.recipient = getRecipientByUuid(star.chatRoomRecipientUser).id;
+                data.recipientUuid = star.chatRoomRecipientUser;
+                data.recipientName = getRecipientByUuid(star.chatRoomRecipientUser).userName;
+                data.recipientAvatar = getRecipientByUuid(star.chatRoomRecipientUser).userAvatar;
                 socket.emit('chatRoom-message', data);
                 
                 $("#chat-text2").val("");
@@ -1259,9 +1260,9 @@ if(webrtc == null){
             return false;
         }
         
-        function getRecipient(name){
+        function getRecipientByUuid(uuid){
             for(var i = 0; i < star.chatroomusers.length; i++){
-                if(star.chatroomusers[i].user == name){
+                if(star.chatroomusers[i].userUuid == uuid){
                     return star.chatroomusers[i];
                 }
             }
@@ -1285,7 +1286,7 @@ if(webrtc == null){
         });
 
         $("#create-instant-room").click(function(){
-            var user = getRecipient(star.chatRoomRecipientUser);
+            var user = getRecipientByUuid(star.chatRoomRecipientUser);
             if(user.userUuid.length > 0 && star.listing.length > 0)
             var params = "id="+star.listing+"&uuid="+user.userUuid+"&"+star.token;
             if($("#create-instant-room-charging").is(":checked")){
@@ -1297,37 +1298,38 @@ if(webrtc == null){
                 data.room = star.chatRoom;
                 data.message = resp.url;
                 data.client = getSessionId();
-                data.sender = getRecipient(star.user).id;
+                data.sender = getRecipientByUuid(star.userUuid).id;
                 data.senderUuid = star.userUuid;
-                data.senderName = star.user;
+                data.senderName = star.userName;
                 data.senderAvatar = star.userAvatar;
-                data.recipient = getRecipient(star.chatRoomRecipientUser).id;
-                data.recipientUuid = getRecipient(star.chatRoomRecipientUser).userUuid;
-                data.recipientName = star.chatRoomRecipientUser;
-                data.recipientAvatar = getRecipient(star.chatRoomRecipientUser).userAvatar;
+                data.recipient = getRecipientByUuid(star.chatRoomRecipientUser).id;
+                data.recipientUuid = star.chatRoomRecipientUser;
+                data.recipientName = getRecipientByUuid(star.chatRoomRecipientUser).userName;
+                data.recipientAvatar = getRecipientByUuid(star.chatRoomRecipientUser).userAvatar;
                 socket.emit('chatRoom-message', data);                
                 
                 chatSend2();
             });
         });
         
+        // select user
         $(".style-switcher-container").on("click", ".chatroom-user", function(event){
             if(star.isOwner){
                 var id = $(this).attr("data-id");
-                var user = $(this).attr("data-name");
-                var avatar = $(this).attr("data-avatar");
-                var uuid = $(this).attr("data-uuid");
-                star.chatRoomRecipient = id;
-                star.chatRoomRecipientUser = user;
-                star.chatRoomRecipientAvatar = avatar;
+                var userName = $(this).attr("data-name");
+                var userAvatar = $(this).attr("data-avatar");
+                var userUuid = $(this).attr("data-uuid");
+                star.chatRoomRecipientUser = userUuid;
+                
                 $(".chat-message-form").show();
-                $(".chat-user-label").html("<img src='/"+avatar+"_32x32' class='avatar16 img-circle'> " +  user);
+                $(".chat-user-label").html("<img src='/"+userAvatar+"_32x32' class='avatar16 img-circle'> " +  userName);
                 $(".user-containers").hide();
-                var container = $(".user-containers[data-usr*='"+uuid+"']");
+                var container = $(".user-containers[data-usr*='"+userUuid+"']");
                 container.show();
             }
         });     
         
+        // user connect
         socket.on('chatroom_update', function(data) {
             var isAdminOnline = false;
             star.chatroomusers = JSON.parse(data)[star.chatRoom];
@@ -1337,18 +1339,19 @@ if(webrtc == null){
                 if(star.chatroomusers[i].admin == true){
                     isAdminOnline = true;
                 }
-                if(star.chatroomusers[i].user != star.user){
-                    html += '<li><a href="#" data-id="'+star.chatroomusers[i].client+'" data-uuid="'+star.chatroomusers[i].userUuid+'" data-avatar="'+star.chatroomusers[i].userAvatar+'" data-name="'+star.chatroomusers[i].user+'" class="black-link chatroom-user"><img class="img-circle avatar16" style="margin:1px;" src="/'+star.chatroomusers[i].userAvatar+'_32x32"> ' + star.chatroomusers[i].user+ '</a></li>';
+                if(star.chatroomusers[i].userUuid != star.userUuid){
+                    html += '<li><a href="#" data-id="'+star.chatroomusers[i].client+'" data-uuid="'+star.chatroomusers[i].userUuid+'" data-avatar="'+star.chatroomusers[i].userAvatar+'" data-name="'+star.chatroomusers[i].userName+'" class="black-link chatroom-user"><img class="img-circle avatar16" style="margin:1px;" src="/'+star.chatroomusers[i].userAvatar+'_32x32"> ' + star.chatroomusers[i].userName+ '</a></li>';
                 }
             }
             if(isAdminOnline){
-                $(".style-switcher").show();
-                if(star.utils.getCookie("widgr-tooltip") == ""){
-                    $(".widgr-tooltip").show();
-                }
+                $(".widgr-chat").show();
+                $(".widgr-email").hide();
             }
             else {
-                $(".style-switcher").hide();
+                $(".widgr-chat").hide();
+                $(".widgr-available").removeClass("blink");
+                $(".widgr-available").css("opacity", 0);
+                $(".widgr-email").show();
             }
             if(star.isOwner){
                 $(".chat-avatars2").html(html);
@@ -1356,17 +1359,18 @@ if(webrtc == null){
             $(".users-count").html(star.chatroomusers.length-1);
         });
         
+        // user disconnect
         socket.on('chatroom_disconnect', function(data) {
             if(star.isOwner && data != null){
-                if(star.chatRoomRecipientUser == data.user){
+                if(star.chatRoomRecipientUser == data.userUuid){
                     $(".chat-user-label").html(i18n("select-user"));
                     star.chatRoomRecipientUser = null;
-                    var usr = getRecipient(data.user);
+                    var usr = getRecipientByUuid(data.userUuid);
                     $(".chat-message-form").hide();
                     
                     var container = $(".user-containers[data-usr*='"+usr.userUuid+"']");
                     var html = '<div>';
-                    html += '<div style="padding:5px; margin:5px;"> ' + usr.user + " " + i18n("left-conversation");
+                    html += '<div style="padding:5px; margin:5px;"> ' + usr.userName + " " + i18n("left-conversation");
                     html += '</div>';
                     html += '</div>';
                     container.append(html);                    
@@ -1377,31 +1381,32 @@ if(webrtc == null){
             }
         });
         
+        // render message
         socket.on('chatRoom-message-render', function(data) {
             var topContent = $("#content2");
-            var uuid = data.recipientUuid == star.userUuid ? data.senderUuid : data.recipientUuid;
-            var name = data.recipientName == star.user ? data.senderName : data.recipientName;
-            var avatar = data.recipientAvatar == star.userAvatar ? data.senderAvatar : data.recipientAvatar;
-            var container = $(".user-containers[data-usr*='"+uuid+"']");
-            var style = data.senderName != star.user ? "widgr-bubble-right" : "widgr-bubble-left";
+            var userUuid = data.recipientUuid == star.userUuid ? data.senderUuid : data.recipientUuid;
+            var userName = data.recipientUuid == star.userUuid ? data.senderName : data.recipientName;
+            var avatar = data.recipientUuid == star.userUuid ? data.senderAvatar : data.recipientAvatar;
+            var container = $(".user-containers[data-usr*='"+userUuid+"']");
+            var style = data.senderName != star.userName ? "widgr-bubble-right" : "widgr-bubble-left";
             var now = new Date();
             var time = starUtils.formatTime2(now);
 
             var firstMessage = false;
             if(container[0] == undefined){
-                topContent.append("<div class='user-containers' data-usr='"+uuid+"_"+star.userUuid+"' style='display:none'></div>");
+                topContent.append("<div class='user-containers' data-usr='"+userUuid+"_"+star.userUuid+"' style='display:none'></div>");
                 firstMessage = true;
             }
-            container = $(".user-containers[data-usr*='"+uuid+"']");
+            container = $(".user-containers[data-usr*='"+userUuid+"']");
             var html = '';
             
             // header
             html += '<span style="line-height:32px; font-size:13px; color:gray" ><img class="img-circle avatar32" style="vertical-align:middle" src="'+star.baseUrl+"/"+data.senderAvatar+'_32x32"> <a target="_blank" href="'+star.baseUrl+"/user/id/"+data.senderUuid+'">' + data.senderName + '</a> <span style="float:right;margin-right:10px">'+time+"</span></span>";
             
             // content
-            html += '<div class="'+style+'">';
+            html += '<div class="'+style+'" >';
             if(data.type == "room"){
-                html += "<a href='"+data.message+"' target='_blank'><i class='fa fa-video-camera'></i> "+i18n("join-vide-conference")+"</a>";
+                html += '<span style="font-size:18px;"><i class="fa fa-phone"></i> <a href="'+data.message+'&tempName='+star.userName+'" target="_blank">'+i18n("join-vide-conference")+'</a>';
             }
             if(data.type == "message"){
                 html += linkify(data.message.replace(/>/g, '&gt;'));
@@ -1409,7 +1414,7 @@ if(webrtc == null){
             html += '</div>';
             
             // first message
-            if(star.chatfirst && star.isOwner == false && star.user == data.senderName && firstMessage){
+            if(star.chatfirst && star.isOwner == false && star.userUuid == data.senderUuid && firstMessage){
                 star.chatfirst = false;
                 html += '<br/>';
                 html += '<div class="widgr-bubble-right">';
@@ -1422,12 +1427,18 @@ if(webrtc == null){
                 $(".user-containers").hide();
                 container.show();
                 // switch the user selector
-                if(star.chatRoomRecipientUser != name){
-                    star.chatRoomRecipientUser = name;
-                    $(".chat-user-label").html("<img src='/"+avatar+"_32x32' class='avatar16 img-circle'> " +  name);
+                if(star.chatRoomRecipientUser != userUuid){
+                    star.chatRoomRecipientUser = userUuid;
+                    $(".chat-user-label").html("<img src='/"+avatar+"_32x32' class='avatar16 img-circle'> " +  userName);
                 }
                 $(".chat-message-form").show();
             }
+            
+            // auto open embedded chat box
+            $(".style-switcher").addClass("opened");
+            $(".style-switcher-content").show();
+            $(".widgr-chat-content").show();
+            star.visible = false;
             
             // scrolling and notification
             $("#content2")[0].scrollTop =  $("#content2")[0].scrollHeight;
@@ -1444,7 +1455,7 @@ if(webrtc == null){
 
 //
 //
-// Hangout Chat 
+// Video call Chat 
 //
 //
 if(webrtc != null){
@@ -1495,7 +1506,7 @@ if(webrtc != null){
             $("#chat-text").val("");
             var data = {};
             data.uuid = star.room;
-            data.name = star.user;
+            data.name = star.userName;
             data.comment = comment;
             roomServices.saveFeed(data, function(){
             });
@@ -1503,6 +1514,9 @@ if(webrtc != null){
         });
     });
 }
+
+
+
 
 
 var roomServices = {};

@@ -97,7 +97,6 @@ public class Listings extends BaseController
                     temp, commentTemp, fromEvent);
         } else
         {
-            final String name = user != null ? user.getFullName() : Messages.get("anonymous") + RandomUtil.getRandomDigits(5);
             final String room = listing != null ? listing.uuid : null;
             final String rmtp = getProperty(CONFIG_RMTP_PATH);
             final String socketIo = getProperty(CONFIG_SOCKET_IO);
@@ -106,7 +105,7 @@ public class Listings extends BaseController
             final Map<String, Object> stats = listing != null ? Rating.calculateStats(ratings) : null;
 
             render(user, isOwner, edit, listing, url, errs, type,
-                    temp, commentTemp, comments, ratings, stats, fromEvent, listings, rmtp, socketIo, room, name, baseUrl);
+                    temp, commentTemp, comments, ratings, stats, fromEvent, listings, rmtp, socketIo, room, baseUrl);
         }
     }
 

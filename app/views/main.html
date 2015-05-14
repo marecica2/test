@@ -46,7 +46,6 @@
 		<!-- My styles -->
         <link href="@{'/public/css/cropper.min.css'}" rel="stylesheet">
         <link href="@{'/public/css/font-awesome.min.css'}" rel="stylesheet">
-        <link href="@{'/public/fonts/embedded.css'}" rel="stylesheet">
         <link href="@{'/public/css/datepicker.css'}" rel="stylesheet" media="screen">
 		<link href="@{'/public/css/skins/purple.css'}"  rel="stylesheet" data-style="styles">
         <link href="@{'/public/stylesheets/main.css'}" rel="stylesheet" media="screen">		
@@ -224,7 +223,7 @@
 			<!-- Chat box -->
 			#{if (listing != null && listing.user.isAvailable()) || (usr != null && usr.isAvailable())}
 			<script type="text/javascript" src="@{'/public/style-switcher/style-switcher.js'}"></script>
-			<div class="style-switcher closed shadow-small style-switcher-container" style="display:none">
+			<div class="style-switcher closed shadow-small style-switcher-container">
 				<div class="header" style="background: #954db3">
 					<a class="trigger btn-default" href="#"><i class="fa fa-comments-o"></i></a>
 					<span style="position:relative;color:white; font-size:17px;"><img class="img-circle" style="height:16px" src="/${usr.avatarUrl}_32x32"> ${usr.getFullName()}</span>
@@ -255,7 +254,7 @@
 							</span>
 							#{if isOwner && listing}
 								<span class="input-group-btn">
-									<button id="create-instant-room" class="btn btn-gray btn-short" style="margin:0px;height:40px" title="&{'create-instant-session'}"><i class="fa fa-video-camera"></i></button>
+									<button id="create-instant-room" class="btn btn-default btn-short" style="margin:0px;height:40px" title="&{'create-instant-session'}"><i class="fa fa-phone"></i></button>
 								</span>
 							#{/if}
 						</div>

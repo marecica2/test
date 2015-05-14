@@ -905,4 +905,15 @@ starServices.hangoutInvite = function(data, success, error){
     });
 };
 
+starServices.sendMessage = function(data, success, error){
+    $.ajax({
+        type: "POST",
+        url: "/user/message?"+star.token,
+        data: JSON.stringify(data),
+        success: success,
+        error: error,
+        contentType: "application/json"
+    });
+};
+
 

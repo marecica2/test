@@ -1,0 +1,57 @@
+#widgr-container a 
+{
+	color: rgb(220,0,46);
+	opacity: 0.9;
+}
+
+#widgr-container a:hover 
+{
+	color: rgb(220,0,46);
+	text-decoration: underline;
+	opacity: 1;
+}
+
+#widgr-container div.style-switcher .header 
+{
+	background-color: rgb(220,0,46);
+	color:white;
+}
+
+#widgr-container .btn-default 
+{
+	background-color: rgb(220,0,46);
+	border-color: rgb(220,0,46);
+	color: white;
+}
+
+#widgr-container .btn-default:hover 
+{
+	background-color: rgb(214,0,0);
+	color: white;
+}
+
+#widgr-container .default-bg 
+{
+	background-color: rgb(220,0,46);
+}
+
+.widgr-bubble-left 
+{
+	background: rgba(220,0,46,0.7);
+	color:white;
+}
+
+.widgr-bubble-left:after 
+{
+	border-color: transparent rgba(220,0,46,0.7);
+}
+
+.widgr-bubble-right
+{
+	background: rgba(220,0,46,0.1);
+}
+
+.widgr-bubble-right:after 
+{
+	border-color: transparent rgba(220,0,46,0.1);
+}

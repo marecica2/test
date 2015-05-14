@@ -10,6 +10,7 @@ import models.ChatFeed;
 import models.Contact;
 import models.Event;
 import models.Listing;
+import models.Message;
 import models.Rating;
 import models.User;
 
@@ -24,6 +25,7 @@ import com.google.gson.JsonObject;
 
 import dto.ActivityDTO;
 import dto.ChatFeedDTO;
+import email.EmailNotificationBuilder;
 
 public class Public extends BaseController
 {
@@ -146,4 +148,35 @@ public class Public extends BaseController
         return feed;
     }
 
+    public static void postMessage()
+    {
+        final JsonObject jo = JsonUtils.getJson(request.body);
+        final String sender = jo.get("sender") != null ? jo.get("sender").getAsString() : null;
+        final String userId = jo.get("user") != null ? jo.get("user").getAsString() : null;
+        final String subject = jo.get("subject") != null ? jo.get("subject").getAsString() : null;
+        final String body = jo.get("body") != null ? jo.get("body").getAsString() : null;
+        final String recipientId = jo.get("recipient").getAsString();
+
+        User toUser = User.getUserByUUID(recipientId);
+        if (userId != null)
+            Notifications.send(toUser.login, subject, body, null, null, null);
+        else
+        {
+            String emailBody = "Sender: " + sender + " (" + sender + ")\n\n";
+            emailBody += body;
+
+            // send notification
+            Message.createNotification(null, toUser, subject, emailBody);
+
+            // send email
+            if (toUser != null && toUser.emailNotification)
+            {
+                EmailNotificationBuilder eb = new EmailNotificationBuilder();
+                eb.setTo(toUser)
+                        .setSubject(subject)
+                        .setMessageWiki(emailBody)
+                        .send();
+            }
+        }
+    }
 }

@@ -109,6 +109,7 @@ GET 	/public/facebook/registration			Public.facebookRegistration
 GET 	/wiki									Public.wiki
 GET     /check-connection	                  	Public.checkconnection
 GET     /embed/listing/{channel}           		Public.embed
+POST    /user/message					 		Public.postMessage
 
 GET		/remove-upload							FileuploadController.removeFile	
 POST    /fileupload								FileuploadController.uploadFile

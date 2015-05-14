@@ -734,23 +734,26 @@
     star.room = '${room}';
 	star.chatRoom = '${listing.user.uuid}';
    	star.ownerName = '${listing.user.getFullName().escapeJavaScript()}';
+   	star.ownerUuid = '${listing.user.uuid}';
     star.server_host = '${socketIo}';
     star.livestream = true;
     star.peerId = null;
 	star.listing = '${listing.uuid}';
-	star.user = '${name.escapeJavaScript()}';
+	
 	star.isOwner = false;
-	#{if isOwner}
-   		star.isOwner = true;
-   	#{/if}
+	star.logged = false;
+	star.userName = "Guest"+ Math.floor(Math.random()*900);
+	star.userAvatar = 'public/images/avatar';
+	star.userUuid = star.utils.uuid();
 	#{if user}
+		star.logged = true;
+		star.userName = '${user.getFullName().escapeJavaScript()}';
 		star.userAvatar = '${user.avatarUrl}';
     	star.userUuid = '${user.uuid}';
-	#{/if}    
-	#{else}
-		star.userAvatar = 'public/images/avatar';
-		star.userUuid = '${new Date().getTime()}';
-	#{/else}	
+    	#{if isOwner}
+   			star.isOwner = true;
+   		#{/if}
+    #{/if}    
 </script>
 <script src="${socketIo}/socket.io/socket.io.js"></script>
 <script src="@{'/public/javascripts/room.js'}" type="text/javascript"></script>
