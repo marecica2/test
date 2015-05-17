@@ -2,6 +2,7 @@ package email;
 
 import java.util.List;
 
+import models.Account;
 import models.Attendance;
 import models.Event;
 import models.User;
@@ -22,6 +23,14 @@ public class EmailNotificationBuilder
     private String message = null;
     private Event event = null;
     private Attendance attendance = null;
+    private Account account = null;
+    private final String emailPrefix = "Widgr - ";
+
+    public EmailNotificationBuilder setAccount(Account account)
+    {
+        this.account = account;
+        return this;
+    }
 
     public EmailNotificationBuilder setAttendance(Attendance attendance)
     {
@@ -95,7 +104,7 @@ public class EmailNotificationBuilder
             final VelocityContext ctx = VelocityTemplate.createBasicTemplate(this.to, locale, baseUrl, subject, message);
             final String template = VelocityTemplate.getTemplate(VelocityTemplate.DEFAULT_TEMPLATE);
             final String body = VelocityTemplate.generateTemplate(ctx, template);
-            new EmailNotificationRunner(ep, "Widgr - " + subject, recipient, body).execute();
+            new EmailNotificationRunner(ep, emailPrefix + subject, recipient, body).execute();
         }
     }
 
@@ -127,14 +136,14 @@ public class EmailNotificationBuilder
 
         if (to == null || to.emailNotification)
         {
-            final VelocityContext ctx = VelocityTemplate.createInvitationTemplate(locale, recipient, from, to, event, baseUrl, att, message);
+            final VelocityContext ctx = VelocityTemplate.createInvitationTemplate(locale, recipient, from, account, to, event, baseUrl, att, message);
             if (message != null && message.length() > 0)
             {
                 ctx.put("notification", message);
                 ctx.put("notificationLabel", from.firstName + ":");
             }
             final String body = VelocityTemplate.generateTemplate(ctx, VelocityTemplate.getTemplate(VelocityTemplate.DEFAULT_TEMPLATE));
-            new EmailNotificationRunner(ep, "Widgr - " + subject, recipient, body).execute();
+            new EmailNotificationRunner(ep, emailPrefix + subject, recipient, body).execute();
         }
     }
 

@@ -45,14 +45,14 @@ public class Hangout extends BaseController
 
         final Event e = event;
 
-        if (user == null && tempName == null)
-            joinRoom(id);
-
         if (e != null && !e.isFree())
             checkPayment(e, request.url);
 
+        if (user == null && tempName == null)
+            joinRoom(id);
+
         // send rating request if user has not rated this channel
-        if (user != null && event != null && !user.isOwner(event) && request.cookies.get(e.uuid) == null)
+        if (user != null && event != null && !user.isTeam(event) && request.cookies.get(e.uuid) == null)
         {
             List<Rating> ratings = Rating.getByObjectUser(event.listing.uuid, user);
             if (ratings.size() == 0)

@@ -149,16 +149,13 @@ public class Accounts extends BaseController
 
         if (!validation.hasErrors())
         {
-            account.name = accName;
-            account.paypalAccount = paypal;
-            account.currency = currency;
-            account.url = url;
-            account.save();
-
-            final Cookie cookie = request.cookies.get("timezoneJs");
-            if (cookie != null)
+            if (!user.role.equals(User.ROLE_USER))
             {
-                user.timezone = NumberUtils.parseInt(cookie.value);
+                account.name = accName;
+                account.paypalAccount = paypal;
+                account.currency = currency;
+                account.url = url;
+                account.save();
             }
 
             user.firstName = firstName;
@@ -174,6 +171,9 @@ public class Accounts extends BaseController
             user.twitter = twitter;
             user.linkedIn = linkedIn;
             user.skype = skype;
+            Cookie cookie = request.cookies.get("timezoneJs");
+            if (cookie != null)
+                user.timezone = NumberUtils.parseInt(cookie.value);
             if (googleCalendarId != null)
                 user.googleCalendarId = googleCalendarId;
             if (imageUrl != null)

@@ -3,6 +3,7 @@ GET     /home									Application.home
 GET     /search									Application.channels
 GET     /autocomplete							Application.autocomplete
 GET     /dashboard			                    Application.dashboard
+GET     /chat				                    Application.chat
 GET     /upcoming		                    	Application.upcoming
 GET     /past				                    Application.past
 GET     /approvements		                    Application.approvements
@@ -176,6 +177,7 @@ GET 	/admin/approve							Admin.approve
 GET 	/admin/deny								Admin.deny
 GET 	/admin/refresh 							Admin.refreshIndexes
 GET 	/admin/delete							Admin.deleteData
+GET 	/admin/dltusr							Admin.deleteUser
 GET 	/admin/block							Admin.block
 GET 	/admin/unblock							Admin.unblock
 

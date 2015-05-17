@@ -107,6 +107,7 @@ public class Registration extends BaseController
     public static void registrationPost(
         String login,
         String url,
+        String account,
         String password,
         String passwordRepeat,
         String firstName,
@@ -150,14 +151,19 @@ public class Registration extends BaseController
 
         final User checkUser = User.getUserByLogin(login);
         if (checkUser != null)
-            validation.addError("login", Messages.get("login-already-used"));
+            validation.addError("login", Messages.get("login-already-used", login));
 
         if (!validation.hasErrors())
         {
-            Account account = createDefaultAccount(firstName, lastName, accPlan, type);
-
             User user = createDefaultUser(login, password, firstName, lastName, token, offset);
-            user = user.save(account);
+            Account acc = null;
+            if (account != null)
+                acc = Account.get(account);
+            if (acc != null)
+                user.role = User.ROLE_USER;
+            if (acc == null)
+                acc = createDefaultAccount(firstName, lastName, accPlan, type);
+            user = user.save(acc);
 
             // if user used invitation link
             if (token != null)
@@ -194,6 +200,7 @@ public class Registration extends BaseController
 
     public static void registrationFacebookPost(
         String login,
+        String account,
         String facebook,
         String facebookName,
         String firstName,
@@ -219,14 +226,20 @@ public class Registration extends BaseController
 
         if (!validation.hasErrors())
         {
-            final Account account = createDefaultAccount(firstName, lastName, Account.TYPE_STANDARD, type);
-
             final String password = RandomUtil.getRandomString(10);
             User user = createDefaultUser(login, password, firstName, lastName, token, offset);
             user.activated = true;
             user.facebookId = facebook;
             user.facebookName = facebookName;
-            user = user.save(account);
+
+            Account acc = null;
+            if (account != null)
+                acc = Account.get(account);
+            if (acc != null)
+                user.role = User.ROLE_USER;
+            if (acc == null)
+                acc = createDefaultAccount(firstName, lastName, Account.TYPE_STANDARD, type);
+            user = user.save(acc);
 
             // if user used invitation link
             if (token != null)

@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Query;
 import javax.persistence.Table;
 
 import play.Logger;
@@ -158,12 +159,50 @@ public class User extends Model
 
     public static List<User> getUsers()
     {
-        return User.find("from User order by created desc ").fetch();
+        return User.find("from User order by account.key asc, created desc ").fetch();
+    }
+
+    public static List<User> getUsersByAccount(Account account)
+    {
+        return User.find("from User where account = ? order by created desc ", account).fetch();
     }
 
     public static List<User> getPublisherRequests()
     {
         return User.find("from User where account.type = ?", Account.TYPE_PUBLISHER_REQUEST).fetch();
+    }
+
+    public static void deleteUser(Integer id)
+    {
+        String query = "";
+        query += "delete from activity where user_id = :userId ;";
+        query += "delete from activity where customer_id = :userId ;";
+        query += "delete from activity where event_id in (select id from event where user_id = :userId);";
+        query += "delete from activity where event_id in (select id from event where customer_id = :userId);";
+        query += "delete from message where fromuser_id = :userId ;";
+        query += "delete from message where owner_id = :userId ;";
+        query += "delete from message where touser_id = :userId ;";
+        query += "delete from comment_comment_reply where comment_id in (select id from comment where user_id = :userId);";
+        query += "delete from comment_comment_reply where replies_id in (select id from comment_reply where user_id = :userId);";
+        query += "delete from comment where user_id = :userId ;";
+        query += "delete from comment_reply where user_id = :userId ;";
+        query += "delete from attendance where user_id = :userId ;";
+        query += "delete from attendance where customer_id = :userId ;";
+        query += "delete from attendance where event_id in (select id from event where customer_id = :userId);";
+        query += "delete from attendance where event_id in (select id from event where user_id = :userId);";
+        query += "delete from event where user_id = :userId ;";
+        query += "delete from event where customer_id = :userId ;";
+        query += "delete from fileupload where owner_id  = :userId ;";
+        query += "delete from listing where user_id = :userId ;";
+        query += "delete from contact where user_id = :userId ;";
+        query += "delete from contact where contact_id = :userId ;";
+        query += "delete from ratingvote where user_id = :userId ;";
+        query += "delete from rating where user_id = :userId ;";
+        query += "delete from users where id = :userId ;";
+
+        Query q = User.em().createNativeQuery(query);
+        q.setParameter("userId", id);
+        q.executeUpdate();
     }
 
     @Override
@@ -236,6 +275,14 @@ public class User extends Model
         return firstName + " " + lastName + acc;
     }
 
+    public String getAccountName()
+    {
+        if (StringUtils.getStringOrNull(this.account.name) != null)
+            return account.name;
+        else
+            return firstName + " " + lastName;
+    }
+
     public Boolean isPublisher()
     {
         if (this.account.type != null && this.account.type.equals(Account.TYPE_PUBLISHER))
@@ -267,6 +314,20 @@ public class User extends Model
     public Boolean isOwner(Event event)
     {
         if (event != null && this.equals(event.user))
+            return true;
+        return false;
+    }
+
+    public Boolean isTeam(Listing listing)
+    {
+        if (listing != null && listing.user.account != null && this.account.equals(listing.user.account))
+            return true;
+        return false;
+    }
+
+    public Boolean isTeam(Event event)
+    {
+        if (event != null && this.account.equals(event.user.account))
             return true;
         return false;
     }

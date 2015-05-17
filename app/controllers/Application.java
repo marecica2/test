@@ -31,10 +31,67 @@ import email.EmailNotificationBuilder;
 //@With(Secure.class)
 public class Application extends BaseController
 {
-    @Before(only = { "dashboard" })
+    @Before(only = { "dashboard", "manageChannels", "chat" })
     static void checkAccess() throws Throwable
     {
         checkAuthorizedAccess();
+    }
+
+    public static void privacy()
+    {
+        final User user = getLoggedUser();
+        render(user);
+    }
+
+    public static void terms()
+    {
+        final User user = getLoggedUser();
+        render(user);
+    }
+
+    public static void help()
+    {
+        final User user = getLoggedUser();
+        render(user);
+    }
+
+    public static void faq()
+    {
+        final User user = getLoggedUser();
+        render(user);
+    }
+
+    public static void sitemap()
+    {
+        final User user = getLoggedUser();
+        render(user);
+    }
+
+    public static void sitemapXml()
+    {
+        response.setContentTypeIfNotSet("application/xml");
+        render();
+    }
+
+    public static void home()
+    {
+        changeLocale();
+        final User user = getLoggedUser();
+        List<Listing> listings = (List<Listing>) Cache.get("listings");
+        if (listings == null)
+        {
+            listings = Listing.getRandom(9);
+            Cache.set("listings", listings, "20s");
+        }
+        String baseUrl = getBaseUrl();
+        render(user, listings, baseUrl);
+    }
+
+    public static void channels()
+    {
+        changeLocale();
+        final User user = getLoggedUser();
+        render(user);
     }
 
     public static void about()
@@ -201,81 +258,6 @@ public class Application extends BaseController
         facebook();
     }
 
-    public static void privacy()
-    {
-        final User user = getLoggedUser();
-        render(user);
-    }
-
-    public static void terms()
-    {
-        final User user = getLoggedUser();
-        render(user);
-    }
-
-    public static void help()
-    {
-        final User user = getLoggedUser();
-        render(user);
-    }
-
-    public static void faq()
-    {
-        final User user = getLoggedUser();
-        render(user);
-    }
-
-    public static void sitemap()
-    {
-        final User user = getLoggedUser();
-        render(user);
-    }
-
-    public static void sitemapXml()
-    {
-        response.setContentTypeIfNotSet("application/xml");
-        render();
-    }
-
-    public static void i18n()
-    {
-        response.contentType = "application/javascript";
-        renderTemplate("Application/i18n.html");
-    }
-
-    public static void home()
-    {
-        changeLocale();
-
-        final User user = getLoggedUser();
-        List<Listing> listings = (List<Listing>) Cache.get("listings");
-        if (listings == null)
-        {
-            listings = Listing.getRandom(9);
-            Cache.set("listings", listings, "20s");
-        }
-        String baseUrl = getBaseUrl();
-        render(user, listings, baseUrl);
-    }
-
-    //    private static Map<String, Object> initRatings()
-    //    {
-    //        Map<String, Object> ratings = (Map<String, Object>) Cache.get("ratings");
-    //
-    //        if (ratings == null || true)
-    //        {
-    //
-    //        }
-    //        return ratings;
-    //    }
-
-    public static void channels()
-    {
-        changeLocale();
-        final User user = getLoggedUser();
-        render(user);
-    }
-
     public static void dashboard(String type, Integer results)
     {
         final User user = getLoggedUser();
@@ -295,6 +277,17 @@ public class Application extends BaseController
         //c.value = user.timezone.toString();
         //request.cookies.put("timezone", c);
         render(user, watchList, listings, approved, type, isOwner, contacts, comments, temp, commentTemp, results, dashboard, baseUrl);
+    }
+
+    public static void chat()
+    {
+        final User user = getLoggedUser();
+        final User usr = getLoggedUser();
+        final List<Listing> listings = user != null ? Listing.getForUserAvailable(user) : null;
+
+        final String room = user.uuid;
+        final String socketIo = getProperty(CONFIG_SOCKET_IO);
+        render(user, usr, room, socketIo, listings);
     }
 
     public static void manageChannels()

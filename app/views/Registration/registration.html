@@ -2,6 +2,7 @@
 #{set 'title'}
 	&{'registration'}
 #{/set}
+#{set wide:true /}
 
 #{set 'moreScripts'}
 <script>
@@ -56,7 +57,9 @@
 				<div class="form-group">
 					<label class="" for="login">&{'login'} *</label>
 					#{authenticityToken /} 
-					<input type="text" class="form-control" id="login" name="login" value="#{if request.params.email}${request.params.email}#{/if}#{else}${params.login}#{/else}" placeholder="&{'registration-login'}" /> <input type="hidden" class="form-control" id="token" name="token" value="${request.params.token}" /> 
+					<input type="text" class="form-control" id="login" name="login" value="#{if request.params.email}${request.params.email}#{/if}#{else}${params.login}#{/else}" placeholder="&{'registration-login'}" /> 
+					<input type="hidden" class="form-control" id="account" name="account" value="#{if request.params.account}${request.params.account}#{/if}#{else}${params.account}#{/else}" /> 
+					<input type="hidden" class="form-control" id="token" name="token" value="#{if request.params.token}${request.params.token}#{/if}#{else}${params.token}#{/else}" /> 
 					<input type="hidden" class="form-control" id="invitation" name="invitation"	value="${request.params.invitation}" /> 
 					<input type="hidden" class="form-control" id="facebook" name="facebook" /> 
 					<input type="hidden" class="form-control" id="facebook" name="url" value="${params.url}" /> 

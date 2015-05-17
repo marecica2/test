@@ -173,7 +173,7 @@
 
 #{if user}
 <div class="logo small-hide" style="position:fixed;top:25px;right:50px; z-index: 100">
-	<a href="/dashboard"><img class="img-circle" style="border:1px solid #333" src="${user.avatarUrl}_32x32"></a>
+	<a href="/dashboard"><img class="img-circle" src="${user.avatarUrl}_32x32"></a>
 </div>
 #{/if}	
 
@@ -239,22 +239,22 @@
 	<br/>
 	<div style="opacity:0.7">
 		<div class="btn-group">
-			<button type="button" id="controls-mute" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'mute'}"><i class="icon-sound"></i></button>
-			<button type="button" id="controls-camera" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'turn-camera-off'}"><i class="fa fa-eye-slash"></i></button>
-			<button type="button" id="screenShareButton" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'share-your-screen'}"><i class="fa fa-desktop"></i></button>
+			<button id="controls-mute" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'mute'}"><i class="icon-sound"></i></button>
+			<button id="controls-camera" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'turn-camera-off'}"><i class="fa fa-eye-slash"></i></button>
+			<button id="screenShareButton" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'share-your-screen'}"><i class="fa fa-desktop"></i></button>
 		    <script src="https://www.webrtc-experiment.com/RecordRTC.js"></script>		
 		
-			<button type="button" id="canvas-open" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'open-canvas'}"><i class="fa fa-paint-brush"></i></button>
+			<button id="canvas-open" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'open-canvas'}"><i class="fa fa-paint-brush"></i></button>
 			#{if event}
-			<button type="button" id="comments-open" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'posts-and-uploads'}"><i class="icon-docs"></i></button>
+			<button id="comments-open" class="controls btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'posts-and-uploads'}"><i class="icon-docs"></i></button>
 			#{/if}
 			<button class="controls btn btn-dark btn-medium" data-toggle="modal" data-target="#myModal" rel="tooltip" data-placement="bottom" data-original-title="&{'share-with-more'}"><i class="icon-user-add"></i></button>
 			<a href="${request.url}" class="btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'refresh'}"><i class="fa fa-refresh"></i></a>
-			<button type="button" id="controls-hangup" class="controls btn btn-danger btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'hang-up'}"><i class="fa fa-phone"></i></button>
+			<button id="controls-hangup" class="controls btn btn-danger btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'hang-up'}"><i class="fa fa-phone"></i></button>
 		</div>
 	</div>
 	
-	<div style="width:100%; position:absolute;bottom:0px;text-align:center">
+	<div style="width:100%; position:fixed;left:10px;bottom:10px;text-align:center">
 		<div id="remotes">
 			<div class="videoContainer"><video id="localVideo" oncontextmenu="return false;"></video></div>
 			<div id="localScreenContainer" class="videoContainer"></div>

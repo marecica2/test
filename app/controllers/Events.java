@@ -283,7 +283,7 @@ public class Events extends BaseController
         final Map<String, String> errs = new HashMap<String, String>();
 
         // permissions check
-        if (!user.isPublisher() || listing == null || !user.isOwner(listing) || (event != null && !user.isOwner(event)))
+        if (!user.isPublisher() || !user.isTeam(event))
             forbidden();
 
         // validation

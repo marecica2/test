@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 
+import models.Account;
 import models.Event;
 import models.User;
 
@@ -58,7 +59,7 @@ public class VelocityTemplate
         return null;
     }
 
-    public static VelocityContext createInvitationTemplate(String locale, String email, User from, User to, Event event, String baseUrl, String attendance, String message)
+    public static VelocityContext createInvitationTemplate(String locale, String email, User from, Account account, User to, Event event, String baseUrl, String attendance, String message)
     {
         VelocityContext ctx = new VelocityContext();
         ctx.put("color0", "#BF94D1");
@@ -71,6 +72,7 @@ public class VelocityTemplate
         ctx.put("logo", baseUrl + "public/images/logo_purple_footer.png");
         ctx.put("logo_footer", baseUrl + "public/images/logo_purple_footer.png");
 
+        String registrationUrl = "registration?email=" + email + "&token=" + from.referrerToken;
         if (from != null)
         {
             ctx.put("user", from.getFullName());
@@ -79,7 +81,10 @@ public class VelocityTemplate
             ctx.put("userUrlLabel", Messages.getMessage(locale, "view-on-widgr"));
             ctx.put("title", Messages.getMessage(locale, "you-have-been-invited-to-widgr", from.getFullName()));
             ctx.put("userAbout", "<h3>" + from.getFullName() + "</h3>" + from.userAboutHtml());
-            ctx.put("url", baseUrl + "registration?email=" + email + "&token=" + from.referrerToken);
+
+            if (account != null)
+                registrationUrl += "&account=" + account.key;
+            ctx.put("url", baseUrl + registrationUrl);
         }
 
         ctx.put("contact", Messages.getMessage(locale, "contact"));
@@ -107,7 +112,7 @@ public class VelocityTemplate
             ctx.put("eventEnd", dt.formatDate(event.eventEnd, new SimpleDateFormat("h:mm a")) + " GMT");
 
             // override registration to add another param
-            ctx.put("url", baseUrl + "registration?email=" + email + "&token=" + from.referrerToken + "&invitation=" + attendance);
+            ctx.put("url", baseUrl + registrationUrl + "&invitation=" + attendance);
         }
 
         return ctx;

@@ -257,7 +257,7 @@ close=Close
 change-plan-to=Change plan to
 will-be-applied-after=Will be applied after
 account.account=Account
-account-name=Account name
+account-name=Account / Company name
 account-plan=Account plan
 account-type=Account type
 publisher-waiting-for-approvement=Requested for Provider account
@@ -307,7 +307,7 @@ start-of-working-hours=Start of working hours
 end-of-working-hours=End of working hours
 PayPal-account=PayPal account
 PayPal-info=To be able to create paid sessions you need to provide valid Premier or Business PayPal account.
-paypal-refund=Important! How to enable refundations
+paypal-refund=How to enable refundations through Widgr
 paypal-refund-desc=By default you cannot use Widgr to make refundations to your customers. You would always need to do it through PayPal and do it manually. By granting API access to issue refunds to Widgr you can make then refunds to your customers just with a single click through <a href='/payments'>Received payments page</a> <h4>Steps for granting API access (Only for refunds)</h4> <ul><li>Go to <a target="_blank" href="https://www.paypal.com">paypal.com</a> and log into your PayPal account</li><li>Navigate to Home > Profile > My selling tools </li><li>Click on API access "Update" link</li><li>Click on Add or edit API permissions</li><li>Click on Add new Third Party button</li><li>Type <input type="text" value="sales_api1.wid.gr"> into "Third Party Permission Username field" and click "Lookup"</li><li>Check <strong>"Issue a refund for a specific transaction"</strong> option and click "Add"</li><li>And that's it</li></ul>
 account.currency=Default currency
 currency=Currency
@@ -421,7 +421,7 @@ dashboard.guests=Guests
 view=View
 submit-for-approval=Submit for approval
 approve=Approve
-decline=Reject
+decline=Decline
 delete=Delete
 
 #channels.html
@@ -594,7 +594,7 @@ sitemap=Sitemap
 your-sessions=My schedule
 session-approval=Requested sessions
 waiting-for-approvement=Session requested
-manage-channels=My Listings
+manage-channels=Manage listings
 share-your-knowledge=Sharing your knowledge
 toggle-navigation=Toggle navigation
 received-new-message=Received new message
@@ -680,14 +680,14 @@ embed-listing-desc=If you own a site, you can embed this simple html snippet int
 approved=Approved
 you-can-pay-for-event-before-or-you-can-wait-until-event-starts=You can pay for session before or you can wait until session starts
 pay-for-event-now=Pay&nbsp;for&nbsp;session&nbsp;before&nbsp;it&nbsp;starts
-join-video-call=Join&nbsp;Session
+join-video-call=Join&nbsp;video&nbsp;call
 start-live-broadcast=Start live broadcast
 stop-live-broadcast=Stop live broadcast
 stop-instant-broadcast=Stop instant broadcast
 start-hangout=Start hangout
 join-hangout=Join hangout
 edit-event=Edit&nbsp;session
-add-event=New Session
+add-event=New&nbsp;Session
 delete-selected-item=Confirm your choice
 delete-event=Delete&nbsp;Session
 star-instant-broadcast=Start instant broadcast
@@ -808,7 +808,7 @@ pay-with-PayPal=Checkout with PayPal
 
 #ratings.html
 yes=Yes
-yes=No
+no=No
 user-reviews=User reviews
 five-stars=Five stars
 four-stars=Four stars
@@ -969,7 +969,7 @@ eventMoved=Changed time for session <a class=popup-event-edit href=/event/%s>%s<
 eventUpdatedUsr=Updated session <a class=popup-event-edit href=/event/%s>%s</a>
 eventUpdatedCust=Updated session <a class=popup-event-edit href=/event/%s>%s</a>
 eventApproved=Approved session <a class=popup-event-edit href=/event/%s>%s</a>
-eventDeclined=Rejected session %s
+eventDeclined=Cancelled session %s
 eventCommented=Added comment on session <a class=popup-event-edit href=/event/%s>%s</a>
 eventCommentedCust=Added comment on session <a class=popup-event-edit href=/event/%s>%s</a>
 eventStarted=Session <a class=popup-event-edit href=/event/%s>%s</a> just started

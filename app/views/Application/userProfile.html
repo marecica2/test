@@ -22,7 +22,7 @@
 			
 			<br/>
 			#{if listings && (usr.isPublisher()) || (user != null  && user.isAdmin()) }
-				<h2>&{'all-channels-from'} ${usr.firstName}</h2>
+				<h2>&{'all-channels-from'} ${usr.getAccountName()}</h2>
 				<div class="separator-2"></div>
 				#{set items:listings /}
 				#{set forEvents:false /}

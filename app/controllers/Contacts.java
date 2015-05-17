@@ -18,7 +18,9 @@ public class Contacts extends BaseController
         User user = getLoggedUser();
         User usr = user;
         List<Contact> contacts = Contact.getContacts(user);
-        render(user, usr, contacts);
+
+        List<User> users = User.getUsersByAccount(user.account);
+        render(user, usr, contacts, users);
     }
 
     public static void invites(String str)
@@ -46,39 +48,46 @@ public class Contacts extends BaseController
         redirectTo(url);
     }
 
-    public static void contactInvite(String email)
+    public static void contactInvite(String email, String account)
     {
         checkAuthenticity();
-        User user = getLoggedUserNotCache();
-        User u = User.getUserByLogin(email);
+        final String url = request.params.get("url");
+        final User user = getLoggedUserNotCache();
+        final User u = User.getUserByLogin(email);
+        final Boolean accountMember = account != null ? true : false;
 
         validation.email(email);
         validation.required(email);
         if (validation.hasErrors())
         {
             flash.error(Messages.get("invalid-email"));
-            Application.dashboard(null, null);
+            session.put("error", Messages.get("invalid-email"));
+            redirectTo(url);
         }
 
         if (u != null)
         {
             validation.addError("error", "");
+            session.put("success", Messages.get("is-already-registered", email, email));
             flash.success(Messages.get("is-already-registered", email, email));
             params.put("email", email);
             params.flash();
             validation.keep();
-            flash("email", email);
+
         } else
         {
             final String subject = Messages.get("invited-you-to-widgr-subject", user.getFullName());
-            new EmailNotificationBuilder()
+            EmailNotificationBuilder eb = new EmailNotificationBuilder()
                     .setFrom(user)
                     .setToEmail(email)
-                    .setSubject(subject)
-                    .sendInvitation();
+                    .setSubject(subject);
+            if (accountMember)
+                eb = eb.setAccount(user.account);
+            eb.sendInvitation();
             flash.success(Messages.get("invitation-sent-to", email));
+            session.put("success", Messages.get("invitation-sent-to", email));
         }
-        Application.dashboard(null, null);
+        redirectTo(url);
     }
 
     public static void contactBlock(String uuid, String url)

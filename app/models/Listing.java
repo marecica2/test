@@ -106,6 +106,10 @@ public class Listing extends Model
     @JoinColumn(name = "user_id")
     public User user;
 
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    public Account account;
+
     public static Listing get(String uuid)
     {
         Listing event = Listing.find("byUuid", uuid).first();
@@ -119,7 +123,7 @@ public class Listing extends Model
 
     public static List<Listing> getForUser(User user)
     {
-        return Listing.find("from Listing where user = ? order by deleted desc nulls first ", user).fetch(500);
+        return Listing.find("from Listing where user = ? or account = ? order by deleted desc nulls first ", user, user.account).fetch(500);
     }
 
     public static List<Listing> getForUserAvailable(User user)

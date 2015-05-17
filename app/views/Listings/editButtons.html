@@ -11,13 +11,13 @@
 			
 			#{if !paid }
 				#{set displayStream:false /}
-				<a class="btn btn-warning  btn-social margin-clear" href="/payment/${event.uuid}?url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-placement="top" title="&{'pay-for-event-now'}">
+				<a class="btn btn-light-gray btn-social margin-clear" href="/payment/${event.uuid}?url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-placement="top" title="&{'pay-for-event-now'}">
 					<i class="fa fa-paypal"></i>
 				</a>
 			#{/if}
 			
 			#{if attendance && attendance.paid && !attendance.refundRequested}
-				<a class="btn btn-warning  btn-social margin-clear" href="" data-toggle="modal" data-target="#refundModal" onclick="$('#share-link').select();">&{'request-refund'}</a>
+				<a class="btn btn-default btn-social margin-clear" href="" data-toggle="modal" data-target="#refundModal" onclick="$('#share-link').select();">&{'request-refund'}</a>
 			#{/if}
 		#{/if}
 
@@ -81,13 +81,6 @@
 		</a>
 		#{/if}
 		
-		#{if !edit && event.type == 'p2p' && (event.state.equals("user_accepted") || event.state.equals("user_created"))}
-			<a class="btn btn-danger  btn-social margin-clear" href="/room?id=${event.uuid}&secret=${event.roomSecret}&#{token /}" target="_blank" rel="tooltip" data-original-title="&{'join-video-call'}">
-				<i class="fa fa-video-camera fa-flip-horizontal"></i>
-			</a>
-		#{/if}			
-
-		
 		#{if edit}
 			<a class="btn btn-light-gray btn-social margin-clear" href="${request.params.url}">
 				&{'cancel'}
@@ -125,15 +118,10 @@
 		#{if !isOwner && !edit && listing.type == 'instant' && listing.started == null}
 		#{/if}
 
-		#{if !edit && isOwner}
-
+		#{if !edit && isTeam}
 			<a class="btn btn-light-gray btn-social margin-clear" href="" rel="tooltip" data-original-title="&{'website-embed'}" data-toggle="modal" data-target="#embedModal"><i class="fa fa-code"></i></a>
-		
-			#{if user.isPublisher() && listing.type != 'instant' && listing.deleted == null}
-				<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&#{token /}&listingId=${listing.uuid}" class="btn btn-light-gray btn-social margin-clear" rel="tooltip" data-original-title="&{'add-event'}">
-					<i class="fa fa-plus"></i>
-				</a>
-			#{/if}
+		#{/if}
+		#{if !edit && isOwner}
 			<a href="/listing/${listing.uuid}?action=edit&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-social margin-clear" rel="tooltip" data-original-title="&{'edit-channel'}">
 				<i class="fa fa-pencil fa-1x"></i>
 			</a>
@@ -147,6 +135,12 @@
 					<i class="fa fa-times"></i>
 				</a>
 			#{/else}
+		#{/if}
+		
+		#{if !edit && isTeam && user.isPublisher() && listing.deleted == null}
+				<a href="/event?action=edit&newEvent=true&url=${request.url.urlEncode()}&#{token /}&listingId=${listing.uuid}" class="btn btn-light-gray btn-social margin-clear" rel="tooltip" data-original-title="&{'add-event'}">
+					<i class="fa fa-plus"></i>
+				</a>
 		#{/if}
 		
 		

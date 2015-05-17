@@ -336,7 +336,7 @@ public class Event extends Model
 
     public Boolean isOwner(User user)
     {
-        return user != null && user.uuid.equals(this.user.uuid) ? true : false;
+        return user != null && user.account.key.equals(this.user.account.key) ? true : false;
     }
 
     public Boolean isPrivate()

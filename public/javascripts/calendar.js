@@ -290,6 +290,7 @@ starCalendar.popupSaveNewEventPropose = function(){
 
 // popup save is clicked
 starCalendar.popupSaveNewEvent = function(proposal){
+    console.log("xxx");
     // save to backend
     var event = {};
     event.eventStart = starCalendar.start; 
@@ -360,6 +361,13 @@ starCalendar.selectionNewEvent = function(ccc, start, end, allDay, event) {
         var later = new Date(now.getTime() + (1000 * 60 * 15));
         $('.timepicker1').val((now.getHours()<10?'0':'') + now.getHours()+":"+(now.getMinutes()<10?'0':'') + now.getMinutes());
         $('.timepicker2').val((later.getHours()<10?'0':'') + later.getHours()+":"+(later.getMinutes()<10?'0':'') + later.getMinutes());
+        
+        starCalendar.start.setHours(now.getHours())
+        starCalendar.start.setMinutes(now.getMinutes())
+        starCalendar.end.setHours(later.getHours())
+        starCalendar.end.setMinutes(later.getMinutes())
+        console.log(starCalendar.start);
+        console.log(starCalendar.end);
     }
 
     $('#myPopover').modal('show');
@@ -376,7 +384,7 @@ starCalendar.clickEvent = function(event, jsEvent, view) {
         });
     }
 
-    if(event.uuid == undefined && event.googleId != null){
+    if(event.uuid == undefined && event.googleId != null && starCalendar.editable){
         if(starCalendar.listings)
             starCalendar.selectionNewEvent(starCalendar.calendar, event.start, event.end, false, event);
     }
@@ -473,14 +481,6 @@ starCalendar.copyValuesToDialog = function(event){
     $(".event-charging-price").val(event.price);
 };
 
-
-starCalendar.saveNotifyEventDialog = function(){
-    $('.notify-checkboxes').prop("checked", true);
-    $(".popup-event-notify").click();
-    $(".spinner-save-notify").show();
-    $(".spinner-notify").hide();
-    starEvent.saveEventDialog();
-}
 
 starCalendar.hexToRgb = function(hex) {
     var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;

@@ -30,6 +30,19 @@
 	color: white;
 }
 
+#widgr-container .text-default 
+{
+	color: rgb(220,0,46);
+}
+
+#widgr-container .label 
+{
+	font-size:0.8em;
+	font-weight:bold;
+	padding:2px 5px;
+	border-radius:3px;
+}
+
 #widgr-container .default-bg 
 {
 	background-color: rgb(0,104,189);

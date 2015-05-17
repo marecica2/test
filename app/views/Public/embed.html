@@ -14,76 +14,76 @@
 #{set item: listing /}
 #{set usr: userDisplayed /}
 
+<script>
+	star.eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+	star.messageEvent = star.eventMethod == "attachEvent" ? "onmessage" : "message";
+	eventer = window[star.eventMethod];
 
-<div id="fb-root"></div>
-<div class="embed-item page-wrapper">
+	eventer(star.messageEvent,function(e) {
+	    var params = e.data;
+	    try {
+		    params = JSON.parse(params);
+		    if(params.type == "msg"){
+		        #{if user}
+			        params.user = "${user.uuid}";
+		        #{/if}
+		        params.recipient = "${item.user.uuid}";
+				starServices.sendMessage(params);
+		    }
+	    } catch (err) {
+               return false;
+           }
+	},false);	
 
-	<script>
-		star.eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-		star.messageEvent = star.eventMethod == "attachEvent" ? "onmessage" : "message";
-		eventer = window[star.eventMethod];
+	var params = {};
+	params["data-bs"] = "${baseUrl}";
+	params["data-ws"] = "${socketIo}";
+	params["data-lg-user-ui"] = ""+new Date().getTime();
+	#{if user}
+		params["data-lg-user-ui"] = "${user.uuid}";
+		params["data-lg-user"] = "${user.getFullName()}";
+		params["data-lg-user-ava"] = "${user.avatarUrl}";
+		params["data-lg-user-lg"] = "${user.login}";
+	#{/if}
 	
-		eventer(star.messageEvent,function(e) {
-		    var params = e.data;
-		    try {
-			    params = JSON.parse(params);
-			    if(params.type == "msg"){
-			        #{if user}
-				        params.user = "${user.uuid}";
-			        #{/if}
-			        params.recipient = "${item.user.uuid}";
-					starServices.sendMessage(params);
-			    }
-		    } catch (err) {
-                return false;
-            }
-		},false);	
+	params["data-listingTitle"] = "${item.title}";
+	params["data-listingImage"] = "${item.imageUrl}";
+	params["data-listingCharging"] = "${item.charging}";
+	params["data-listingPrice"] = "${item.price}";
+	params["data-listingDuration"] = "${item.chargingTime}";
+	params["data-listingCurrency"] = "${item.currency}";
+	params["data-listingFirstFree"] = "${item.firstFree}";
+	params["data-listingStars"] = '${stats.get("avgStars")}';
+	params["data-listingReviews"] = '${stats.get("totalStars")}';
+	params["data-listingUuid"] = '${item.uuid}';
 	
-		var params = {};
-		params["data-bs"] = "${baseUrl}";
-		params["data-ws"] = "${socketIo}";
-		params["data-lg-user-ui"] = ""+new Date().getTime();
-		#{if user}
-			params["data-lg-user-ui"] = "${user.uuid}";
-			params["data-lg-user"] = "${user.getFullName()}";
-			params["data-lg-user-ava"] = "${user.avatarUrl}";
-			params["data-lg-user-lg"] = "${user.login}";
-		#{/if}
+	params["data-room"] = "${item.user.uuid}";
+	params["data-owner"] = "${item.user.getFullName()}";
+	params["data-owner-avatar"] = "${item.user.avatarUrl}";
+	params["data-owner-uuid"] = "${item.user.uuid}";
+	params["data-owner-company"] = "${item.user.account.name}";
+	params["type"] = "init";
+	parent.postMessage(JSON.stringify(params),"*");  
+	
+	$(document).ready(function(){
+	    //var params = {};
+	    //params["selector"] = ".widgr-embedded-iframe";
+		//params["height"] = $(".embed-item").height();
+		//params["type"] = "resize";
+		//parent.postMessage(JSON.stringify(params),"*");    
 		
-		params["data-listingTitle"] = "${item.title}";
-		params["data-listingImage"] = "${item.imageUrl}";
-		params["data-listingCharging"] = "${item.charging}";
-		params["data-listingPrice"] = "${item.price}";
-		params["data-listingDuration"] = "${item.chargingTime}";
-		params["data-listingCurrency"] = "${item.currency}";
-		params["data-listingFirstFree"] = "${item.firstFree}";
-		
-		params["data-room"] = "${item.user.uuid}";
-		params["data-owner"] = "${item.user.getFullName()}";
-		params["data-owner-avatar"] = "${item.user.avatarUrl}";
-		params["data-owner-uuid"] = "${item.user.uuid}";
-		params["data-owner-company"] = "${item.user.account.name}";
-		params["type"] = "init";
-		parent.postMessage(JSON.stringify(params),"*");  
-		
-		$(document).ready(function(){
-		    //var params = {};
-		    //params["selector"] = ".widgr-embedded-iframe";
-			//params["height"] = $(".embed-item").height();
-			//params["type"] = "resize";
-			//parent.postMessage(JSON.stringify(params),"*");    
-			
-			$("#widgr-open-chat").click(function(){
-			    var params = {};
-				params["type"] = "chat-open";
-				parent.postMessage(JSON.stringify(params),"*"); 		    
-			});
+		$("#widgr-open-chat").click(function(){
+		    var params = {};
+			params["type"] = "chat-open";
+			parent.postMessage(JSON.stringify(params),"*"); 		    
 		});
-		
-	</script>
+	});
 	
-		
-	*{
+</script>
+<div id="fb-root"></div>
+
+*{
+<div class="embed-item page-wrapper">
 	<a href="/listing/${item.uuid}" target="_parent">
 	<div style="position:relative">
 	  	<span class="listing-item-top shadow-inset-2" style="display:block; background: url('/${item.imageUrl}') no-repeat center; background-size:cover;position:relative">
@@ -166,8 +166,8 @@
 		    </div>
 		</div>  	
   	</div>
-	}*
 </div>
+}*
 
 
 

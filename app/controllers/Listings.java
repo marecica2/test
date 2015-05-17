@@ -40,6 +40,7 @@ public class Listings extends BaseController
         final User user = getLoggedUser();
         final Listing listing = Listing.get(uuid);
         final Boolean isOwner = listing != null ? listing.user.equals(user) : false;
+        final Boolean isTeam = listing != null && user != null ? user.isTeam(listing) : false;
 
         if ((!isNew && listing == null) || (listing != null && listing.deleted != null && listing.deleted && !isOwner))
         {
@@ -104,7 +105,7 @@ public class Listings extends BaseController
             final List<Rating> ratings = listing != null ? Rating.getByObject(uuid) : null;
             final Map<String, Object> stats = listing != null ? Rating.calculateStats(ratings) : null;
 
-            render(user, isOwner, edit, listing, url, errs, type,
+            render(user, isOwner, isTeam, edit, listing, url, errs, type,
                     temp, commentTemp, comments, ratings, stats, fromEvent, listings, rmtp, socketIo, room, baseUrl);
         }
     }
@@ -176,8 +177,10 @@ public class Listings extends BaseController
                 listing.roomSecret = RandomUtil.getUUID();
                 listing.created = new Date();
                 listing.user = user;
+                listing.account = user.account;
                 listing.state = Event.EVENT_STATE_USER_CREATED;
             }
+            listing.account = user.account;
             listing.language = language;
             listing.chatEnabled = chatEnabled != null ? true : null;
             listing.firstFree = firstFree != null ? true : null;

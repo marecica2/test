@@ -49,7 +49,6 @@
         <link href="@{'/public/css/datepicker.css'}" rel="stylesheet" media="screen">
 		<link href="@{'/public/css/skins/purple.css'}"  rel="stylesheet" data-style="styles">
         <link href="@{'/public/stylesheets/main.css'}" rel="stylesheet" media="screen">		
-		<link href="@{'/public/style-switcher/style-switcher.css'}" rel="stylesheet">
          #{get 'moreStyles' /}       
          
         <!-- Jquery and Bootstap core js files -->
@@ -151,7 +150,7 @@
 
 
 #{else}	
-	<body class="boxed pattern-2">
+	<body class="#{if wide}wide#{/if}#{else}boxed#{/else} pattern-2">
 		<div id="fb-root"></div>
 		
 		<!-- scrollToTop -->
@@ -222,45 +221,6 @@
 			
 			<!-- Chat box -->
 			#{if (listing != null && listing.user.isAvailable()) || (usr != null && usr.isAvailable())}
-			<script type="text/javascript" src="@{'/public/style-switcher/style-switcher.js'}"></script>
-			<div class="style-switcher closed shadow-small style-switcher-container">
-				<div class="header" style="background: #954db3">
-					<a class="trigger btn-default" href="#"><i class="fa fa-comments-o"></i></a>
-					<span style="position:relative;color:white; font-size:17px;"><img class="img-circle" style="height:16px" src="/${usr.avatarUrl}_32x32"> ${usr.getFullName()}</span>
-				</div>
-				<div style="padding:5px;" class="style-switcher-container-2">
-					#{if isOwner}
-						<span style="font-size:12px;line-height: 12px;">
-							#{if listing && !listing.isFree()}
-								<label style="font-weight: normal"><input type="checkbox" id="create-instant-room-charging" value="true"> Free Instant Session</label> &nbsp;
-							#{/if}					        				
-							<label style="font-weight: normal"><input type="checkbox" id="auto-switch-off" value="true"> Auto user switch off</label>
-						</span>
-				        <div class="btn-group btn-block chat-dropdown">
-				        	<button type="button" class="btn btn-block dropdown-toggle lowercase" data-toggle="dropdown">
-				        		<span data-bind="label" class="chat-user-label">&{'select-user'}</span>&nbsp;<span class="caret"></span> &nbsp; <span class="pull-right badge">&{'visitors'}: <span class="users-count">0</span></span>
-				        	</button>
-				        	<ul class="dropdown-menu selectable chat-avatars2" role="menu">
-				        	</ul>
-				        </div> 	
-					#{/if}
-					<div id="content2" class="" style="height:385px; margin-bottom:5px; overflow-y: auto; overflow-x:hidden; text-align:left; color:black"></div>
-					
-					<div class="chat-message-form">
-						<div class="input-group">
-							<input id="chat-text2" class="form-control" maxlength="400" placeholder="&{'enter-your-message'}"> 
-							<span class="input-group-btn">
-								<button id="chat-send2" class="btn btn-default btn-short" style="margin:0px;height:40px"><i class="fa fa-share"></i></button>
-							</span>
-							#{if isOwner && listing}
-								<span class="input-group-btn">
-									<button id="create-instant-room" class="btn btn-default btn-short" style="margin:0px;height:40px" title="&{'create-instant-session'}"><i class="fa fa-phone"></i></button>
-								</span>
-							#{/if}
-						</div>
-					</div>
-				</div>
-			</div>
 			#{/if}
 			<!-- Chat box -->				
 			
@@ -287,6 +247,13 @@
 									  ${flash.success.raw()}
 									</div>
 								#{/if}
+
+								#{if session && session.success}
+									<div class="shadow alert alert-info alert-dismissible" role="alert">
+									  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
+									  ${session.success.raw()} %{ session.remove("success"); }%
+									</div>
+								#{/if}
 								
 								#{if flash && flash.warning}
 									<div class="shadow alert alert-warning alert-dismissible" role="alert">
@@ -301,6 +268,14 @@
 								  <strong>Error!</strong> ${flash.error.raw()} 
 								</div>				
 								#{/if}
+								
+								#{if session && session.error}
+								<div class="shadow alert alert-danger alert-dismissible" role="alert">
+								  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
+								  <strong>Error!</strong> ${session.error.raw()} %{ session.remove("error"); }%
+								</div>				
+								#{/if}
+
 								#{if request.cookies.error}
 								<div class="shadow alert alert-danger alert-dismissible" role="alert">
 								  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>

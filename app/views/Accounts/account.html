@@ -15,8 +15,6 @@
 #{/set}
 
 
-
-
 <form id="cropForm" action="/crop" method="post">
 	<input type="hidden" id="url" name="url" value="${request.url.urlEncode()}" />
 	<input type="hidden" id="x1" name="x1" />
@@ -71,20 +69,19 @@
 	  		}*
 	  	
 			<h2 class="btn-margin">
-				<i class="fa fa-sliders"></i> &{'settings'}
-				<span class="pull-right">
+				<i class="fa fa-edit"></i> &{'settings'}
+				<span>
 					#{if !edit}
-						<span id="upload-button" class="btn btn-margin btn-light-gray btn-short" style=""><i class="icon-user"></i> &{'change-profile-picture'}</span>
-						<a class="btn btn-light-gray btn-margin btn-short" href="/settings?edit=true"><i class="fa fa-pencil"></i> &{'edit'}</a>
+						<span id="upload-button" class="btn btn-margin btn-light-gray btn-short btn-sm" style=""><i class="icon-user"></i> &{'change-profile-picture'}</span>
+						<a class="btn btn-light-gray btn-margin btn-short btn-sm" href="/settings?edit=true"><i class="fa fa-pencil"></i> &{'edit'}</a>
 					#{/if}
 					#{else}
-						<a class="btn btn-light-gray btn-margin btn-short" href="/settings"><i class="fa fa-times"></i> &{'cancel'}</a>
+						<a class="btn btn-light-gray btn-margin btn-short btn-sm" href="/settings"><i class="fa fa-times"></i> &{'cancel'}</a>
 					#{/else}
 				</span>
 			</h2>
-			<form class="form-horizontal" role="form" method="post" action="/settings?edit=true">	
-		    #{authenticityToken /}
 
+			<br/>
 			<div class="row">
 				<div class="col-md-0">
 				</div>
@@ -115,12 +112,16 @@
 				<div class="clearfix"></div>
 			</div>
 			<!-- Fileupload -->		
+ 			
+ 			
 			
 			<h3 class="normal">&{'account.account'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
 			<div class="separator-2"></div>
 			
-			#{if !edit}
+			<form class="form-horizontal" role="form" method="post" action="/settings?edit=true">				
+		    #{authenticityToken /}					
 
+			#{if !edit}
 			<div class="form-group">
 				<label class="col-sm-3 control-label">
 					&{'login'}
@@ -136,11 +137,13 @@
 					<i class="icon-info tip" rel="tooltip" data-placement="left" title="&{'account-info'}"></i> &{'account-name'}
 				</label>
 			    <div class="col-sm-9">
-			      	<p class="form-control-static">
+			      	<div class="form-control-static">
 			      		${user.account.name}
-			      	</p>
+			      	</div>
 			    </div>
 			</div>
+			
+			#{if user.role != 'user'}
 			<div class="form-group">
 				<label class="col-sm-3 control-label">
 					&{'account-type'}
@@ -162,8 +165,9 @@
 			      	</p>
 			    </div>
 			</div>
+			#{/if}
 
-			#{if user.isPublisher()}
+			#{if user.isPublisher() && user.role != 'user'}
 			<div class="form-group">
 				<label class="col-sm-3 control-label">
 					&{'account-plan'}
@@ -335,7 +339,9 @@
 			    </div>
 			</div>			
 			#{/if}
+			
 			#{else}
+			#{if user.role != 'user'}
 			<div class="form-group">
 				<label for="name" class="col-sm-2 control-label">&{'account-name'}</label>
 			    <div class="col-sm-10">
@@ -343,6 +349,7 @@
 			      <div class="error">#{error 'accName' /}</div>
 			    </div>
 			</div>
+			#{/if}
 			<div class="form-group">
 				<label for="firstName" class="col-sm-2 control-label">&{'first-name'}</label>
 			    <div class="col-sm-10">
@@ -398,7 +405,7 @@
 			
 			
 
-			#{if user.account.type == "publisher"}
+			#{if user.account.type == "publisher" && user.role != "user"}
 			<a id="paypal"></a>
 			<h3 class="normal">&{'paypal-account'} <a class="btn btn-light-gray btn-sm btn-margin" href="/settings?edit=true#paypal"><i class="fa fa-pencil"></i> &{'edit'}</a></h3>
 			<div class="separator-2"></div>
@@ -749,6 +756,8 @@
 			#{/if}
 		</form>
 		</div>
+		
+		
 	</div>
 </div>
 </div>

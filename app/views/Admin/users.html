@@ -21,15 +21,14 @@
 			
 			<h2>Users</h2>
 			<div class="separator-2"></div>
-			<table class="table table-hover table-condensed">
+			<table class="table table-hover table-condensed" style="font-size:0.9em">
 				<thead>
 					<tr>
 						<th>Name</th>
-						<th>Id</th>
-						<th>Account type</th>
-						<th>Account plan</th>
+						<th>Plan</th>
 						<th>Referrer</th>
 						<th>Created</th>
+						<th>Last logged</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -38,12 +37,9 @@
 						<td>
 							<img class="avatar16" src="/${item.avatarUrl}_32x32">
 							<a href="/user/${item.login}">${item.fullName}</a>
-						</td>
-						<td>
-							${item.id}
-						</td>
-						<td>
-							${item.account.type}
+							${item.account.name} &middot;
+							${item.account.type} &middot;
+							${item.role} 
 						</td>
 						<td>
 							#{if item.account.currentPlan()}
@@ -60,9 +56,15 @@
 							 ${item.created.format("dd.MM.yyyy")}
 						</td>
 						<td>
+							#{if item.lastLoginTime}
+								${item.lastLoginTime.format("dd.MM.yyyy")}
+							#{/if}
+						</td>
+						<td>
 							<a href="/mail?action=new&to=${item.login}">&nbsp;<i class="fa fa-envelope-o"></i></a> &middot;
 							<a href="/payments?transaction=${item.login}&sent=true">sent</a> &middot;
 							<a href="/payments?transaction=${item.login}">received</a> &middot;
+							<a href="/admin/dltusr?id=${item.id}&url=${request.url.urlEncode()}" class="btn btn-danger btn-sm btn-margin" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}">Delete</a>
 							#{if item.blocked}
 								<a href="/admin/unblock?uuid=${item.uuid}&url=${request.url.urlEncode()}" class="btn btn-default btn-sm btn-margin">Unblock</a>
 							#{/if}

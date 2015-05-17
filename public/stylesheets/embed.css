@@ -30,14 +30,27 @@
 	max-width: 500px;
 	position: fixed;
 	bottom: 0px;
-	right:5%;
+	right:60px;
+}
+
+.flip-horizontal {
+    -moz-transform: scaleX(-1) !important;
+    -webkit-transform: scaleX(-1) !important;
+    -o-transform: scaleX(-1) !important;
+    transform: scaleX(-1) !important;
+    -ms-filter: fliph !important; /*IE*/
+    filter: fliph !important; /*IE*/
 }
 
 #widgr-container .style-switcher-content {
-	min-width:400px;	
+	width:380px;	
 }
 
 @media (max-width: 768px){
+	#widgr-container .style-switcher-content {
+		width:auto;	
+	}
+	
 	#widgr-container .widgr-embedded-iframe {
 		height:100% !important;
 	}
@@ -52,7 +65,7 @@
 		border-radius:0px;
 	}
 	#widgr-container .chat-window {
-		max-height:70% !important;
+		max-height:60% !important;
 		font-size:16px;
 	}
 	.widgr-bubble-right {
@@ -73,13 +86,23 @@
 	position: relative;
 	font-size:14px;
 	padding:6px;
-	line-height:26px;
+	line-height:38px;
 }
 
+#widgr-container .header .header-title {
+	margin-left:60px;
+	margin-right:10px;
+}
+
+#widgr-container div.style-switcher.opened .header .header-title {
+	margin:0px;
+}
+
+
 #widgr-container .chat-window {
-	max-height: 385px;
-	margin-top: 5px;
-	margin-bottom: 5px;
+	max-height: 400px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 	overflow-y: auto;
 	overflow-x: hidden;
 	text-align: left;
@@ -90,14 +113,14 @@
 	position:absolute;
 	left:0px;
 	top:0px;
-	padding:6px;
 	background-color: rgba(0,0,0,0.1);
 	opacity:1;
 	color:white;
-	font-size: 25px;
+	font-size: 20px;
 	border-right:1px solid rgba(255,255,255, 0.2);
 	text-decoration: none;
-	border-top-left-radius:6px;
+	width:50px;
+	line-height:50px;
 }
 
 #widgr-container div.style-switcher a.trigger:hover {
@@ -116,7 +139,7 @@
 	transition: all 0.2s ease-in-out;
 }
 
-#widgr-container .btn {
+#widgr-container .btn2 {
 	padding: 6px 12px;
 	margin-bottom: 0;
 	font-size: 14px;
@@ -143,13 +166,13 @@
 	font-family:'Open Sans', sans-serif;
 }
 
-#widgr-container .btn-default {
+#widgr-container .btn2-default {
 	background-color: #555;
 	color: #fff ;
 	border-color: #555;
 }
 
-#widgr-container .btn-default:hover {
+#widgr-container .btn2-default:hover {
 	background-color: #444;
 }
 
@@ -258,7 +281,7 @@
 	border-radius: 50%;
 }
 
-#widgr-container .style-switcher .btn-short {
+#widgr-container .style-switcher .btn2-short {
 	min-width: 0px !important;
 }
 

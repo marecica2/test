@@ -234,7 +234,8 @@ star.renderItems = function(data, prefix){
         else
             url = "/event/"+item.uuid;
         
-        html += "<div class='anchorlink pointer event-box2 shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-href='"+url+"' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
+        html += "<div class='event-box2'>";
+        html += "<div class='anchorlink pointer shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' style='margin:0px;height:300px;' data-href='"+url+"' data-animation-effect='fadeInLeft' data-effect-delay='300'>";
         
         html += "   <div class='overlay-container'>";
         html += "       <a href='"+url+"'>";
@@ -251,7 +252,7 @@ star.renderItems = function(data, prefix){
         html += "       </div>";
         html += "       <div style='position:absolute;top:0px;right:0px;width:270px'>";
         if(item.available)
-            html += "       <i class='fa fa-circle' style='color:green'></i>";            
+            html += "       <i class='fa fa-circle' style='color:#5cb85c'></i>";            
         html += "           <small><strong><a href='/user/"+item.createdByLogin+"' itemprop='name'>"+item.createdByName+"</a></strong></small>";
         if(item.language != null) 
             html += "       &middot; <img src='/public/images/flags/"+item.language+".gif'>"; 
@@ -294,6 +295,8 @@ star.renderItems = function(data, prefix){
         
         
         html += "   </div>";
+        
+        html += "</div>"; 
         html += "</div>"; 
     }
     return html    

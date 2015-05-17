@@ -37,6 +37,15 @@ public class Admin extends BaseController
         render(user, users, usersMap);
     }
 
+    public static void deleteUser(Integer id, String url)
+    {
+        User user = getLoggedUser();
+        if (user == null || !user.isAdmin())
+            notFound();
+        User.deleteUser(id);
+        redirectTo(url);
+    }
+
     public static void block(String uuid, String url)
     {
         User user = User.getUserByUUID(uuid);
@@ -127,21 +136,21 @@ public class Admin extends BaseController
         try
         {
             String query = "";
-            query += "DROP TABLE IF EXISTS ratingvote CASCADE;";
-            query += "DROP TABLE IF EXISTS comment_comment CASCADE;";
-            query += "DROP TABLE IF EXISTS comment_reply CASCADE;";
-            query += "DROP TABLE IF EXISTS comment_comment_reply CASCADE;";
-            query += "DROP TABLE IF EXISTS comment_fileupload CASCADE;";
-            query += "DROP TABLE IF EXISTS activity CASCADE;";
-            query += "DROP TABLE IF EXISTS rating CASCADE;";
-            query += "DROP TABLE IF EXISTS event_comment_fileupload CASCADE;";
-            query += "DROP TABLE IF EXISTS event_comment CASCADE;";
-            query += "DROP TABLE IF EXISTS fileupload CASCADE;";
-            query += "DROP TABLE IF EXISTS comment CASCADE;";
-            query += "DROP TABLE IF EXISTS message CASCADE;";
-            query += "DROP TABLE IF EXISTS event CASCADE;";
-            query += "DROP TABLE IF EXISTS chat_feed CASCADE;";
-            query += "DROP TABLE IF EXISTS attendance CASCADE;";
+            //            query += "DROP TABLE IF EXISTS ratingvote CASCADE;";
+            //            query += "DROP TABLE IF EXISTS comment_comment CASCADE;";
+            //            query += "DROP TABLE IF EXISTS comment_reply CASCADE;";
+            //            query += "DROP TABLE IF EXISTS comment_comment_reply CASCADE;";
+            //            query += "DROP TABLE IF EXISTS comment_fileupload CASCADE;";
+            //            query += "DROP TABLE IF EXISTS activity CASCADE;";
+            //            query += "DROP TABLE IF EXISTS rating CASCADE;";
+            //            query += "DROP TABLE IF EXISTS event_comment_fileupload CASCADE;";
+            //            query += "DROP TABLE IF EXISTS event_comment CASCADE;";
+            //            query += "DROP TABLE IF EXISTS fileupload CASCADE;";
+            //            query += "DROP TABLE IF EXISTS comment CASCADE;";
+            //            query += "DROP TABLE IF EXISTS message CASCADE;";
+            //            query += "DROP TABLE IF EXISTS event CASCADE;";
+            //            query += "DROP TABLE IF EXISTS chat_feed CASCADE;";
+            //            query += "DROP TABLE IF EXISTS attendance CASCADE;";
 
             Query q = JPA.em().createNativeQuery(query);
             q.executeUpdate();

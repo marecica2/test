@@ -14,18 +14,6 @@
 	</p>
 	
 	<br/>
-	<form class="form-inline" method="post" role="form" action="/contacts/invite?url=${request.url.urlEncode()}&#{token /}">
-	  	<div class="form-group">
-		    <div class="input-group">
-		      	<input type="text" class="form-control" autocomplete="off" size="50" maxlength="100" name="email" placeholder="&{'invite-new-user'}" value="${flash.email}" >
-			    <span class="input-group-btn">
-			    	<button class="btn btn-light-gray btn-short btn-margin" style="height:40px;" id="dialog-invite-button" type="submit">&{'invite-by-email'}</button>
-			    </span>					    
-		    </div>
-		</div>				
-	</form>	
-	
-
 	<h3>&{'activities'}  <span style="font-size:0.7em"><i class="activities-refresh color-link  fa fa-refresh"></i></span> </h3>
 	<div class="separator-2"></div>
 	<ul style="width:100%;" class="table  list-unstyled   activities "></ul>

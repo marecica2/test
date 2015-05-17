@@ -520,7 +520,8 @@ function maximizeMimize(id, local){
         $(star.maximized).appendTo(moveTo);
         if(star.maximized != null)
             star.maximized.play();
-        $("#video-element-"+star.maximizedId).css("border", "4px solid rgba(0,0,0,0.0)");
+        $("#video-element-"+star.maximizedId).css("border", "1px solid rgba(0,0,0,0.0)");
+        $("#video-element-"+id).removeClass("user-elm-selected");
         $("#"+star.maximizedId+"_video_small").hide();
         
         // mimize maximized screen
@@ -556,8 +557,10 @@ function maximizeMimize(id, local){
         $(star.maximized).css("z-index", "-2");
         $("#"+star.maximizedId+"_video_small").show();
         $(".container", "#video-element-"+star.maximizedId).hide();
-        if(star.selectedId != null)
-            $("#video-element-"+id).css("border", "4px solid rgba(255,255,255,0.7)");
+        if(star.selectedId != null){
+            $("#video-element-"+id).css("border", "1px solid rgba(255,255,255,0.9)");
+            $("#video-element-"+id).addClass("user-elm-selected");
+        }
         if(star.maximized != null)
             star.maximized.play();
         
@@ -1221,6 +1224,8 @@ if(webrtc == null){
     usr.userAvatar = star.userAvatar;
     usr.admin = star.isOwner;
     usr.userUuid = star.userUuid;
+    usr.listingUuid = star.listingUuid;
+    usr.listingTitle = star.listingTitle;
     if(!star.isOwner)
         star.chatRoomRecipientUser = star.ownerUuid;
     else
@@ -1319,17 +1324,19 @@ if(webrtc == null){
                 var userName = $(this).attr("data-name");
                 var userAvatar = $(this).attr("data-avatar");
                 var userUuid = $(this).attr("data-uuid");
+                var usr = getRecipientByUuid(userUuid);
                 star.chatRoomRecipientUser = userUuid;
+                star.listing = usr.listingUuid;
                 
                 $(".chat-message-form").show();
-                $(".chat-user-label").html("<img src='/"+userAvatar+"_32x32' class='avatar16 img-circle'> " +  userName);
+                $(".chat-user-label").html("<img src='/"+userAvatar+"_32x32' class='avatar22 img-circle'> " +  userName + " (" + usr.listingTitle + ")" );
                 $(".user-containers").hide();
                 var container = $(".user-containers[data-usr*='"+userUuid+"']");
                 container.show();
             }
         });     
-        
-        // user connect
+
+        // users update
         socket.on('chatroom_update', function(data) {
             var isAdminOnline = false;
             star.chatroomusers = JSON.parse(data)[star.chatRoom];
@@ -1340,7 +1347,7 @@ if(webrtc == null){
                     isAdminOnline = true;
                 }
                 if(star.chatroomusers[i].userUuid != star.userUuid){
-                    html += '<li><a href="#" data-id="'+star.chatroomusers[i].client+'" data-uuid="'+star.chatroomusers[i].userUuid+'" data-avatar="'+star.chatroomusers[i].userAvatar+'" data-name="'+star.chatroomusers[i].userName+'" class="black-link chatroom-user"><img class="img-circle avatar16" style="margin:1px;" src="/'+star.chatroomusers[i].userAvatar+'_32x32"> ' + star.chatroomusers[i].userName+ '</a></li>';
+                    html += '<li><a style="cursor:pointer" data-id="'+star.chatroomusers[i].client+'" data-uuid="'+star.chatroomusers[i].userUuid+'" data-avatar="'+star.chatroomusers[i].userAvatar+'" data-name="'+star.chatroomusers[i].userName+'" class="black-link chatroom-user"><img class="img-circle avatar22" style="margin:1px;" src="/'+star.chatroomusers[i].userAvatar+'_32x32"> ' + star.chatroomusers[i].userName + ' (' + star.chatroomusers[i].listingTitle + ')</a></li>';
                 }
             }
             if(isAdminOnline){
@@ -1429,7 +1436,10 @@ if(webrtc == null){
                 // switch the user selector
                 if(star.chatRoomRecipientUser != userUuid){
                     star.chatRoomRecipientUser = userUuid;
-                    $(".chat-user-label").html("<img src='/"+avatar+"_32x32' class='avatar16 img-circle'> " +  userName);
+                    star.chatRoomRecipientUser = userUuid;
+                    var usr = getRecipientByUuid(userUuid);
+                    star.listing = usr.listingUuid;
+                    $(".chat-user-label").html("<img src='/"+avatar+"_32x32' class='avatar22 img-circle'> " +  userName + " (" + usr.listingTitle + ")");
                 }
                 $(".chat-message-form").show();
             }

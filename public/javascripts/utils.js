@@ -85,6 +85,173 @@ $(document).ready(function(){
     
 });
 
+star.utils.chatContent = function(star){
+    var html = '';
+    html += '<div id="widgr-container" style="display:none">';
+    html += '<div class="style-switcher shadow">';
+    
+    html += '   <div class="header style-switcher-trigger" style="text-align:center">';
+    html += '       <a class="trigger flip-horizontal" href="#chat">&nbsp;<i class="fa fa-video-camera"></i>&nbsp;</a>';
+    html += '       <strong class="header-title">'+i18n("Talk with Us over live video")+' '+'</strong>' 
+    html += '   </div>';
+    
+    html += '   <div class="style-switcher-content" style="padding:15px;display:none">';
+   
+    
+    if(star.listingTitle){
+    html += '   <div class="widgr-chat-noiframe" style="margin-bottom:20px;text-align:center;font-size:14px;">';
+    html += '       <strong style="font-size:16px">'+star.listingTitle+'</strong>';
+    html += '       <p style="text-align:center">';
+    html += '           <img style="height:16px;vertical-align:middle;" class="img-circle" src="'+star.baseUrl+"/"+star.ownerAvatar+'_64x64">';
+    html += '           <a target="_blank" href="'+star.baseUrl+"/user/id/"+star.ownerUuid+'">'+star.ownerName+'</a><br/>';
+    if(star.listingCharging != 'free'){
+        html += '       '+star.listingPrice+ ' ' + star.listingCurrency + ' per '+ star.listingDuration + ' min ';
+        if(star.listingFirstFree){
+            html += '   <span class="default-bg label">first free</span>';
+        }
+    }
+    else {
+        html += '       Free ';
+    }
+    html += '           <br/>';
+    for(var j = 0; j < 5; j++)
+        if(j < Math.round(star.listingStars))
+            html += "   <i class='fa fa-star text-default' data-value='1'></i>";
+        else
+            html += "   <i class='fa fa-star-o text-light' data-value='1'></i>";
+    html += "           <span> from <a target='_blank' href='"+star.baseUrl+"/listing/"+star.listingUuid+"#reviews'>" + star.listingReviews + " " + i18n("reviews") + "</a></span>";
+    html += '       </p>';
+    html += '   </div>';
+    }
+    
+    html += '   <iframe class="widgr-chat-iframe widgr-embedded-iframe" style="margin:5px 0px;min-width:100%;display:none" src="'+star.baseUrl+'/login" seamless frameBorder="0"></iframe>';
+    
+    html += '   <div class="widgr-chat-noiframe">';
+    html += '       <div class="widgr-chat">';
+    html += '           <div id="content2" class="chat-window widgr-chat-input widgr-chat-content" style="display:none"></div>';
+    
+    if(!star.logged){
+        html += '       <div class="widgr-chat-noiframe">';
+        html += '           <table class="widgr-start-chat-container" style="width:100%; border-collapse:collapse">';
+        html += '               <tr>';
+        html += '                   <td style="padding:0px;width:100%"><input type="text" class="form-control left-radius widgr-custom-name" maxlength="40" style="width:100%;" placeholder="'+i18n('your-name')+'"></td>';
+        html += '                   <td style="padding:0px;"><button class="widgr-startchat-btn btn2 btn2-default right-radius" style="width:100px;height:36px;">'+i18n('start-chat')+'</button></td>';
+        html += '               </tr>';
+        html += '           </table>';
+        html += '       </div>';
+    }    
+    
+    html += '           <table class="widgr-chat-input" style="display:none; width:100%; border-collapse:collapse;">';
+    html += '               <tr>';
+    html += '                   <td style="width:100%;padding:0px;"><input id="chat-text2" class="form-control left-radius" maxlength="400" style="width:100%" placeholder="'+i18n('message')+'"></td>';
+    html += '                   <td style="padding:0px;"><button id="chat-send2" class="btn2 btn2-default btn-short right-radius" style="width:40px;height:36px;"><i class="fa fa-share fa-flip-horizontal"></i></button></td>';
+    html += '               </tr>';
+    html += '           </table>';
+    
+    html += '       </div>';
+    
+    html += '       <div class="widgr-email" style="display:none">';
+    html += '           <span class="vertical-padding">'+star.ownerName+ " "+i18n('not-available-now')+'</span><br/><br/>';
+    html += '           <p class="widgr-email-validation" style="color:red;display:none">Please correct your input</p>'
+    if(!star.logged){
+        html += '       <input id="chat-text2" class="form-control radius vertical-padding widgr-email-sender" maxlength="50" style="width:100%" placeholder="'+i18n('your-email')+'">';
+    }
+    html += '           <input id="chat-text2" class="form-control radius vertical-padding widgr-email-subject" maxlength="100" style="width:100%" placeholder="'+i18n('subject')+'">';
+    html += '           <textarea id="chat-text2" class="form-control radius vertical-padding widgr-email-body" maxlength="400" style="width:100%;height:100px;" placeholder="'+i18n('message')+'"></textarea>';
+    html += '           <button class="btn2 btn2-default radius widgr-send-msg-btn" style="width:100%;height:35px;"><i class="fa fa-envelope"></i> '+i18n('submit')+'</button>';
+    html += '       </div>';
+    
+    html += '       <div style="text-align:center;padding:4px;font-size:12px">';
+    if(!star.logged)
+        html += '<div class="widgr-chat-noiframe" style="text-align:center;font-size:12px;padding:10px;">'+i18n('not-logged')+'</div>';    
+    html += '           <i>Powered by </i><a target="_blank" class="black-link" style="opacity:1" href="'+star.baseUrl+'"><img style="height:17px; vertical-align:middle" src="'+star.baseUrl+'/public/images/logo_purple.png"></a>';
+    html += '       </div>';
+    html += '   </div>';
+
+
+    html += '</div>';
+    html += '</div>';
+    return html;
+};
+
+star.utils.chatEvents = function(){
+    if(star.logged){
+        $(".widgr-chat-input").show();
+    }
+    
+    // chat open
+    $(document).on("click", ".widgr-iframe-btn", function(){
+        $(".widgr-chat-noiframe").hide();
+        $(".widgr-chat-iframe").show();
+    });                    
+    
+    // send msg
+    $(document).on("click", ".widgr-send-msg-btn", function(){
+        var valid = true;
+        var msg = {};
+        msg.type = "msg";
+        msg.sender = $(".widgr-email-sender").val();
+        msg.subject = $(".widgr-email-subject").val();
+        msg.body = $(".widgr-email-body").val();
+        if(!msg.sender)
+            valid = false;
+        if(!msg.subject)
+            valid = false;
+        if(!msg.body)
+            valid = false;
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        if(!re.test(msg.sender))
+            valid = false;
+        
+        if(valid){
+            star.container[0].contentWindow.postMessage(JSON.stringify(msg), '*');
+            var html = "<p>Your message has been sent</p>";
+            html += "<p>"+msg.subject+"<br/>";
+            html += msg.body+"</p>";
+            $(".widgr-email").html(html);
+            $(".widgr-email-validation").hide();
+        } else {
+            $(".widgr-email-validation").show();
+        }
+    });                     
+
+    // start chat btn
+    $(document).on("click", ".widgr-startchat-btn", function(){
+        star.userName = $(".widgr-custom-name").val();
+        star.utils.setCookieMinutes("widgr-name", $(".widgr-custom-name").val(), 15);
+        star.utils.setCookieMinutes("widgr-user-uuid", star.userUuid, 15);
+        
+        var usr = {};
+        usr.room = star.chatRoom;
+        usr.userName = star.userName;
+        usr.listingUuid = star.listingUuid;
+        usr.listingTitle = star.listingTitle;
+        usr.userUuid = star.userUuid;
+        usr.userAvatar = star.userAvatar;
+        usr.admin = star.isOwner;
+        socket.emit('chatroom_reconnect', usr);  
+        
+        $(".widgr-custom-name").hide();
+        $(".widgr-chat-input").show();
+        $(".widgr-startchat-btn").hide();
+        setTimeout(function(){
+            $("#chat-text2")[0].focus();
+        }, 100);
+    });                     
+    
+    $(document).on("click", ".style-switcher-trigger", function(){
+        if(star.visible){
+            $(".style-switcher-content").show();
+            $(".style-switcher").addClass("opened");
+            star.visible = false;
+        } else {
+            $(".style-switcher-content").hide();
+            $(".style-switcher").removeClass("opened");
+            star.visible = true;
+        }
+    });    
+}
+
 
 star.utils.Interval = function(fn, time) {
     var timer = false;
