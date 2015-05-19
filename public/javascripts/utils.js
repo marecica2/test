@@ -204,7 +204,14 @@ star.utils.chatEvents = function(){
             valid = false;
         
         if(valid){
-            star.container[0].contentWindow.postMessage(JSON.stringify(msg), '*');
+            if(star.container != undefined)
+                star.container[0].contentWindow.postMessage(JSON.stringify(msg), '*');
+            else {
+                if(star.logged)
+                    msg.user = star.userUuid;
+                msg.recipient = star.ownerUuid;
+                starServices.sendMessage(msg);
+            }
             var html = "<p>Your message has been sent</p>";
             html += "<p>"+msg.subject+"<br/>";
             html += msg.body+"</p>";
@@ -648,7 +655,6 @@ function linkify(inputText) {
           input.siblings('.rating-clear').show();
         }
       }
-
 
       // Iterate and transform all selected inputs
       for (element = this.length - 1; element >= 0; element--) {

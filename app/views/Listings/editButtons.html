@@ -65,7 +65,13 @@
 			#{else}
 				<a class="btn btn-light-gray btn-social margin-clear" href="">&{'refresh'}</a>
 			#{/else}											
-		#{/if}											
+		#{/if}		
+		
+		#{if !edit && isOwner && event.isEditable(user)}
+		<a class="btn btn-light-gray btn-social margin-clear" href="/event-delete?uuid=${request.params.uuid}&url=${'/listing/'+listing.uuid.urlEncode()}&#{token /}" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}" rel="tooltip" data-original-title="&{'delete-event'}">
+			<i class="dialog-event-edit fa fa-trash fa-1x"></i>
+		</a>
+		#{/if}									
 		
 		
 		#{if !edit && isOwner && event.isEditable(user)}
@@ -74,13 +80,6 @@
 		</a>
 		#{/if}
 
-
-		#{if !edit && isOwner && event.isEditable(user)}
-		<a class="btn btn-light-gray btn-social margin-clear" href="/event-delete?uuid=${request.params.uuid}&url=${'/listing/'+listing.uuid.urlEncode()}&#{token /}" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}" rel="tooltip" data-original-title="&{'delete-event'}">
-			<i class="dialog-event-edit fa fa-times fa-1x"></i>
-		</a>
-		#{/if}
-		
 		#{if edit}
 			<a class="btn btn-light-gray btn-social margin-clear" href="${request.params.url}">
 				&{'cancel'}
@@ -91,7 +90,7 @@
 			<a class="btn btn-success  btn-social margin-clear" href="/event-approve?event=${event.uuid}&url=${request.url.urlEncode()}&#{token /}"><i class="fa fa-check"></i> &{'approve'}</a>
 			<a class="btn btn-danger  btn-social margin-clear" href="/event-decline?event=${request.params.uuid}&#{token /}&url=${'/listing/'+listing.uuid.urlEncode()}" 
 				onclick="if(confirm('&{'confirm-decline'}')){return true;} else {return false;}">
-				<i class="dialog-event-edit fa fa-times fa-1x"></i> &{'decline'}
+				<i class="dialog-event-edit fa fa-trash fa-1x"></i> &{'decline'}
 			</a>
 	   	#{/if} 		
 	   			
@@ -122,9 +121,6 @@
 			<a class="btn btn-light-gray btn-social margin-clear" href="" rel="tooltip" data-original-title="&{'website-embed'}" data-toggle="modal" data-target="#embedModal"><i class="fa fa-code"></i></a>
 		#{/if}
 		#{if !edit && isOwner}
-			<a href="/listing/${listing.uuid}?action=edit&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-social margin-clear" rel="tooltip" data-original-title="&{'edit-channel'}">
-				<i class="fa fa-pencil fa-1x"></i>
-			</a>
 			#{if listing.deleted}
 				<a href="/listing-enable?uuid=${listing.uuid}&url=${request.url.urlEncode()}&#{token /}" class="btn btn-gray btn-social margin-clear" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}" rel="tooltip" data-original-title="&{'enable-channel'}">
 					<i class="fa fa-check"></i>
@@ -132,9 +128,12 @@
 			#{/if}
 			#{else}
 				<a href="/listing-delete?uuid=${listing.uuid}&#{token /}" class="btn btn-light-gray btn-social margin-clear" onclick="if(confirm('&{'confirm-decline'}?')){return true;} else {return false;}" rel="tooltip" data-original-title="&{'delete-channel'}">
-					<i class="fa fa-times"></i>
+					<i class="fa fa-trash"></i>
 				</a>
 			#{/else}
+			<a href="/listing/${listing.uuid}?action=edit&url=${request.url.urlEncode()}&#{token /}" class="btn btn-light-gray btn-social margin-clear" rel="tooltip" data-original-title="&{'edit-channel'}">
+				<i class="fa fa-pencil fa-1x"></i>
+			</a>
 		#{/if}
 		
 		#{if !edit && isTeam && user.isPublisher() && listing.deleted == null}

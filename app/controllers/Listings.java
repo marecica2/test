@@ -41,6 +41,9 @@ public class Listings extends BaseController
         final Listing listing = Listing.get(uuid);
         final Boolean isOwner = listing != null ? listing.user.equals(user) : false;
         final Boolean isTeam = listing != null && user != null ? user.isTeam(listing) : false;
+        User onlineUser = findRandomAvaiableAgent(listing.user.account);
+        if (onlineUser == null)
+            onlineUser = listing.user;
 
         if ((!isNew && listing == null) || (listing != null && listing.deleted != null && listing.deleted && !isOwner))
         {
@@ -105,7 +108,7 @@ public class Listings extends BaseController
             final List<Rating> ratings = listing != null ? Rating.getByObject(uuid) : null;
             final Map<String, Object> stats = listing != null ? Rating.calculateStats(ratings) : null;
 
-            render(user, isOwner, isTeam, edit, listing, url, errs, type,
+            render(user, onlineUser, isOwner, isTeam, edit, listing, url, errs, type,
                     temp, commentTemp, comments, ratings, stats, fromEvent, listings, rmtp, socketIo, room, baseUrl);
         }
     }

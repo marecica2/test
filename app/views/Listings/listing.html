@@ -721,13 +721,17 @@
 #{/if}
 
 
-#{if !edit && globalObject && listing.user.available != null}
+#{if !edit && onlineUser && !isTeam}
 <script>
+	star.loaded = false;
+	star.visible = true;
+    $('body').append(star.utils.chatContent(star));
+
     star.room = '${room}';
-	star.chatRoom = '${listing.user.uuid}';
-   	star.ownerName = '${listing.user.getFullName().escapeJavaScript()}';
-   	star.ownerUuid = '${listing.user.uuid}';
-   	star.ownerAvatar = '${listing.user.avatarUrl}';
+	star.chatRoom = '${onlineUser.account.key}';
+   	star.ownerName = '${onlineUser.getFullName().escapeJavaScript()}';
+   	star.ownerUuid = '${onlineUser.uuid}';
+   	star.ownerAvatar = '${onlineUser.avatarUrl}';
     star.server_host = '${socketIo}';
     star.livestream = true;
     star.peerId = null;
@@ -742,29 +746,37 @@
     star.listingFirstFree = '${listing.firstFree}';
     star.listingStars = '${stats.get("avgStars")}';
     star.listingReviews = '${stats.get("totalStars")}';	
-	
-	
-	star.isOwner = false;
-	star.logged = false;
-	star.userName = "Guest"+ Math.floor(Math.random()*900);
-	star.userAvatar = 'public/images/avatar';
-	star.userUuid = star.utils.uuid();
+    star.isOwner = false;
+
+
 	#{if user}
 		star.logged = true;
 		star.userName = '${user.getFullName().escapeJavaScript()}';
 		star.userAvatar = '${user.avatarUrl}';
     	star.userUuid = '${user.uuid}';
     #{/if}    
-    
+    #{else}
+		star.logged = false;
+    	star.userAvatar = 'public/images/avatar';
+		star.userName = "Guest"+ Math.floor(Math.random()*900);
+	    star.userUuid = star.utils.uuid();		
+	    var name = star.utils.getCookie("widgr-name");
+	    if(name != ""){
+	        star.userName = name;
+	        star.userUuid = star.utils.getCookie("widgr-user-uuid");
+	        $(".widgr-custom-name").val(star.userName);
+    	console.log($(".widgr-custom-name"));
+	        $(".widgr-custom-name").hide();
+	        $(".widgr-startchat-btn").hide();
+	        $(".widgr-chat-input").show();
+	    }
+	#{/else}
 </script>
 <script src="${socketIo}/socket.io/socket.io.js"></script>
 <script src="@{'/public/javascripts/room.js'}" type="text/javascript"></script>
 <script>
-	star.loaded = false;
-	star.visible = true;
-	$('body').append(star.utils.chatContent(star));
 	$("#widgr-container").show();
-	star.utils.chatEvents();
+	star.utils.chatEvents();	
 </script>
 #{/if}	
 

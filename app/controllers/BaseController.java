@@ -1,8 +1,10 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.Account;
 import models.Attendance;
 import models.Event;
 import models.Listing;
@@ -16,6 +18,7 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Http.Header;
 import utils.NumberUtils;
+import utils.RandomUtil;
 import utils.UriUtils;
 
 public class BaseController extends Controller
@@ -272,6 +275,26 @@ public class BaseController extends Controller
     {
         User user = User.getUserByLogin(getProperty("admin.user"));
         return user;
+    }
+
+    public static User findRandomAvaiableAgent(final Account account)
+    {
+        final List<User> teamUsers = User.getUsersByAccount(account);
+        final List<User> availableTeamUsers = new ArrayList<User>();
+        for (User teamUser : teamUsers)
+        {
+            if (teamUser.isAvailable() != null && teamUser.isAvailable())
+                availableTeamUsers.add(teamUser);
+        }
+        if (availableTeamUsers.size() == 1)
+            return availableTeamUsers.get(0);
+        if (availableTeamUsers.size() > 1)
+        {
+            Integer rnd = RandomUtil.getRandomInteger(availableTeamUsers.size());
+            System.err.println(rnd);
+            return availableTeamUsers.get(rnd);
+        }
+        return null;
     }
 
 }

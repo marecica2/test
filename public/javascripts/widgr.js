@@ -240,8 +240,8 @@ star.renderItems = function(data, prefix){
         html += "   <div class='overlay-container'>";
         html += "       <a href='"+url+"'>";
         html += "       <div style='background:url(\"/"+item.imageUrl+"_256x256\"); height:128px; width:100%; background-size: cover' class='shadow-inset-2'></div>";
-        html += "       <div style='position:absolute;bottom:5px;right:0px;width:270px'>";
-        html += "           <div style='font-weight:bold;' class='white'>"+star.utils.trimTo(item.title, 50)+"</div>";
+        html += "       <div style='position:absolute;bottom:5px;left:90px;'>";
+        html += "           <div style='font-weight:bold;' class='white'><small style='font-size:0.8em'>"+i18n(item.category)+"</small><br/>"+star.utils.trimTo(item.title, 50)+"</div>";
         html += "       </div>";            
         html += "       </a>";            
         html += "   </div>";
@@ -250,13 +250,12 @@ star.renderItems = function(data, prefix){
         html += "       <div style='position:absolute;top: -34px; width:100%'>";
         html += "           <img class='avatar64 img-circle' style='border:3px solid #fafafa; float:left; margin-right:10px' href='"+url+"' src='/"+item.createdByAvatarUrl+"_64x64'>"
         html += "       </div>";
-        html += "       <div style='position:absolute;top:0px;right:0px;width:270px'>";
+        html += "       <div style='position:absolute;top:0px;left:90px;'>";
         if(item.available)
             html += "       <i class='fa fa-circle' style='color:#5cb85c'></i>";            
         html += "           <small><strong><a href='/user/"+item.createdByLogin+"' itemprop='name'>"+item.createdByName+"</a></strong></small>";
         if(item.language != null) 
             html += "       &middot; <img src='/public/images/flags/"+item.language+".gif'>"; 
-        html += "           &middot; <small>"+i18n(item.category)+"</small>"
         html += "       </div>";
         
         if(listing)

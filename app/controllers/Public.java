@@ -7,7 +7,6 @@ import java.util.Map;
 
 import models.Activity;
 import models.ChatFeed;
-import models.Contact;
 import models.Event;
 import models.Listing;
 import models.Message;
@@ -17,9 +16,7 @@ import models.User;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import play.i18n.Lang;
-import play.i18n.Messages;
 import utils.JsonUtils;
-import utils.RandomUtil;
 
 import com.google.gson.JsonObject;
 
@@ -35,20 +32,15 @@ public class Public extends BaseController
         final Listing listing = channel != null ? Listing.get(channel) : null;
         final List<Rating> ratings = listing != null ? Rating.getByObject(listing.uuid) : null;
         final Map<String, Object> stats = listing != null ? Rating.calculateStats(ratings) : null;
-        final User userDisplayed = listing.user;
         final String baseUrl = getBaseUrlWithoutSlash();
-        final List<Contact> followers = null;
-        final List<Contact> followees = null;
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
-        final String name = user != null ? user.getFullName() : Messages.get("anonymous") + RandomUtil.getRandomDigits(5);
-        final String room = listing != null ? listing.uuid : null;
-        final Boolean isOwner = listing != null ? listing.user.equals(user) : false;
 
-        if (request.params.get("facebook") != null)
-        {
-        }
+        User userDisplayed = listing.user;
+        User onlineUser = findRandomAvaiableAgent(listing.user.account);
+        if (onlineUser != null)
+            userDisplayed = onlineUser;
 
-        render(user, userDisplayed, listing, followers, followees, baseUrl, socketIo, ratings, stats, name, room, isOwner);
+        render(user, onlineUser, userDisplayed, listing, baseUrl, socketIo, ratings, stats);
     }
 
     public static void checkConnection()

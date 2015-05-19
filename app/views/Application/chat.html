@@ -1,6 +1,6 @@
 #{extends 'main.html' /} 
 #{set 'title'}
-	&{'manage-channels'}
+	&{'chat'}
 #{/set}
 
 #{set 'moreScripts'}
@@ -23,43 +23,48 @@
 				#{if user.isAvailable()}
 					<a class="btn btn-light-gray btn-sm" href="/available-stop?id=${user.uuid}&url=${request.url.urlEncode()}&#{token /}"><i class="fa fa-power-off"></i> &{'uncheck-me-as-available'}</a>
 				#{/if}		
-				#{if !user.isAvailable()}
-					<a class="btn btn-success btn-sm" href="/available-start?id=${user.uuid}&url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-original-title="&{'turn-on-available-now'}"><i class="fa fa-circle"></i> &{'check-me-as-available'}</a>
-				#{/if}					
 			</h2>
+		
+			#{if !user.isAvailable()}
+				<div style="text-align: center;margin:100px 0;">
+				<a class="btn btn-default" href="/available-start?id=${user.uuid}&url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-original-title="&{'turn-on-available-now'}"><i class="fa fa-circle"></i> &{'check-me-as-available'}</a>
+				</div>
+			#{/if}	
 		</div>
 		
-		<div class="col-md-5">
+		#{if user.isAvailable()}
+		<div class="col-md-4">
 			<div class="stats row grid-space-10">
 				<div class="col-md-6 col-sm-6">
 					<div class="box-style-1 gray-bg">
-						<h5 class="title">&{'visitors'} online</h5>
+						<h5 class="title">&{'visitors'}</h5>
 						<i class="icon-users" style="font-size:40px"></i>
 						<span class="stat-num counting users-count" data-to="1125" data-speed="3000">?</span>
 					</div>	
 				</div>
 				<div class="col-md-6 col-sm-6">
 					<div class="box-style-1 gray-bg">
-						<h5 class="title">&{'Agents'} online</h5>
+						<h5 class="title">&{'agents'}</h5>
 						<i class="fa fa-headphones" style="font-size:40px"></i>
-						<span class="stat-num counting users-count" data-to="1125" data-speed="3000">?</span>
+						<span class="stat-num counting admins-count" data-to="1125" data-speed="3000">?</span>
 					</div>	
 				</div>
 			</div>
+			<div class="style-switcher-container" style="font-size:0.9em;padding-top:20px;">
+	        	<ul class="selectable chat-avatars2 list-unstyled">
+	        	</ul>				
+			</div>
+			<br/>
+			<br/>
 		</div>			
-	
-		<div class="col-md-7">
-			#{if user.isAvailable()}
+		
+		<div class="col-md-8">
 			<div class="style-switcher-container">
 				<div class="style-switcher-container-2">
 			        
-			        <div class="btn-group btn-block chat-dropdown">
-			        	<button type="button" class="btn btn-light-gray btn-block dropdown-toggle lowercase" data-toggle="dropdown">
-			        		<span data-bind="label" class="chat-user-label">&{'select-user'}</span>&nbsp;<span class="caret"></span>
-			        	</button>
-			        	<ul class="dropdown-menu selectable chat-avatars2" role="menu">
-			        	</ul>
-			        </div>
+			        <h3 class="chat-dropdown margin-top-clear">
+		        		<span data-bind="label" class="chat-user-label">&{'select-user'}</span>
+			        </h3>
 					
 					<div id="content2" class="" style="background:#fafafa; padding:10px;height:50vh; margin-bottom:10px; overflow-y: auto; overflow-x:hidden; text-align:left; color:black"></div>
 					
@@ -70,7 +75,7 @@
 								<button id="chat-send2" class="btn btn-default btn-short" style="margin:0px;height:40px"><i class="fa fa-share"></i></button>
 							</span>
 							<span class="input-group-btn">
-								<button id="create-instant-room" class="btn btn-default btn-short" style="margin:0px;height:40px" title="&{'create-instant-session'}"><i class="fa fa-video-camera"></i></button>
+								<button id="create-instant-room" class="btn btn-gray btn-short" style="margin:0px;height:40px" title="&{'create-instant-session'}"><i class="fa fa-video-camera"></i></button>
 							</span>
 						</div>
 					</div>
@@ -80,15 +85,15 @@
 					<label style="font-weight: normal"><input type="checkbox" id="auto-switch-off" value="true"> Auto user switch off</label>
 				</div>
 			</div>
-			#{/if}
 		</div>	
+		#{/if}
 		
 	</div>
 </div>
 
 #{if user.isAvailable()}
 <script>
-	star.chatRoom = '${user.uuid}';
+	star.chatRoom = '${user.account.key}';
    	star.ownerName = '${user.getFullName().escapeJavaScript()}';
    	star.ownerUuid = '${user.uuid}';
     star.server_host = '${socketIo}';
@@ -97,6 +102,7 @@
 	star.listing = '${user.uuid}';
 	
 	star.isOwner = true;
+	star.isTeam = true;
 	star.logged = true;
 	star.userName = "Guest"+ Math.floor(Math.random()*900);
 	star.userAvatar = 'public/images/avatar';

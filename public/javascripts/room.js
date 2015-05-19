@@ -1324,12 +1324,13 @@ if(webrtc == null){
                 var userName = $(this).attr("data-name");
                 var userAvatar = $(this).attr("data-avatar");
                 var userUuid = $(this).attr("data-uuid");
+                var lbl = $(this).attr("data-lbl");
                 var usr = getRecipientByUuid(userUuid);
                 star.chatRoomRecipientUser = userUuid;
                 star.listing = usr.listingUuid;
                 
                 $(".chat-message-form").show();
-                $(".chat-user-label").html("<img src='/"+userAvatar+"_32x32' class='avatar22 img-circle'> " +  userName + " (" + usr.listingTitle + ")" );
+                $(".chat-user-label").html('<a href="/user/id/'+userUuid+'" target="_blank"><img class="img-circle avatar32" style="margin:1px;" src="/'+userAvatar+'_64x64"> ' + userName + '</a> <small>'+lbl+'</small>');
                 $(".user-containers").hide();
                 var container = $(".user-containers[data-usr*='"+userUuid+"']");
                 container.show();
@@ -1340,14 +1341,24 @@ if(webrtc == null){
         socket.on('chatroom_update', function(data) {
             var isAdminOnline = false;
             star.chatroomusers = JSON.parse(data)[star.chatRoom];
+            star.admins = 0;
+            star.users = 0;
             
             var html = '';
             for(var i = 0; i < star.chatroomusers.length; i++){
+                
                 if(star.chatroomusers[i].admin == true){
                     isAdminOnline = true;
+                    if(star.chatroomusers[i].userUuid != star.userUuid)
+                        star.admins += 1;
+                } else {
+                    star.users += 1;
                 }
                 if(star.chatroomusers[i].userUuid != star.userUuid){
-                    html += '<li><a style="cursor:pointer" data-id="'+star.chatroomusers[i].client+'" data-uuid="'+star.chatroomusers[i].userUuid+'" data-avatar="'+star.chatroomusers[i].userAvatar+'" data-name="'+star.chatroomusers[i].userName+'" class="black-link chatroom-user"><img class="img-circle avatar22" style="margin:1px;" src="/'+star.chatroomusers[i].userAvatar+'_32x32"> ' + star.chatroomusers[i].userName + ' (' + star.chatroomusers[i].listingTitle + ')</a></li>';
+                    var lbl = star.chatroomusers[i].listingTitle;
+                    if(star.chatroomusers[i].admin)
+                        lbl = "<i class='fa fa-headphones'></i> Agent";
+                    html += '<li><a style="cursor:pointer" data-lbl="'+lbl+'" data-id="'+star.chatroomusers[i].client+'" data-uuid="'+star.chatroomusers[i].userUuid+'" data-avatar="'+star.chatroomusers[i].userAvatar+'" data-name="'+star.chatroomusers[i].userName+'" class="chatroom-user"><img class="img-circle avatar22" style="margin:1px;" src="/'+star.chatroomusers[i].userAvatar+'_32x32"> ' + star.chatroomusers[i].userName + '</a> <small>' + lbl + '</small></li>';
                 }
             }
             if(isAdminOnline){
@@ -1363,7 +1374,8 @@ if(webrtc == null){
             if(star.isOwner){
                 $(".chat-avatars2").html(html);
             }
-            $(".users-count").html(star.chatroomusers.length-1);
+            $(".users-count").html(star.users);
+            $(".admins-count").html(star.admins);
         });
         
         // user disconnect
@@ -1436,10 +1448,12 @@ if(webrtc == null){
                 // switch the user selector
                 if(star.chatRoomRecipientUser != userUuid){
                     star.chatRoomRecipientUser = userUuid;
-                    star.chatRoomRecipientUser = userUuid;
                     var usr = getRecipientByUuid(userUuid);
+                    var lbl = usr.listingTitle;
                     star.listing = usr.listingUuid;
-                    $(".chat-user-label").html("<img src='/"+avatar+"_32x32' class='avatar22 img-circle'> " +  userName + " (" + usr.listingTitle + ")");
+                    if(usr.admin)
+                        lbl = "<i class='fa fa-headphones'></i> Agent";
+                    $(".chat-user-label").html("<img src='/"+avatar+"_32x32' class='avatar32 img-circle'> " +  userName + " <small>" + lbl + "</small>");
                 }
                 $(".chat-message-form").show();
             }
