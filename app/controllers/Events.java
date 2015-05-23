@@ -117,23 +117,21 @@ public class Events extends BaseController
         )
     {
         final User user = getLoggedUser();
+        final String baseUrl = getBaseUrl().substring(0, getBaseUrl().length() - 1);
         final Boolean edit = action != null && action.equals("edit") ? true : false;
         final Boolean isNew = newEvent != null ? true : false;
-        final String baseUrl = getBaseUrl().substring(0, getBaseUrl().length() - 1);
-
         final Event event = !isNew ? Event.get(uuid) : null;
+
+        // check access
+        if (event == null && !isNew)
+            notFound();
+
         final List<Listing> listings = event != null ? Listing.getForUser(event.listing.user) : null;
         final Boolean isOwner = event != null ? event.isOwner(user) : false;
         final Boolean isTeam = event != null && user != null ? user.isTeam(event) : false;
         final Attendance attendance = user != null && event != null ? event.getInviteForCustomer(user) : null;
         final Boolean paid = (user != null && attendance != null && attendance.paid != null && attendance.paid) || isOwner ? true : false;
-        User onlineUser = findRandomAvaiableAgent(event.user.account);
-        if (onlineUser == null)
-            onlineUser = event.user;
-
-        // check access
-        if (event == null && !isNew)
-            notFound();
+        final User displayedUser = event.listing.user;
 
         if (edit && event != null && edit && !event.isEditable(user))
             forbidden();
@@ -239,7 +237,7 @@ public class Events extends BaseController
         final String rmtp = getProperty(CONFIG_RMTP_PATH);
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
         Map<String, String> errs = new HashMap<String, String>();
-        render("Listings/listing.html", user, onlineUser, isOwner, isTeam, edit, event, attendance, paid, url, errs, name, room, rmtp,
+        render("Listings/listing.html", user, displayedUser, isOwner, isTeam, edit, event, attendance, paid, url, errs, name, room, rmtp,
                 socketIo, type, files, temp, commentTemp, comments, listings, ratings, stats, listing, fromEvent, baseUrl);
     }
 

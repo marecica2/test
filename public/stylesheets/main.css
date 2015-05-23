@@ -146,10 +146,16 @@ img {
 .scrollToTop {
 	height:50px;
 	bottom:1px;
-	border:1px solid white;
-	border-bottom:0px;
 	border-top-left-radius:7px;
 	border-top-right-radius:7px;
+}
+
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover {
+	text-decoration: none !important;
+}
+
+h1 a:visited, h2 a:visited, h3 a:visited, h4 a:visited, h5 a:visited, h6 a:visited {
+	text-decoration: none !important;
 }
 
 /* theme fixes */
@@ -164,8 +170,55 @@ img {
 
 
 /* various */
+.list-item-gray {
+	cursor:pointer;
+	margin-bottom:10px;
+	padding:10px;
+	background: #fafafa;
+}
+
+.list-item-gray:hover {
+	background: #f7f7f7;
+}
+
+.widgr-bubble-left 
+{
+	width:60%;
+	background: rgba(149, 77, 179,0.7);
+	color:white;
+}
+
+.widgr-bubble-left a 
+{
+	color:rgba(255,255,255, 0.8);
+}
+
+.widgr-bubble-left:after 
+{
+	border-color: transparent rgba(149, 77, 179,0.7);
+}
+
+.widgr-bubble-right
+{
+	width:60%;
+	background: rgba(149, 77, 179,0.1);
+}
+
+.widgr-bubble-right:after 
+{
+	border-color: transparent rgba(149, 77, 179,0.1);
+}
+
 .margin-top-clear {
 	margin-top:0px;
+}
+
+.margin10 {
+	margin:10px 10px 10px 0;
+}
+
+.margin5 {
+	margin:5px 5px 5px 0;
 }
 
 .blur {
@@ -404,11 +457,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
 }
 
 .event-box2 {
-	width:355px;
+	width:380px;
 	float:left;
 	margin:0px; 
 	text-align:left;
-	padding:3px;
+	padding-right:5px;
+	padding-bottom:6px;
 }
 
 
@@ -565,21 +619,25 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
 }
 
 .avatar16 {
+	vertical-align:middle;
 	height:16px;
 	width:16px;
 }
 
 .avatar32 {
+	vertical-align:middle;
 	height:32px;
 	width:32px;
 }
 
 .avatar22 {
+	vertical-align:middle;
 	height:24px;
 	width:24px;
 }
 
 .avatar64 {
+	vertical-align:middle;
 	height:64px;
 	width:64px;
 }

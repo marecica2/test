@@ -124,6 +124,17 @@
 			#{if !edit}
 			<div class="form-group">
 				<label class="col-sm-3 control-label">
+					&{'display-name'}
+				</label>
+			    <div class="col-sm-9">
+			      	<p class="form-control-static">
+			      		${user.firstName} ${user.lastName}
+			      	</p>
+			    </div>
+			</div>				
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
 					&{'login'}
 				</label>
 			    <div class="col-sm-9">
@@ -224,17 +235,6 @@
 			    </div>
 			</div>
 			#{/if}
-
-			<div class="form-group">
-				<label class="col-sm-3 control-label">
-					&{'display-name'}
-				</label>
-			    <div class="col-sm-9">
-			      	<p class="form-control-static">
-			      		${user.firstName} ${user.lastName}
-			      	</p>
-			    </div>
-			</div>			
 
 			<div class="form-group">
 				<label class="col-sm-3 control-label">

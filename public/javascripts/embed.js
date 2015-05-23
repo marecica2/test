@@ -1,4 +1,5 @@
 var star = {};
+star.embedded = true;
 star.loaded = false;
 star.visible = true;
 star.eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
@@ -27,6 +28,8 @@ eventer(star.messageEvent,function(e) {
         star.listingFirstFree = params["data-listingFirstFree"];
         star.listingStars = params["data-listingStars"];
         star.listingReviews = params["data-listingReviews"];
+        star.listingUserName = params["data-listingUserName"];
+        star.listingUserUuid = params["data-listingUserUuid"];
         
         star.ownerName = params["data-owner"]; 
         star.ownerAvatar = params["data-owner-avatar"]; 
@@ -36,6 +39,7 @@ eventer(star.messageEvent,function(e) {
         star.logged = false;
         star.userAvatar = "public/images/avatar";
         star.userName = "Guest"+ Math.floor(Math.random()*900);
+        star.userUuid = star.uuid();
         if(params["data-lg-user"] != undefined){
             star.logged = true;
             star.userUuid = params["data-lg-user-ui"]; 
@@ -43,7 +47,7 @@ eventer(star.messageEvent,function(e) {
             star.userAvatar = params["data-lg-user-ava"]; 
             star.userLogin = params["data-lg-user-lg"];
         }
-        star.embedInit();  
+        star.loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js", star.embedInit);
     }
     if(params.type == "chat-open"){
         star.chatOpen();
@@ -85,7 +89,6 @@ star.embedInit = function(){
   
             // read user name from cookie
             var name = star.utils.getCookie("widgr-name");
-            star.userUuid = star.utils.uuid();
             if(!star.logged && name != ""){
                 star.userName = name;
                 star.userUuid = star.utils.getCookie("widgr-user-uuid");
@@ -95,9 +98,7 @@ star.embedInit = function(){
                 $(".widgr-startchat-btn").hide();
             }
             
-
-            $.getScript(star.baseUrl+"/public/javascripts/room.js", function(){
-                star.utils.chatEvents();
+            $.getScript(star.baseUrl+"/public/javascripts/livechat.js", function(){
             });
         
         });    
@@ -114,6 +115,32 @@ star.resize = function(data){
     }
 }
 
+star.loadScript = function(path, clbck){
+    var script = document.createElement("SCRIPT");
+    script.src = path;
+    script.type = 'text/javascript';
+    document.getElementsByTagName("head")[0].appendChild(script);
+    var checkReady = function(callback) {
+        if (window.jQuery) {
+            callback(jQuery);
+        }
+        else {
+            window.setTimeout(function() { checkReady(callback); }, 100);
+        }
+    };
+    checkReady(function($) {
+        clbck();
+    }); 
+};
+
+star.uuid = function() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
+}
 
 i18n = function(code) {
     var locale = navigator.language;
@@ -158,7 +185,7 @@ star.i18nMessages.en = {
         "join-vide-conference":"Join video call",
         "start-chat":"Start chat",
         "not-logged":"You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in or register.</a> Learn more <a href='https://wid.gr' target='_blank'>about Widgr.</a>",
-        "not-available-now":"is not online now, you can leave him message and he will reply you later.",
+        "not-available-now":"We are not online now, you can leave us a message and we will reply you later.",
         "sign-in":"Sign in or register. Fastest with Facebook",
         "learn-more":"or learn <a href='' target='_blank'>more about Widgr.</a>",
         "we-are-online":"is available"
@@ -180,19 +207,3 @@ star.i18nMessages.de = {
         "sign-in":"Sign in or register. Fastest with Facebook",
         "we-are-online":"ist online"
 };
-
-star.loadScript = function(path){
-    var script = document.createElement("SCRIPT");
-    script.src = path;
-    script.type = 'text/javascript';
-    document.getElementsByTagName("head")[0].appendChild(script);
-    var checkReady = function(callback) {
-        if (window.jQuery) {
-            callback(jQuery);
-        }
-        else {
-            window.setTimeout(function() { checkReady(callback); }, 100);
-        }
-    };
-}
-star.loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js");

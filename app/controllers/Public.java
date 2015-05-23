@@ -34,13 +34,8 @@ public class Public extends BaseController
         final Map<String, Object> stats = listing != null ? Rating.calculateStats(ratings) : null;
         final String baseUrl = getBaseUrlWithoutSlash();
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
-
-        User userDisplayed = listing.user;
-        User onlineUser = findRandomAvaiableAgent(listing.user.account);
-        if (onlineUser != null)
-            userDisplayed = onlineUser;
-
-        render(user, onlineUser, userDisplayed, listing, baseUrl, socketIo, ratings, stats);
+        final User userDisplayed = listing.user;
+        render(user, userDisplayed, listing, baseUrl, socketIo, ratings, stats);
     }
 
     public static void checkConnection()
@@ -72,9 +67,13 @@ public class Public extends BaseController
         redirectTo(url);
     }
 
-    public static void feeds(String event)
+    public static void feeds(String event, String sender, String recipient, Integer from, Integer max)
     {
-        final List<ChatFeed> feeds = ChatFeed.getByUuid(event);
+        List<ChatFeed> feeds = null;
+        if (event != null)
+            feeds = ChatFeed.getByUuid(event);
+        if (sender != null || recipient != null)
+            feeds = ChatFeed.getBySenderRecipient(sender, recipient, from, max);
         final List<ChatFeedDTO> feedsDto = new ArrayList<ChatFeedDTO>();
         for (ChatFeed chatFeed : feeds)
             feedsDto.add(ChatFeedDTO.convert(chatFeed));
@@ -102,10 +101,6 @@ public class Public extends BaseController
 
     public static void feedSave()
     {
-        final User user = getLoggedUser();
-        if (user == null)
-            forbidden();
-
         final JsonObject jo = JsonUtils.getJson(request.body);
         ChatFeed feed = new ChatFeed();
         feed = feedFromJson(jo, feed);
@@ -133,10 +128,20 @@ public class Public extends BaseController
 
     private static ChatFeed feedFromJson(final JsonObject jo, ChatFeed feed)
     {
+        System.err.println(jo);
         feed.uuid = StringEscapeUtils.escapeHtml(jo.get("uuid").getAsString());
         feed.comment = StringEscapeUtils.escapeHtml(jo.get("comment").getAsString());
-        feed.name = StringEscapeUtils.escapeHtml(jo.get("name").getAsString());
         feed.created = new Date();
+        if (jo.get("name") != null)
+            feed.name = StringEscapeUtils.escapeHtml(jo.get("name").getAsString());
+        if (jo.get("sender") != null)
+            feed.sender = StringEscapeUtils.escapeHtml(jo.get("sender").getAsString());
+        if (jo.get("senderName") != null)
+            feed.senderName = StringEscapeUtils.escapeHtml(jo.get("senderName").getAsString());
+        if (jo.get("recipient") != null)
+            feed.recipient = StringEscapeUtils.escapeHtml(jo.get("recipient").getAsString());
+        if (jo.get("recipientName") != null)
+            feed.recipientName = StringEscapeUtils.escapeHtml(jo.get("recipientName").getAsString());
         return feed;
     }
 

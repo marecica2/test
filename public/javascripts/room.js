@@ -227,9 +227,8 @@ if(webrtc != null){
          
          // maximize mimize peer
          $(document).on("click", ".user-elm", function(){
-
              var id = $(this).attr("data-id");
-             var local = $(this).parent().parent().parent().attr("data-local");
+             var local = $(this).attr("data-local");
              if(star.selectedId == null || star.selectedId != id){
                  star.selectedId = id;
                  star.switchAuto = false;
@@ -444,63 +443,51 @@ if(webrtc != null){
 
 
 function usersRender(data) {
-    data = JSON.parse(data);
+    var userList = JSON.parse(data);
     var html = "";
     users = [];
-    for ( var index in data) {
-        var row = data[index];
-            for ( var usr in row) {
-                if(row[usr].room == star.room){
-                    html = "";
-                    users.push(row[usr]);
-                    
-                    var peerId = row[usr].peer;
-                    if(row[usr] == getPeerId())
-                        peerId = row[usr].id;
-                    
-                    
-                    // dropdown + peer controls
-                    html += "<div class='video-dropdown' data-id='"+peerId+"'><i class='fa fa-chevron-down color-link-light'></i></div>"
-                    html += "<div class='peer-controls' data-id='"+peerId+"' style='display:none;z-index:9999;opacity:0.8'>";
-                    if(typeof row[usr].avatar != "undefined"){
-                        html += "<a class='btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' href='/user/"+row[usr].login+"' target='_blank' >"
-                            html += "<i class='icon-user'></i> "+i18n("view-profile");
-                        html += "</a> ";
-                    }
-                    html += "<button class='peer-mute btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' data-type='audio' data-name='" + row[usr].user + "' data-id='"+peerId+"'>"
-                    html += "   <i class='icon-mute'></i> "+i18n("mute");
-                    html += "</button> ";
-                    html += "</div>";
-                    
-                    html += "<div id='user-item-"+peerId+"' data-id='"+peerId+"' style='position:relative;' title='"+row[usr].user+"'>";
-                    
-                    // peer labels
-                    html += "<div style='position:absolute;top:5px;left:5px;z-index:9999;'>";
-                    html += "   <div style='display:none' class='peer-label-screenshare peer-control-lbl btn-success' data-id='"+peerId+"'><i class='fa fa-desktop'></i></div>"
-                    html += "   <div style='display:none' class='peer-label-muted peer-control-lbl btn-danger' data-id='"+peerId+"'><i class='icon-mute'></i></div>"
-                    html += "   <div style='display:none' class='peer-label-camera peer-control-lbl btn-danger' data-id='"+peerId+"'><i class='fa fa-eye-slash'></i></div>"
-                    html += "</div>";
-                   
- 
+    for(var i = 0; i < userList.length; i++) {
+        html = "";
+        users.push(userList[i]);
+        var peerId = userList[i].peer;
+        
+        // dropdown + peer controls
+        html += "<div class='video-dropdown' data-id='"+peerId+"'><i class='fa fa-chevron-down color-link-light'></i></div>"
+        html += "<div class='peer-controls' data-id='"+peerId+"' style='display:none;z-index:9999;opacity:0.8'>";
+        if(typeof userList[i].avatar != "undefined"){
+            html += "<a class='btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' href='/user/"+userList[i].login+"' target='_blank' >"
+                html += "<i class='icon-user'></i> "+i18n("view-profile");
+            html += "</a> ";
+        }
+        html += "<button class='peer-mute btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' data-type='audio' data-name='" + userList[i].user + "' data-id='"+peerId+"'>"
+        html += "   <i class='icon-mute'></i> "+i18n("mute");
+        html += "</button> ";
+        html += "</div>";
 
-                    // peer avatar
-                    html += "<div id='"+ peerId +"_video_small' class='peer-avatar'>";
-                    html += "   <div class='peer-avatar-label'>" + (row[usr].usr != undefined ? row[usr].usr.name : row[usr].user);
-                    if(row[usr].avatar != undefined && row[usr].avatar != null)
-                        html += "       <br/><img src='"+row[usr].avatar+"_32x32' class='img-circle'>";
-                    html += "   </div>";
-                    html += "</div>";
-    
-                    html += "</div>";
-                    
-                    function closure(elm, html) {
-                        $("#video-element-"+elm).waitUntilExists(function(){
-                            $("#video-element-"+elm).prepend(html);
-                        });
-                    };
-                    closure(peerId, html);
-                }
-            }
+        html += "<div id='user-item-"+peerId+"' data-id='"+peerId+"' style='position:relative;' title='"+userList[i].user+"'>";
+        
+        // peer labels
+        html += "<div style='position:absolute;top:5px;left:5px;z-index:9999;'>";
+        html += "   <div style='display:none' class='peer-label-screenshare peer-control-lbl btn-success' data-id='"+peerId+"'><i class='fa fa-desktop'></i></div>"
+        html += "   <div style='display:none' class='peer-label-muted peer-control-lbl btn-danger' data-id='"+peerId+"'><i class='icon-mute'></i></div>"
+        html += "   <div style='display:none' class='peer-label-camera peer-control-lbl btn-danger' data-id='"+peerId+"'><i class='fa fa-eye-slash'></i></div>"
+        html += "</div>";
+                   
+        // peer avatar
+        html += "<div id='"+ peerId +"_video_small' class='peer-avatar'>";
+        html += "   <div class='peer-avatar-label'>" + (userList[i].usr != undefined ? userList[i].usr.name : userList[i].user);
+        if(userList[i].avatar != undefined && userList[i].avatar != null)
+            html += "       <br/><img src='"+userList[i].avatar+"_32x32' class='img-circle'>";
+        html += "   </div>";
+        html += "</div>";
+        html += "</div>";
+        
+        function closure(elm, html) {
+            $("#video-element-"+elm).waitUntilExists(function(){
+                $("#video-element-"+elm).prepend(html);
+            });
+        };
+        closure(peerId, html);
     }
     
     // check if buttons should be enabled or disabled  
@@ -1203,275 +1190,6 @@ if(star.userInRoom){
     
         touch.target.dispatchEvent(simulatedEvent);
     }
-}
-
-
-
-
-
-//
-//
-// Embedded Chat 
-//
-//
-if(webrtc == null){
-    star.chatroomusers = [];
-    star.chatfirst = true;
-    
-    var usr = {};
-    usr.room = star.chatRoom;
-    usr.userName = star.userName;
-    usr.userAvatar = star.userAvatar;
-    usr.admin = star.isOwner;
-    usr.userUuid = star.userUuid;
-    usr.listingUuid = star.listingUuid;
-    usr.listingTitle = star.listingTitle;
-    if(!star.isOwner)
-        star.chatRoomRecipientUser = star.ownerUuid;
-    else
-        $(".chat-message-form").hide();
-    socket.emit('chatroom_joined', usr);    
-    
-    $(document).ready(function(){
-        $(".open-chat").click(function() {
-            if ($(".style-switcher.closed").length>0) 
-                $('.style-switcher .trigger').click();
-        });
-
-        $("#widgr-open-chat").click(function() {
-            $(".style-switcher-container .trigger").click();
-        });
-        
-        function chatSend2(){
-            if($("#chat-text2").val() != null && $("#chat-text2").val().length > 0){
-                var data = {};
-                data.type = "message";
-                data.room = star.chatRoom;
-                data.message = $("#chat-text2").val();
-                data.client = getSessionId();
-                data.sender = getRecipientByUuid(star.userUuid).id;
-                data.senderUuid = star.userUuid;
-                data.senderName = star.userName;
-                data.senderAvatar = star.userAvatar;
-                data.recipient = getRecipientByUuid(star.chatRoomRecipientUser).id;
-                data.recipientUuid = star.chatRoomRecipientUser;
-                data.recipientName = getRecipientByUuid(star.chatRoomRecipientUser).userName;
-                data.recipientAvatar = getRecipientByUuid(star.chatRoomRecipientUser).userAvatar;
-                socket.emit('chatRoom-message', data);
-                
-                $("#chat-text2").val("");
-                $("#chat-text2").focus();
-            }
-            return false;
-        }
-        
-        function getRecipientByUuid(uuid){
-            for(var i = 0; i < star.chatroomusers.length; i++){
-                if(star.chatroomusers[i].userUuid == uuid){
-                    return star.chatroomusers[i];
-                }
-            }
-            return null;
-        };
-        
-        $(document).on("click", "#chat-send2", function(){
-            chatSend2();
-        });
-
-        $(document).on("keyup", "#chat-text2", function(e){
-            if(e.keyCode == 13)
-                chatSend2();
-        });
-        
-        $(".chatroom-user-clear").click(function(){
-            $(this).hide();
-            $(".chatroom-user-select").html("");
-            star.chatRoomRecipient = null;
-            star.chatRoomRecipientUser = null;
-        });
-
-        $("#create-instant-room").click(function(){
-            var user = getRecipientByUuid(star.chatRoomRecipientUser);
-            if(user.userUuid.length > 0 && star.listing.length > 0)
-            var params = "id="+star.listing+"&uuid="+user.userUuid+"&"+star.token;
-            if($("#create-instant-room-charging").is(":checked")){
-                params += "&free=true";
-            }
-            roomServices.instantRoom(params, function(resp){
-                var data = {};
-                data.type = "room";
-                data.room = star.chatRoom;
-                data.message = resp.url;
-                data.client = getSessionId();
-                data.sender = getRecipientByUuid(star.userUuid).id;
-                data.senderUuid = star.userUuid;
-                data.senderName = star.userName;
-                data.senderAvatar = star.userAvatar;
-                data.recipient = getRecipientByUuid(star.chatRoomRecipientUser).id;
-                data.recipientUuid = star.chatRoomRecipientUser;
-                data.recipientName = getRecipientByUuid(star.chatRoomRecipientUser).userName;
-                data.recipientAvatar = getRecipientByUuid(star.chatRoomRecipientUser).userAvatar;
-                socket.emit('chatRoom-message', data);                
-                
-                chatSend2();
-            });
-        });
-        
-        // select user
-        $(".style-switcher-container").on("click", ".chatroom-user", function(event){
-            if(star.isOwner){
-                var id = $(this).attr("data-id");
-                var userName = $(this).attr("data-name");
-                var userAvatar = $(this).attr("data-avatar");
-                var userUuid = $(this).attr("data-uuid");
-                var lbl = $(this).attr("data-lbl");
-                var usr = getRecipientByUuid(userUuid);
-                star.chatRoomRecipientUser = userUuid;
-                star.listing = usr.listingUuid;
-                
-                $(".chat-message-form").show();
-                $(".chat-user-label").html('<a href="/user/id/'+userUuid+'" target="_blank"><img class="img-circle avatar32" style="margin:1px;" src="/'+userAvatar+'_64x64"> ' + userName + '</a> <small>'+lbl+'</small>');
-                $(".user-containers").hide();
-                var container = $(".user-containers[data-usr*='"+userUuid+"']");
-                container.show();
-            }
-        });     
-
-        // users update
-        socket.on('chatroom_update', function(data) {
-            var isAdminOnline = false;
-            star.chatroomusers = JSON.parse(data)[star.chatRoom];
-            star.admins = 0;
-            star.users = 0;
-            
-            var html = '';
-            for(var i = 0; i < star.chatroomusers.length; i++){
-                
-                if(star.chatroomusers[i].admin == true){
-                    isAdminOnline = true;
-                    if(star.chatroomusers[i].userUuid != star.userUuid)
-                        star.admins += 1;
-                } else {
-                    star.users += 1;
-                }
-                if(star.chatroomusers[i].userUuid != star.userUuid){
-                    var lbl = star.chatroomusers[i].listingTitle;
-                    if(star.chatroomusers[i].admin)
-                        lbl = "<i class='fa fa-headphones'></i> Agent";
-                    html += '<li><a style="cursor:pointer" data-lbl="'+lbl+'" data-id="'+star.chatroomusers[i].client+'" data-uuid="'+star.chatroomusers[i].userUuid+'" data-avatar="'+star.chatroomusers[i].userAvatar+'" data-name="'+star.chatroomusers[i].userName+'" class="chatroom-user"><img class="img-circle avatar22" style="margin:1px;" src="/'+star.chatroomusers[i].userAvatar+'_32x32"> ' + star.chatroomusers[i].userName + '</a> <small>' + lbl + '</small></li>';
-                }
-            }
-            if(isAdminOnline){
-                $(".widgr-chat").show();
-                $(".widgr-email").hide();
-            }
-            else {
-                $(".widgr-chat").hide();
-                $(".widgr-available").removeClass("blink");
-                $(".widgr-available").css("opacity", 0);
-                $(".widgr-email").show();
-            }
-            if(star.isOwner){
-                $(".chat-avatars2").html(html);
-            }
-            $(".users-count").html(star.users);
-            $(".admins-count").html(star.admins);
-        });
-        
-        // user disconnect
-        socket.on('chatroom_disconnect', function(data) {
-            if(star.isOwner && data != null){
-                if(star.chatRoomRecipientUser == data.userUuid){
-                    $(".chat-user-label").html(i18n("select-user"));
-                    star.chatRoomRecipientUser = null;
-                    var usr = getRecipientByUuid(data.userUuid);
-                    $(".chat-message-form").hide();
-                    
-                    var container = $(".user-containers[data-usr*='"+usr.userUuid+"']");
-                    var html = '<div>';
-                    html += '<div style="padding:5px; margin:5px;"> ' + usr.userName + " " + i18n("left-conversation");
-                    html += '</div>';
-                    html += '</div>';
-                    container.append(html);                    
-
-                    // scrolling
-                    $("#content2")[0].scrollTop =  $("#content2")[0].scrollHeight;
-                }
-            }
-        });
-        
-        // render message
-        socket.on('chatRoom-message-render', function(data) {
-            var topContent = $("#content2");
-            var userUuid = data.recipientUuid == star.userUuid ? data.senderUuid : data.recipientUuid;
-            var userName = data.recipientUuid == star.userUuid ? data.senderName : data.recipientName;
-            var avatar = data.recipientUuid == star.userUuid ? data.senderAvatar : data.recipientAvatar;
-            var container = $(".user-containers[data-usr*='"+userUuid+"']");
-            var style = data.senderName != star.userName ? "widgr-bubble-right" : "widgr-bubble-left";
-            var now = new Date();
-            var time = starUtils.formatTime2(now);
-
-            var firstMessage = false;
-            if(container[0] == undefined){
-                topContent.append("<div class='user-containers' data-usr='"+userUuid+"_"+star.userUuid+"' style='display:none'></div>");
-                firstMessage = true;
-            }
-            container = $(".user-containers[data-usr*='"+userUuid+"']");
-            var html = '';
-            
-            // header
-            html += '<span style="line-height:32px; font-size:13px; color:gray" ><img class="img-circle avatar32" style="vertical-align:middle" src="'+star.baseUrl+"/"+data.senderAvatar+'_32x32"> <a target="_blank" href="'+star.baseUrl+"/user/id/"+data.senderUuid+'">' + data.senderName + '</a> <span style="float:right;margin-right:10px">'+time+"</span></span>";
-            
-            // content
-            html += '<div class="'+style+'" >';
-            if(data.type == "room"){
-                html += '<span style="font-size:18px;"><i class="fa fa-phone"></i> <a href="'+data.message+'&tempName='+star.userName+'" target="_blank">'+i18n("join-vide-conference")+'</a>';
-            }
-            if(data.type == "message"){
-                html += linkify(data.message.replace(/>/g, '&gt;'));
-            }
-            html += '</div>';
-            
-            // first message
-            if(star.chatfirst && star.isOwner == false && star.userUuid == data.senderUuid && firstMessage){
-                star.chatfirst = false;
-                html += '<br/>';
-                html += '<div class="widgr-bubble-right">';
-                html +=  "Operator will available for you in few seconds. Please wait.";
-                html += '</div>';
-            }
-            container.append(html);
-
-            if(!$("#auto-switch-off").is(":checked")){
-                $(".user-containers").hide();
-                container.show();
-                // switch the user selector
-                if(star.chatRoomRecipientUser != userUuid){
-                    star.chatRoomRecipientUser = userUuid;
-                    var usr = getRecipientByUuid(userUuid);
-                    var lbl = usr.listingTitle;
-                    star.listing = usr.listingUuid;
-                    if(usr.admin)
-                        lbl = "<i class='fa fa-headphones'></i> Agent";
-                    $(".chat-user-label").html("<img src='/"+avatar+"_32x32' class='avatar32 img-circle'> " +  userName + " <small>" + lbl + "</small>");
-                }
-                $(".chat-message-form").show();
-            }
-            
-            // auto open embedded chat box
-            $(".style-switcher").addClass("opened");
-            $(".style-switcher-content").show();
-            $(".widgr-chat-content").show();
-            star.visible = false;
-            
-            // scrolling and notification
-            $("#content2")[0].scrollTop =  $("#content2")[0].scrollHeight;
-            if ($(".style-switcher.closed").length>0) 
-                $('.style-switcher .trigger').click();
-            var audio = new Audio(star.baseUrl+'/public/images/ring.mp3');
-            audio.play();
-        });        
-    });
 }
 
 

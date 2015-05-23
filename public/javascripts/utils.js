@@ -100,10 +100,11 @@ star.utils.chatContent = function(star){
     
     if(star.listingTitle){
     html += '   <div class="widgr-chat-noiframe" style="margin-bottom:20px;text-align:center;font-size:14px;">';
-    html += '       <strong style="font-size:16px">'+star.listingTitle+'</strong>';
-    html += '       <p style="text-align:center">';
-    html += '           <img style="height:16px;vertical-align:middle;" class="img-circle" src="'+star.baseUrl+"/"+star.ownerAvatar+'_64x64">';
-    html += '           <a target="_blank" href="'+star.baseUrl+"/user/id/"+star.ownerUuid+'">'+star.ownerName+'</a><br/>';
+    html += '       <a href="'+star.baseUrl+"/listing/"+star.listingUuid+'" target="_blank" style="color:black;font-size:16px"><strong>'+star.listingTitle+'</strong></a>';
+    html += '       <div style="text-align:center">';
+    html += '           By <a target="_blank" href="'+star.baseUrl+"/user/id/"+star.listingUserUuid+'">'+star.listingUserName+'</a>';
+    html += "           <br/>";
+
     if(star.listingCharging != 'free'){
         html += '       '+star.listingPrice+ ' ' + star.listingCurrency + ' per '+ star.listingDuration + ' min ';
         if(star.listingFirstFree){
@@ -113,14 +114,18 @@ star.utils.chatContent = function(star){
     else {
         html += '       Free ';
     }
-    html += '           <br/>';
+    
+    if(star.listingReviews > 2){
+    html += "           <br/>";
     for(var j = 0; j < 5; j++)
         if(j < Math.round(star.listingStars))
             html += "   <i class='fa fa-star text-default' data-value='1'></i>";
         else
             html += "   <i class='fa fa-star-o text-light' data-value='1'></i>";
     html += "           <span> from <a target='_blank' href='"+star.baseUrl+"/listing/"+star.listingUuid+"#reviews'>" + star.listingReviews + " " + i18n("reviews") + "</a></span>";
-    html += '       </p>';
+    }
+    
+    html += '       </div>';
     html += '   </div>';
     }
     
@@ -151,7 +156,7 @@ star.utils.chatContent = function(star){
     html += '       </div>';
     
     html += '       <div class="widgr-email" style="display:none">';
-    html += '           <span class="vertical-padding">'+star.ownerName+ " "+i18n('not-available-now')+'</span><br/><br/>';
+    html += '           <span class="vertical-padding">'+i18n('not-available-now')+'</span><br/><br/>';
     html += '           <p class="widgr-email-validation" style="color:red;display:none">Please correct your input</p>'
     if(!star.logged){
         html += '       <input id="chat-text2" class="form-control radius vertical-padding widgr-email-sender" maxlength="50" style="width:100%" placeholder="'+i18n('your-email')+'">';
@@ -173,92 +178,6 @@ star.utils.chatContent = function(star){
     html += '</div>';
     return html;
 };
-
-star.utils.chatEvents = function(){
-    if(star.logged){
-        $(".widgr-chat-input").show();
-    }
-    
-    // chat open
-    $(document).on("click", ".widgr-iframe-btn", function(){
-        $(".widgr-chat-noiframe").hide();
-        $(".widgr-chat-iframe").show();
-    });                    
-    
-    // send msg
-    $(document).on("click", ".widgr-send-msg-btn", function(){
-        var valid = true;
-        var msg = {};
-        msg.type = "msg";
-        msg.sender = $(".widgr-email-sender").val();
-        msg.subject = $(".widgr-email-subject").val();
-        msg.body = $(".widgr-email-body").val();
-        if(!msg.sender)
-            valid = false;
-        if(!msg.subject)
-            valid = false;
-        if(!msg.body)
-            valid = false;
-        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-        if(!re.test(msg.sender))
-            valid = false;
-        
-        if(valid){
-            if(star.container != undefined)
-                star.container[0].contentWindow.postMessage(JSON.stringify(msg), '*');
-            else {
-                if(star.logged)
-                    msg.user = star.userUuid;
-                msg.recipient = star.ownerUuid;
-                starServices.sendMessage(msg);
-            }
-            var html = "<p>Your message has been sent</p>";
-            html += "<p>"+msg.subject+"<br/>";
-            html += msg.body+"</p>";
-            $(".widgr-email").html(html);
-            $(".widgr-email-validation").hide();
-        } else {
-            $(".widgr-email-validation").show();
-        }
-    });                     
-
-    // start chat btn
-    $(document).on("click", ".widgr-startchat-btn", function(){
-        star.userName = $(".widgr-custom-name").val();
-        star.utils.setCookieMinutes("widgr-name", $(".widgr-custom-name").val(), 15);
-        star.utils.setCookieMinutes("widgr-user-uuid", star.userUuid, 15);
-        
-        var usr = {};
-        usr.room = star.chatRoom;
-        usr.userName = star.userName;
-        usr.listingUuid = star.listingUuid;
-        usr.listingTitle = star.listingTitle;
-        usr.userUuid = star.userUuid;
-        usr.userAvatar = star.userAvatar;
-        usr.admin = star.isOwner;
-        socket.emit('chatroom_reconnect', usr);  
-        
-        $(".widgr-custom-name").hide();
-        $(".widgr-chat-input").show();
-        $(".widgr-startchat-btn").hide();
-        setTimeout(function(){
-            $("#chat-text2")[0].focus();
-        }, 100);
-    });                     
-    
-    $(document).on("click", ".style-switcher-trigger", function(){
-        if(star.visible){
-            $(".style-switcher-content").show();
-            $(".style-switcher").addClass("opened");
-            star.visible = false;
-        } else {
-            $(".style-switcher-content").hide();
-            $(".style-switcher").removeClass("opened");
-            star.visible = true;
-        }
-    });    
-}
-
 
 star.utils.Interval = function(fn, time) {
     var timer = false;

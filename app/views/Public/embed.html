@@ -11,7 +11,6 @@
 #{/else}
 
 <!-- include from listings list -->
-#{set item: listing /}
 #{set usr: userDisplayed /}
 
 <script>
@@ -27,8 +26,16 @@
 		        #{if user}
 			        params.user = "${user.uuid}";
 		        #{/if}
-		        params.recipient = "${item.user.uuid}";
+		        params.recipient = "${listing.user.uuid}";
 				starServices.sendMessage(params);
+				
+		    } else if (params.type = "save-feed"){
+                roomServices.saveFeed(params, function(){
+                });  
+		    } else if (params.type = "get-feeds"){
+	            roomServices.getFeeds(params.params, function(data){
+	                star.renderFeeds(data);
+	            });
 		    }
 	    } catch (err) {
                return false;
@@ -46,32 +53,29 @@
 		params["data-lg-user-lg"] = "${user.login}";
 	#{/if}
 	
-	params["data-listingTitle"] = "${item.title}";
-	params["data-listingImage"] = "${item.imageUrl}";
-	params["data-listingCharging"] = "${item.charging}";
-	params["data-listingPrice"] = "${item.price}";
-	params["data-listingDuration"] = "${item.chargingTime}";
-	params["data-listingCurrency"] = "${item.currency}";
-	params["data-listingFirstFree"] = "${item.firstFree}";
+	params["data-listingTitle"] = "${listing.title}";
+	params["data-listingImage"] = "${listing.imageUrl}";
+	params["data-listingCharging"] = "${listing.charging}";
+	params["data-listingPrice"] = "${listing.price}";
+	params["data-listingDuration"] = "${listing.chargingTime}";
+	params["data-listingCurrency"] = "${listing.currency}";
+	params["data-listingFirstFree"] = "${listing.firstFree}";
 	params["data-listingStars"] = '${stats.get("avgStars")}';
 	params["data-listingReviews"] = '${stats.get("totalStars")}';
-	params["data-listingUuid"] = '${item.uuid}';
+	params["data-listingUuid"] = '${listing.uuid}';
+	params["data-listingUserName"] = '${listing.user.getFullNameAccount()}';
+	params["data-listingUserUuid"] = '${listing.user.uuid}';
 	
-	params["data-room"] = "${item.user.uuid}";
-	params["data-owner"] = "${item.user.getFullName()}";
-	params["data-owner-avatar"] = "${item.user.avatarUrl}";
-	params["data-owner-uuid"] = "${item.user.uuid}";
-	params["data-owner-company"] = "${item.user.account.name}";
+	
+	params["data-room"] = "${userDisplayed.account.key}";
+	params["data-owner"] = "${userDisplayed.getFullName()}";
+	params["data-owner-avatar"] = "${userDisplayed.avatarUrl}";
+	params["data-owner-uuid"] = "${userDisplayed.uuid}";
+	params["data-owner-company"] = "${userDisplayed.account.name}";
 	params["type"] = "init";
 	parent.postMessage(JSON.stringify(params),"*");  
 	
 	$(document).ready(function(){
-	    //var params = {};
-	    //params["selector"] = ".widgr-embedded-iframe";
-		//params["height"] = $(".embed-item").height();
-		//params["type"] = "resize";
-		//parent.postMessage(JSON.stringify(params),"*");    
-		
 		$("#widgr-open-chat").click(function(){
 		    var params = {};
 			params["type"] = "chat-open";
@@ -79,96 +83,41 @@
 		});
 	});
 	
+	
+	var roomServices = {};
+	roomServices.saveFeed = function(data, success, error){
+	 $.ajax({
+	     type: "POST",
+	     url: "/public/feed",
+	     data: JSON.stringify(data),
+	     success: success,
+	     error: error,
+	     contentType: "application/json"
+	 });
+	};
+
+	roomServices.getFeeds = function(params, success, error){
+	 $.ajax({
+	     type: "GET",
+	     url: "/public/feeds?"+params,
+	     success: success,
+	     error: error,
+	     contentType: "application/json"
+	 });
+	};
+
+	roomServices.instantRoom = function(params, success, error){
+	    var data = {};
+	    $.ajax({
+	        type: "POST",
+	        url: "/instant-room-rest?"+params,
+	        data: JSON.stringify(data),
+	        success: success,
+	        error: error,
+	        contentType: "application/json"
+	    });    
+	};	
+	
 </script>
 <div id="fb-root"></div>
-
-*{
-<div class="embed-item page-wrapper">
-	<a href="/listing/${item.uuid}" target="_parent">
-	<div style="position:relative">
-	  	<span class="listing-item-top shadow-inset-2" style="display:block; background: url('/${item.imageUrl}') no-repeat center; background-size:cover;position:relative">
-			#{if item.video}
-				<a class="text-shadow" style="font-size:3em; color:white;position:absolute;top:30%;left:45%" href="${item.video}" target="_blank" title="&{'play-introduction'}"><i class="fa fa-youtube-play"></i></a>
-			#{/if}
-			
-			<a href="/listing/${item.uuid}" target="_parent">
-		        <span style='position:absolute;bottom:5px;font-size:18px;right:10px;width:75%'>
-		        	<span style='font-weight:bold;' class='white'>${item.title}</span>
-		        </span>		
-	        </a>
-	        
-			<a href="/user/${userDisplayed.login}#chat=open" style="position:absolute;left:20px;top:130px" data-original-title="&{'go-to-profile'}"><img class="img-circle" style="border:5px solid white" src="/${userDisplayed.avatarUrl}_64x64"></a>			
-	  	</span>
-	</div>
-	</a>
-	
-  	<div style="position:relative" class="shadow-inset">
-  		<div style='position:absolute;top:5px;right:10px;width:75%'>
-	  		#{if userDisplayed.isOnline()}
-	  			&{'online'}
-	  			<span><i class="icon-record" style="color:#5cb85c"></i></span>
-			#{/if}
-			#{else}
-	  			&{'offline'}
-	  			<span><i class="icon-record" style="color:gray"></i></span>
-			#{/else}
-			<strong>
-				${item.user.getFullNameAccount()}
-			</strong>
-		</div>		
-		<br/>	
-		
-		<div class="centered" style="padding: 15px">
-			#{if listing.isAvailable()}
-				<a href="#chat" id="widgr-open-chat" class="btn btn-gray btn-short open-chat style-switcher" title="&{'open-chat'} ${listing.user.getFullName()}"><i class="fa fa-comments-o"></i></a>
-				<a href="/instant-room?id=${listing.uuid}&#{token /}" target="_blank" class="btn btn-gray btn-short no-schedule-start style-switcher " style="display:none"><i class="fa fa-arrow-right"></i> &{'request-for-event-instant'}</a>
-			#{/if}			
-			#{elseif user}
-				<a href="/mail?action=new&to=${listing.user.login}" target="_blank" class="btn btn-gray btn-short" title="&{'write-message-for'} ${listing.user.getFullName()}"><i class="fa fa-envelope-o"></i></a>
-			#{/elseif}
-			#{else}
-				<a href="/contact?id=${listing.user.login}" target="_blank" class="btn btn-gray btn-short " title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-envelope-o"></i></a>
-			#{/else}
-			<a href="/user/${usr.login}/calendar?channel=${listing.uuid}&#{token /}" target="_blank" class="btn btn-gray btn-short"  title="&{'schedule-session'}"><i class="fa fa-calendar"></i> &{'schedule-session'}</a>
-
-			<div>
-			&{'price'}:
-			#{if item.charging != 'free'}
-				&{'from'} ${item.price} <small>${item.currency} &{'for'} ${item.chargingTime} &{'minutes'}</small>
-				#{if item.firstFree}
-					<span class="label label-success">&{'first-free'}</span>
-				#{/if}	
-			#{/if}
-			#{else}
-				<strong class="">&{'free'}</strong>
-			#{/else}	
-			</div>	
-			<br/>
-
-			<div>
-	       		#{list items:1..5, as:'i'} 
-	       			#{if stats.get("avgStars") >= i}
-					    <i class="fa fa-star text-default" data-value="1"></i>
-	       			#{/if}
-	       			#{else}
-					    <i class="fa fa-star-o" data-value="1"></i>
-	       			#{/else}
-				#{/list}
-				&{'from'} ${stats.get("totalStars")} <a href="/listing/${item.uuid}#reviews" target="_parent">&{'reviews'}</a>
-			</div>
-			<hr/>	
-		    <div style="text-align:center;font-size:13px">
-				#{if user == null}
-			    	&{'embed-login-message', request.url.urlEncode(), request.url.urlEncode()}
-			    	<br/><br/>
-				#{/if}
-			    <i>Powered by</i> <a target="_blank" class="black-link" href="${baseUrl}"><img style="vertical-align: middle;height: 14px" alt="widgr" src="/public/images/logo_purple.png"></a>
-		    </div>
-		</div>  	
-  	</div>
-</div>
-}*
-
-
-
 

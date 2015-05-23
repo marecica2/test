@@ -162,6 +162,14 @@
 	transition: all 0.2s ease-in-out;
 }
 
+#widgr-container .margin10 {
+	margin:10px;
+	margin-left:0px;
+}
+	
+	font-family:'Open Sans', sans-serif;
+}
+
 #widgr-container textarea{
 	font-family:'Open Sans', sans-serif;
 }

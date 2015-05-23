@@ -215,7 +215,6 @@
 				<script>
 					$("#fb-share").click(function(e){
 					    e.preventDefault();
-					    console.log(window.location.href);
 					    FB.ui(
 					    {
 						    method: 'feed',
@@ -721,17 +720,18 @@
 #{/if}
 
 
-#{if !edit && onlineUser && !isTeam}
+#{if !edit && displayedUser && !isTeam}
 <script>
 	star.loaded = false;
+	star.embedded = false;
 	star.visible = true;
     $('body').append(star.utils.chatContent(star));
 
     star.room = '${room}';
-	star.chatRoom = '${onlineUser.account.key}';
-   	star.ownerName = '${onlineUser.getFullName().escapeJavaScript()}';
-   	star.ownerUuid = '${onlineUser.uuid}';
-   	star.ownerAvatar = '${onlineUser.avatarUrl}';
+	star.chatRoom = '${displayedUser.account.key}';
+   	star.ownerName = '${displayedUser.getFullName().escapeJavaScript()}';
+   	star.ownerUuid = '${displayedUser.uuid}';
+   	star.ownerAvatar = '${displayedUser.avatarUrl}';
     star.server_host = '${socketIo}';
     star.livestream = true;
     star.peerId = null;
@@ -747,7 +747,6 @@
     star.listingStars = '${stats.get("avgStars")}';
     star.listingReviews = '${stats.get("totalStars")}';	
     star.isOwner = false;
-
 
 	#{if user}
 		star.logged = true;
@@ -765,7 +764,6 @@
 	        star.userName = name;
 	        star.userUuid = star.utils.getCookie("widgr-user-uuid");
 	        $(".widgr-custom-name").val(star.userName);
-    	console.log($(".widgr-custom-name"));
 	        $(".widgr-custom-name").hide();
 	        $(".widgr-startchat-btn").hide();
 	        $(".widgr-chat-input").show();
@@ -773,10 +771,9 @@
 	#{/else}
 </script>
 <script src="${socketIo}/socket.io/socket.io.js"></script>
-<script src="@{'/public/javascripts/room.js'}" type="text/javascript"></script>
+<script src="@{'/public/javascripts/livechat.js'}" type="text/javascript"></script>
 <script>
 	$("#widgr-container").show();
-	star.utils.chatEvents();	
 </script>
 #{/if}	
 

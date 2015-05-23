@@ -10,6 +10,14 @@ public class ChatFeedDTO
 
     public String comment;
 
+    public String senderName;
+
+    public String sender;
+
+    public String recipientName;
+
+    public String recipient;
+
     public long created;
 
     public boolean isAnonymous;
@@ -22,6 +30,10 @@ public class ChatFeedDTO
         e.comment = feed.comment;
         e.created = feed.created.getTime();
         e.name = feed.name;
+        e.recipientName = feed.recipientName;
+        e.recipient = feed.recipient;
+        e.senderName = feed.senderName;
+        e.sender = feed.sender;
         return e;
     }
 }
