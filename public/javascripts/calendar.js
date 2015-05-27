@@ -290,7 +290,6 @@ starCalendar.popupSaveNewEventPropose = function(){
 
 // popup save is clicked
 starCalendar.popupSaveNewEvent = function(proposal){
-    console.log("xxx");
     // save to backend
     var event = {};
     event.eventStart = starCalendar.start; 

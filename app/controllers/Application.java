@@ -396,7 +396,6 @@ public class Application extends BaseController
                 forbidden();
             if (user == null)
                 redirectToLogin(request.url);
-            flash.put("success", Messages.get("click-and-drag-to-create-event"));
         }
         renderTemplate("/Application/calendar.html", user, userDisplayed, isOwner, listing, listings, followers, followees, follow);
     }

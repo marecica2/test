@@ -1,38 +1,38 @@
 #widgr-container a 
 {
-	color: rgb(122,204,41);
+	color: rgb(138,92,46);
 	opacity: 0.9;
 }
 
 #widgr-container a:hover 
 {
-	color: rgb(122,204,41);
+	color: rgb(138,92,46);
 	text-decoration: underline;
 	opacity: 1;
 }
 
 #widgr-container div.style-switcher .header 
 {
-	background-color: rgb(122,204,41);
+	background-color: rgb(138,92,46);
 	color:white;
 }
 
 #widgr-container .btn2-default 
 {
-	background-color: rgb(122,204,41);
-	border-color: rgb(122,204,41);
+	background-color: rgb(138,92,46);
+	border-color: rgb(138,92,46);
 	color: white;
 }
 
 #widgr-container .btn2-default:hover 
 {
-	background-color: rgb(92,184,21);
+	background-color: rgb(118, 72, 26);
 	color: white;
 }
 
 #widgr-container .text-default 
 {
-	color: rgb(122,204,41);
+	color: rgb(138,92,46);
 }
 
 #widgr-container .label 
@@ -46,26 +46,26 @@
 #widgr-container .default-bg 
 {
 	color:white;
-	background-color: rgb(122,204,41);
+	background-color: rgb(138,92,46);
 }
 
 .widgr-bubble-left 
 {
-	background: rgba(122,204,41,0.7);
+	background: rgba(138,92,46,0.7);
 	color:white;
 }
 
 .widgr-bubble-left:after 
 {
-	border-color: transparent rgba(122,204,41,0.7);
+	border-color: transparent rgba(138,92,46,0.7);
 }
 
 .widgr-bubble-right
 {
-	background: rgba(122,204,41,0.1);
+	background: rgba(138,92,46,0.1);
 }
 
 .widgr-bubble-right:after 
 {
-	border-color: transparent rgba(122,204,41,0.1);
+	border-color: transparent rgba(138,92,46,0.1);
 }

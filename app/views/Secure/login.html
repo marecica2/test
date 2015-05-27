@@ -8,7 +8,7 @@
 	<script>
 		star.fbClbck = function(resp) {
 	    	FB.api('/me', function(response) {
-	        	$.post("/login/facebook?id="+response.id+"&signedRequest="+resp.authResponse.signedRequest+"&authenticityToken="+$("input[name='authenticityToken']").val(), function(redirect){
+	        	$.post("/login/facebook?id="+response.id+"&signedRequest="+resp.authResponse.signedRequest+"&"+star.token, function(redirect){
 	            	var params = {};
 					params["type"] = "reload";
 					parent.postMessage(JSON.stringify(params),"*");    

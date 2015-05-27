@@ -386,7 +386,7 @@ public class Listings extends BaseController
             forbidden();
         if (user == null)
             forbidden();
-        if (!user.equals(l.user))
+        if (!user.isTeam(l))
             forbidden();
 
         Event e = instantRoomGenerate(l, customer, isFree);

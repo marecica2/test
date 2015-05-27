@@ -409,6 +409,7 @@ get-modern-browser=Compatibility
 compatibility=<p><strong>To get full experience</strong> make sure that you are using up-to-date browser<br/>Widgr sessions happens over live video calls. These Video calls are based on Webrtc browser technology, which is still under development and is not fully supported by all browsers. Make sure that your browser supports Webrtc <a href="/instant">by starting test video call.</a> You should be able to see yourself on the screen. Or you can check your <a target="_blank" href="http://iswebrtcreadyyet.com/">browser support for Webrtc in detail here &raquo;</p>
 
 #calendar.html
+requested-session-for=Request for new Session
 calendar-msg=<h4>My Schedule</h4>On this page you can view all your scheduled sessions. If you are Provider, you can create new session by clicking on the calendar.
 show-google-calendar-events=Show Google calendar events
 for=For
@@ -671,12 +672,48 @@ url=Url
 channel-type=Listing type
 instant-broadcast=Instant broadcast
 price=Price
+
+#chat.html
+watch-intro=Watch intro
+we-are-online=Chat with Us
 first-free=First Session free
+auto-switch=Auto user switch off
+agents=Team members
+team-chat=Team chat
+previous-messages=Previous messages
+live-chat=Live chat
+msgLiveChat-msg=<h4>Live chat</h4>This page allows you to communicate with your customers instantly. If you embedded Widgr chat box on your site, you will be able to monitor your online customers, wait until they will start chat with you or you can even contact them first. If you have more team members this is a good place where you can collaborate and communicate together. Just turn on "Available now" status. <br/><br/><strong>Important! Please note that when you leave this page you will appear to your visitors as you were offline.</strong> <br/><a href="/help#embed">Learn more about how to embed Widgr chat box on your site</a>
+team-members=Account members
+invite-team-members-by-email=Invite members to your account by email
+administrator=Administrator
+online=Online
+from=from
+previous-messages=Previous messages
+incorrect-input=Please correct your input
+operator-available=Operator will available for you in few seconds. Please wait.
+operator=Operator
+message-sent=Your message has been sent
+new-message=New message
+left-conversation=left conversation
+submit=Submit 
+available=Available 
+your-email=Your email 
+subject=Subject 
+message=Write your message 
+your-name=Enter your name 
+chat-with=Chat with
+click-to-open-chat=Open chat
+join-vide-conference=Join video call
+start-chat=Start chat
+not-logged=You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in or register.</a> Learn more <a href='https://wid.gr' target='_blank'>about Widgr.</a>
+not-available-now=We are not online now, you can leave us a message and we will reply you later.
+sign-in-facebook=Sign in or register. Fastest with Facebook
+
 
 #editButtons.html
 website-embed=Embed this listing into your website
 embed-listing=Embed this listing into your website
-embed-listing-desc=If you own a site, you can embed this simple html snippet into your site. With this feature your visitors could be able to contact you using Widgr just with one click. <a href="/help#embedding">Learn more here</a>
+embed-listing-desc=If you own a site, you can customize and embed this simple html snippet into your site. use this feature to enable instant video and chat directly on your site. <a href="/help#embedding">Learn more</a>
 approved=Approved
 you-can-pay-for-event-before-or-you-can-wait-until-event-starts=You can pay for session before or you can wait until session starts
 pay-for-event-now=Pay&nbsp;for&nbsp;session&nbsp;before&nbsp;it&nbsp;starts

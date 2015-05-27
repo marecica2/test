@@ -9,11 +9,17 @@
 #{/set}
 
 #{set 'moreMessages'}
-	#{if request.cookies.msgCalendar == null}
+	#{if listing == null && request.cookies.msgCalendar == null}
 		<div class="shadow alert alert-info alert-dismissible" role="alert">
 		  <button type="button" class="close" data-dismiss="alert" onclick="star.utils.dismiss('msgCalendar')"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
 		  &{'calendar-msg'}
 		</div>
+	#{/if}
+	#{if listing != null && request.cookies.msgSessionRequest == null}			
+		<div class="shadow alert alert-info alert-dismissible" role="alert">
+			<button type="button" class="close" data-dismiss="alert" onclick="star.utils.dismiss('msgSessionRequest')"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
+			&{'click-and-drag-to-create-event'}	
+		</div>			
 	#{/if}
 #{/set}
 
@@ -55,6 +61,9 @@
 		#{if user && isOwner}
 			starCalendar.userUUID = "${user.uuid}";
 			starCalendar.login = "${user.login}";
+			starCalendar.editable = true;
+		#{/if}
+		#{if user && listing}
 			starCalendar.editable = true;
 		#{/if}
 		#{else}
@@ -101,53 +110,12 @@
 			
 			#{set item: listing /}
 			#{set usr: userDisplayed /}
-			<br/>
-			<div class="anchorLink shadow-blur" data-href="/listing/${item.uuid}" style="cursor:pointer;text-align:left;width:100%; background: #fafafa; width:100%; margin:0 0 20px 0;">
-			   		
-		   		<div class="listing-item-top shadow-inset-2" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
-		   		</div>
-		
-		   		<div class="listing-item shadow-inset-2" style="background: url('/${item.imageUrl}') no-repeat center; background-size:cover;">
-		   		</div>				   		
-		   		
-		   		<div style="display:table-cell;vertical-align:top;padding:15px;position:relative;">
-					<p>
-						<img class="inline img-circle avatar22" src="/${item.user.avatarUrl}_32x32"> 
-						<strong>${item.user.fullName}</strong>  &middot; 
-						&{item.category} 
-					</p>
-					<h4>${item.title}</h4>
-					
-					<span class="truncate">${item.getDescriptionHtml().trimDot(200).raw()}</span>
-		   			<p>
-		   			#{if item.charging != 'free'}
-		   				<strong>&{'from'} ${item.price} <small>${item.currency}</small></strong>
-			   			<nobr>&{'for'} 15</nobr> &{'minutes'}
-		   			#{/if}
-		   			#{else}
-		   				<strong class="">&{'free'}</strong>
-		   			#{/else}
-		   			#{if item.firstFree}
-		   				<span class="label default-bg">&{'first-free'}</span>
-		   			#{/if}
-		   			
-		   			</p>
-		      		#{list items:1..5, as:'i'} 
-		       			#{if i <= item.ratingAvg} 
-						    <i class="fa fa-star text-default" data-value="1"></i>
-		       			#{/if}
-		       			#{else}
-						    <i class="fa fa-star-o" data-value="1"></i>
-		       			#{/else}
-					#{/list}
-		            ${item.ratingStars} &{'reviews'}   					   			
-		   		</div>
-			</div>
-
+			
+			<h2>${item.title} <small> &{'requested-session-for'}</small></h2>	
+			<h4><img class="img-circle avatar22" src="/${listing.user.avatarUrl}_32x32"> <a href="/user/${listing.user.login}">${listing.user.getFullNameAccount()}</a></h4>	
 		</div>
 	</div>	
 </div>
-<br/>
 #{/if}	
 
 #{elseif userDisplayed}
@@ -156,7 +124,8 @@
 #{/elseif}	
 	
 <!-- Calendar container -->
-<section class="main-container" >	
+<section>	
+<br/>
 <div class="container" style="min-height:60%;">
 	<div class="row">
 		<div class="col-md-12">

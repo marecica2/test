@@ -91,8 +91,8 @@ star.utils.chatContent = function(star){
     html += '<div class="style-switcher shadow">';
     
     html += '   <div class="header style-switcher-trigger" style="text-align:center">';
-    html += '       <a class="trigger flip-horizontal" href="#chat">&nbsp;<i class="fa fa-video-camera"></i>&nbsp;</a>';
-    html += '       <strong class="header-title">'+i18n("Talk with Us over live video")+' '+'</strong>' 
+    html += '       <a class="trigger" href="#chat">&nbsp;<i style="position:relative;top:2px;" class="'+star.chatboxIcon+'"></i>&nbsp;</a>';
+    html += '       <strong class="header-title"><nobr>'+star.chatboxTitle+'&nbsp;<small class="widgr-online-status blink" style="font-size:10px;color:rgba(255,255,255,0.8);position:relative;top:-2px">'+i18n("online")+'</small>'+'</nobr></strong>';
     html += '   </div>';
     
     html += '   <div class="style-switcher-content" style="padding:15px;display:none">';
@@ -102,18 +102,18 @@ star.utils.chatContent = function(star){
     html += '   <div class="widgr-chat-noiframe" style="margin-bottom:20px;text-align:center;font-size:14px;">';
     html += '       <a href="'+star.baseUrl+"/listing/"+star.listingUuid+'" target="_blank" style="color:black;font-size:16px"><strong>'+star.listingTitle+'</strong></a>';
     html += '       <div style="text-align:center">';
-    html += '           By <a target="_blank" href="'+star.baseUrl+"/user/id/"+star.listingUserUuid+'">'+star.listingUserName+'</a>';
+    html += '           <a target="_blank" href="'+star.baseUrl+"/user/id/"+star.listingUserUuid+'">'+star.listingUserName+'</a>';
     html += "           <br/>";
 
     if(star.listingCharging != 'free'){
         html += '       '+star.listingPrice+ ' ' + star.listingCurrency + ' per '+ star.listingDuration + ' min ';
         if(star.listingFirstFree){
-            html += '   <span class="default-bg label">first free</span>';
+            html += '   <span class="default-bg label">'+i18n('first-free')+'</span>';
         }
     }
-    else {
-        html += '       Free ';
-    }
+
+    if(typeof star.listingVideo != "undefined" && star.listingVideo.length > 0)
+        html += "           <br/><strong><a class='popup-iframe' href='"+star.listingVideo+"' >"+i18n("watch-intro")+"</a></strong>";
     
     if(star.listingReviews > 2){
     html += "           <br/>";
@@ -122,21 +122,22 @@ star.utils.chatContent = function(star){
             html += "   <i class='fa fa-star text-default' data-value='1'></i>";
         else
             html += "   <i class='fa fa-star-o text-light' data-value='1'></i>";
-    html += "           <span> from <a target='_blank' href='"+star.baseUrl+"/listing/"+star.listingUuid+"#reviews'>" + star.listingReviews + " " + i18n("reviews") + "</a></span>";
+    html += "           <span> "+i18n("from")+" <a target='_blank' href='"+star.baseUrl+"/listing/"+star.listingUuid+"#reviews'>" + star.listingReviews + " " + i18n("reviews") + "</a></span>";
     }
     
+    html += '           <hr style="margin:15px 0 0 0;border:0px;border-top: 1px solid #eee;">';
     html += '       </div>';
     html += '   </div>';
     }
     
-    html += '   <iframe class="widgr-chat-iframe widgr-embedded-iframe" style="margin:5px 0px;min-width:100%;display:none" src="'+star.baseUrl+'/login" seamless frameBorder="0"></iframe>';
+    //html += '   <iframe class="widgr-chat-iframe widgr-embedded-iframe" style="margin:5px 0px;display:none" src="'+star.baseUrl+'/login" seamless frameBorder="0"></iframe>';
     
     html += '   <div class="widgr-chat-noiframe">';
     html += '       <div class="widgr-chat">';
-    html += '           <div id="content2" class="chat-window widgr-chat-input widgr-chat-content" style="display:none"></div>';
     
     if(!star.logged){
-        html += '       <div class="widgr-chat-noiframe">';
+        html += '       <div class="widgr-chat-noiframe" style="text-align:center">';
+        html += '           <span style="position:relative;bottom:15px;">'+i18n('sign-facebook')+'</span><iframe class="widgr-chat-iframe widgr-embedded-iframe" style="width:80px;height:37px;display:inline-block" src="'+star.baseUrl+'/registration/facebook" seamless frameBorder="0"></iframe>';
         html += '           <table class="widgr-start-chat-container" style="width:100%; border-collapse:collapse">';
         html += '               <tr>';
         html += '                   <td style="padding:0px;width:100%"><input type="text" class="form-control left-radius widgr-custom-name" maxlength="40" style="width:100%;" placeholder="'+i18n('your-name')+'"></td>';
@@ -145,10 +146,15 @@ star.utils.chatContent = function(star){
         html += '           </table>';
         html += '       </div>';
     }    
+
+    html += '           <div id="widgr-chat-content" class="chat-window widgr-chat-input widgr-chat-content" style="display:none">';
+    if(!star.isOwner)
+        html += "           <div class='user-containers' data-sender='"+star.userUuid+"' data-usr='"+star.userUuid+"' style='display:none'><div style='text-align:center'><a class='load-feeds' style='cursor:pointer;font-weight:bold' data-from='0' >"+i18n("previous-messages")+"</a></div></div>";
+    html += '           </div>';
     
     html += '           <table class="widgr-chat-input" style="display:none; width:100%; border-collapse:collapse;">';
     html += '               <tr>';
-    html += '                   <td style="width:100%;padding:0px;"><input id="chat-text2" class="form-control left-radius" maxlength="400" style="width:100%" placeholder="'+i18n('message')+'"></td>';
+    html += '                   <td style="width:100%;padding:0px;"><input id="chat-text2" class="form-control left-radius" maxlength="255" style="width:100%" placeholder="'+i18n('message')+'"></td>';
     html += '                   <td style="padding:0px;"><button id="chat-send2" class="btn2 btn2-default btn-short right-radius" style="width:40px;height:36px;"><i class="fa fa-share fa-flip-horizontal"></i></button></td>';
     html += '               </tr>';
     html += '           </table>';
@@ -157,27 +163,82 @@ star.utils.chatContent = function(star){
     
     html += '       <div class="widgr-email" style="display:none">';
     html += '           <span class="vertical-padding">'+i18n('not-available-now')+'</span><br/><br/>';
-    html += '           <p class="widgr-email-validation" style="color:red;display:none">Please correct your input</p>'
+    html += '           <p class="widgr-email-validation" style="color:red;display:none">'+i18n("incorrect-input")+'</p>'
     if(!star.logged){
         html += '       <input id="chat-text2" class="form-control radius vertical-padding widgr-email-sender" maxlength="50" style="width:100%" placeholder="'+i18n('your-email')+'">';
     }
     html += '           <input id="chat-text2" class="form-control radius vertical-padding widgr-email-subject" maxlength="100" style="width:100%" placeholder="'+i18n('subject')+'">';
-    html += '           <textarea id="chat-text2" class="form-control radius vertical-padding widgr-email-body" maxlength="400" style="width:100%;height:100px;" placeholder="'+i18n('message')+'"></textarea>';
+    html += '           <textarea id="chat-text2" class="form-control radius vertical-padding widgr-email-body" maxlength="400" style="font-family:inherit;width:100%;height:100px;" placeholder="'+i18n('message')+'"></textarea>';
     html += '           <button class="btn2 btn2-default radius widgr-send-msg-btn" style="width:100%;height:35px;"><i class="fa fa-envelope"></i> '+i18n('submit')+'</button>';
     html += '       </div>';
     
-    html += '       <div style="text-align:center;padding:4px;font-size:12px">';
-    if(!star.logged)
-        html += '<div class="widgr-chat-noiframe" style="text-align:center;font-size:12px;padding:10px;">'+i18n('not-logged')+'</div>';    
+    html += '       <div style="text-align:center;padding-top:10px;font-size:12px">';
+    if(!star.logged){
+        html += '       <div class="widgr-chat-noiframe" style="text-align:center;font-size:12px;padding:10px;padding-bottom:0px;">'+i18n('not-logged');   
+        html += '       </div>';
+    }
     html += '           <i>Powered by </i><a target="_blank" class="black-link" style="opacity:1" href="'+star.baseUrl+'"><img style="height:17px; vertical-align:middle" src="'+star.baseUrl+'/public/images/logo_purple.png"></a>';
+    if(star.embedded){
+        html += '       &middot; <span class="widgr-lang-select">';
+        html += '           <img class="widgr-lang-flag" data-lang="en" src="'+star.baseUrl+'/public/images/flags/en.gif">';
+        html += '           <img class="widgr-lang-flag" data-lang="de" src="'+star.baseUrl+'/public/images/flags/de.gif">';
+        html += '           <img class="widgr-lang-flag" data-lang="sk" src="'+star.baseUrl+'/public/images/flags/sk.gif">';
+        html += '       </span>';
+    }
     html += '       </div>';
-    html += '   </div>';
 
 
     html += '</div>';
     html += '</div>';
     return html;
 };
+
+var roomServices = {};
+roomServices.saveFeed = function(data, success, error){
+ $.ajax({
+     type: "POST",
+     url: "/public/feed",
+     data: JSON.stringify(data),
+     success: success,
+     error: error,
+     contentType: "application/json"
+ });
+};
+
+roomServices.getFeeds = function(params, success, error){
+ $.ajax({
+     type: "GET",
+     url: "/public/feeds?"+params,
+     success: success,
+     error: error,
+     contentType: "application/json"
+ });
+};
+
+roomServices.instantRoom = function(params, success, error){
+    var data = {};
+    $.ajax({
+        type: "POST",
+        url: "/instant-room-rest?"+params,
+        data: JSON.stringify(data),
+        success: success,
+        error: error,
+        contentType: "application/json"
+    });    
+};
+
+star.utils.unicode = function(theString) {
+    var unicodeString = '';
+    for (var i=0; i < theString.length; i++) {
+      var theUnicode = theString.charCodeAt(i).toString(16).toUpperCase();
+      while (theUnicode.length < 4) {
+        theUnicode = '0' + theUnicode;
+      }
+      theUnicode = '\\u' + theUnicode;
+      unicodeString += theUnicode;
+    }
+    return unicodeString;
+}
 
 star.utils.Interval = function(fn, time) {
     var timer = false;
@@ -699,6 +760,4 @@ function linkify(inputText) {
       }
     });
 }(jQuery));
-
- 
 

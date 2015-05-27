@@ -45,15 +45,14 @@
 					<div class="header-top-dropdown">
 						<div class="btn-group dropdownq">
 							<a class="btn dropdown-toggle margin-top-clear" href="/instant" target="_blank" rel="tooltip" data-placement="bottom" data-original-title="&{'start-instant-chat'}"><i class="fa fa-video-camera fa-flip-horizontal"></i></a>
-							<a class="btn dropdown-toggle margin-top-clear" href="/search">&{'search'}</a>
-							<a class="btn dropdown-toggle margin-top-clear" href="/about">&{'about-widgr'}</a>
-							<a class="btn dropdown-toggle margin-top-clear" href="/help">&{'tour'}</a>
+							<a class="btn dropdown-toggle margin-top-clear" href="/about">&{'about'}</a>
+							<a class="btn dropdown-toggle margin-top-clear" href="/help">&{'help'}</a>
 							<a class="btn dropdown-toggle margin-top-clear" href="/faq">&{'FAQ'}</a>
 							<a class="btn dropdown-toggle margin-top-clear" href="/contact">&{'contact-us'}</a>
 						</div>
 						<div class="btn-group dropdown">
 							<button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
-								<img src='/public/images/flags/#{if request.cookies.get("WIDGR_LANG") != null}${request.cookies.get("WIDGR_LANG").value}#{/if}#{else}${lang}#{/else}.gif'>
+								<img src='/public/images/flags/#{if request.cookies.get("WIDGR_LANG") != null}${request.cookies.get("_widgr_lang").value}#{/if}#{else}${lang}#{/else}.gif'>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-right dropdown-animation" style="padding:0px;">
 					            <li><a href="/locale?locale=en&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/en.gif'> English</a></li>
@@ -134,38 +133,40 @@
 								  	  			<a href="/mail" class="object-non-visible animated object-visible wobble" data-animation-effect="wobble" data-effect-delay="6000" ><i style="font-size:1.3em" class="text-default fa fa-envelope title="&{'received-new-message'}"></i></a>
 								  	  		</li>	
 										 	#{if user.unreadMessages == null}
-								  	  		<li class="header-notification2"><a href="/mail" style="padding-right:0px"><i class="fa fa-envelope-o"></i></a></li>
+								  	  		<li class="header-notification2 #{if request.url.indexOf("mail")>=0} active #{/if}"><a href="/mail" style="padding-right:0px"><i class="fa fa-envelope-o"></i></a></li>
 											#{/if}							  	  		
 										#{/if}			
 										
-														  	  		
 
-   								  	   	<li #{if request.url.indexOf("seach")>=0}class="active"#{/if}><a href="/search" id="public-btn-logout">&{'search'}</a></li>
+   								  	   	<li class="#{if request.url.indexOf("search")>=0} active #{/if}"><a href="/search" id="public-btn-logout"><i class="fa fa-search"></i> &{'search'}</a></li>
+
+     									#{if user && user.isPublisher()}
+								          	<li class="#{if request.url.indexOf("chat")>=0} active #{/if}"><a href="/chat"><i class="icon-chat"></i> &{'live-chat'}</a></li>
+							          	#{/if}	
 
 									 	#{if user}
-									      <li class="dropdown">
+									      <li class="dropdown #{if request.url.indexOf("dashboard")>=0} active #{/if}">
 									        <a href="/dashboard" class="dropdown-toggle" data-toggle="dropdown">
-									        	&{'dashboard'}
+									        	<i class="fa fa-th-large"></i> &{'dashboard'}
 									        </a>
 									        <ul class="dropdown-menu">
-									          	<li><a href="/dashboard"><i class="fa fa-dashboard"></i> &{'dashboard'}</a></li>
+									          	<li><a href="/dashboard"><i class="fa fa-th-large"></i> &{'dashboard'}</a></li>
 									          	<li><a href="/listings"><i class="fa fa-share-alt"></i> &{'manage-channels'}</a></li>
-									          	#{if user.isPublisher()}
-										          	<li><a href="/chat"><i class="fa fa-comments-o"></i> &{'chat'}</a></li>
-										          	<li><a href="/approvements"><i class="fa fa-check"></i> &{'session-approval'}</a></li>
-									          	#{/if}
 									          	<li><a href="/media-library"><i class="icon-docs"></i> &{'media-library'}</a></li>
 									        </ul>
 									      </li>	
 
-									      <li class="dropdown">
+									      <li class='dropdown #{if request.url.indexOf("calendar")>=0} active #{/if}'>
 									        <a href="/user/${user.login}/calendar" class="dropdown-toggle" data-toggle="dropdown">
-									        	&{'your-sessions'}
+									        	<i class="fa fa-calendar"></i> &{'your-sessions'}
 									        </a>
 									        <ul class="dropdown-menu">
 											    <li><a href="/user/${user.login}/calendar"><i class="fa fa-calendar"></i> &{'your-sessions'}</a></li>
 									          	<li><a href="/upcoming"><i class="icon-clock"></i> &{'upcoming-events'}</a></li>
 									          	<li><a href="/past"><i class="icon-back-in-time"></i> &{'previous-events'}</a></li>
+									          	#{if user.isPublisher()}
+										          	<li><a href="/approvements"><i class="fa fa-check"></i> &{'session-approval'}</a></li>
+									          	#{/if}									          	
 									        </ul>
 									      </li>	
 									      									 	

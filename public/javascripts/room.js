@@ -26,7 +26,6 @@ var webrtc = null;
 if(star.userInRoom){
     webrtc = new SimpleWebRTC({
         localVideoEl: 'localVideo',
-        //remoteVideosEl: 'remotes',
         autoRequestMedia: true,
         url: star.server_host,
         debug: false,
@@ -44,21 +43,27 @@ usr.avatar = star.avatar;
 usr.admin = star.isOwner;
 usr.login = star.login;
 usr.uuid = star.userUuid;
-if(webrtc == null)
-    socket.emit('user_joined', usr);
+socket.emit('user_joined', usr);
 
 
 // video call buttons handlers
 $(document).ready(function(){
+    
+    $('#joinModal').modal({show:true});
+    
+    
+    $('#btn-call-start').click(function(){
+        $(".control-buttons").show();
+    });
+    
     
     // stop instant broadcast
     $(".btn-instant-stop").click(function(){
         send_chat(' stopped broadcasting', star.user);
         var data = {};
         data.id = socket.socket.sessionid;
-        socket_message_broadcast("instant-room-stop-broadcast", data);
+        star.socket_message_broadcast("instant-room-stop-broadcast", data);
         window.location = $(this).attr("data-href");
-          
     });
 
     // start instat room
@@ -72,7 +77,7 @@ $(document).ready(function(){
         
         var data = {};
         data.id = socket.socket.sessionid;
-        socket_message_broadcast("instant-room-private-broadcast", data);
+        star.socket_message_broadcast("instant-room-private-broadcast", data);
         window.location = $(this).attr("data-href");        
     });
 
@@ -80,7 +85,7 @@ $(document).ready(function(){
     $(".btn-instant-start").click(function(){
         var data = {};
         data.id = socket.socket.sessionid;
-        socket_message_broadcast("instant-room-start-broadcast", data);
+        star.socket_message_broadcast("instant-room-start-broadcast", data);
         window.location = $(this).attr("data-href");        
     });
 });
@@ -103,346 +108,342 @@ socket.on('socket_message', function(data) {
     }  
  });
 
-if(webrtc != null){
-    webrtc.on('readyToCall', function () {
-        if(webrtc != null)
-            usr.peer = getPeerId();
-         socket.emit('user_joined', usr);
-        
-         // automatic join to room
-         var room = star.room
-         joinRoom(room, joinRoomCallback);
-         
-         $(document).click(function(){
-             $(".peer-controls").hide();
-         });
-
-         // show invite modal when there is only one user
-         var stopInterval = setInterval(function(){
-             if($(".user-elm").length <= 1)
-                 $('#myModal').modal({show:true});
-             clearInterval(stopInterval);
-         }, 15000);
-         
-         // camera on off
-         $("#controls-camera").click(function(){
-             if(!star.cameraoOff){
-                 star.cameraoOff = true;
-                 webrtc.pauseVideo();
-                 $(this).removeClass("btn-dark");
-                 $(this).addClass("btn-danger");
-                 $(".peer-label-camera[data-id='"+getPeerId()+"']").show();
-                 $(".videoContainer", "#video-element-"+getPeerId()).hide();
-                 $("#"+getPeerId()+"_video_small").show();
-             } else {
-                 star.cameraoOff = false;
-                 webrtc.resumeVideo();
-                 $(this).removeClass("btn-danger");
-                 $(this).addClass("btn-dark");
-                 $(".peer-label-camera[data-id='"+getPeerId()+"']").hide();
-                 if(star.maximizedId != getPeerId())
-                     $(".videoContainer", "#video-element-"+getPeerId()).show();
-                 if(star.maximizedId != getPeerId())
-                     $("#"+getPeerId()+"_video_small").hide();
-             }
-             
-             var data = {};
-             data.id = getPeerId();
-             data.cameraoOff = star.cameraoOff;
-             socket_message_broadcast("camera-broadcast", data);
-         });
-
-         // muting unmuting
-         $("#controls-mute").click(function(){
-             if(star.muted == false){
-                 $(this).removeClass("btn-dark");
-                 $(this).addClass("btn-danger");
-                 $(this).html("<i class='icon-mute'></i>");
-                 $(".peer-label-muted[data-id='"+getPeerId()+"']").show();
-                 webrtc.mute();
-                 star.muted = true;
-             } else {
-                 $(this).removeClass("btn-danger");
-                 $(this).addClass("btn-dark");
-                 $(this).html("<i class='icon-sound'></i>");
-                 $(".peer-label-muted[data-id='"+getPeerId()+"']").hide();
-                 webrtc.unmute();
-                 star.muted = false;
-             }
-             var data = {};
-             data.id = getPeerId();
-             data.muted = star.muted;
-             socket_message_broadcast("mute-broadcast", data);
-         });
-
-         $(document).on("click", ".peer-mute", function(event){
-             event.stopPropagation();
-             var id = $(this).attr("data-id");
-             if(id == getPeerId()){
-                 $("#controls-mute").html("<i class='icon-mute'></i>");
-                 $("#controls-mute").removeClass("btn-dark");
-                 $("#controls-mute").addClass("btn-danger");
-                 webrtc.mute();
-                 star.muted = true;
-             }
-             $(".peer-label-muted[data-id='"+id+"']").show();
-             $(".peer-controls[data-id='"+id+"']").hide();
-             var data = {};
-             data.id = id;
-             data.muted = true;
-             socket_message_broadcast("mute-broadcast", data);
-         });
-
-         $(document).on("click", ".peer-unmute", function(event){
-             event.stopPropagation();
-             var id = $(this).attr("data-id");
-             if(id == getPeerId()){
-                 $("#controls-mute").html("<i class='icon-sound'></i>");
-                 $("#controls-mute").removeClass("btn-danger");
-                 $("#controls-mute").addClass("btn-dark");
-                 webrtc.unmute();
-                 star.muted = false;                 
-             }
-             $(".peer-label-muted[data-id='"+id+"']").hide();
-             $(".peer-controls[data-id='"+id+"']").hide();
-             var data = {};
-             data.id = id;
-             data.muted = false;
-             socket_message_broadcast("mute-broadcast", data);
-         });
-         
-         // peer dropdown clicked
-         $(document).on("click", ".video-dropdown", function(event){
-             event.stopPropagation();
-             var id = $(this).attr("data-id");
-             if($(".peer-controls[data-id='"+id+"']").is(':visible'))
-                 $(".peer-controls[data-id='"+id+"']").hide();
-             else {
-                 $(".peer-controls").hide();
-                 var height = $(".peer-controls[data-id='"+id+"']").height() + 5;
-                 $(".peer-controls[data-id='"+id+"']").css("top", "-"+height+"px");
-                 $(".peer-controls[data-id='"+id+"']").show();
-             }
-         });
-         
-         // maximize mimize peer
-         $(document).on("click", ".user-elm", function(){
-             var id = $(this).attr("data-id");
-             var local = $(this).attr("data-local");
-             if(star.selectedId == null || star.selectedId != id){
-                 star.selectedId = id;
-                 star.switchAuto = false;
-                 maximizeMimize(id, local);
-                 $(this).attr("data-reverse", "false");
-             } else {
-                 star.selectedId = null;
-                 star.switchAuto = true;
-                 maximizeMimize(id, local);
-                 $(this).attr("data-reverse", "true");
-             }
-         });
-         
-         // hangup
-         $("#controls-hangup").click(function() {
-             $(".controls").hide();
-             peerRemoveCurrent();
-             for(var i = 0; i < peers().length; i++){
-                 peers()[i].end();
-             }
-             
-             $("#remotes").remove();
-             $("#localVideo").remove();
-             webrtc.leaveRoom();
-             webrtc.stopLocalVideo();
-             webrtc.connection.removeAllListeners();
-             webrtc.connection.disconnect();
-             var data = {};
-             data.id = getPeerId();
-             socket_message_all("controls-hangup", data);
-             send_chat(' has left the conversation', star.user);
-
-             //$("#ratingModal").modal({"show" : true});
-             window.close();
-         });         
+webrtc.on('readyToCall', function () {
+    if(webrtc != null)
+        usr.peer = getPeerId();
+     socket.emit('user_joined', usr);
     
-         // screenshare
-         if (!webrtc.capabilities.screenSharing) {
-             $('#screenShareButton').attr('disabled', 'disabled');
+     // automatic join to room
+     var room = star.room
+     joinRoom(room, joinRoomCallback);
+     
+     $(document).click(function(){
+         $(".peer-controls").hide();
+     });
+
+     // show invite modal when there is only one user
+     var stopInterval = setInterval(function(){
+         if($(".user-elm").length <= 1)
+             $('#myModal').modal({show:true});
+         clearInterval(stopInterval);
+     }, 15000);
+     
+     // camera on off
+     $("#controls-camera").click(function(){
+         if(!star.cameraoOff){
+             star.cameraoOff = true;
+             webrtc.pauseVideo();
+             $(this).removeClass("btn-dark");
+             $(this).addClass("btn-danger");
+             $(".peer-label-camera[data-id='"+getPeerId()+"']").show();
+             $(".videoContainer", "#video-element-"+getPeerId()).hide();
+             $("#"+getPeerId()+"_video_small").show();
+         } else {
+             star.cameraoOff = false;
+             webrtc.resumeVideo();
+             $(this).removeClass("btn-danger");
+             $(this).addClass("btn-dark");
+             $(".peer-label-camera[data-id='"+getPeerId()+"']").hide();
+             if(star.maximizedId != getPeerId())
+                 $(".videoContainer", "#video-element-"+getPeerId()).show();
+             if(star.maximizedId != getPeerId())
+                 $("#"+getPeerId()+"_video_small").hide();
          }
-         if(navigator.userAgent.toLowerCase().indexOf('chrome') == -1)
-             $('#screenShareButton').attr('disabled', 'disabled');
          
-         $('#screenShareButton').click(function () {
-             if (!star.screenShare) {
-                 getScreenId(function (error, sourceId, screen_constraints) {
-                     if(sourceId && sourceId != 'firefox') {
-                         screen_constraints = {
-                             video: {
-                                 mandatory: {
-                                     chromeMediaSource: 'screen',
-                                     maxWidth: 1920,
-                                     maxHeight: 1080,
-                                     minAspectRatio: 1.77
-                                 }
+         var data = {};
+         data.id = getPeerId();
+         data.cameraoOff = star.cameraoOff;
+         star.socket_message_broadcast("camera-broadcast", data);
+     });
+
+     // muting unmuting
+     $("#controls-mute").click(function(){
+         if(star.muted == false){
+             $(this).removeClass("btn-dark");
+             $(this).addClass("btn-danger");
+             $(this).html("<i class='icon-mute'></i>");
+             $(".peer-label-muted[data-id='"+getPeerId()+"']").show();
+             webrtc.mute();
+             star.muted = true;
+         } else {
+             $(this).removeClass("btn-danger");
+             $(this).addClass("btn-dark");
+             $(this).html("<i class='icon-sound'></i>");
+             $(".peer-label-muted[data-id='"+getPeerId()+"']").hide();
+             webrtc.unmute();
+             star.muted = false;
+         }
+         var data = {};
+         data.id = getPeerId();
+         data.muted = star.muted;
+         star.socket_message_broadcast("mute-broadcast", data);
+     });
+
+     $(document).on("click", ".peer-mute", function(event){
+         event.stopPropagation();
+         var id = $(this).attr("data-id");
+         if(id == getPeerId()){
+             $("#controls-mute").html("<i class='icon-mute'></i>");
+             $("#controls-mute").removeClass("btn-dark");
+             $("#controls-mute").addClass("btn-danger");
+             webrtc.mute();
+             star.muted = true;
+         }
+         $(".peer-label-muted[data-id='"+id+"']").show();
+         $(".peer-controls[data-id='"+id+"']").hide();
+         var data = {};
+         data.id = id;
+         data.muted = true;
+         star.socket_message_broadcast("mute-broadcast", data);
+     });
+
+     $(document).on("click", ".peer-unmute", function(event){
+         event.stopPropagation();
+         var id = $(this).attr("data-id");
+         if(id == getPeerId()){
+             $("#controls-mute").html("<i class='icon-sound'></i>");
+             $("#controls-mute").removeClass("btn-danger");
+             $("#controls-mute").addClass("btn-dark");
+             webrtc.unmute();
+             star.muted = false;                 
+         }
+         $(".peer-label-muted[data-id='"+id+"']").hide();
+         $(".peer-controls[data-id='"+id+"']").hide();
+         var data = {};
+         data.id = id;
+         data.muted = false;
+         star.socket_message_broadcast("mute-broadcast", data);
+     });
+     
+     // peer dropdown clicked
+     $(document).on("click", ".video-dropdown", function(event){
+         event.stopPropagation();
+         var id = $(this).attr("data-id");
+         if($(".peer-controls[data-id='"+id+"']").is(':visible'))
+             $(".peer-controls[data-id='"+id+"']").hide();
+         else {
+             $(".peer-controls").hide();
+             var height = $(".peer-controls[data-id='"+id+"']").height() + 5;
+             $(".peer-controls[data-id='"+id+"']").css("top", "-"+height+"px");
+             $(".peer-controls[data-id='"+id+"']").show();
+         }
+     });
+     
+     // maximize mimize peer
+     $(document).on("click", ".user-elm", function(){
+         var id = $(this).attr("data-id");
+         var local = $(this).attr("data-local");
+         if(star.selectedId == null || star.selectedId != id){
+             star.selectedId = id;
+             star.switchAuto = false;
+             star.maximizeMimize(id, local);
+             $(this).attr("data-reverse", "false");
+         } else {
+             star.selectedId = null;
+             star.switchAuto = true;
+             star.maximizeMimize(id, local);
+             $(this).attr("data-reverse", "true");
+         }
+     });
+     
+     // hangup
+     $("#controls-hangup").click(function() {
+         $(".controls").hide();
+         peerRemoveCurrent();
+         for(var i = 0; i < peers().length; i++){
+             peers()[i].end();
+         }
+         
+         $("#remotes").remove();
+         $("#localVideo").remove();
+         webrtc.leaveRoom();
+         webrtc.stopLocalVideo();
+         webrtc.connection.removeAllListeners();
+         webrtc.connection.disconnect();
+         var data = {};
+         data.id = getPeerId();
+         star.socket_message_all("controls-hangup", data);
+         send_chat(' has left the conversation', star.user);
+
+         //$("#ratingModal").modal({"show" : true});
+         window.close();
+     });         
+
+     // screenshare
+     if (!webrtc.capabilities.screenSharing) {
+         $('#screenShareButton').attr('disabled', 'disabled');
+     }
+     if(navigator.userAgent.toLowerCase().indexOf('chrome') == -1)
+         $('#screenShareButton').attr('disabled', 'disabled');
+     
+     $('#screenShareButton').click(function () {
+         if (!star.screenShare) {
+             getScreenId(function (error, sourceId, screen_constraints) {
+                 if(sourceId && sourceId != 'firefox') {
+                     screen_constraints = {
+                         video: {
+                             mandatory: {
+                                 chromeMediaSource: 'screen',
+                                 maxWidth: 1920,
+                                 maxHeight: 1080,
+                                 minAspectRatio: 1.77
                              }
-                         };
-
-                         if (error === 'permission-denied') return alert('Permission is denied.');
-                         if (error === 'not-chrome') return alert('Please use chrome.');
-
-                         if (!error && sourceId) {
-                             screen_constraints.video.mandatory.chromeMediaSource = 'desktop';
-                             screen_constraints.video.mandatory.chromeMediaSourceId = sourceId;
                          }
+                     };
+
+                     if (error === 'permission-denied') return alert('Permission is denied.');
+                     if (error === 'not-chrome') return alert('Please use chrome.');
+
+                     if (!error && sourceId) {
+                         screen_constraints.video.mandatory.chromeMediaSource = 'desktop';
+                         screen_constraints.video.mandatory.chromeMediaSourceId = sourceId;
                      }
+                 }
 
-                     navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
-                     navigator.getUserMedia(screen_constraints, function (stream) {
-                         myStream = stream;
-                         myStream.type = "screenShare";
-                         webrtc.shareScreenMy(myStream);
-                         //$("#screen-unique-id")[0].src = URL.createObjectURL(stream);
-                         
-                         $(".peer-label-screenshare[data-id='"+getPeerId()+"']").show();
-                         star.screenShare = true;
-                         $("#screen-unique-id").show();
-                         webrtc.pauseVideo();
-                         
-                         var data = {};
-                         data.id = getPeerId();
-                         data.screenShare = true;
-                         socket_message_broadcast("screenshare-broadcast", data);
-                         $("#screenShareButton").removeClass("btn-dark");
-                         $("#screenShareButton").addClass("btn-success");
-                     }, function (error) {
-                         console.error(error);
-                         $('#extensionModal').modal({show:true});
-                     });
-                 }); 
-                 
+                 navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
+                 navigator.getUserMedia(screen_constraints, function (stream) {
+                     myStream = stream;
+                     myStream.type = "screenShare";
+                     webrtc.shareScreenMy(myStream);
+                     //$("#screen-unique-id")[0].src = URL.createObjectURL(stream);
+                     
+                     $(".peer-label-screenshare[data-id='"+getPeerId()+"']").show();
+                     star.screenShare = true;
+                     $("#screen-unique-id").show();
+                     webrtc.pauseVideo();
+                     
+                     var data = {};
+                     data.id = getPeerId();
+                     data.screenShare = true;
+                     star.socket_message_broadcast("screenshare-broadcast", data);
+                     $("#screenShareButton").removeClass("btn-dark");
+                     $("#screenShareButton").addClass("btn-success");
+                 }, function (error) {
+                     console.error(error);
+                     $('#extensionModal').modal({show:true});
+                 });
+             }); 
+             
 
-             } else {
-                 $(".peer-label-screenshare[data-id='"+getPeerId()+"']").hide();
-                 $("#screen-unique-id")[0].src = "";
-                 $("#screen-unique-id").hide();
-                 webrtc.resumeVideo();
-                 webrtc.stopScreenShare();
-                 star.screenShare = false;
-                 $("#screenShareButton").removeClass("btn-success");
-                 $("#screenShareButton").addClass("btn-dark");
-                 var data = {};
-                 data.id = getPeerId();
-                 data.screenShare = false;
-                 socket_message_broadcast("screenshare-broadcast", data);
-             }
-         });         
-    });
+         } else {
+             $(".peer-label-screenshare[data-id='"+getPeerId()+"']").hide();
+             $("#screen-unique-id")[0].src = "";
+             $("#screen-unique-id").hide();
+             webrtc.resumeVideo();
+             webrtc.stopScreenShare();
+             star.screenShare = false;
+             $("#screenShareButton").removeClass("btn-success");
+             $("#screenShareButton").addClass("btn-dark");
+             var data = {};
+             data.id = getPeerId();
+             data.screenShare = false;
+             star.socket_message_broadcast("screenshare-broadcast", data);
+         }
+     });         
+});
     
     
-    webrtc.on('localScreenRemoved', function () {
-    });
-    
-    
-    webrtc.on('localScreenAdded', function (video) {
-    });
-    
+webrtc.on('localScreenRemoved', function () {
+});
 
-    webrtc.on('connectionReady', function (id) {
-        $(webrtc.getLocalVideoContainer()).parent().wrap("<div data-id='"+id+"' data-local='true' style='position:relative;' id='video-element-"+id+"' class='user-elm'></div>");
-        $(webrtc.getLocalVideoContainer()).parent().parent().append("<div id='localVolume' class='volumeBar'></div>");
-        webrtc.getLocalVideoContainer().play();
-    });
+
+webrtc.on('localScreenAdded', function (video) {
+});
+
+
+webrtc.on('connectionReady', function (id) {
+    $(webrtc.getLocalVideoContainer()).parent().wrap("<div data-id='"+id+"' data-local='true' style='position:relative;' id='video-element-"+id+"' class='user-elm'></div>");
+    $(webrtc.getLocalVideoContainer()).parent().parent().append("<div id='localVolume' class='volumeBar'></div>");
+    webrtc.getLocalVideoContainer().play();
+});
+
+
+// we got access to the camera
+webrtc.on('localStream', function (stream) {
     
-    
-    // we got access to the camera
-    webrtc.on('localStream', function (stream) {
-        
-    });
-    
-    
-    // a peer video has been added
-    webrtc.on('videoAdded', function (video, peer) {
-        var remotes = document.getElementById('remotes');
-        var isScreen = $(video).attr("id").indexOf("_screen") != -1 ? true : false;
-    
-        if (remotes) {
-            if(isScreen){
-                // replace it with screen stream
-                $("#"+peer.id+"_video_incoming").before(video);
-    
-                // hide original video
-                $("#"+peer.id+"_video_incoming").hide();
-    
-                video.play();
-                video.play();
-            } else {
-                var container = document.createElement('div');
-                container.className = 'videoContainer';
-                container.id = 'container_' + webrtc.getDomId(peer);
-                container.appendChild(video);
-                
-                // move the video avatar
-                remotes.appendChild(container);
-    
-                // show the ice connection state
-                if (peer && peer.pc) {
-                    var connstate = document.createElement('div');
-                    connstate.className = 'connectionstate';
-                    container.appendChild(connstate);
-                }            
-                $(container).wrap("<div  data-id='"+peer.id+"' id='video-element-"+peer.id+"' class='user-elm'></div>");
-                // show the remote volume
-                var vol = document.createElement('div');
-                vol.id = 'volume_' + peer.id;
-                vol.className = 'volumeBar';
-                $("#video-element-"+peer.id).append($(vol));
-                video.play();
-            }
-        }
-    })
-    
-    
-    // a peer was removed
-    webrtc.on('videoRemoved', function (video, peer) {
-        var isScreen = $(video).attr("id").indexOf("_screen") != -1 ? true : false;
+});
+
+
+// a peer video has been added
+webrtc.on('videoAdded', function (video, peer) {
+    var remotes = document.getElementById('remotes');
+    var isScreen = $(video).attr("id").indexOf("_screen") != -1 ? true : false;
+
+    if (remotes) {
         if(isScreen){
-            // remove screen share video
-            $(video).remove();
-            $("#"+peer.id+"_screen_incoming").remove();
-            star.maximizedScreen = null;
-    
-            // show original video
-            $("#"+peer.id+"_video_incoming").show();
+            // replace it with screen stream
+            $("#"+peer.id+"_video_incoming").before(video);
+
+            // hide original video
+            $("#"+peer.id+"_video_incoming").hide();
+
+            video.play();
+            video.play();
         } else {
-            $(video).remove();
-            //$("#"+peer.id+"_video_incoming").remove();
-            $("#video-element-"+peer.id).remove();
+            var container = document.createElement('div');
+            container.className = 'videoContainer';
+            container.id = 'container_' + webrtc.getDomId(peer);
+            container.appendChild(video);
+            
+            // move the video avatar
+            remotes.appendChild(container);
+
+            // show the ice connection state
+            if (peer && peer.pc) {
+                var connstate = document.createElement('div');
+                connstate.className = 'connectionstate';
+                container.appendChild(connstate);
+            }            
+            $(container).wrap("<div  data-id='"+peer.id+"' id='video-element-"+peer.id+"' class='user-elm'></div>");
+            // show the remote volume
+            var vol = document.createElement('div');
+            vol.id = 'volume_' + peer.id;
+            vol.className = 'volumeBar';
+            $("#video-element-"+peer.id).append($(vol));
+            video.play();
         }
-    });
-    
-    
-    // local volume has changed
-    var volumes = 0;
-    webrtc.on('volumeChange', function (volume, treshold) {
-        if(!star.muted){
-            showVolume(document.getElementById('localVolume'), volume);
-            if(volume > treshold && star.switchAuto){
-                var id = getPeerId();
-                var data = {};
-                data.id = getPeerId();
-                data.volume = volume;
-                socket_message_broadcast("speaking", data);
-            }
-        }
-    });
-    
-    
-    //webrtc.webrtc.on("speaking", star.room, function(data){
-    //});
-}
+    }
+})
 
 
-function usersRender(data) {
+// a peer was removed
+webrtc.on('videoRemoved', function (video, peer) {
+    var isScreen = $(video).attr("id").indexOf("_screen") != -1 ? true : false;
+    if(isScreen){
+        // remove screen share video
+        $(video).remove();
+        $("#"+peer.id+"_screen_incoming").remove();
+        star.maximizedScreen = null;
+
+        // show original video
+        $("#"+peer.id+"_video_incoming").show();
+    } else {
+        $(video).remove();
+        //$("#"+peer.id+"_video_incoming").remove();
+        $("#video-element-"+peer.id).remove();
+    }
+});
+
+
+// local volume has changed
+var volumes = 0;
+webrtc.on('volumeChange', function (volume, treshold) {
+    if(!star.muted){
+        showVolume(document.getElementById('localVolume'), volume);
+        if(volume > treshold && star.switchAuto){
+            var id = getPeerId();
+            var data = {};
+            data.id = getPeerId();
+            data.volume = volume;
+            star.socket_message_broadcast("speaking", data);
+        }
+    }
+});
+    
+    
+
+
+star.usersRender = function(data) {
     var userList = JSON.parse(data);
     var html = "";
     users = [];
@@ -496,14 +497,12 @@ function usersRender(data) {
     }
 }
 
-function maximizeMimize(id, local){
-    
-    // mimize maximized video
+// mimize maximized video
+star.maximizeMimize = function(id, local){
     if(star.maximizedId != null){
         var moveTo = $(".videoContainer", "#video-element-"+star.maximizedId);
         $(".videoContainer", "#video-element-"+star.maximizedId).show();
         $(star.maximized).css("position", "inherit");
-        $(star.maximized).css("z-index", "-2");
         $(star.maximized).appendTo(moveTo);
         if(star.maximized != null)
             star.maximized.play();
@@ -536,12 +535,8 @@ function maximizeMimize(id, local){
         }
 
         // for video
-        $(star.maximized).appendTo(".body");
-        $(star.maximized).css("position", "fixed");
-        $(star.maximized).css("top", "0px");
+        $(star.maximized).appendTo(".maximized-container");
         $(".videoContainer", "#video-element-"+star.maximizedId).hide();
-        $(star.maximized).css("height", "100%");
-        $(star.maximized).css("z-index", "-2");
         $("#"+star.maximizedId+"_video_small").show();
         $(".container", "#video-element-"+star.maximizedId).hide();
         if(star.selectedId != null){
@@ -553,7 +548,7 @@ function maximizeMimize(id, local){
         
         // for screen
         if(star.maximizedScreen != null){
-            $(star.maximizedScreen).appendTo(".body");
+            $(star.maximizedScreen).appendTo(".maximized-container");
             $(".videoContainer", "#video-element-"+star.maximizedId).hide();
             $(star.maximizedScreen).addClass("video-screen");
             $(star.maximizedScreen).removeClass("video-screen-mimized");
@@ -588,7 +583,7 @@ if(star.userInRoom){
                 // update maximized screen
                 if(star.switchAuto && data.data.id != getPeerId()){
                     if(star.maximizedId == null || data.data.id != star.maximizedId){
-                        maximizeMimize(data.data.id, false);
+                        star.maximizeMimize(data.data.id, false);
                     }
                 }
             }
@@ -693,7 +688,7 @@ if(star.userInRoom){
     
     
     socket.on('user_update', function(data) {
-        usersRender(data);
+        star.usersRender(data);
     });
     
 } 
@@ -708,7 +703,7 @@ if(star.userInRoom){
 //
 //
 
-function socket_message_all(event, data) {
+star.socket_message_all = function(event, data) {
     socket.emit('socket_message_all', {
         "user" : star.user,
         "room" : star.room,
@@ -718,7 +713,7 @@ function socket_message_all(event, data) {
     });
 };
 
-function socket_message_broadcast(event, data) {
+star.socket_message_broadcast = function(event, data) {
     socket.emit('socket_message_broadcast', {
         "user" : star.user,
         "room" : star.room,
@@ -728,7 +723,7 @@ function socket_message_broadcast(event, data) {
     });
 };
 
-function socket_message_broadcast_to(event, to, data) {
+star.socket_message_broadcast_to = function(event, to, data) {
     socket.emit('socket_message_broadcast_to', {
         "user" : star.user,
         "room" : star.room,
@@ -756,88 +751,110 @@ function send_chat(message, usr){
 // Canvas drawing
 //
 //
-if(star.userInRoom){
-    var canvas = {};
-    canvas.type = "pen";
-    canvas.canvas = null;
-    canvas.ctx; 
-    canvas.flag = false, 
-    canvas.prevX = 0; 
-    canvas.currX = 0; 
-    canvas.prevY = 0; 
-    canvas.currY = 0, 
-    canvas.dot_flag = false;
-    canvas.x = "rgba(255, 255, 255, 0.95)"; 
-    canvas.y = 2;
-    canvas.history = [];
-    
-    canvas.init = function() {
-        canvas.canvas = $(".canvas-paper")[0];
-        canvas.ctx = canvas.canvas.getContext("2d");
-        canvas.w = canvas.canvas.width;
-        canvas.h = canvas.canvas.height;
-    
-        canvas.canvas.addEventListener("mousemove", function (e) {
-            canvas.findxy('move', e);
-        }, false);
-        canvas.canvas.addEventListener("mousedown", function (e) {
-            canvas.findxy('down', e);
-        }, false);
-        canvas.canvas.addEventListener("mouseup", function (e) {
-            canvas.findxy('up', e);
-            if(canvas.history.length >= 11)
-                canvas.history.shift();
-            canvas.history.push(canvas.canvas.toDataURL());
-        }, false);
-        canvas.canvas.addEventListener("mouseout", function (e) {
-            canvas.findxy('out', e);
-        }, false);
-    
+var canvas = {};
+canvas.type = "pen";
+canvas.canvas = null;
+canvas.ctx; 
+canvas.flag = false, 
+canvas.prevX = 0; 
+canvas.currX = 0; 
+canvas.prevY = 0; 
+canvas.currY = 0, 
+canvas.dot_flag = false;
+canvas.x = "rgba(255, 255, 255, 0.95)"; 
+canvas.y = 2;
+canvas.history = [];
+
+canvas.init = function() {
+    canvas.canvas = $(".canvas-paper")[0];
+    canvas.ctx = canvas.canvas.getContext("2d");
+    canvas.w = canvas.canvas.width;
+    canvas.h = canvas.canvas.height;
+
+    canvas.canvas.addEventListener("mousemove", function (e) {
+        canvas.findxy('move', e);
+    }, false);
+    canvas.canvas.addEventListener("mousedown", function (e) {
+        canvas.findxy('down', e);
+    }, false);
+    canvas.canvas.addEventListener("mouseup", function (e) {
+        canvas.findxy('up', e);
+        if(canvas.history.length >= 11)
+            canvas.history.shift();
+        canvas.history.push(canvas.canvas.toDataURL());
+    }, false);
+    canvas.canvas.addEventListener("mouseout", function (e) {
+        canvas.findxy('out', e);
+    }, false);
+
+}
+
+canvas.mode = function(style){
+    if(style == 'pen'){
+        canvas.type = "pen";
+        $("#mode-eraser").removeClass("active");
+    } else {
+        canvas.type = "eraser";
+        $("#mode-pen").removeClass("active");
+        $("#mode-eraser").addClass("active");
     }
-    
-    
-    canvas.mode = function(style){
-        if(style == 'pen'){
-            canvas.type = "pen";
-            $("#mode-eraser").removeClass("active");
-        } else {
-            canvas.type = "eraser";
-            $("#mode-pen").removeClass("active");
-            $("#mode-eraser").addClass("active");
-        }
-    }
-    
-    
-    canvas.undo = function() {
-        if(canvas.history.length > 0){
-            var undo =  canvas.history.pop();
-            var image = new Image;
-            image.src = undo;
-            canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
-            canvas.ctx.drawImage(image,0, 0);
-            
-            var data = {};
-            data.image = canvas.canvas.toDataURL();
-            socket_message_broadcast("canvas-undo", data);
-        }
-    }
-    
-    
-    canvas.undoMessage = function(data){
+}
+
+canvas.undo = function() {
+    if(canvas.history.length > 0){
+        var undo =  canvas.history.pop();
         var image = new Image;
-            image.src = data.image;
-            canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
-            canvas.ctx.drawImage(image,0, 0);
+        image.src = undo;
+        canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+        canvas.ctx.drawImage(image,0, 0);
+        
+        var data = {};
+        data.image = canvas.canvas.toDataURL();
+        star.socket_message_broadcast("canvas-undo", data);
+    }
+}
+
+canvas.undoMessage = function(data){
+    var image = new Image;
+        image.src = data.image;
+        canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+        canvas.ctx.drawImage(image,0, 0);
+}
+
+canvas.draw = function() {
+    canvas.ctx.beginPath();
+    
+    if(canvas.type == "pen"){
+        canvas.ctx.globalCompositeOperation="source-over";
+        canvas.ctx.moveTo(canvas.prevX, canvas.prevY);
+        canvas.ctx.lineTo(canvas.currX, canvas.currY);
+        canvas.ctx.lineCap="round";
+        canvas.ctx.strokeStyle = canvas.x;
+        canvas.ctx.lineWidth = canvas.y;
+        canvas.ctx.stroke();
+        canvas.ctx.closePath();
+    } else {
+        canvas.ctx.globalCompositeOperation="destination-out";
+        canvas.ctx.arc(canvas.currX,canvas.currY,30,0,Math.PI*2,false);
+        canvas.ctx.fill();
     }
     
-    
-    canvas.draw = function() {
+    var data = {};
+    data.type = canvas.type;
+    data.prevX = canvas.prevX;
+    data.prevY = canvas.prevY;
+    data.currX = canvas.currX;
+    data.currY = canvas.currY;
+    star.socket_message_broadcast("canvas-draw", data);
+}
+
+canvas.drawMessage = function(data){
+    if(data != undefined){
         canvas.ctx.beginPath();
-        
-        if(canvas.type == "pen"){
+        if(data.type == "pen"){
             canvas.ctx.globalCompositeOperation="source-over";
-            canvas.ctx.moveTo(canvas.prevX, canvas.prevY);
-            canvas.ctx.lineTo(canvas.currX, canvas.currY);
+            canvas.ctx.moveTo(data.prevX, data.prevY);
+            canvas.ctx.lineTo(data.currX, data.currY);
             canvas.ctx.lineCap="round";
             canvas.ctx.strokeStyle = canvas.x;
             canvas.ctx.lineWidth = canvas.y;
@@ -845,351 +862,312 @@ if(star.userInRoom){
             canvas.ctx.closePath();
         } else {
             canvas.ctx.globalCompositeOperation="destination-out";
-            canvas.ctx.arc(canvas.currX,canvas.currY,30,0,Math.PI*2,false);
-            canvas.ctx.fill();
-        }
-        
-        var data = {};
-        data.type = canvas.type;
-        data.prevX = canvas.prevX;
-        data.prevY = canvas.prevY;
-        data.currX = canvas.currX;
-        data.currY = canvas.currY;
-        socket_message_broadcast("canvas-draw", data);
-    }
-    
-    
-    canvas.drawMessage = function(data){
-        if(data != undefined){
-            canvas.ctx.beginPath();
-            if(data.type == "pen"){
-                canvas.ctx.globalCompositeOperation="source-over";
-                canvas.ctx.moveTo(data.prevX, data.prevY);
-                canvas.ctx.lineTo(data.currX, data.currY);
-                canvas.ctx.lineCap="round";
-                canvas.ctx.strokeStyle = canvas.x;
-                canvas.ctx.lineWidth = canvas.y;
-                canvas.ctx.stroke();
-                canvas.ctx.closePath();
-            } else {
-                canvas.ctx.globalCompositeOperation="destination-out";
-                canvas.ctx.arc(data.currX,data.currY,30,0,Math.PI*2,false);
-                canvas.ctx.fill();            
-            }
+            canvas.ctx.arc(data.currX,data.currY,30,0,Math.PI*2,false);
+            canvas.ctx.fill();            
         }
     }
-    
-    
-    canvas.resize = function(){
-        $(canvas.canvas).attr({ width: canvas.w, height: canvas.h });
-        var image = new Image;
-        if(canvas.history != undefined && canvas.history.length > 0){
-            image.src = canvas.history[canvas.history.length-1];
-            canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
-            canvas.ctx.drawImage(image,0, 0);
-        }
-        var data = {};
-        data.width = canvas.w;
-        data.height = canvas.h;
-        data.image = canvas.canvas.toDataURL();
-        socket_message_broadcast("canvas-resize", data);
-    }
-    
-    
-    canvas.resizeMessage = function(data){
-        $(".canvas-container").show();
-        
-        canvas.w = data.width;
-        canvas.h = data.height;
-        $(canvas.canvas).height(data.height);
-        $(canvas.canvas).width(data.width);
-        $(canvas.canvas).attr({ width: data.width, height: data.height });
-        $(".ui-wrapper").height(data.height);
-        $(".ui-wrapper").width(data.width);
-        
-        //redraw image
-        var image = new Image;
-        image.src = data.image;
+}
+
+canvas.resize = function(){
+    $(canvas.canvas).attr({ width: canvas.w, height: canvas.h });
+    var image = new Image;
+    if(canvas.history != undefined && canvas.history.length > 0){
+        image.src = canvas.history[canvas.history.length-1];
         canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
         canvas.ctx.drawImage(image,0, 0);
+    }
+    var data = {};
+    data.width = canvas.w;
+    data.height = canvas.h;
+    data.image = canvas.canvas.toDataURL();
+    star.socket_message_broadcast("canvas-resize", data);
+}
+
+canvas.resizeMessage = function(data){
+    $(".canvas-container").show();
+    
+    canvas.w = data.width;
+    canvas.h = data.height;
+    $(canvas.canvas).height(data.height);
+    $(canvas.canvas).width(data.width);
+    $(canvas.canvas).attr({ width: data.width, height: data.height });
+    $(".ui-wrapper").height(data.height);
+    $(".ui-wrapper").width(data.width);
+    
+    //redraw image
+    var image = new Image;
+    image.src = data.image;
+    canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+    canvas.ctx.drawImage(image,0, 0);
+    
+    // activate button
+    star.drawing = true;
+    $("#canvas-open").removeClass("btn-dark");
+    $("#canvas-open").addClass("btn-success");
+    $(".canvas-container").show();
+}
+
+canvas.erase = function() {
+    canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+    var data = {};
+    star.socket_message_broadcast("canvas-erase", data);
+}
+
+canvas.eraseMessage = function(){
+    canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+}
+
+canvas.save = function() {
+    // draw patter on background
+    var img = new Image();
+    img.src = '../images/canvas_pattern_0.jpg';
+    canvas.ctx.globalCompositeOperation="destination-over";
+    var ptrn = canvas.ctx.createPattern(img,'repeat');
+    canvas.ctx.fillStyle = ptrn;
+    canvas.ctx.fillRect(0,0,canvas.w,canvas.h);
+
+    var dataURL = canvas.canvas.toDataURL("image/png");
+
+    // upload the image
+    var blob = canvas.dataURItoBlob(dataURL);
+    var name = "canvas-"+starUtils.s4()+".png";
+    if($("#canvas-name").val().length > 0)
+        name = $("#canvas-name").val()+".png";
+    blob.name = name;
+    blob.lastModifiedDate = new Date();
+    blob.lastModified = blob.lastModifiedDate.getTime();
+    var files = [];
+    files.push(blob)
+    var params = "";
+    var temp = star.utils.uuid();
+    params = "temp="+temp;
+    star.utils.uploadFiles('/fileupload?'+star.token+'&'+params, files, function(json){
+        var response = JSON.parse(json);
         
-        // activate button
-        star.drawing = true;
-        $("#canvas-open").removeClass("btn-dark");
-        $("#canvas-open").addClass("btn-success");
-        $(".canvas-container").show();
-    }
-    
-    
-    canvas.erase = function() {
-        canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+        // save comment
         var data = {};
-        socket_message_broadcast("canvas-erase", data);
+        data.uuid = star.room;
+        data.type = "file";
+        data.objectType = "event";
+        data.comment = "canvas.jpg";
+        data.tempId = temp;
+        
+        canvas.erase();
+
+        starServices.addComment(data, function(){
+            var d = {};
+            star.socket_message_broadcast("files-reload", d);
+            star.loadComments(star.params, star.dashboard);
+        });        
+    });
+}
+
+canvas.filesReload = function(){
+    star.loadComments(star.params, star.dashboard);
+    canvas.commentsOpen();
+}
+
+canvas.dataURItoBlob = function(dataURI) {
+    dataURI = dataURI.split(',');
+    var type = dataURI[0].split(':')[1].split(';')[0],
+        byteString = atob(dataURI[1]),
+        byteStringLength = byteString.length,
+        arrayBuffer = new ArrayBuffer(byteStringLength),
+        intArray = new Uint8Array(arrayBuffer);
+    for (var i = 0; i < byteStringLength; i++) {
+        intArray[i] = byteString.charCodeAt(i);
     }
-    
-    
-    canvas.eraseMessage = function(){
-        canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+    return new Blob([intArray], {
+        type: type
+    });
+}
+
+canvas.findxy = function(res, e) {
+    if(e.type == "touchmove"){
+        canvas.prevX = canvas.currX;
+        canvas.prevY = canvas.currY;
+        canvas.currX = e.changedTouches[0].clientX - $(canvas.canvas).offset().left;
+        canvas.currY = e.changedTouches[0].clientY - $(canvas.canvas).offset().top;
+        if(isNaN(canvas.prevX)){
+            canvas.prevX = canvas.currX;
+            canvas.prevY = canvas.currY;
+        }
+    } else {
+        canvas.prevX = canvas.currX;
+        canvas.prevY = canvas.currY;
+        canvas.currX = e.clientX - $(canvas.canvas).offset().left;
+        canvas.currY = e.clientY - $(canvas.canvas).offset().top;
     }
-    
-    
-    canvas.save = function() {
-        // draw patter on background
-        var img = new Image();
-        img.src = '../images/canvas_pattern_0.jpg';
-        canvas.ctx.globalCompositeOperation="destination-over";
-        var ptrn = canvas.ctx.createPattern(img,'repeat');
-        canvas.ctx.fillStyle = ptrn;
-        canvas.ctx.fillRect(0,0,canvas.w,canvas.h);
-    
-        var dataURL = canvas.canvas.toDataURL("image/png");
-    
-        // upload the image
-        var blob = canvas.dataURItoBlob(dataURL);
-        var name = "canvas-"+starUtils.s4()+".png";
-        if($("#canvas-name").val().length > 0)
-            name = $("#canvas-name").val()+".png";
-        blob.name = name;
-        blob.lastModifiedDate = new Date();
-        blob.lastModified = blob.lastModifiedDate.getTime();
-        var files = [];
-        files.push(blob)
-        var params = "";
-        var temp = star.utils.uuid();
-        params = "temp="+temp;
-        star.utils.uploadFiles('/fileupload?'+star.token+'&'+params, files, function(json){
-            var response = JSON.parse(json);
+
+    if (res == 'down') {
+        canvas.flag = true;
+        canvas.dot_flag = true;
+        if (canvas.dot_flag) {
+            canvas.ctx.beginPath();
+            canvas.ctx.moveTo(canvas.currX-1, canvas.currY);
+            canvas.ctx.lineTo(canvas.currX, canvas.currY);
+            canvas.ctx.lineCap="round";
+            canvas.ctx.strokeStyle = canvas.x;
+            canvas.ctx.lineWidth = canvas.y;
+            canvas.ctx.stroke();
+            canvas.ctx.closePath();
             
-            // save comment
             var data = {};
-            data.uuid = star.room;
-            data.type = "file";
-            data.objectType = "event";
-            data.comment = "canvas.jpg";
-            data.tempId = temp;
-            
-            canvas.erase();
-    
-            starServices.addComment(data, function(){
-                var d = {};
-                socket_message_broadcast("files-reload", d);
-                star.loadComments(star.params, star.dashboard);
-            });        
-        });
-    }
-    
-    canvas.filesReload = function(){
-        star.loadComments(star.params, star.dashboard);
-        canvas.commentsOpen();
-    }
-    
-    
-    canvas.dataURItoBlob = function(dataURI) {
-        dataURI = dataURI.split(',');
-        var type = dataURI[0].split(':')[1].split(';')[0],
-            byteString = atob(dataURI[1]),
-            byteStringLength = byteString.length,
-            arrayBuffer = new ArrayBuffer(byteStringLength),
-            intArray = new Uint8Array(arrayBuffer);
-        for (var i = 0; i < byteStringLength; i++) {
-            intArray[i] = byteString.charCodeAt(i);
+            data.type = canvas.type;
+            data.prevX = canvas.currX-1;
+            data.prevY = canvas.currY;
+            data.currX = canvas.currX;
+            data.currY = canvas.currY;
+            star.socket_message_broadcast("canvas-draw", data);
         }
-        return new Blob([intArray], {
-            type: type
-        });
     }
+    if (res == 'up' || res == "out") {
+        canvas.flag = false;
+    }
+    if (res == 'move') {
+        if (canvas.flag) {
+            canvas.draw();
+        }
+    }
+}
+
+canvas.share = function(elm){
+    var data = {};
+    data.width = canvas.w;
+    data.height = canvas.h;
+    data.image = canvas.canvas.toDataURL();
+    star.socket_message_broadcast("canvas-resize", data);
+    $(elm).addClass("btn-primary");
+}
+
+canvas.close = function(){
+    star.drawing = false;
+    $(".canvas-container").hide();
+    $("#canvas-open").addClass("btn-dark");
+    $("#canvas-open").removeClass("btn-success");    
+}
+
+canvas.commentsClose = function(){
+    star.commentsDialog = false;
+    $(".comments-container").hide();
+    $("#comments-open").addClass("btn-dark");
+    $("#comments-open").removeClass("btn-success");    
+}
+
+canvas.commentsOpen = function(){
+    star.commentsDialog = true;
+    $(".comments-container").show();
+    $("#comments-open").removeClass("btn-dark");
+    $("#comments-open").addClass("btn-success");    
+}
+
+$(document).ready(function(){
+    document.addEventListener("touchstart", canvas.touchHandler, true);
+    document.addEventListener("touchmove", canvas.touchHandler, true);
+    document.addEventListener("touchend", canvas.touchHandler, true);
+    document.addEventListener("touchcancel", canvas.touchHandler, true);        
     
-    
-    canvas.findxy = function(res, e) {
-        if(e.type == "touchmove"){
-            canvas.prevX = canvas.currX;
-            canvas.prevY = canvas.currY;
-            canvas.currX = e.changedTouches[0].clientX - $(canvas.canvas).offset().left;
-            canvas.currY = e.changedTouches[0].clientY - $(canvas.canvas).offset().top;
-            if(isNaN(canvas.prevX)){
-                canvas.prevX = canvas.currX;
-                canvas.prevY = canvas.currY;
-            }
+    $("#canvas-open").click(function(e){
+        $(".draggable").css("z-index", "1000");
+        $(".canvas-container").css("z-index", "1001");
+        
+        if(star.drawing == false){
+            star.drawing = true;
+            $("#canvas-open").removeClass("btn-dark");
+            $("#canvas-open").addClass("btn-success");
+            $(".canvas-container").show();
         } else {
-            canvas.prevX = canvas.currX;
-            canvas.prevY = canvas.currY;
-            canvas.currX = e.clientX - $(canvas.canvas).offset().left;
-            canvas.currY = e.clientY - $(canvas.canvas).offset().top;
+            star.drawing = false;
+            $(".canvas-container").hide();
+            $("#canvas-open").addClass("btn-dark");
+            $("#canvas-open").removeClass("btn-success");             
         }
-    
-        if (res == 'down') {
-            canvas.flag = true;
-            canvas.dot_flag = true;
-            if (canvas.dot_flag) {
-                canvas.ctx.beginPath();
-                canvas.ctx.moveTo(canvas.currX-1, canvas.currY);
-                canvas.ctx.lineTo(canvas.currX, canvas.currY);
-                canvas.ctx.lineCap="round";
-                canvas.ctx.strokeStyle = canvas.x;
-                canvas.ctx.lineWidth = canvas.y;
-                canvas.ctx.stroke();
-                canvas.ctx.closePath();
-                
-                var data = {};
-                data.type = canvas.type;
-                data.prevX = canvas.currX-1;
-                data.prevY = canvas.currY;
-                data.currX = canvas.currX;
-                data.currY = canvas.currY;
-                socket_message_broadcast("canvas-draw", data);
-            }
+    });
+
+    $("#comments-open").click(function(e){
+        $(".draggable").css("z-index", "1000");
+        $(".comments-container").css("z-index", "1001");
+        
+        if(star.commentsDialog == false){
+            star.commentsDialog = true;
+            $("#comments-open").removeClass("btn-dark");
+            $("#comments-open").addClass("btn-success");
+            $(".comments-container").show();
+        } else {
+            star.commentsDialog = false;
+            $(".comments-container").hide();
+            $("#comments-open").addClass("btn-dark");
+            $("#comments-open").removeClass("btn-success");             
         }
-        if (res == 'up' || res == "out") {
-            canvas.flag = false;
-        }
-        if (res == 'move') {
-            if (canvas.flag) {
-                canvas.draw();
-            }
-        }
-    }
-    
-    canvas.share = function(elm){
-        var data = {};
-        data.width = canvas.w;
-        data.height = canvas.h;
-        data.image = canvas.canvas.toDataURL();
-        socket_message_broadcast("canvas-resize", data);
-        $(elm).addClass("btn-primary");
-    }
-    
-    canvas.close = function(){
-        star.drawing = false;
-        $(".canvas-container").hide();
-        $("#canvas-open").addClass("btn-dark");
-        $("#canvas-open").removeClass("btn-success");    
-    }
-    
-    canvas.commentsClose = function(){
-        star.commentsDialog = false;
-        $(".comments-container").hide();
-        $("#comments-open").addClass("btn-dark");
-        $("#comments-open").removeClass("btn-success");    
-    }
-
-    canvas.commentsOpen = function(){
-        star.commentsDialog = true;
-        $(".comments-container").show();
-        $("#comments-open").removeClass("btn-dark");
-        $("#comments-open").addClass("btn-success");    
-    }
-    
-    $(document).ready(function(){
-        document.addEventListener("touchstart", canvas.touchHandler, true);
-        document.addEventListener("touchmove", canvas.touchHandler, true);
-        document.addEventListener("touchend", canvas.touchHandler, true);
-        document.addEventListener("touchcancel", canvas.touchHandler, true);        
-        
-        $("#canvas-open").click(function(e){
-            $(".draggable").css("z-index", "1000");
-            $(".canvas-container").css("z-index", "1001");
-            
-            if(star.drawing == false){
-                star.drawing = true;
-                $("#canvas-open").removeClass("btn-dark");
-                $("#canvas-open").addClass("btn-success");
-                $(".canvas-container").show();
-            } else {
-                star.drawing = false;
-                $(".canvas-container").hide();
-                $("#canvas-open").addClass("btn-dark");
-                $("#canvas-open").removeClass("btn-success");             
-            }
-        });
-    
-        $("#comments-open").click(function(e){
-            $(".draggable").css("z-index", "1000");
-            $(".comments-container").css("z-index", "1001");
-            
-            if(star.commentsDialog == false){
-                star.commentsDialog = true;
-                $("#comments-open").removeClass("btn-dark");
-                $("#comments-open").addClass("btn-success");
-                $(".comments-container").show();
-            } else {
-                star.commentsDialog = false;
-                $(".comments-container").hide();
-                $("#comments-open").addClass("btn-dark");
-                $("#comments-open").removeClass("btn-success");             
-            }
-        });
-        
-        $(".comments-container").css('position','fixed');
-        $(".comments-container").css("left", "30px");
-        $(".comments-container").css("top", "30px");
-        $(".comments-resize-2").resizable({
-            minHeight: 300,
-            minWidth: 340
-        });
-        
-        // dragging
-        $(".draggable").draggable({handle:".drag-slider"});
-        $(".draggable").mousedown(function(){
-            $(".draggable").css("z-index", "1000");
-            $(this).css("z-index", "1001");
-        });
-        
-        $(".canvas-container").css('position','fixed');
-        $(".canvas-container").css("left", "10px");
-        $(".canvas-container").css("top", "10px");
-        $(".canvas-container").show();
-        $(".canvas-paper").resizable({
-            minHeight: 340,
-            minWidth: 460,
-            stop: function(event, ui) {
-                  canvas.w = ui.size.width;
-                  canvas.h = ui.size.height;
-                  canvas.resize();
-            }
-        });
-
-        canvas.init(); 
-        $(".canvas-container").hide();
-
-
     });
     
-    socket.on('socket_message', function(data) {
-        if(data.event == "canvas-draw"){
-            canvas.drawMessage(data.data);
-        }     
-        if(data.event == "canvas-undo"){
-            canvas.undoMessage(data.data);
-        }     
-        if(data.event == "canvas-resize"){
-            canvas.resizeMessage(data.data);
-        }     
-        if(data.event == "canvas-erase"){
-            canvas.eraseMessage();
-        }     
-        if(data.event == "canvas-save"){
-        }     
-        if(data.event == "files-reload"){
-            canvas.filesReload();
-        }     
-     });
+    $(".comments-container").css('position','fixed');
+    $(".comments-container").css("left", "30px");
+    $(".comments-container").css("top", "30px");
+    $(".comments-resize-2").resizable({
+        minHeight: 300,
+        minWidth: 340
+    });
     
+    // dragging
+    $(".draggable").draggable({handle:".drag-slider"});
+    $(".draggable").mousedown(function(){
+        $(".draggable").css("z-index", "1000");
+        $(this).css("z-index", "1001");
+    });
     
-    canvas.touchHandler = function(event) {
-        var touch = event.changedTouches[0];
-        
-        var simulatedEvent = document.createEvent("MouseEvent");
-            simulatedEvent.initMouseEvent({
-            touchstart: "mousedown",
-            touchmove: "mousemove",
-            touchend: "mouseup"
-        }[event.type], true, true, window, 1,
-            touch.screenX, touch.screenY,
-            touch.clientX, touch.clientY, false,
-            false, false, false, 0, null);
+    $(".canvas-container").css('position','fixed');
+    $(".canvas-container").css("left", "10px");
+    $(".canvas-container").css("top", "10px");
+    $(".canvas-container").show();
+    $(".canvas-paper").resizable({
+        minHeight: 340,
+        minWidth: 460,
+        stop: function(event, ui) {
+              canvas.w = ui.size.width;
+              canvas.h = ui.size.height;
+              canvas.resize();
+        }
+    });
+
+    canvas.init(); 
+    $(".canvas-container").hide();
+});
+
+socket.on('socket_message', function(data) {
+    if(data.event == "canvas-draw"){
+        canvas.drawMessage(data.data);
+    }     
+    if(data.event == "canvas-undo"){
+        canvas.undoMessage(data.data);
+    }     
+    if(data.event == "canvas-resize"){
+        canvas.resizeMessage(data.data);
+    }     
+    if(data.event == "canvas-erase"){
+        canvas.eraseMessage();
+    }     
+    if(data.event == "canvas-save"){
+    }     
+    if(data.event == "files-reload"){
+        canvas.filesReload();
+    }     
+ });
+
+canvas.touchHandler = function(event) {
+    var touch = event.changedTouches[0];
     
-        touch.target.dispatchEvent(simulatedEvent);
-    }
+    var simulatedEvent = document.createEvent("MouseEvent");
+        simulatedEvent.initMouseEvent({
+        touchstart: "mousedown",
+        touchmove: "mousemove",
+        touchend: "mouseup"
+    }[event.type], true, true, window, 1,
+        touch.screenX, touch.screenY,
+        touch.clientX, touch.clientY, false,
+        false, false, false, 0, null);
+
+    touch.target.dispatchEvent(simulatedEvent);
 }
 
 
@@ -1200,101 +1178,130 @@ if(star.userInRoom){
 // Video call Chat 
 //
 //
-if(webrtc != null){
-    socket.on('message', function(data) {
-        if (data.message) {
-            var html = '';
-            if(data.username != undefined)
-                html += '<strong>' + data.username.replace(/>/g, '&gt;') + '</strong>: ';
-            var message = linkify(data.message);
-            html += message + '<br/>';
-            $("#content").append(html);
-            var elm = $("#chat-container");
-            if(star.chatMimized){
-                elm.animate({right:'0px'},100);
-                star.chatMimized = false;
-            }
-        }
-        $("#content").scrollTop[0] = content.scrollHeight;
-    });
     
-    
-    $(document).ready(function(){
-        
-        // init room feeds
-        roomServices.getFeeds("event="+star.room, function(data){
-            var html = "";
-            for(var i = data.length-1; i >= 0; i--){
-                var date = new Date(data[i].created).toLocaleString();
-                html += "<b title='"+date+"' >"+data[i].name+": </b>"+linkify(data[i].comment)+"<br/>";
-            }
-            $("#content").html(html);
-        });        
-        
-        $("#chat-slider").click(function() {
-            var elm = $("#chat-container");
-            if(star.chatMimized){
-                elm.animate({right:'0px'},100);
-                star.chatMimized = false;
-            } else {
-                elm.animate({right:'-325px'},100);
-                star.chatMimized = true;
-            }
-        });
-        
-        $("#chat-send").click(function() {
-            var comment = $("#chat-text").val();
-            send_chat(comment, $("#chat-name").val());
-            $("#chat-text").val("");
-            var data = {};
-            data.uuid = star.room;
-            data.name = star.userName;
-            data.comment = comment;
-            roomServices.saveFeed(data, function(){
-            });
-            return false;
-        });
+star.teamMessageSend = function(){
+    if($("#chat-text3").val() == null || $("#chat-text3").val().length == 0)
+        return;
+    var data = {};
+    data.type = "message";
+    data.room = star.chatRoom;
+    data.message = $("#chat-text3").val();
+    data.client = star.getSessionId();
+    data.sender = star.userUuid;
+    data.senderUuid = star.userUuid;
+    data.senderName = star.userName;
+    data.senderAvatar = star.userAvatar;
+    socket.emit('hangout-send', data); 
+
+    var saveFeed = {};
+    saveFeed.uuid = star.chatRoom;
+    saveFeed.sender = data.senderUuid;
+    saveFeed.senderName = data.senderName;
+    saveFeed.comment = data.message;
+    roomServices.saveFeed(saveFeed, function(){
+    });           
+    $("#chat-text3").val("");
+    $("#chat-text3").focus();    
+};
+
+star.teamFeedsLoad = function(event, elm) {
+    var btn = $(this);
+    var from = parseInt(btn.attr("data-from"));
+    var max = 5;    
+    var btnContainer = btn.parent();
+    var container = btn.parent().parent();
+    var params = "&from="+from+"&max="+max+"&id="+star.chatRoom;    
+    roomServices.getFeeds(params, function(data){
+        star.feedsRender(data, btnContainer);
     });
+    btn.attr("data-from", from + max); 
 }
 
+star.feedsRender = function(data, btnContainer, clbck){
+    html = "";
+    for(var i = data.length - 1; i >= 0; i--){
+        time = starUtils.formatDate(new Date(data[i].created)) + " " + starUtils.formatTime2(new Date(data[i].created));
+        html += '<span style="line-height:32px; font-size:13px; color:gray" ><a target="_blank" href="'+star.baseUrl+"/user/id/"+data[i].sender+'">' + data[i].senderName + '</a> <span style="float:right;margin-right:10px">'+ time +"</span></span>";
+        if(star.userUuid == data[i].sender){
+            html += '<div class="widgr-bubble-left">';
+            html +=  data[i].comment;
+            html += '</div>';
+        } else {
+            html += '<div class="widgr-bubble-right">';
+            html +=  data[i].comment;
+            html += '</div>';
+        }
+    }
+    btnContainer.after(html);
+    if(star.scrollDown){
+        $("#widgr-chat-content")[0].scrollTop =  $("#widgr-chat-content")[0].scrollHeight;  
+        star.scrollDown = false;
+    }
+    if(!star.isOwner && data.length > 0){
+        $(".widgr-chat-content").show();
+        $(".user-containers").show();
+    }
+}
 
+star.teamMessageRender = function(data) {
+    if(!star.chatOpen){
+        $("#chat-open").click();
+    }
+    
+    var now = new Date();
+    var time = starUtils.formatDate(now) + " " + starUtils.formatTime2(now);
+    var style = data.senderName != star.userName ? "widgr-bubble-right" : "widgr-bubble-left";
+    var html = '';
+    html += '<span style="line-height:32px; font-size:13px; color:gray" ><img class="img-circle avatar32 margin10" style="vertical-align:middle" src="'+star.baseUrl+"/"+data.senderAvatar+'_32x32"><a target="_blank" href="'+star.baseUrl+"/user/id/"+data.senderUuid+'">' + data.senderName + '</a> <span style="float:right;margin-right:10px">'+time+"</span></span>";
+    html += '<div class="'+style+'" >';
+    html += linkify(data.message.replace(/>/g, '&gt;'));
+    html += '</div>';
+    if(!$(".team-switch").is(":visible"))
+        $(".widgr-msg-team").fadeOut("slow").fadeIn("slow");
+    $(".widgr-chat-content-team").append(html);
+    $(".widgr-chat-content-team")[0].scrollTop =  $(".widgr-chat-content-team")[0].scrollHeight;  
+}
 
+star.getSessionId = function(){
+    return socket.socket.sessionid;
+}
 
+star.chatOpen = false;
+$(document).ready(function(){
+    $("#chat-open").click(function(){
+        star.chatOpen = !star.chatOpen;
+        if(star.chatOpen){
+            $(this).addClass("btn-success");
+            $(this).removeClass("btn-dark");
+            $(".right-panel").show();
+        } else {
+            $(".right-panel").hide();
+            $(this).removeClass("btn-success");
+            $(this).addClass("btn-dark");
+        }
+    });
 
-var roomServices = {};
-roomServices.saveFeed = function(data, success, error){
- $.ajax({
-     type: "POST",
-     url: "/public/feed",
-     data: JSON.stringify(data),
-     success: success,
-     error: error,
-     contentType: "application/json"
- });
-};
+    $("#chat-close").click(function(){
+        $("#chat-open").click();
+    });
+    
+    // render team message
+    socket.on('hangout-message', star.teamMessageRender);     
+    
+    // load team history
+    $(document).on("click", ".team-feeds-load", star.teamFeedsLoad);    
 
-roomServices.getFeeds = function(params, success, error){
- $.ajax({
-     type: "GET",
-     url: "/public/feeds?"+params,
-     success: success,
-     error: error,
-     contentType: "application/json"
- });
-};
-
-roomServices.instantRoom = function(params, success, error){
-    var data = {};
-    $.ajax({
-        type: "POST",
-        url: "/instant-room-rest?"+params,
-        data: JSON.stringify(data),
-        success: success,
-        error: error,
-        contentType: "application/json"
-    });    
-};
-
+    $(document).on("click", "#chat-send3", function(){
+        star.teamMessageSend();
+    });
+    
+    $(document).on("keyup", "#chat-text3", function(e){
+        if(e.keyCode == 13)
+            star.teamMessageSend();
+    });        
+    
+    $(".team-feeds-load").click();
+});
 
 
 
@@ -1320,7 +1327,6 @@ function getSessionId(){
     return socket.socket.sessionid;
 }
 
-
 function getPeerById(id){
     var peers = webrtc.webrtc.peers;
     if(peers != undefined){
@@ -1333,13 +1339,11 @@ function getPeerById(id){
     return null;
 }
 
-
 function peerRemoveCurrent(){
     var peer = getPeerById(getPeerId());
     if(peer != null)
         peer.end();
 }
-
 
 function getUserById(id){
     for(var i = 0; i < users.length; i++){
@@ -1349,27 +1353,22 @@ function getUserById(id){
     }
 }
 
-
 function s4() {
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 };
-
 
 function uuid() {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
            s4() + '-' + s4() + s4() + s4();
 }
 
-
 function peers(){
     return webrtc.webrtc.peers;
 }
 
-
 function joinRoomCallback(err, r){
     $(".controls").show();
 }
-
 
 function joinRoom(room, joinRoomCallback){
     var isInRoom = false;
@@ -1384,7 +1383,6 @@ function joinRoom(room, joinRoomCallback){
     }
 }
 
-
 function showVolume(el, volume) {
     $(el).show();
     $(el).css("opacity", "1");
@@ -1398,8 +1396,6 @@ function showVolume(el, volume) {
     }
     $(el).fadeOut();
 }
-
-
 
 (function ($) {
     $.fn.waitUntilExists    = function (handler, shouldRunHandlerOnce, isChild) {

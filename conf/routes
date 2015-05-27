@@ -31,6 +31,7 @@ GET		/login									Secure.login
 GET		/login/									Secure.login
 POST   	/login          						Secure.authenticate
 POST   	/login/facebook							Secure.authenticateFacebook
+GET   	/login/facebook							Secure.authenticateFacebook
 GET	   	/logout									Secure.logout
 
 GET	   	/google									GoogleOauth.authorize
@@ -88,6 +89,7 @@ GET		/password								Registration.password
 POST 	/password								Registration.passwordPost
 GET		/public/password						Registration.passwordCustomer
 POST 	/public/password						Registration.passwordCustomerPost
+GET 	/registration/facebook					Registration.registrationFacebook
 POST 	/registration/facebook					Registration.registrationFacebookPost
 GET 	/registration/activate					Registration.activate
 

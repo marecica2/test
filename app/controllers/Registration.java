@@ -104,6 +104,12 @@ public class Registration extends BaseController
         render(uuid);
     }
 
+    public static void registrationFacebook()
+    {
+        User user = new User();
+        render(user);
+    }
+
     public static void registrationPost(
         String login,
         String url,
@@ -209,7 +215,8 @@ public class Registration extends BaseController
         String type,
         String invitation,
         String token,
-        Integer offset)
+        Integer offset,
+        Boolean iframe)
     {
         checkAuthenticity();
         validation.required(firstName);
@@ -217,10 +224,12 @@ public class Registration extends BaseController
         validation.email(login).message("validation.login");
         validation.required(login);
 
-        User checkUser = User.getUserByLogin(login);
-        if (checkUser != null)
-            validation.addError("login", Messages.get("login-already-used", login));
-        checkUser = User.getUserByFacebook(facebook);
+        // if existing user and from iframe - autosign and refresh
+        User checkUser = User.getUserByFacebook(facebook);
+        if (iframe != null && checkUser != null)
+            facebookAutoSignIn();
+
+        checkUser = User.getUserByLogin(login);
         if (checkUser != null)
             validation.addError("login", Messages.get("login-already-used", login));
 
@@ -261,13 +270,35 @@ public class Registration extends BaseController
                     .setMessageWiki(body)
                     .send();
 
-            redirectTo("/login");
+            session.put("username", user.login);
+
+            // if existing user and from iframe - autosign and refresh
+            if (iframe != null)
+                facebookAutoSignIn();
+            else
+                redirectTo("/dashboard");
         }
         params.flash();
         validation.keep();
         flash.keep();
         params.flash();
         registration();
+    }
+
+    private static void facebookAutoSignIn()
+    {
+        try
+        {
+            boolean success = Secure.authenticateFacebookMethod(request.params.get("id"), request.params.get("signedRequest"));
+            if (success)
+                render("Registration/registrationFacebookRefresh.html");
+            else
+                forbidden();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            error();
+        }
     }
 
     public static void password()
@@ -407,4 +438,5 @@ public class Registration extends BaseController
         plan.save();
         return account;
     }
+
 }

@@ -131,7 +131,7 @@ public class Events extends BaseController
         final Boolean isTeam = event != null && user != null ? user.isTeam(event) : false;
         final Attendance attendance = user != null && event != null ? event.getInviteForCustomer(user) : null;
         final Boolean paid = (user != null && attendance != null && attendance.paid != null && attendance.paid) || isOwner ? true : false;
-        final User displayedUser = event.listing.user;
+        final User displayedUser = event != null ? event.listing.user : null;
 
         if (edit && event != null && edit && !event.isEditable(user))
             forbidden();
@@ -285,8 +285,11 @@ public class Events extends BaseController
         final Map<String, String> errs = new HashMap<String, String>();
 
         // permissions check
-        if (!user.isPublisher() || !user.isTeam(event))
+        if (!user.isPublisher() && !user.isTeam(event))
+        {
+            System.err.println("ss");
             forbidden();
+        }
 
         // validation
         checkAuthenticity();

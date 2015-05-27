@@ -29,7 +29,7 @@
 	color: #262626;
 	max-width: 500px;
 	position: fixed;
-	bottom: 0px;
+	bottom: -3px;
 	right:60px;
 }
 
@@ -79,23 +79,28 @@
 
 
 #widgr-container div.style-switcher .header {
+	padding:0px;
 	border-top-left-radius:6px;
 	border-top-right-radius:6px;		
 	background-color: #555;
 	cursor:pointer;
 	position: relative;
 	font-size:14px;
-	padding:6px;
-	line-height:38px;
+	line-height:50px;
 }
 
 #widgr-container .header .header-title {
+	font-size:16px;
 	margin-left:60px;
 	margin-right:10px;
 }
 
 #widgr-container div.style-switcher.opened .header .header-title {
 	margin:0px;
+}
+
+#widgr-container div.style-switcher.opened .header .header-title .widgr-online-status {
+	display:none !important;
 }
 
 
@@ -113,22 +118,23 @@
 	position:absolute;
 	left:0px;
 	top:0px;
-	background-color: rgba(0,0,0,0.1);
+	background-color: rgba(0,0,0,0.13);
 	opacity:1;
 	color:white;
-	font-size: 20px;
+	font-size: 22px;
+	border-top-left-radius:4px;
 	border-right:1px solid rgba(255,255,255, 0.2);
 	text-decoration: none;
 	width:50px;
-	line-height:50px;
+	line-height:52px;
 }
 
 #widgr-container div.style-switcher a.trigger:hover {
 	background-color: rgba(0,0,0,0.2);
 }
 
-#widgr-container .style-switcher.closed a.trigger {
-
+#widgr-container .style-switcher.opened a.trigger {
+	line-height:50px;
 }
 
 #widgr-container a.trigger {
@@ -299,6 +305,15 @@
 	box-shadow: inset -20px -45px 100px -34px rgba(0,0,0,0.9);	
 }
 
+.widgr-lang-flag {
+	position:relative;
+	top:5px;
+	padding:5px;
+}
+
+.widgr-lang-flag:hover {
+	background: #f0f0f0;
+}
 
 #widgr-container .shadow {
 	-webkit-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);

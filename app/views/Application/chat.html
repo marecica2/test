@@ -7,10 +7,10 @@
 #{/set}
 
 #{set 'moreMessages'}
-	#{if request.cookies.msgChannels == null}
+	#{if request.cookies.msgLiveChat == null}
 		<div class="shadow alert alert-info alert-dismissible" role="alert">
-		  <button type="button" class="close" data-dismiss="alert" onclick="star.utils.dismiss('msgChannels')"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
-		  &{'msgChannels-msg'}
+		  <button type="button" class="close" data-dismiss="alert" onclick="star.utils.dismiss('msgLiveChat')"><span aria-hidden="true">&times;</span><span class="sr-only">&{'close'}</span></button>
+		  &{'msgLiveChat-msg'}
 		</div>
 	#{/if}
 #{/set}
@@ -19,55 +19,68 @@
 	<div class="row row-xs-height">
 		<div class="col-md-12">
 			<h2>
-				<i class="fa fa-comments-o"></i> Live chat
+				<i class="icon-chat"></i> &{'live-chat'}
 				#{if user.isAvailable()}
+					<small> 
+						&nbsp;&nbsp;
+						<i class="icon-users"></i>&{'visitors'}: <span class="users-count">?</span> &nbsp;
+						<i class="fa fa-headphones"></i> &{'agents'}: <span class="admins-count">?</span>			
+					</small> &nbsp;
 					<a class="btn btn-light-gray btn-sm" href="/available-stop?id=${user.uuid}&url=${request.url.urlEncode()}&#{token /}"><i class="fa fa-power-off"></i> &{'uncheck-me-as-available'}</a>
 				#{/if}		
 			</h2>
 		
 			#{if !user.isAvailable()}
 				<div style="text-align: center;margin:100px 0;">
-				<a class="btn btn-default" href="/available-start?id=${user.uuid}&url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-original-title="&{'turn-on-available-now'}"><i class="fa fa-circle"></i> &{'check-me-as-available'}</a>
+					<a class="btn btn-dark" href="/available-start?id=${user.uuid}&url=${request.url.urlEncode()}&#{token /}" rel="tooltip" data-original-title="&{'turn-on-available-now'}"><i class="fa fa-circle"></i> &{'check-me-as-available'}</a>
 				</div>
 			#{/if}	
 		</div>
 		
 		#{if user.isAvailable()}
-		<div class="col-md-5">
-			<h5 style="margin-top:13px">
-				<i class="icon-users"></i>&nbsp; &{'visitors'}: <span class="users-count">?</span> &nbsp;&nbsp;&nbsp;&nbsp;
-				<i class="fa fa-headphones"></i>&nbsp; &{'agents'}: <span class="admins-count">?</span>
-			</h5>
-			<br/>
-			<div class="style-switcher-container"">
+		<div class="col-md-4">
+			<div class="style-switcher-container">
 	        	<ul class="selectable chat-avatars2 list-unstyled">
 	        	</ul>				
 			</div>
 			<br/>
-			<br/>
 		</div>			
-		<div class="col-md-7">
+		<div class="col-md-8 user-switch" style="display:none">
 			<div class="style-switcher-container">
-		        <h4 class="chat-dropdown margin-top-clear">
-	        		<span data-bind="label" class="chat-user-label"></span>
+		        <h4 class="chat-dropdown margin-top-clear" style="line-height: 52px;">
+	        		<span data-bind="label" class="chat-user-label"><i  class="icon-user"></i> Select User</span>
 		        </h4>
-				<div id="content2" class="" style="padding:10px;height:60vh; margin-bottom:10px; overflow-y: auto; overflow-x:hidden; text-align:left; color:black"></div>
+				<div id="widgr-chat-content" class="" style="padding:10px;height:50vh; margin-bottom:10px; overflow-y: auto; overflow-x:hidden; text-align:left; color:black"></div>
 				<div class="chat-message-form1">
 					<div class="input-group">
 						<input id="chat-text2" class="form-control" maxlength="400" placeholder="&{'enter-your-message'}"> 
 						<span class="input-group-btn">
-							<button id="chat-send2" class="btn btn-default btn-short" style="margin:0px;height:40px"><i class="fa fa-share"></i></button>
+							<button id="chat-send2" class="btn btn-dark btn-short" style="margin:0px;height:40px"><i class="fa fa-share"></i></button>
 						</span>
 						<span class="input-group-btn">
-							<button id="create-instant-room" class="btn btn-gray btn-short" style="margin:0px;height:40px" title="&{'create-instant-session'}"><i class="fa fa-video-camera"></i></button>
+							<button id="create-instant-room" class="btn btn-dark btn-short" style="margin:0px;height:40px" title="&{'create-instant-session'}"><i class="fa fa-video-camera"></i></button>
 						</span>
 					</div>
 				</div>
 				<br/>
-				<label style="font-weight: normal"><input type="checkbox" id="create-instant-room-charging" value="true"> First session free</label> &nbsp;
-				<label style="font-weight: normal"><input type="checkbox" id="auto-switch-off" value="true"> Auto user switch off</label>
+				<label style="font-weight: normal"><input type="checkbox" id="create-instant-room-charging" value="true"> &{'first-free'}</label> &nbsp;
+				<label style="font-weight: normal"><input type="checkbox" id="auto-switch-off" value="true"> &{'auto-switch'}</label>
 			</div>
 		</div>	
+		<div class="col-md-8 team-switch">
+			<h4 style="margin-top:0px;height:52px;line-height: 52px">
+				<i class="fa fa-headphones"></i> &{'team-chat'}
+			</h4>
+			<div class="widgr-chat-content-team" style="padding:10px;height:50vh; margin-bottom:10px; overflow-y: auto; overflow-x:hidden; text-align:left; color:black">
+				<p style="text-align:center;width:100%"><a style="cursor:pointer;font-weight: bold" data-from="0" class="team-feeds-load">&{'previous-messages'}</a></p>
+			</div>
+			<div class="input-group">
+				<input id="chat-text3" class="form-control" maxlength="400" placeholder="&{'enter-your-message'}"> 
+				<span class="input-group-btn">
+					<button id="chat-send3" class="btn btn-dark btn-short" style="margin:0px;height:40px"><i class="fa fa-share"></i></button>
+				</span>
+			</div>				
+		</div>			
 		#{/if}
 		
 	</div>
@@ -82,7 +95,7 @@
     star.livestream = true;
     star.peerId = null;
 	star.listing = '${user.uuid}';
-	star.ebmedded = false;
+	star.embedded = false;
 	
 	star.isOwner = true;
 	star.isTeam = true;

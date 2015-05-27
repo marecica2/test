@@ -4,99 +4,11 @@ if(false){
     var star = {};
 }  
 star.chatfirst = true;
+star.adminMessage = false;
 star.chatRoomUsers = [];
 star.chatRoomRecipientUser = null;
 star.admins = 0;
 star.users = 0;
-
-$(document).ready(function(){
-    var usr = {};
-    usr.room = star.chatRoom;
-    usr.userName = star.userName;
-    usr.userAvatar = star.userAvatar;
-    usr.admin = star.isOwner;
-    usr.userUuid = star.userUuid;
-    usr.listingUuid = star.listingUuid;
-    usr.listingTitle = star.listingTitle;
-    socket.emit('chatroom_joined', usr);  
-    
-    $(".open-chat").click(function() {
-        if ($(".style-switcher.closed").length>0) 
-            $('.style-switcher .trigger').click();
-    });
-
-    $("#widgr-open-chat").click(function() {
-        $(".style-switcher-container .trigger").click();
-    });
-    
-    socket.on('chatRoom-getUsers-resp', function(data) {
-        star.chatRoomUsers = JSON.parse(data);
-        star.messageSend();
-    });
-    
-    $(document).on("click", "#chat-send2", function(){
-        star.messageSend();
-    });
-
-    $(document).on("keyup", "#chat-text2", function(e){
-        if(e.keyCode == 13)
-            star.messageSend();
-    });
-    
-    $(".chatroom-user-clear").click(function(){
-        $(this).hide();
-        $(".chatroom-user-select").html("");
-    });
-
-    // create instant room
-    $("#create-instant-room").click(star.instantRoom);
-    
-    // select user
-    $(".style-switcher-container").on("click", ".chatroom-user", star.userSwitch);     
-
-    // users update
-    socket.on('chatroom_update', star.usersRender);
-    
-    // user disconnect
-    socket.on('chatroom_disconnect', star.userDisconnect);
-    
-    // render message
-    socket.on('chatRoom-message-render', star.messageRender); 
-    
-    // load history
-    $(document).on("click", ".load-feeds", star.feedsLoad);
-    
-    // send email message
-    $(document).on("click", ".widgr-send-msg-btn", star.sendMail);                     
-    
-    // start chat btn
-    $(document).on("click", ".widgr-startchat-btn", star.startChat);                     
-
-    // chat open
-    $(document).on("click", ".widgr-iframe-btn", function(){
-        $(".widgr-chat-noiframe").hide();
-        $(".widgr-chat-iframe").show();
-    });                    
-    
-    $(document).on("click", ".style-switcher-trigger", function(){
-        if(star.visible){
-            $(".style-switcher-content").show();
-            $(".style-switcher").addClass("opened");
-            star.visible = false;
-        } else {
-            $(".style-switcher-content").hide();
-            $(".style-switcher").removeClass("opened");
-            star.visible = true;
-        }
-    });   
-    
-    if(star.logged)
-        $(".widgr-chat-input").show();
-});
-
-star.getSessionId = function(){
-    return socket.socket.sessionid;
-}
 
 
 
@@ -131,47 +43,61 @@ star.instantRoom = function(){
     });
 }
 
-star.userSwitch = function(event){
-    if(star.isOwner){
-        var id = $(this).attr("data-id");
-        var userName = $(this).attr("data-name");
-        var userAvatar = $(this).attr("data-avatar");
-        var userUuid = $(this).attr("data-uuid");
-        var lbl = $(this).attr("data-lbl");
-        
-        if($(this).attr("data-team")){
-            $(".chat-user-label").html('<span style="line-height:52px"><i class="fa fa-headphones fa-2x"></i> Team chat</span>');
-            $(".user-containers").hide();
-            star.chatRoomRecipientUser = null;
-            
-        } else {
-            var usr = star.getRecipientByUuid(userUuid);
-            if(star.userUuid != userUuid)
-                star.chatRoomRecipientUser = userUuid;
-            star.listing = usr.listingUuid;
-            
-            $(".widgr-msg-"+userUuid).hide();
-            $(".chat-message-form").show();
-            $(".chat-user-label").html('<a href="/user/id/'+userUuid+'" target="_blank"><img class="img-circle avatar32 margin10" src="/'+userAvatar+'_64x64">' + userName + '</a> <small>'+lbl+'</small>');
-            $(".user-containers").hide();
-            
-            var topContent = $("#content2");
-            var container = $(".user-containers[data-usr*='"+userUuid+"']");
-            if(container[0] == undefined){
-                topContent.append("<div class='user-containers' data-recipient='"+userUuid+"' data-sender='"+star.userUuid+"' data-usr='"+userUuid+"_"+star.userUuid+"' style=''><p style='text-align:center'><a class='load-feeds' style='cursor:pointer;font-weight:bold' data-from='0' >Older chats</a></p></div>");
-                firstMessage = true;
-            }
-            container = $(".user-containers[data-usr*='"+userUuid+"']");
-            container.show();               
-        }
+star.userSwitch = function(){
+    $(".team-switch").hide();
+    $(".user-switch").show();
+    
+    star.adminMessage = false;
+    var id = $(this).attr("data-id");
+    var userName = $(this).attr("data-name");
+    var userAvatar = $(this).attr("data-avatar");
+    var userUuid = $(this).attr("data-uuid");
+    var lbl = $(this).attr("data-lbl");
+    
+    var usr = star.getRecipientByUuid(userUuid);
+    if(star.userUuid != userUuid)
+        star.chatRoomRecipientUser = userUuid;
+    star.listing = usr.listingUuid;
+    
+    $(".widgr-msg-"+userUuid).hide();
+    $(".chat-message-form").show();
+    $(".chat-user-label").html('<a href="/user/id/'+userUuid+'" target="_blank"><img class="img-circle avatar32 margin10" src="/'+userAvatar+'_64x64">' + userName + '</a> <small>'+lbl+'</small>');
+    $(".user-containers").hide();
+    var first = false;
+    var topContent = $("#widgr-chat-content");
+    var container = $(".user-containers[data-usr*='"+userUuid+"']");
+    if(container[0] == undefined){
+        var first = true;
+        topContent.append("<div class='user-containers' data-recipient='"+userUuid+"' data-sender='"+star.userUuid+"' data-usr='"+userUuid+"_"+star.userUuid+"' style=''><p style='text-align:center'><a class='load-feeds' style='cursor:pointer;font-weight:bold' data-from='0' >"+i18n("previous-messages")+"</a></p></div>");
+        firstMessage = true;
     }
+    container = $(".user-containers[data-usr*='"+userUuid+"']");
+    container.show();   
+        
+
+    // load feeds for the first time
+    if(first){
+        star.scrollDown = true;
+        $(".load-feeds:visible").click();
+    }
+    $("#widgr-chat-content")[0].scrollTop =  $("#widgr-chat-content")[0].scrollHeight;
+}
+
+star.teamSwitch = function(){
+    $(".team-switch").show();
+    $(".user-switch").hide();
+    $(".widgr-msg-team").fadeOut("slow");
+    $(".widgr-chat-content-team")[0].scrollTop =  $(".widgr-chat-content-team")[0].scrollHeight;      
 }
 
 star.usersRender = function(data) {
     var isAdminOnline = false;
     star.chatRoomUsers = JSON.parse(data);
+    star.admins = 0;
+    star.users = 0;
+    
     var html = '';
-    html += '<li data-team="true" data-lbl="Team chat" class="chatroom-user list-item-gray" data-lbl="Team chat"><span style="margin:6px;"><i class="fa fa-headphones"></i></span><a style="cursor:pointer;font-weight:bold;line-height:36px">Team chat</a></li>';
+    html += "<li class='list-item-gray team-chat-select'><span style='line-height:38px;'>&nbsp; <i class='fa fa-headphones'></i> &nbsp;Team Chat</span><br/><small style='color:silver'>Chat with your team</small> <small style='display:none' class='label label-danger widgr-msg-team'>"+i18n("new-message")+"</small></li>"
     for(var i = 0; i < star.chatRoomUsers.length; i++){
         if(star.chatRoomUsers[i].admin == true){
             isAdminOnline = true;
@@ -183,8 +109,8 @@ star.usersRender = function(data) {
         if(star.chatRoomUsers[i].userUuid != star.userUuid){
             var lbl = star.chatRoomUsers[i].listingTitle;
             if(star.chatRoomUsers[i].admin)
-                lbl = "<span class='label default-bg'>Operator</span>";
-            html += '<li  data-lbl="'+lbl+'" data-id="'+star.chatRoomUsers[i].client+'" data-uuid="'+star.chatRoomUsers[i].userUuid+'" data-avatar="'+star.chatRoomUsers[i].userAvatar+'" data-name="'+star.chatRoomUsers[i].userName+'" class="chatroom-user list-item-gray" ><a style="cursor:pointer;font-weight:bold"><img class="img-circle avatar22 margin5" src="/'+star.chatRoomUsers[i].userAvatar+'_32x32">' + star.chatRoomUsers[i].userName + '</a> <small>' + lbl + '</small> <small style="display:none" class="label label-danger widgr-msg-'+star.chatRoomUsers[i].userUuid+'">New message</small></li>';
+                lbl = "<span class='label default-bg'>"+i18n("operator")+"</span>";
+            html += '<li  data-lbl="'+lbl+'" data-id="'+star.chatRoomUsers[i].client+'" data-uuid="'+star.chatRoomUsers[i].userUuid+'" data-avatar="'+star.chatRoomUsers[i].userAvatar+'" data-name="'+star.chatRoomUsers[i].userName+'" class="chatroom-user list-item-gray" ><a><img class="img-circle avatar22 margin5" src="/'+star.chatRoomUsers[i].userAvatar+'_32x32">' + star.chatRoomUsers[i].userName + '</a> <br/><small style="color:silver">' + lbl + '</small> <small style="display:none" class="label label-danger widgr-msg-'+star.chatRoomUsers[i].userUuid+'">'+i18n("new-message")+'</small></li>';
         }
     }
     if(star.isOwner)
@@ -192,8 +118,10 @@ star.usersRender = function(data) {
     if(isAdminOnline){
         $(".widgr-chat").show();
         $(".widgr-email").hide();
+        $(".widgr-online-status").show();
     }
     else {
+        $(".widgr-online-status").hide();
         $(".widgr-chat").hide();
         $(".widgr-email").show();
     }
@@ -215,7 +143,7 @@ star.userDisconnect = function(data) {
             container.append(html);                    
 
             // scrolling
-            $("#content2")[0].scrollTop =  $("#content2")[0].scrollHeight;
+            $("#widgr-chat-content")[0].scrollTop =  $("#widgr-chat-content")[0].scrollHeight;
         }
     }
 }
@@ -250,15 +178,66 @@ star.startChat = function(){
     }, 100);
 }
 
+star.teamMessageSend = function(){
+    if($("#chat-text3").val() == null || $("#chat-text3").val().length == 0)
+        return;
+    var data = {};
+    data.type = "message";
+    data.room = star.chatRoom;
+    data.message = $("#chat-text3").val();
+    data.client = star.getSessionId();
+    data.sender = star.getRecipientByUuid(star.userUuid).id;
+    data.senderUuid = star.userUuid;
+    data.senderName = star.userName;
+    data.senderAvatar = star.userAvatar;
+    socket.emit('chatRoom-team-message', data);    
+    var saveFeed = {};
+    saveFeed.uuid = star.chatRoom;
+    saveFeed.sender = data.senderUuid;
+    saveFeed.senderName = data.senderName;
+    saveFeed.comment = data.message;
+    roomServices.saveFeed(saveFeed, function(){
+    });           
+    $("#chat-text3").val("");
+    $("#chat-text3").focus();    
+};
+
+star.teamFeedsLoad = function(event, elm) {
+    var btn = $(this);
+    var from = parseInt(btn.attr("data-from"));
+    var max = 5;    
+    var btnContainer = btn.parent();
+    var container = btn.parent().parent();
+    var params = "&from="+from+"&max="+max+"&id="+star.chatRoom;    
+    roomServices.getFeeds(params, function(data){
+        star.feedsRender(data, btnContainer);
+    });
+    btn.attr("data-from", from + max); 
+}
+
+star.teamMessageRender = function(data) {
+    var now = new Date();
+    var time = starUtils.formatDate(now) + " " + starUtils.formatTime2(now);
+    var style = data.senderName != star.userName ? "widgr-bubble-right" : "widgr-bubble-left";
+    var html = '';
+    html += '<span style="line-height:32px; font-size:13px; color:gray" ><img class="img-circle avatar32 margin10" style="vertical-align:middle" src="'+star.baseUrl+"/"+data.senderAvatar+'_32x32"><a target="_blank" href="'+star.baseUrl+"/user/id/"+data.senderUuid+'">' + data.senderName + '</a> <span style="float:right;margin-right:10px">'+time+"</span></span>";
+    html += '<div class="'+style+'" >';
+    html += linkify(data.message.replace(/>/g, '&gt;'));
+    html += '</div>';
+    if(!$(".team-switch").is(":visible"))
+        $(".widgr-msg-team").fadeOut("slow").fadeIn("slow");
+    $(".widgr-chat-content-team").append(html);
+    $(".widgr-chat-content-team")[0].scrollTop =  $(".widgr-chat-content-team")[0].scrollHeight;  
+}
+
 star.messageSend = function(){
     if(typeof star.chatRoomUsers == "undefined" || star.chatRoomUsers.length == 0){
         var data = {};
         socket.emit('chatRoom-getUsers', data);
     } else {
-        
         if($("#chat-text2").val() == null || $("#chat-text2").val().length == 0)
             return; 
-        
+
         var data = {};
         data.type = "message";
         data.room = star.chatRoom;
@@ -277,17 +256,15 @@ star.messageSend = function(){
         }
         socket.emit('chatRoom-message', data);
         
-        if(star.chatRoomRecipientUser == data.recipientUuid){
+        if(star.chatRoomRecipientUser == data.recipientUuid)
             $(".widgr-msg-"+data.recipientUuid).fadeOut("slow");
-        }  
-        
         $("#chat-text2").val("");
         $("#chat-text2").focus();
         
-        // save feed
         var saveFeed = {};
         saveFeed.type = "save-feed";
         saveFeed.uuid = star.chatRoom;
+        saveFeed.listing = star.listing;
         saveFeed.sender = data.senderUuid;
         saveFeed.senderName = data.senderName;
         saveFeed.recipient = data.recipientUuid;
@@ -304,22 +281,27 @@ star.messageSend = function(){
 }
 
 star.messageRender = function(data) {
-    var userUuid = typeof data.recipientUuid == "undefined" || data.recipientUuid == star.userUuid ? data.senderUuid : data.recipientUuid;
-    var userName = typeof data.recipientUuid == "undefined" || data.recipientUuid == star.userUuid ? data.senderName : data.recipientName;
-    var avatar = typeof data.recipientUuid == "undefined" || data.recipientUuid == star.userUuid ? data.senderAvatar : data.recipientAvatar;
-    var style = data.senderName != star.userName ? "widgr-bubble-right" : "widgr-bubble-left";
     var now = new Date();
     var time = starUtils.formatDate(now) + " " + starUtils.formatTime2(now);
     var firstMessage = false;
+    var style = data.senderName != star.userName ? "widgr-bubble-right" : "widgr-bubble-left";
+    var userUuid = typeof data.recipientUuid == "undefined" || data.recipientUuid == star.userUuid ? data.senderUuid : data.recipientUuid;
+    var userName = typeof data.recipientUuid == "undefined" || data.recipientUuid == star.userUuid ? data.senderName : data.recipientName;
+    var avatar = typeof data.recipientUuid == "undefined" || data.recipientUuid == star.userUuid ? data.senderAvatar : data.recipientAvatar;
+    var topContent = $("#widgr-chat-content");
+    var container;
 
-    var topContent = $("#content2");
-    var container = $(".user-containers[data-usr*='"+userUuid+"']");
-    if(container[0] == undefined){
-        topContent.append("<div class='user-containers' data-recipient='"+data.recipientUuid+"' data-sender='"+data.senderUuid+"' data-usr='"+userUuid+"_"+star.userUuid+"' style='display:none'><p style='text-align:center'><a class='load-feeds' style='cursor:pointer;font-weight:bold' data-from='0' >Older chats</a></p></div>");
-        firstMessage = true;
+    // init Basic message container 
+    if(star.isOwner){
+        container = $(".user-containers[data-usr*='"+userUuid+"']");
+        if(container[0] == undefined){
+            topContent.append("<div class='user-containers' data-recipient='"+data.recipientUuid+"' data-sender='"+data.senderUuid+"' data-usr='"+userUuid+"_"+star.userUuid+"' style='display:none'><p style='text-align:center'><a class='load-feeds' style='cursor:pointer;font-weight:bold' data-from='0' >"+i18n("previous-messages")+"</a></p></div>");
+            firstMessage = true;
+        }
+        container = $(".user-containers[data-usr*='"+userUuid+"']");
+    } else {
+        container = $(".user-containers[data-usr='"+star.userUuid+"']");
     }
-    container = $(".user-containers[data-usr*='"+userUuid+"']");
-
     
     // header
     var html = '';
@@ -335,22 +317,20 @@ star.messageRender = function(data) {
     }
     html += '</div>';
     
-    // notification label
-    if(star.userUuid != userUuid && star.chatRoomRecipientUser != userUuid){
-        $(".widgr-msg-"+userUuid).fadeOut("slow").fadeIn("slow");
-    }
-    
-    // first message
-    if(star.chatfirst && star.isOwner == false && star.userUuid == data.senderUuid && firstMessage){
-        star.chatfirst = false;
+    // display first message immediately
+    if(star.chatfirst && !star.isOwner && star.userUuid == data.senderUuid){
         html += '<br/>';
         html += '<div class="widgr-bubble-right">';
-        html +=  "Operator will available for you in few seconds. Please wait.";
+        html +=  i18n("operator-available");
         html += '</div>';
     }
+    star.chatfirst = false;
     container.append(html);
 
-    // switch the user selector
+    if(!container.is(":visible"))
+        $(".widgr-msg-"+userUuid).fadeOut("slow").fadeIn("slow");
+
+    // auto switch the user selector
     if(!$("#auto-switch-off").is(":checked")){
         $(".user-containers").hide();
         container.show();
@@ -361,11 +341,10 @@ star.messageRender = function(data) {
             var lbl = usr.listingTitle;
             star.listing = usr.listingUuid;
             if(usr.admin)
-                lbl = "<span class='label default-bg'>Operator</span>";
+                lbl = "<span class='label default-bg'>"+i18n("operator")+"</span>";
             $(".chat-user-label").html("<img src='/"+avatar+"_32x32' class='avatar32 margin10 img-circle'><a href='/user/id"+userUuid+"' target='_blank'>" +  userName + "</a> <small>" + lbl + "</small>");
         }
-        $(".chat-message-form").show();
-    }
+    }  
     
     // auto open embedded chat box
     $(".style-switcher").addClass("opened");
@@ -373,12 +352,70 @@ star.messageRender = function(data) {
     $(".widgr-chat-content").show();
     star.visible = false;
     
-    // scrolling and notification
-    $("#content2")[0].scrollTop =  $("#content2")[0].scrollHeight;
+    $("#widgr-chat-content")[0].scrollTop =  $("#widgr-chat-content")[0].scrollHeight;
     if ($(".style-switcher.closed").length>0) 
         $('.style-switcher .trigger').click();
     var audio = new Audio(star.baseUrl+'/public/images/ring.mp3');
     audio.play();
+}
+
+star.feedsLoad = function(event, elm) {
+    var btn = $(this);
+    if(typeof elm != "undefined")
+        btn = elm;
+    
+    var from = parseInt(btn.attr("data-from"));
+    var max = 30;
+    var btnContainer = btn.parent();
+    var container = btn.parent().parent();
+    var params = "&from="+from+"&max="+max;
+
+    if(star.isOwner){
+        var sender = container.attr("data-sender");
+        if(typeof sender != "undefined")
+            params += "&sender="+star.chatRoomRecipientUser;
+    } else {
+        params += "&sender="+star.userUuid;
+        params += "&listing="+star.listing;
+    }
+
+    if(star.embedded){
+        var req = {};
+        req.type = "get-feeds";
+        req.params = params;
+        star.container[0].contentWindow.postMessage(JSON.stringify(req), '*');
+    } else {
+        roomServices.getFeeds(params, function(data){
+            star.feedsRender(data, btnContainer);
+        });
+    }
+    btn.attr("data-from", from + max); 
+}
+
+star.feedsRender = function(data, btnContainer, clbck){
+    html = "";
+    for(var i = data.length - 1; i >= 0; i--){
+        time = starUtils.formatDate(new Date(data[i].created)) + " " + starUtils.formatTime2(new Date(data[i].created));
+        html += '<span style="line-height:32px; font-size:13px; color:gray" ><a target="_blank" href="'+star.baseUrl+"/user/id/"+data[i].sender+'">' + data[i].senderName + '</a> <span style="float:right;margin-right:10px">'+ time +"</span></span>";
+        if(star.userUuid == data[i].sender){
+            html += '<div class="widgr-bubble-left">';
+            html +=  data[i].comment;
+            html += '</div>';
+        } else {
+            html += '<div class="widgr-bubble-right">';
+            html +=  data[i].comment;
+            html += '</div>';
+        }
+    }
+    btnContainer.after(html);
+    if(star.scrollDown){
+        $("#widgr-chat-content")[0].scrollTop =  $("#widgr-chat-content")[0].scrollHeight;  
+        star.scrollDown = false;
+    }
+    if(!star.isOwner && data.length > 0){
+        $(".widgr-chat-content").show();
+        $(".user-containers").show();
+    }
 }
 
 star.sendMail = function(){
@@ -407,7 +444,7 @@ star.sendMail = function(){
             msg.recipient = star.ownerUuid;
             starServices.sendMessage(msg);
         }
-        var html = "<p>Your message has been sent</p>";
+        var html = "<p>"+i18n("message-sent")+"</p>";
         html += "<p>"+msg.subject+"<br/>";
         html += msg.body+"</p>";
         $(".widgr-email").html(html);
@@ -415,62 +452,6 @@ star.sendMail = function(){
     } else {
         $(".widgr-email-validation").show();
     }
-}
-
-
-
-
-
-//
-// Feeds
-//
-
-star.feedsLoad = function() {
-    var btn = $(this);
-    var from = parseInt(btn.attr("data-from"));
-    var max = 10;
-    var btnContainer = $(this).parent();
-    var container = $(this).parent().parent();
-    var params = "";
-
-    var sender = container.attr("data-sender");
-    if(typeof sender != "undefined")
-        params += "&sender="+sender;
-    
-    var recipient = container.attr("data-recipient");
-    if(typeof recipient != "undefined")
-        params += "&recipient="+recipient;
-    params += "&from="+from+"&max="+max;
-    
-    if(star.embedded){
-        var req = {};
-        req.type = "get-feeds";
-        req.params = params;
-        star.container[0].contentWindow.postMessage(JSON.stringify(req), '*');
-    } else {
-        roomServices.getFeeds(params, function(data){
-            star.feedsRender(data, btnContainer);
-        });
-    }
-    btn.attr("data-from", from + max); 
-}
-
-star.feedsRender = function(data, btnContainer){
-    html = "";
-    for(var i = data.length - 1; i >= 0; i--){
-        time = starUtils.formatDate(new Date(data[i].created)) + " " + starUtils.formatTime2(new Date(data[i].created));
-        html += '<span style="line-height:32px; font-size:13px; color:gray" ><a target="_blank" href="'+star.baseUrl+"/user/id/"+data[i].sender+'">' + data[i].senderName + '</a> <span style="float:right;margin-right:10px">'+ time +"</span></span>";
-        if(star.userUuid == data[i].sender){
-            html += '<div class="widgr-bubble-left">';
-            html +=  data[i].comment;
-            html += '</div>';
-        } else {
-            html += '<div class="widgr-bubble-right">';
-            html +=  data[i].comment;
-            html += '</div>';
-        }
-    }
-    btnContainer.after(html);
 }
 
 star.getRecipientByUuid = function(uuid){
@@ -490,37 +471,121 @@ star.getRecipientByUuid = function(uuid){
     return null;
 };
 
+$(document).ready(function(){
+    var usr = {};
+    usr.room = star.chatRoom;
+    usr.userName = star.userName;
+    usr.userAvatar = star.userAvatar;
+    usr.admin = star.isOwner;
+    usr.userUuid = star.userUuid;
+    usr.listingUuid = star.listingUuid;
+    usr.listingTitle = star.listingTitle;
+    socket.emit('chatroom_joined', usr);  
+    
+    $(".open-chat").click(function() {
+        if ($(".style-switcher.closed").length>0) 
+            $('.style-switcher .trigger').click();
+    });
 
-var roomServices = {};
-roomServices.saveFeed = function(data, success, error){
- $.ajax({
-     type: "POST",
-     url: "/public/feed",
-     data: JSON.stringify(data),
-     success: success,
-     error: error,
-     contentType: "application/json"
- });
-};
+    $("#widgr-open-chat").click(function() {
+        $(".style-switcher-container .trigger").click();
+    });
+    
+    socket.on('chatRoom-getUsers-resp', function(data) {
+        star.chatRoomUsers = JSON.parse(data);
+        star.messageSend();
+    });
+    
+    $(document).on("click", "#chat-send2", function(){
+        star.messageSend();
+    });
 
-roomServices.getFeeds = function(params, success, error){
- $.ajax({
-     type: "GET",
-     url: "/public/feeds?"+params,
-     success: success,
-     error: error,
-     contentType: "application/json"
- });
-};
+    $(document).on("keyup", "#chat-text2", function(e){
+        if(e.keyCode == 13)
+            star.messageSend();
+    });
 
-roomServices.instantRoom = function(params, success, error){
-    var data = {};
-    $.ajax({
-        type: "POST",
-        url: "/instant-room-rest?"+params,
-        data: JSON.stringify(data),
-        success: success,
-        error: error,
-        contentType: "application/json"
-    });    
-};
+    
+    // render team message
+    socket.on('chatRoom-team-message-render', star.teamMessageRender);     
+    
+    // load team history
+    $(document).on("click", ".team-feeds-load", star.teamFeedsLoad);    
+
+    $(document).on("click", "#chat-send3", function(){
+        star.teamMessageSend();
+    });
+    
+    $(document).on("keyup", "#chat-text3", function(e){
+        if(e.keyCode == 13)
+            star.teamMessageSend();
+    });
+    
+    
+    // clear user on disconnect
+    $(".chatroom-user-clear").click(function(){
+        $(this).hide();
+        $(".chatroom-user-select").html("");
+    });
+
+    // create instant room
+    $("#create-instant-room").click(star.instantRoom);
+    
+    // select user
+    $(".style-switcher-container").on("click", ".chatroom-user", star.userSwitch);     
+
+    // select user
+    $(".style-switcher-container").on("click", ".team-chat-select", star.teamSwitch);     
+
+    // users update
+    socket.on('chatroom_update', star.usersRender);
+    
+    // user disconnect
+    socket.on('chatroom_disconnect', star.userDisconnect);
+    
+    // render message
+    socket.on('chatRoom-message-render', star.messageRender); 
+    
+    // load feeds history
+    $(document).on("click", ".load-feeds", star.feedsLoad);
+
+    // send email message
+    $(document).on("click", ".widgr-send-msg-btn", star.sendMail);                     
+    
+    // start chat btn
+    $(document).on("click", ".widgr-startchat-btn", star.startChat);                     
+
+    // chat open
+    $(document).on("click", ".widgr-iframe-btn", function(){
+        $(".widgr-chat-noiframe").hide();
+        $(".widgr-chat-iframe").show();
+    });                    
+
+    // open close chatbox
+    $(document).on("click", ".style-switcher-trigger", function(){
+        if(star.visible){
+            $(".style-switcher-content").show();
+            $(".style-switcher").addClass("opened");
+            star.visible = false;
+        } else {
+            $(".style-switcher-content").hide();
+            $(".style-switcher").removeClass("opened");
+            star.visible = true;
+        }
+    });   
+    
+    if(star.logged)
+        $(".widgr-chat-input").show();
+    
+    if(!star.isOwner){
+        star.feedsLoad(null, $(".load-feeds"));
+    }
+    
+    if(star.isOwner){
+        $(".team-feeds-load").click();
+    }
+});
+
+star.getSessionId = function(){
+    return socket.socket.sessionid;
+}

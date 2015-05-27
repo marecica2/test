@@ -409,6 +409,7 @@ get-modern-browser=Kompatibilität
 compatibility=<p><strong> Um eine volle Erfahrung zu bekommen </strong> stellen Sie sicher, dass Sie haben aktuellste web-browser <br/> Widgr Sitzungen geschieht über Live-Video-Anrufe. Diese Video-Anrufe auf WebRTC Browser-Technologie, die sich noch in der Entwicklung und ist noch nicht vollständig von allen Browsern unterstützt wird. Stellen Sie sicher, dass Ihr Webbrowser WebRTC <a href="/instant"> durch Starten Testvideoanruf. </a> Sie sollten in der Lage, sich selbst auf dem Bildschirm zu sehen sein. Oder Sie können Ihre <a target="_blank" href="http://iswebrtcreadyyet.com/"> Browser-Unterstützung für WebRTC im Detail prüfen &raquo; </ p>
                                               
 #calendar.html
+requested-session-for=Session fur
 calendar-msg=<h4>Mein Kalender</h4> Auf dieser Seite können Sie alle Ihre geplanten Sitzungen anzuzeigen. Wenn Sie Publisher sind, können Sie neue Sitzung erstellen, indem Sie auf den Kalender klicken.
 show-google-calendar-events=Google Kalender anzeigen
 for=Für
@@ -671,7 +672,42 @@ url=URL
 channel-type=Kategorie
 instant-broadcast=Sofortige Sendung
 price=Preis
-first-free=Erste Sitzung frei
+
+#chat.html
+watch-intro=Watch intro
+we-are-online=Wir sind Online.
+first-free=First Session free
+auto-switch=Auto user switch off
+agents=Agents 
+team-chat=Team chat
+previous-messages=Previous messages
+live-chat=Live chat
+msgLiveChat-msg=<h4>Live chat</h4>This page allows you to communicate with your customers instantly. If you embedded Widgr chat box on your site, you will be able to monitor your online customers, wait until they will start chat with you or you can even contact them first. If you have more team members this is a good place where you can collaborate and communicate together. Just turn on "Available now" status. Your wisitors wiil be able to use the embedded Widgr chatbox to communicate with you. <br/><br/><strong>Important! Please note that when you leave this page you will appear to your visitors as you were offline.</strong> <br/><a href="/help#embed">Learn more about how to embed Widgr chat box on your site</a>
+team-members=Account members
+invite-team-members-by-email=Invite members to your account by email
+administrator=Administrator  
+online=Online
+from=from
+previous-messages=Previous messages
+incorrect-input=Please correct your input
+operator-available=Operator will available for you in few seconds. Please wait.
+operator=Operator
+message-sent=Your message has been sent
+new-message=New message
+left-conversation=left conversation
+submit=Submit 
+available=Available 
+your-email=Your email 
+subject=Subject 
+message=Write your message 
+your-name=Enter your name 
+chat-with=Chat with
+click-to-open-chat=Open chat
+join-vide-conference=Join video call
+start-chat=Start chat
+not-logged=You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in or register.</a> Learn more <a href='https://wid.gr' target='_blank'>about Widgr.</a>
+not-available-now=We are not online now, you can leave us a message and we will reply you later.
+sign-in-facebook=Sign in or register. Fastest with Facebook
                                               
 #editButtons.html                                                 
 website-embed=Kleinanzeige auf Ihrer Website einfügen

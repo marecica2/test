@@ -1,19 +1,6 @@
-#{extends 'main.html' /} 
-#{set 'title'}
-	${listing.title} - ${userDisplayed.fullName}
-#{/set}
-
-#{if request.params.facebook == null}
-	#{set raw: true /}
-#{/if}
-#{else}
-	#{set facebook: true /}
-#{/else}
-
-<!-- include from listings list -->
-#{set usr: userDisplayed /}
-
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
+	star = {};
 	star.eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
 	star.messageEvent = star.eventMethod == "attachEvent" ? "onmessage" : "message";
 	eventer = window[star.eventMethod];
@@ -29,12 +16,15 @@
 		        params.recipient = "${listing.user.uuid}";
 				starServices.sendMessage(params);
 				
-		    } else if (params.type = "save-feed"){
+		    } else if (params.type == "save-feed"){
                 roomServices.saveFeed(params, function(){
                 });  
-		    } else if (params.type = "get-feeds"){
+		    } else if (params.type == "get-feeds"){
 	            roomServices.getFeeds(params.params, function(data){
-	                star.renderFeeds(data);
+	                var feeds = {};
+	                feeds.type = "feeds";
+	                feeds.data = data;
+	                parent.postMessage(JSON.stringify(feeds),"*"); 
 	            });
 		    }
 	    } catch (err) {
@@ -46,6 +36,7 @@
 	params["data-bs"] = "${baseUrl}";
 	params["data-ws"] = "${socketIo}";
 	params["data-lg-user-ui"] = ""+new Date().getTime();
+	
 	#{if user}
 		params["data-lg-user-ui"] = "${user.uuid}";
 		params["data-lg-user"] = "${user.getFullName()}";
@@ -53,6 +44,7 @@
 		params["data-lg-user-lg"] = "${user.login}";
 	#{/if}
 	
+	params["data-listingVideo"] = "${listing.video}";
 	params["data-listingTitle"] = "${listing.title}";
 	params["data-listingImage"] = "${listing.imageUrl}";
 	params["data-listingCharging"] = "${listing.charging}";
@@ -65,7 +57,6 @@
 	params["data-listingUuid"] = '${listing.uuid}';
 	params["data-listingUserName"] = '${listing.user.getFullNameAccount()}';
 	params["data-listingUserUuid"] = '${listing.user.uuid}';
-	
 	
 	params["data-room"] = "${userDisplayed.account.key}";
 	params["data-owner"] = "${userDisplayed.getFullName()}";
@@ -82,7 +73,6 @@
 			parent.postMessage(JSON.stringify(params),"*"); 		    
 		});
 	});
-	
 	
 	var roomServices = {};
 	roomServices.saveFeed = function(data, success, error){
@@ -117,7 +107,5 @@
 	        contentType: "application/json"
 	    });    
 	};	
-	
 </script>
-<div id="fb-root"></div>
 

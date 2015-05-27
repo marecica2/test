@@ -67,13 +67,15 @@ public class Public extends BaseController
         redirectTo(url);
     }
 
-    public static void feeds(String event, String sender, String recipient, Integer from, Integer max)
+    public static void feeds(String id, String uuid, String sender, String recipient, Integer from, Integer max)
     {
         List<ChatFeed> feeds = null;
-        if (event != null)
-            feeds = ChatFeed.getByUuid(event);
-        if (sender != null || recipient != null)
-            feeds = ChatFeed.getBySenderRecipient(sender, recipient, from, max);
+        if (id != null)
+            feeds = ChatFeed.getByUuid(id, from, max);
+
+        else if (sender != null || recipient != null)
+            feeds = ChatFeed.getBySenderRecipient(sender, recipient, from, max, uuid);
+
         final List<ChatFeedDTO> feedsDto = new ArrayList<ChatFeedDTO>();
         for (ChatFeed chatFeed : feeds)
             feedsDto.add(ChatFeedDTO.convert(chatFeed));
@@ -128,12 +130,13 @@ public class Public extends BaseController
 
     private static ChatFeed feedFromJson(final JsonObject jo, ChatFeed feed)
     {
-        System.err.println(jo);
+        feed.created = new Date();
         feed.uuid = StringEscapeUtils.escapeHtml(jo.get("uuid").getAsString());
         feed.comment = StringEscapeUtils.escapeHtml(jo.get("comment").getAsString());
-        feed.created = new Date();
         if (jo.get("name") != null)
             feed.name = StringEscapeUtils.escapeHtml(jo.get("name").getAsString());
+        if (jo.get("listing") != null)
+            feed.listing = StringEscapeUtils.escapeHtml(jo.get("listing").getAsString());
         if (jo.get("sender") != null)
             feed.sender = StringEscapeUtils.escapeHtml(jo.get("sender").getAsString());
         if (jo.get("senderName") != null)

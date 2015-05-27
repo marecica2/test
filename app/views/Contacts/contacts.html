@@ -46,7 +46,10 @@
 					  			<i style="color:gray" class="icon-record"></i>
 							#{/else}						
 							<img class="avatar22 img-circle" src="/${item.avatarUrl}_32x32">
-							<a href="/user/${item.login}">${item.getFullName()}</a>
+							<a href="/user/${item.login}">${item.getFullName()}</a> &nbsp;
+					  		#{if item.role == "admin"}
+								&{'administrator'}
+							#{/if}
 						</td>
 						<td>
 							#{if item.lastLoginTime}

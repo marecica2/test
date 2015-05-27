@@ -58,8 +58,6 @@ public class Secure extends BaseController
         }
     }
 
-    // ~~~ Login
-
     public static void login()
     {
 
@@ -119,37 +117,49 @@ public class Secure extends BaseController
         return ret;
     }
 
-    public static void authenticateFacebook(String id, String token, String signedRequest) throws Throwable
+    public static void authenticateFacebook(String id, String token, String signedRequest) throws Exception
     {
         checkAuthenticity();
+        boolean success = authenticateFacebookMethod(id, signedRequest);
+        if (success)
+        {
+            String url = getRedirectUrl();
+            url = getBaseUrlWithoutSlash() + url;
+            renderText(url);
+        }
+        renderText("/login");
+    }
+
+    public static boolean authenticateFacebookMethod(String id, String signedRequest) throws Exception
+    {
         User user = User.getUserByFacebook(id);
         String[] parts = signedRequest.split("\\.");
         final String encoded = parts[0].trim();
         final String expected = encode("8250fede980433de1fac794c3c205548", parts[1]).trim();
 
-        //System.err.println("encoded [" + encoded + "]");
-        //System.err.println("expecte [" + expected + "]");
+        //System.err.println("enc [" + encoded + "]");
+        //System.err.println("exp [" + expected + "]");
 
         if (!encoded.contains(expected))
         {
             Logger.error("Secure.authenticateFacebook: Incorrect facebook oauth signature");
-            return;
+            return false;
         }
 
         if (user == null)
         {
             flash.error(Messages.get("user-does-not-exist"));
-            return;
+            return false;
         }
 
         if (!user.activated)
         {
             flash.error(Messages.get("your-account-is-not-activated"));
-            return;
+            return false;
         }
 
         if (user.blocked != null)
-            return;
+            return false;
 
         if (user != null)
         {
@@ -157,11 +167,8 @@ public class Secure extends BaseController
             user.lastOnlineTime = new Date();
             user.save();
             session.put("username", user.login);
-
-            String url = getRedirectUrl();
-            url = getBaseUrlWithoutSlash() + url;
-            renderText(url);
         }
+        return true;
     }
 
     public static void logout() throws Throwable

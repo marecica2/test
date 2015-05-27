@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<title>Facebook login</title>
+	</head>
+	<body>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
+		<script>
+			var star = {};
+		    star.fbClbck = function(resp) {
+		        FB.api('/me', function(data) {
+		            $("#firstName").val(data.first_name);
+		            $("#lastName").val(data.last_name);
+		            $("#login").val(data.email);
+		            $("#facebook").val(data.id);
+		            $("#facebookName").val(data.name);
+		            $("#url").val(data.link);
+		            $("#id").val(data.id);
+		            $("#signedRequest").val(resp.authResponse.signedRequest);
+		            $("#registrationForm").submit();
+		            e.preventDefault();
+		        });
+		    }
+		</script>
+		
+		<div id="fb-root"></div>
+		<span class="pull-right fb-login-button" data-max-rows="1" data-size="small" data-scope="email" data-show-faces="false"	data-auto-logout-link="false"></span>
+		<form action="/registration/facebook" method="POST" id="registrationForm">
+			#{authenticityToken /} 
+			<input type="hidden" class="form-control" id="login" name="login" value=""/> 
+			<input type="hidden" class="form-control" id="facebook" name="facebook" /> 
+			<input type="hidden" class="form-control" id="facebookName" name="facebookName" />
+			<input type="hidden" class="form-control" id="signedRequest" name="signedRequest" />
+			<input type="hidden" class="form-control" id="id" name="id" />
+			<input type="hidden" class="form-control" id="iframe" name="iframe" value="true" />
+			<input type="hidden" class="form-control" id="firstName" name="firstName" value="${params.firstName}" placeholder="&{'first-name'}" />
+			<input type="hidden" class="form-control" id="lastName" name="lastName" value="${params.lastName}" placeholder="&{'last-name'}" />
+			<input type="hidden" name="offset" id="offset">
+			<script>
+		        var d = new Date()
+		        var n = d.getTimezoneOffset();
+		        $("#offset").val(n);
+		    </script>
+		</form>
+
+	</body>
+</html>
+
+
+
+
