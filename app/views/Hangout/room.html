@@ -48,6 +48,10 @@
 			margin-left: 5px;
 		}
 		
+		.modal.in {
+			background: rgba(0,0,0,0.1);
+		}
+		
 		.controls.btn-dark {
 			background: none;
 		}
@@ -121,25 +125,6 @@
 
 <div id="fb-root"></div>
 
-<!-- Join session modal -->
-<div class="modal" id="joinModal" tabindex="-1" role="dialog" aria-labelledby="joinModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog shadow-outset">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title" id="myModalLabel"><i class="fa fa-video-camera fa-flip-horizontal"></i> &{'Join video call'}</h3>
-      </div>
-      <div class="modal-body">
-		<video id="previewVideo" oncontextmenu="return false;"></video>
-	    <div class="form-group">
-	    	&{'extension-needs-to-be-installed-message'}
-	    </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="btn-call-start" class="btn btn-light-gray btn-short dialog-close" data-dismiss="modal">&{'start'}</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Canvas -->
 <div class="canvas-container ui-widget-content shadow-small modal-content draggable" style="background: #fafafa; display: none; position:fixed;z-index: 999;" >
@@ -248,18 +233,28 @@
 			</div>
 			#{/if}	
 			
-			<div class="logo small-hide" style="position:absolute;top:30px;left:20px;opacity: 0.7;z-index:20"><img style="height:30px" src="/public/images/logo_purple_footer.png"></div>
+			<div class="logo small-hide" style="position:absolute;top:30px;left:20px;opacity: 0.7;z-index:20;text-align: left">
+				<img style="height:30px" src="/public/images/logo_purple_footer.png">
+				#{if event}
+					<h6><a href="/event/${event.uuid}" class="white-link text-shadow2">${event.listing.title}</a></h6>
+				#{/if}
+			</div>
+				
+			<div class="ready-join-session" style="position: absolute; width:100%; top:50%;z-index: 10000">
+				<h2 class="white-link text-shadow2" style="color:white">Ready to join Session #{if event}&bdquo;${event.listing.title}&rdquo;#{/if} ?</h2>
+				<button type="button" id="btn-call-start" class="btn btn-default dialog-close shadow-small" style="display: none" data-dismiss="modal">&{'join'}</button>
+			</div>				
 				
 			<div style="position: absolute;top:20px;width:inherit;z-index:10;width:100%">
 				<div style="opacity:0.7;">
-					<div class="btn-group control-buttons" style="display:none">
+					<div class="btn-group control-buttons">
 						<button id="controls-mute" class="controls text-shadow btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'mute'}"><i class="icon-sound"></i></button>
 						<button id="controls-camera" class="controls text-shadow btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'turn-camera-off'}"><i class="fa fa-eye-slash"></i></button>
 						<button id="screenShareButton" class="controls text-shadow btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'share-your-screen'}"><i class="fa fa-desktop"></i></button>
 						<button id="canvas-open" class="controls text-shadow btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'open-canvas'}"><i class="fa fa-paint-brush"></i></button>
 						<button id="controls-hangup" class="controls text-shadow btn btn-danger btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'hang-up'}"><i class="fa fa-phone"></i></button>
 						<a href="${request.url}" class="controls text-shadow btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'refresh'}"><i class="fa fa-refresh"></i></a>
-						<button id="comments-open" class="controls text-shadow btn btn-dark btn-medium" #{if event} disabled#{/if} rel="tooltip" data-placement="bottom" data-original-title="&{'posts-and-uploads'}"><i class="icon-docs"></i></button>
+						<button id="comments-open" class="controls text-shadow btn btn-dark btn-medium" #{if event == null} disabled#{/if} rel="tooltip" data-placement="bottom" data-original-title="&{'posts-and-uploads'}"><i class="icon-docs"></i></button>
 						<button class="controls text-shadow btn btn-dark btn-medium" data-toggle="modal" data-target="#myModal" rel="tooltip" data-placement="bottom" data-original-title="&{'share-with-more'}"><i class="icon-user-add"></i></button>
 						<button id="chat-open" class="controls text-shadow btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'open-canvas'}"><i class="fa fa-comments-o"></i></button>
 					</div>
@@ -267,7 +262,7 @@
 			</div>
 			
 			<div style="position:absolute;left:10px;bottom:10px;">
-				<div id="remotes">
+				<div id="remotes" style="display:none">
 					<div class="videoContainer"><video id="localVideo" oncontextmenu="return false;"></video></div>
 					<div id="localScreenContainer" class="videoContainer"></div>
 				</div>

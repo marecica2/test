@@ -7,6 +7,7 @@ var users = [];
 var t;
 var myStream = null;
 var recordAudio, recordVideo;
+var room = star.room;
 
 star.data = null;
 star.maximized = null;
@@ -41,10 +42,10 @@ usr.admin = star.isOwner;
 usr.login = star.login;
 usr.uuid = star.userUuid;
 
+$('#joinModal').modal({show:true});
 
 // video call buttons handlers
 $(document).ready(function(){
-    
     
     $('#btn-call-start').click(function(){
         $(".control-buttons").show();
@@ -103,30 +104,11 @@ socket.on('socket_message', function(data) {
  });
 
 webrtc.on('readyToCall', function () {
-     usr.peer = getPeerId();
-     usr.client = getPeerId();
-     socket.emit('user_joined', usr);
-    
-     // automatic join to room
-     var room = star.room
-     joinRoom(room, joinRoomCallback);
-     
-     
-     // show controls
-     $(".control-buttons").show();
-     
-     
+
      $(document).click(function(){
          $(".peer-controls").hide();
      });
 
-//     // show invite modal when there is only one user
-//     var stopInterval = setInterval(function(){
-//         if($(".user-elm").length <= 1)
-//             $('#myModal').modal({show:true});
-//         clearInterval(stopInterval);
-//     }, 15000);
-     
      // camera on off
      $("#controls-camera").click(function(){
          if(!star.cameraoOff){
@@ -339,6 +321,25 @@ webrtc.on('readyToCall', function () {
              star.socket_message_broadcast("screenshare-broadcast", data);
          }
      });         
+     
+     $('#btn-call-start').show();
+     $("#remotes").show();
+     $('#btn-call-start').click(function(){
+         $(".ready-join-session").remove();
+         $(".control-buttons").show();
+         usr.peer = getPeerId();
+         usr.client = getPeerId();
+         socket.emit('user_joined', usr);
+         joinRoom(room, joinRoomCallback);        
+         
+         // show invite modal when there is only one user
+         var stopInterval = setInterval(function(){
+             if($(".user-elm").length <= 1)
+                 $('#myModal').modal({show:true});
+             clearInterval(stopInterval);
+         }, 5000);         
+     });    
+     
 });
     
     
@@ -931,7 +932,9 @@ function peers(){
 }
 
 function joinRoomCallback(err, r){
-    $(".controls").show();
+    //setTimeout(function(){ 
+    //    $(".user-elm:not([data-local])").click();
+    //}, 2000);    
 }
 
 function joinRoom(room, joinRoomCallback){

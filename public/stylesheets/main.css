@@ -689,6 +689,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
 	text-shadow: 1px 2px 7px rgba(0, 0, 0, 1);
 }
 
+.text-shadow2 {
+	text-shadow: 2px 2px 1px rgba(0, 0, 0, 1);
+}
+
 .shadow-inset {
 	-webkit-box-shadow: inset 0px 0px 30px 30px rgba(0, 0, 0, 0.01);
 	-moz-box-shadow: inset 0px 0px 30px 30px rgba(0, 0, 0, 0.01);
