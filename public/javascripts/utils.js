@@ -185,8 +185,8 @@ star.utils.chatContent = function(star){
         html += '           <img class="widgr-lang-flag" data-lang="sk" src="'+star.baseUrl+'/public/images/flags/sk.gif">';
         html += '       </span>';
     }
+    html += '           &middot; <a href="'+star.baseUrl+'/instant" style="text-decoration:none" target="_blank"><i style="position:relative;top:1px;" class="fa fa-video-camera"></i> '+i18n('instant-video-call')+'</a>';
     html += '       </div>';
-
 
     html += '</div>';
     html += '</div>';

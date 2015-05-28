@@ -119,12 +119,13 @@
 	</script>	
 #{/set}
 
+<div id="fb-root"></div>
+
 <!-- Join session modal -->
-<div class="modal" id="joinModal" tabindex="-1" role="dialog" aria-labelledby="joinModal" aria-hidden="true">
+<div class="modal" id="joinModal" tabindex="-1" role="dialog" aria-labelledby="joinModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog shadow-outset">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">&{'cancel'}</span></button>
         <h3 class="modal-title" id="myModalLabel"><i class="fa fa-video-camera fa-flip-horizontal"></i> &{'Join video call'}</h3>
       </div>
       <div class="modal-body">
@@ -258,9 +259,7 @@
 						<button id="canvas-open" class="controls text-shadow btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'open-canvas'}"><i class="fa fa-paint-brush"></i></button>
 						<button id="controls-hangup" class="controls text-shadow btn btn-danger btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'hang-up'}"><i class="fa fa-phone"></i></button>
 						<a href="${request.url}" class="controls text-shadow btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'refresh'}"><i class="fa fa-refresh"></i></a>
-						#{if event}
-							<button id="comments-open" class="controls text-shadow btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'posts-and-uploads'}"><i class="icon-docs"></i></button>
-						#{/if}
+						<button id="comments-open" class="controls text-shadow btn btn-dark btn-medium" #{if event} disabled#{/if} rel="tooltip" data-placement="bottom" data-original-title="&{'posts-and-uploads'}"><i class="icon-docs"></i></button>
 						<button class="controls text-shadow btn btn-dark btn-medium" data-toggle="modal" data-target="#myModal" rel="tooltip" data-placement="bottom" data-original-title="&{'share-with-more'}"><i class="icon-user-add"></i></button>
 						<button id="chat-open" class="controls text-shadow btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'open-canvas'}"><i class="fa fa-comments-o"></i></button>
 					</div>
@@ -312,5 +311,6 @@
 <script src="${socketIo}/socket.io/socket.io.js"></script>
 <script src="@{'/public/javascripts/lib/simpleWebRtc.js'}" type="text/javascript" ></script>
 <script src="@{'/public/javascripts/room.js'}" type="text/javascript"></script>
+<script src="@{'/public/javascripts/canvas.js'}" type="text/javascript"></script>
 <div class="clear"></div>
 <video id="screen-unique-id" class="sharescreen" autoplay="autoplay" ></video>

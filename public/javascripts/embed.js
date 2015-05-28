@@ -243,6 +243,7 @@ i18n = function(code) {
 
 star.i18nMessages = {};
 star.i18nMessages.en = {
+        "instant-video-call":"Instant videocall",
         "sign-facebook":"Sign in with Facebook (recommended)",
         "first-free":"First Session free",
         "watch-intro":"Watch intro",
@@ -270,6 +271,7 @@ star.i18nMessages.en = {
         "":""
 };
 star.i18nMessages.de = {
+        "instant-video-call":"Instant videocall",
         "sign-facebook":"Sign in with Facebook (recommended)",        
         "first-free":"First Sitzung frei",
         "watch-intro":"Watch intro",
@@ -298,6 +300,7 @@ star.i18nMessages.de = {
         "":""
 };
 star.i18nMessages.sk = {
+        "instant-video-call":"Instant videocall",
         "sign-facebook":"Prihlásiť sa pomocou Facebook (odporúčané)",
         "first-free":"Prvé sedenie zadarmo",
         "watch-intro":"Pozrieť ukážku",

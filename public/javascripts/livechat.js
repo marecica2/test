@@ -92,7 +92,11 @@ star.teamSwitch = function(){
 
 star.usersRender = function(data) {
     var isAdminOnline = false;
-    star.chatRoomUsers = JSON.parse(data);
+    var usrs = JSON.parse(data);
+    if(usrs == null)
+        return;
+    
+    star.chatRoomUsers = usrs;
     star.admins = 0;
     star.users = 0;
     
