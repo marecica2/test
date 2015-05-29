@@ -226,7 +226,7 @@ public class Registration extends BaseController
 
         // if existing user and from iframe - autosign and refresh
         User checkUser = User.getUserByFacebook(facebook);
-        if (iframe != null && checkUser != null)
+        if (checkUser != null)
             facebookAutoSignIn();
 
         checkUser = User.getUserByLogin(login);

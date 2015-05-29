@@ -8,7 +8,7 @@
 <script>
     $("#offset").val(timezoneOffset);
 
-    star.fbClbck = function() {
+    star.fbClbck = function(resp) {
         FB.api('/me', function(data) {
             $("#firstName").val(data.first_name);
             $("#lastName").val(data.last_name);
@@ -16,7 +16,10 @@
             $("#facebook").val(data.id);
             $("#facebookName").val(data.name);
             $("#url").val(data.link);
-            
+            $("#id").val(data.id);
+            $("#signedRequest").val(resp.authResponse.signedRequest);        
+            console.log(data.id);
+            console.log(resp.authResponse.signedRequest);
             $('#registrationForm').attr('action', "/registration/facebook?"+star.token);
             $("#registrationForm").submit();
             e.preventDefault();
@@ -64,6 +67,8 @@
 					<input type="hidden" class="form-control" id="facebook" name="facebook" /> 
 					<input type="hidden" class="form-control" id="facebook" name="url" value="${params.url}" /> 
 					<input type="hidden" class="form-control" id="facebookName" name="facebookName" />
+					<input type="hidden" class="form-control" id="signedRequest" name="signedRequest" />
+					<input type="hidden" class="form-control" id="id" name="id" />					
 					<div class="error">#{error 'login' /}</div>
 				</div>
 				

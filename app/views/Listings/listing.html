@@ -227,7 +227,7 @@
 <div class="section" style="padding-top:15px;padding-bottom:15px;background-color:#fcfcfc">
 	<div class="container">
 		<div class="row">
-	   	<div class="col-md-6">
+	   	<div class="col-sm-6">
 
 		   	<h3 class="" style="font-style:italic;margin-top:13px">
 		   		#{if listing}
@@ -247,7 +247,7 @@
 		   	</h3>	
 	   	</div>
 		
-		<div class="col-md-6">
+		<div class="col-sm-6">
 			#{include 'Listings/editButtons.html' /}
 		
 			<!-- social -->
@@ -804,10 +804,10 @@
     star.livestream = true;
     star.peerId = null;
 	star.listing = '${listing.uuid}';
-	star.listingVideo = '${listing.video}';
+	star.listingVideo = '${listing.video.escapeJavaScript()}';
 	star.listingUuid = '${listing.uuid}';
 	star.listingTitle = '${listing.title.escapeJavaScript()}';
-    star.listingImage = '${listing.imageUrl}';
+    star.listingImage = '${listing.imageUrl.escapeJavaScript()}';
     star.listingCharging = '${listing.charging}';
     star.listingPrice = '${listing.price}'; 
     star.listingDuration = '${listing.chargingTime}'; 
@@ -815,11 +815,11 @@
     star.listingFirstFree = '${listing.firstFree}';
     star.listingStars = '${stats.get("avgStars")}';
     star.listingReviews = '${stats.get("totalStars")}';	
-    star.listingUserName ='${listing.user.fullName}';
+    star.listingUserName ='${listing.user.fullName.escapeJavaScript()}';
     star.listingUserUuid = '${listing.user.uuid}';
     star.isOwner = false;
 
-    star.chatboxIcon = "fa fa-video-camera fa-flip-horizontal";
+    star.chatboxIcon = "fa fa-comments-o";
     star.chatboxTitle = i18n('we-are-online');
     
 	#{if user}

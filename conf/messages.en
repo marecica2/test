@@ -674,6 +674,11 @@ instant-broadcast=Instant broadcast
 price=Price
 
 #chat.html
+incompatible-browser=Warning! Your browser does not support video calls
+download-browser=Please download latest version of supported browser
+instant-video-call=Instant Videocall
+or-your-name=Or enter your name
+sign-facebook=Sign in with Facebook (recommended)
 watch-intro=Watch intro
 we-are-online=Chat with Us
 first-free=First Session free
@@ -705,7 +710,7 @@ chat-with=Chat with
 click-to-open-chat=Open chat
 join-vide-conference=Join video call
 start-chat=Start chat
-not-logged=You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in or register.</a> Learn more <a href='https://wid.gr' target='_blank'>about Widgr.</a>
+not-logged=You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in with registration form</a>. Or
 not-available-now=We are not online now, you can leave us a message and we will reply you later.
 sign-in-facebook=Sign in or register. Fastest with Facebook
 

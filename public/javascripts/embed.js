@@ -37,17 +37,26 @@ eventer(star.messageEvent,function(e) {
         star.ownerUuid = params["data-owner-uuid"]; 
         star.ownerCompany = params["data-owner-company"]; 
         star.isOwner = false;
-        star.logged = false;
-        star.userAvatar = "public/images/avatar";
-        star.userName = "Guest"+ Math.floor(Math.random()*900);
-        star.userUuid = star.uuid();
+
         if(params["data-lg-user"] != undefined){
             star.logged = true;
             star.userUuid = params["data-lg-user-ui"]; 
             star.userName = params["data-lg-user"]; 
             star.userAvatar = params["data-lg-user-ava"]; 
             star.userLogin = params["data-lg-user-lg"];
+        } else {
+            star.userAvatar = "public/images/avatar";
+            star.userName = "Guest"+ Math.floor(Math.random()*900);
+            star.logged = false;
+            var uuid = star.getCookie("widgr-user-uuid");
+            if(!star.logged && uuid != "")
+                star.userUuid = star.getCookie("widgr-user-uuid");
+            else {
+                star.userUuid = star.uuid();
+                star.setCookieMinutes("widgr-user-uuid", star.userUuid, 60);        
+            }
         }
+        
         star.loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js", star.embedInit);
     }
     if(params.type == "chat-open"){
@@ -90,10 +99,8 @@ star.embedInit = function(){
                
                 // read user name from cookie
                 var name = star.utils.getCookie("widgr-name");
-                if(!star.logged && name != ""){
+                if(!star.logged && name != "")
                     star.userName = name;
-                    star.userUuid = star.utils.getCookie("widgr-user-uuid");
-                }
                 
                 // add chat box if not exist
                 if($(".style-switcher-container")[0] == undefined){
@@ -197,17 +204,38 @@ star.uuid = function() {
     return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
 }
 
+star.setCookieMinutes = function(name,value,minutes) {
+    var date = new Date();
+    if(minutes == undefined)
+        date.setTime(date.getTime()+(9999*24*60*60*1000));
+    else
+        date.setTime(date.getTime()+(minutes*60*1000));
+    var expires = "; Expires="+date.toGMTString();
+    document.cookie = name+"="+value+expires+"; Path=/";
+}
+
+star.getCookie = function(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) != -1) return c.substring(name.length,c.length);
+    }
+    return "";
+}
+
 star.getLocale = function() {
     var locale = navigator.language;
     locale = locale.substring(0, 2);
-    var lc = star.utils.getCookie("widgr-embed-locale");
+    var lc = star.getCookie("widgr-embed-locale");
     if(lc != "")
         locale = lc;
     return locale;
 }
 
 star.setLocale = function(code) {
-    star.utils.setCookie("widgr-embed-locale",  code);
+    star.setCookie("widgr-embed-locale",  code);
 }
 
 i18n = function(code) {
@@ -241,8 +269,21 @@ i18n = function(code) {
     return message;
 };
 
+var prefix;
+var version;
+
+if (window.mozRTCPeerConnection || navigator.mozGetUserMedia) {
+    prefix = 'moz';
+    version = parseInt(navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1], 10);
+} else if (window.webkitRTCPeerConnection || navigator.webkitGetUserMedia) {
+    prefix = 'webkit';
+    version = navigator.userAgent.match(/Chrom(e|ium)/) && parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2], 10);
+}
+
 star.i18nMessages = {};
 star.i18nMessages.en = {
+        "incompatible-browser":"Warning! Your browser does not support video calls.",
+        "download-browser":"Please download latest version of supported browser, ",
         "instant-video-call":"Instant videocall",
         "sign-facebook":"Sign in with Facebook (recommended)",
         "first-free":"First Session free",
@@ -261,16 +302,18 @@ star.i18nMessages.en = {
         "your-email":"Your email", 
         "subject":"Subject", 
         "message":"Write your message", 
-        "your-name":"Or enter your name", 
+        "or-your-name":"Or enter your name", 
         "chat-with":"Chat with",
         "click-to-open-chat":"Open chat",
         "join-vide-conference":"Join video call",
         "start-chat":"Start chat",
-        "not-logged":"You are not logged in. To use all features you need an account. Just <a href='https://wid.gr/registration' target='_blank'>sign in or register.</a> Learn more <a href='https://wid.gr' target='_blank'>about Widgr.</a>",
+        "not-logged":"You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in with registration form</a>. Or",
         "not-available-now":"We are not online now, you can leave us a message and we will reply you later.",
         "":""
 };
 star.i18nMessages.de = {
+        "incompatible-browser":"Warning! Your browser does not support video calls.",
+        "download-browser":"Please download latest version of supported browser, ",
         "instant-video-call":"Instant videocall",
         "sign-facebook":"Sign in with Facebook (recommended)",        
         "first-free":"First Sitzung frei",
@@ -290,18 +333,20 @@ star.i18nMessages.de = {
         "subject":"Subject", 
         "message":"Write your message",         
         "message":"Schreiben Sie eine Nachricht", 
-        "your-name":"Eingeben Sie Ihre Name", 
+        "or-your-name":"Eingeben Sie Ihre Name", 
         "chat-with":"Chat mit",
         "click-to-open-chat":"Chat offnen",
         "join-vide-conference":"Join Videoanruf",
         "start-chat":"Start chat",
-        "not-logged":"You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in or register. </a> Learn more <a href='https://wid.gr' target='_blank'>about Widgr.</a>",
+        "not-logged":"You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in with registration form</a>. Or",
         "not-available-now":"Wir sind nicht online. is not online now, you can leave him message and he will reply you later.",
         "":""
 };
 star.i18nMessages.sk = {
+        "incompatible-browser":"Dôležité! Váš prehliadač nepodporuje videohovory.",
+        "download-browser":"Please download latest version of supported browser, ",
         "instant-video-call":"Instant videocall",
-        "sign-facebook":"Prihlásiť sa pomocou Facebook (odporúčané)",
+        "sign-facebook":"Prihláste sa pomocou Facebook (odporúčané)",
         "first-free":"Prvé sedenie zadarmo",
         "watch-intro":"Pozrieť ukážku",
         "online":"Online",
@@ -318,12 +363,12 @@ star.i18nMessages.sk = {
         "your-email":"Váš email", 
         "subject":"Predmet", 
         "message":"Správa", 
-        "your-name":"Alebo zadajte meno", 
+        "or-your-name":"Alebo zadajte meno", 
         "chat-with":"Napísať správu",
         "click-to-open-chat":"Otvoriť chat",
         "join-vide-conference":"Spustiť videohovor",
         "start-chat":"Spustiť chat",
-        "not-logged":"Nieste prihlásený. Pre plne využitie služieb je potrebné sa prihlásiť. <a href='https://wid.gr/registration' target='_blank'>Prihláste sa alebo registrujte.</a> Dozvedieť sa viac <a href='https://wid.gr' target='_blank'>o službe Widgr.</a>",
+        "not-logged":"Nieste prihlásený. Pre plné použitie je potrebné sa zaregistrovať. <a href='#' class='widgr-iframe-btn'>Použite registračný formulár</a>. Alebo",
         "not-available-now":"Momentálne niesme online. Prosím zanechajte nám správu a my Vám odpovieme hneď ako to len bude možné",
         "":""
 };

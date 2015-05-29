@@ -289,19 +289,26 @@
 
 <script>
     star.user = '${name.escapeJavaScript()}';
-    star.userUuid = '${user.uuid}';
-    star.userName = '${user.getFullName().escapeJavaScript()}';
-    star.userAvatar = '${user.avatarUrl}';
     star.room = '${room.escapeJavaScript()}';
     star.chatRoom = '${room.escapeJavaScript()}';
+    star.server_host = '${socketIo.escapeJavaScript()}';
+    star.userInRoom = true;
+    star.livestream = true;
+    star.peerId = null;
     #{if user}
     	star.login = '${user.login.escapeJavaScript()}';
     	star.avatar = '${user.avatarUrl.escapeJavaScript()}';
+    	star.userUuid = '${user.uuid}';
+    	star.userName = '${user.getFullName().escapeJavaScript()}';
+    	star.userAvatar = '${user.avatarUrl}';
+		star.logged = true;
     #{/if}
-    star.userInRoom = true;
-    star.server_host = '${socketIo.escapeJavaScript()}';
-    star.livestream = true;
-    star.peerId = null;
+    #{else}
+		star.logged = false;
+    	star.userAvatar = 'public/images/avatar';
+	    star.userUuid = star.utils.uuid();		
+        star.userName = star.user;
+	#{/else}    
 </script>
 <script src="${socketIo}/socket.io/socket.io.js"></script>
 <script src="@{'/public/javascripts/lib/simpleWebRtc.js'}" type="text/javascript" ></script>

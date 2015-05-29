@@ -255,6 +255,9 @@ public class Secure extends BaseController
             User user = User.getUserByLogin(username);
             clearUserFromCache();
 
+            if (user != null)
+                System.err.println(Crypto.decryptAES(user.password));
+
             if (user != null && !user.activated)
             {
                 flash.error(Messages.get("your-account-is-not-activated"));

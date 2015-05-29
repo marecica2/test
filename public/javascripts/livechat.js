@@ -80,14 +80,14 @@ star.userSwitch = function(){
         star.scrollDown = true;
         $(".load-feeds:visible").click();
     }
-    $("#widgr-chat-content")[0].scrollTop =  $("#widgr-chat-content")[0].scrollHeight;
+    $("#widgr-chat-content")[0].scrollTop =  $("#widgr-chat-content")[0].scrollHeight + 500;
 }
 
 star.teamSwitch = function(){
     $(".team-switch").show();
     $(".user-switch").hide();
     $(".widgr-msg-team").fadeOut("slow");
-    $(".widgr-chat-content-team")[0].scrollTop =  $(".widgr-chat-content-team")[0].scrollHeight;      
+    $(".widgr-chat-content-team")[0].scrollTop =  $(".widgr-chat-content-team")[0].scrollHeight + 500;      
 }
 
 star.usersRender = function(data) {
@@ -147,7 +147,7 @@ star.userDisconnect = function(data) {
             container.append(html);                    
 
             // scrolling
-            $("#widgr-chat-content")[0].scrollTop =  $("#widgr-chat-content")[0].scrollHeight;
+            $("#widgr-chat-content")[0].scrollTop =  $("#widgr-chat-content")[0].scrollHeight + 500;
         }
     }
 }
@@ -174,9 +174,8 @@ star.startChat = function(){
     usr.listingTitle = star.listingTitle;
     socket.emit('chatroom_reconnect', usr);  
     
-    $(".widgr-custom-name").hide();
+    $(".widgr-start-chat-container").hide();
     $(".widgr-chat-input").show();
-    $(".widgr-startchat-btn").hide();
     setTimeout(function(){
         $("#chat-text2")[0].focus();
     }, 100);
@@ -231,7 +230,10 @@ star.teamMessageRender = function(data) {
     if(!$(".team-switch").is(":visible"))
         $(".widgr-msg-team").fadeOut("slow").fadeIn("slow");
     $(".widgr-chat-content-team").append(html);
-    $(".widgr-chat-content-team")[0].scrollTop =  $(".widgr-chat-content-team")[0].scrollHeight;  
+    $(".widgr-chat-content-team")[0].scrollTop =  $(".widgr-chat-content-team")[0].scrollHeight + 500;  
+    
+    var audio = new Audio(star.baseUrl+'/public/images/ring.mp3');
+    audio.play();    
 }
 
 star.messageSend = function(){
@@ -351,14 +353,14 @@ star.messageRender = function(data) {
     }  
     
     // auto open embedded chat box
-    $(".style-switcher").addClass("opened");
-    $(".style-switcher-content").show();
+    $(".widgr-chatbox").addClass("opened");
+    $(".widgr-chatbox-content").show();
     $(".widgr-chat-content").show();
     star.visible = false;
     
-    $("#widgr-chat-content")[0].scrollTop =  $("#widgr-chat-content")[0].scrollHeight;
-    if ($(".style-switcher.closed").length>0) 
-        $('.style-switcher .trigger').click();
+    $("#widgr-chat-content")[0].scrollTop =  $("#widgr-chat-content")[0].scrollHeight + 500;
+    if ($(".widgr-chatbox.closed").length>0) 
+        $('.widgr-chatbox .trigger').click();
     var audio = new Audio(star.baseUrl+'/public/images/ring.mp3');
     audio.play();
 }
@@ -413,7 +415,7 @@ star.feedsRender = function(data, btnContainer, clbck){
     }
     btnContainer.after(html);
     if(star.scrollDown){
-        $("#widgr-chat-content")[0].scrollTop =  $("#widgr-chat-content")[0].scrollHeight;  
+        $("#widgr-chat-content")[0].scrollTop =  $("#widgr-chat-content")[0].scrollHeight + 500;  
         star.scrollDown = false;
     }
     if(!star.isOwner && data.length > 0){
@@ -487,12 +489,12 @@ $(document).ready(function(){
     socket.emit('chatroom_joined', usr);  
     
     $(".open-chat").click(function() {
-        if ($(".style-switcher.closed").length>0) 
-            $('.style-switcher .trigger').click();
+        if ($(".widgr-chatbox.closed").length>0) 
+            $('.widgr-chatbox .trigger').click();
     });
 
     $("#widgr-open-chat").click(function() {
-        $(".style-switcher-container .trigger").click();
+        $(".widgr-chatbox-container .trigger").click();
     });
     
     socket.on('chatRoom-getUsers-resp', function(data) {
@@ -536,10 +538,10 @@ $(document).ready(function(){
     $("#create-instant-room").click(star.instantRoom);
     
     // select user
-    $(".style-switcher-container").on("click", ".chatroom-user", star.userSwitch);     
+    $(".widgr-chatbox-container").on("click", ".chatroom-user", star.userSwitch);     
 
     // select user
-    $(".style-switcher-container").on("click", ".team-chat-select", star.teamSwitch);     
+    $(".widgr-chatbox-container").on("click", ".team-chat-select", star.teamSwitch);     
 
     // users update
     socket.on('chatroom_update', star.usersRender);
@@ -561,19 +563,19 @@ $(document).ready(function(){
 
     // chat open
     $(document).on("click", ".widgr-iframe-btn", function(){
-        $(".widgr-chat-noiframe").hide();
-        $(".widgr-chat-iframe").show();
+        $(".widgr-chat").hide();
+        $(".widgr-chat").after('<iframe class="widgr-chat-iframe widgr-embedded-iframe" style="width:100%" src="'+star.baseUrl+'/registration" seamless frameBorder="0"></iframe>');
     });                    
 
     // open close chatbox
-    $(document).on("click", ".style-switcher-trigger", function(){
+    $(document).on("click", ".widgr-chatbox-trigger", function(){
         if(star.visible){
-            $(".style-switcher-content").show();
-            $(".style-switcher").addClass("opened");
+            $(".widgr-chatbox-content").show();
+            $(".widgr-chatbox").addClass("opened");
             star.visible = false;
         } else {
-            $(".style-switcher-content").hide();
-            $(".style-switcher").removeClass("opened");
+            $(".widgr-chatbox-content").hide();
+            $(".widgr-chatbox").removeClass("opened");
             star.visible = true;
         }
     });   
@@ -587,6 +589,10 @@ $(document).ready(function(){
     
     if(star.isOwner){
         $(".team-feeds-load").click();
+    }
+    
+    if(!star.utils.detectWebrtc().support){
+        $(".widgr-compatibilty-warning").show();
     }
 });
 

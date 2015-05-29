@@ -8,9 +8,8 @@
 
 window.fbAsyncInit = function() {
     if($(".page-wrapper")[0] != undefined){
-        FB.Canvas.setSize({ width: 640, height: $(".page-wrapper").height() + 200});
         $(document).ready(function(){
-            FB.Canvas.setSize({ width: 640, height: $(".page-wrapper").height() + 200});
+            FB.Canvas.setSize({ width: 640, height: 800});
         });
     }
     
@@ -26,7 +25,7 @@ window.fbAsyncInit = function() {
 $(document).ajaxStop(function () {
     if(typeof FB !== "undefined"){
         if($(".page-wrapper")[0] != undefined){
-            FB.Canvas.setSize({ width: 640, height: $(".page-wrapper").height() + 200});
+            FB.Canvas.setSize({ width: 640, height: $(".page-wrapper").height()+100});
         }
     }
 });      

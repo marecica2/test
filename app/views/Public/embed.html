@@ -39,14 +39,14 @@
 	
 	#{if user}
 		params["data-lg-user-ui"] = "${user.uuid}";
-		params["data-lg-user"] = "${user.getFullName()}";
-		params["data-lg-user-ava"] = "${user.avatarUrl}";
-		params["data-lg-user-lg"] = "${user.login}";
+		params["data-lg-user"] = "${user.getFullName().escapeJavaScript()}";
+		params["data-lg-user-ava"] = "${user.avatarUrl.escapeJavaScript()}";
+		params["data-lg-user-lg"] = "${user.login.escapeJavaScript()}";
 	#{/if}
 	
-	params["data-listingVideo"] = "${listing.video}";
-	params["data-listingTitle"] = "${listing.title}";
-	params["data-listingImage"] = "${listing.imageUrl}";
+	params["data-listingVideo"] = "${listing.video.escapeJavaScript()}";
+	params["data-listingTitle"] = "${listing.title.escapeJavaScript()}";
+	params["data-listingImage"] = "${listing.imageUrl.escapeJavaScript()}";
 	params["data-listingCharging"] = "${listing.charging}";
 	params["data-listingPrice"] = "${listing.price}";
 	params["data-listingDuration"] = "${listing.chargingTime}";
@@ -54,15 +54,15 @@
 	params["data-listingFirstFree"] = "${listing.firstFree}";
 	params["data-listingStars"] = '${stats.get("avgStars")}';
 	params["data-listingReviews"] = '${stats.get("totalStars")}';
-	params["data-listingUuid"] = '${listing.uuid}';
-	params["data-listingUserName"] = '${listing.user.getFullNameAccount()}';
-	params["data-listingUserUuid"] = '${listing.user.uuid}';
+	params["data-listingUuid"] = '${listing.uuid.escapeJavaScript()}';
+	params["data-listingUserName"] = '${listing.user.getFullNameAccount().escapeJavaScript()}';
+	params["data-listingUserUuid"] = '${listing.user.uuid.escapeJavaScript()}';
 	
-	params["data-room"] = "${userDisplayed.account.key}";
-	params["data-owner"] = "${userDisplayed.getFullName()}";
-	params["data-owner-avatar"] = "${userDisplayed.avatarUrl}";
-	params["data-owner-uuid"] = "${userDisplayed.uuid}";
-	params["data-owner-company"] = "${userDisplayed.account.name}";
+	params["data-room"] = "${userDisplayed.account.key.escapeJavaScript()}";
+	params["data-owner"] = "${userDisplayed.getFullName().escapeJavaScript()}";
+	params["data-owner-avatar"] = "${userDisplayed.avatarUrl.escapeJavaScript()}";
+	params["data-owner-uuid"] = "${userDisplayed.uuid.escapeJavaScript()}";
+	params["data-owner-company"] = "${userDisplayed.account.name.escapeJavaScript()}";
 	params["type"] = "init";
 	parent.postMessage(JSON.stringify(params),"*");  
 	

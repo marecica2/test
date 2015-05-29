@@ -1,5 +1,5 @@
 #widgr-container {
-	z-index: 10001;
+	z-index: 9999;
 	font-family:'Open Sans', sans-serif;
 	border: 1px solid #ddd;
 	font-size: 14px;
@@ -20,7 +20,7 @@
 	opacity: 1;
 }
 
-#widgr-container div.style-switcher {
+#widgr-container div.widgr-chatbox {
 	background-color: white;
 	border-top-left-radius:6px;
 	border-top-right-radius:6px;	
@@ -30,24 +30,15 @@
 	max-width: 500px;
 	position: fixed;
 	bottom: -3px;
-	right:60px;
+	right:100px;
 }
 
-.flip-horizontal {
-    -moz-transform: scaleX(-1) !important;
-    -webkit-transform: scaleX(-1) !important;
-    -o-transform: scaleX(-1) !important;
-    transform: scaleX(-1) !important;
-    -ms-filter: fliph !important; /*IE*/
-    filter: fliph !important; /*IE*/
-}
-
-#widgr-container .style-switcher-content {
+#widgr-container .widgr-chatbox-content {
 	width:380px;	
 }
 
 @media (max-width: 768px){
-	#widgr-container .style-switcher-content {
+	#widgr-container .widgr-chatbox-content {
 		width:auto;	
 	}
 	
@@ -55,7 +46,7 @@
 		height:100% !important;
 	}
 	
-	#widgr-container div.style-switcher.opened {
+	#widgr-container div.widgr-chatbox.opened {
 		max-width: 100%;
 		min-width: 100%;
 		width: 100%;
@@ -65,7 +56,7 @@
 		border-radius:0px;
 	}
 	#widgr-container .chat-window {
-		max-height:60% !important;
+		max-height:55% !important;
 		font-size:16px;
 	}
 	.widgr-bubble-right {
@@ -78,7 +69,7 @@
 
 
 
-#widgr-container div.style-switcher .header {
+#widgr-container div.widgr-chatbox .widgr-header {
 	padding:0px;
 	border-top-left-radius:6px;
 	border-top-right-radius:6px;		
@@ -89,17 +80,17 @@
 	line-height:50px;
 }
 
-#widgr-container .header .header-title {
+#widgr-container .widgr-header .widgr-header-title {
 	font-size:16px;
 	margin-left:60px;
 	margin-right:10px;
 }
 
-#widgr-container div.style-switcher.opened .header .header-title {
+#widgr-container div.widgr-chatbox.opened .widgr-header .widgr-header-title {
 	margin:0px;
 }
 
-#widgr-container div.style-switcher.opened .header .header-title .widgr-online-status {
+#widgr-container div.widgr-chatbox.opened .widgr-header .widgr-header-title .widgr-online-status {
 	display:none !important;
 }
 
@@ -114,7 +105,16 @@
 	color: black
 }
 
-#widgr-container div.style-switcher a.trigger {
+#widgr-container .flip-horizontal {
+    -moz-transform: scaleX(-1) !important;
+    -webkit-transform: scaleX(-1) !important;
+    -o-transform: scaleX(-1) !important;
+    transform: scaleX(-1) !important;
+    -ms-filter: fliph !important; /*IE*/
+    filter: fliph !important; /*IE*/
+}
+
+#widgr-container div.widgr-chatbox div.widgr-trigger {
 	position:absolute;
 	left:0px;
 	top:0px;
@@ -129,21 +129,24 @@
 	line-height:52px;
 }
 
-#widgr-container div.style-switcher a.trigger:hover {
+#widgr-container div.widgr-chatbox div.widgr-trigger:hover {
 	background-color: rgba(0,0,0,0.2);
 }
 
-#widgr-container .style-switcher.opened a.trigger {
+#widgr-container .widgr-chatbox.opened div.widgr-trigger {
 	line-height:50px;
 }
 
-#widgr-container a.trigger {
-	-webkit-transition: all 0.2s ease-in-out;
-	-moz-transition: all 0.2s ease-in-out;
-	-ms-transition: all 0.2s ease-in-out;
-	-o-transition: all 0.2s ease-in-out;
-	transition: all 0.2s ease-in-out;
+
+#widgr-container .widgr-trigger i {
+	line-height:52px;
 }
+
+#widgr-container .widgr-chatbox.opened .widgr-trigger i {
+	line-height:50px;
+}
+
+
 
 #widgr-container .btn2 {
 	padding: 6px 12px;
@@ -295,7 +298,7 @@
 	border-radius: 50%;
 }
 
-#widgr-container .style-switcher .btn2-short {
+#widgr-container .widgr-chatbox .btn2-short {
 	min-width: 0px !important;
 }
 
@@ -306,16 +309,15 @@
 }
 
 .widgr-lang-flag {
-	position:relative;
-	top:5px;
+	vertical-align:middle;
 	padding:5px;
 }
 
 .widgr-lang-flag:hover {
-	background: #f0f0f0;
+	background: #d0d0d0;
 }
 
-#widgr-container .shadow {
+#widgr-container .widgr-shadow {
 	-webkit-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
 	-moz-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
 	box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
