@@ -22,7 +22,7 @@ star.screenShare = false;
 star.drawing = false;
 star.commentsDialog = false;
 star.users = [];
-    
+
 var webrtc = null;
 webrtc = new SimpleWebRTC({
     localVideoEl: 'localVideo',
@@ -46,11 +46,6 @@ $('#joinModal').modal({show:true});
 
 // video call buttons handlers
 $(document).ready(function(){
-    
-    $('#btn-call-start').click(function(){
-        $(".control-buttons").show();
-    });
-    
     
     // stop instant broadcast
     $(".btn-instant-stop").click(function(){
@@ -118,6 +113,8 @@ webrtc.on('readyToCall', function () {
              $(this).addClass("btn-danger");
              $(".peer-label-camera[data-id='"+getPeerId()+"']").show();
              $(".videoContainer", "#video-element-"+getPeerId()).hide();
+             $(".videoContainer", "#video-element-"+getPeerId()).addClass("hidden");
+             $("#"+getPeerId()+"_video_small").addClass("displayed");
              $("#"+getPeerId()+"_video_small").show();
          } else {
              star.cameraoOff = false;
@@ -125,10 +122,13 @@ webrtc.on('readyToCall', function () {
              $(this).removeClass("btn-danger");
              $(this).addClass("btn-dark");
              $(".peer-label-camera[data-id='"+getPeerId()+"']").hide();
+             $(".videoContainer", "#video-element-"+getPeerId()).removeClass("hidden");
+             $("#"+getPeerId()+"_video_small").removeClass("displayed");
              if(star.maximizedId != getPeerId())
                  $(".videoContainer", "#video-element-"+getPeerId()).show();
              if(star.maximizedId != getPeerId())
                  $("#"+getPeerId()+"_video_small").hide();
+             
          }
          
          var data = {};
@@ -136,6 +136,17 @@ webrtc.on('readyToCall', function () {
          data.cameraoOff = star.cameraoOff;
          star.socket_message_broadcast("camera-broadcast", data);
      });
+     
+     $("#controls-camera-ready").click(function(){
+         if($(this).hasClass("btn-dark")){
+             $(this).removeClass("btn-dark");
+             $(this).addClass("btn-danger");
+         } else {
+             $(this).addClass("btn-dark");
+             $(this).removeClass("btn-danger");
+         }
+         $("#controls-camera").click();
+     });     
 
      // muting unmuting
      $("#controls-mute").click(function(){
@@ -159,6 +170,19 @@ webrtc.on('readyToCall', function () {
          data.muted = star.muted;
          star.socket_message_broadcast("mute-broadcast", data);
      });
+     
+     $("#controls-mute-ready").click(function(){
+         if($(this).hasClass("btn-dark")){
+             $(this).removeClass("btn-dark");
+             $(this).addClass("btn-danger");
+             $(this).html("<i class='icon-mute'></i>");         
+         } else {
+             $(this).addClass("btn-dark");
+             $(this).removeClass("btn-danger");
+             $(this).html("<i class='icon-sound'></i>");         
+         }
+         $("#controls-mute").click();
+     });     
 
      $(document).on("click", ".peer-mute", function(event){
          event.stopPropagation();
@@ -321,10 +345,22 @@ webrtc.on('readyToCall', function () {
              star.socket_message_broadcast("screenshare-broadcast", data);
          }
      });         
-     
-     $('#btn-call-start').show();
+
+     $('.webrtc-ready').show();
      $("#remotes").show();
+     if(star.user == undefined)
+         $("#input-name").show();
+
      $('#btn-call-start').click(function(){
+         if(star.user == undefined && $("#input-name").val() == "" ){
+             $("#input-name").focus();
+             return;
+         } 
+         if(star.user == undefined && $("#input-name").val() != "" ){
+             star.user = $("#input-name").val();
+             usr.user = $("#input-name").val();
+         }
+             
          $(".ready-join-session").remove();
          $(".control-buttons").show();
          usr.peer = getPeerId();
@@ -337,7 +373,9 @@ webrtc.on('readyToCall', function () {
              if($(".user-elm").length <= 1)
                  $('#myModal').modal({show:true});
              clearInterval(stopInterval);
-         }, 5000);         
+         }, 5000);   
+         
+         start();
      });    
      
 });
@@ -445,7 +483,6 @@ webrtc.on('volumeChange', function (volume, treshold) {
 
 star.usersRender = function(data) {
     var userList = JSON.parse(data);
-    console.log(userList);
     var html = "";
     users = [];
     star.users = userList;
@@ -501,16 +538,21 @@ star.usersRender = function(data) {
 
 // mimize maximized video
 star.maximizeMimize = function(id, local){
+
     if(star.maximizedId != null){
         var moveTo = $(".videoContainer", "#video-element-"+star.maximizedId);
         $(".videoContainer", "#video-element-"+star.maximizedId).show();
+        
         $(star.maximized).css("position", "inherit");
         $(star.maximized).appendTo(moveTo);
         if(star.maximized != null)
             star.maximized.play();
+        
         $("#video-element-"+star.maximizedId).css("border", "1px solid rgba(0,0,0,0.0)");
         $("#video-element-"+id).removeClass("user-elm-selected");
-        $("#"+star.maximizedId+"_video_small").hide();
+        
+        if(!$("#"+star.maximizedId+"_video_small").hasClass("displayed"))
+            $("#"+star.maximizedId+"_video_small").hide();
         
         // mimize maximized screen
         $(star.maximizedScreen).removeClass("video-screen");
@@ -535,7 +577,7 @@ star.maximizeMimize = function(id, local){
                 if($("#"+id+"_video_incoming").length > 0)
                     star.maximizedScreen = $("#"+id+"_screen_incoming")[0];
         }
-
+        
         // for video
         $(star.maximized).appendTo(".maximized-container");
         $(".videoContainer", "#video-element-"+star.maximizedId).hide();
@@ -626,13 +668,16 @@ socket.on('socket_message', function(data) {
                 $(".videoContainer", "#video-element-"+data.data.id).hide();
             if(star.maximizedId != data.data.id)
                 $("#"+data.data.id+"_video_small").show();
-            
+            $("#"+data.data.id+"_video_small").addClass("displayed");
+            $("#container_"+data.data.id+"_video_incoming").addClass("hidden");
         } else {
             $(".peer-label-camera[data-id='"+data.data.id+"']").hide();
             if(star.maximizedId != data.data.id)
                 $(".videoContainer", "#video-element-"+data.data.id).show();
             if(star.maximizedId != data.data.id)
                 $("#"+data.data.id+"_video_small").hide();
+            $("#"+data.data.id+"_video_small").removeClass("displayed");
+            $("#container_"+data.data.id+"_video_incoming").removeClass("hidden");
         }
     }
 
@@ -932,9 +977,19 @@ function peers(){
 }
 
 function joinRoomCallback(err, r){
-    //setTimeout(function(){ 
-    //    $(".user-elm:not([data-local])").click();
-    //}, 2000);    
+    setTimeout(function(){ 
+        //$(".user-elm:not([data-local])").click();
+        var data = {};
+        data.id = getPeerId();
+        data.muted = star.muted;
+        star.socket_message_broadcast("mute-broadcast", data);
+        
+        data = {};
+        data.id = getPeerId();
+        data.cameraoOff = star.cameraoOff;
+        star.socket_message_broadcast("camera-broadcast", data);    
+    }, 2000);    
+    
 }
 
 function joinRoom(room, joinRoomCallback){
@@ -984,3 +1039,76 @@ function showVolume(el, volume) {
         return $this;
     }
 }(jQuery));
+
+var clsStopwatch = function() {
+    // Private vars
+    var startAt = 0;    // Time of last start / resume. (0 if not running)
+    var lapTime = 0;    // Time on the clock when last stopped in milliseconds
+
+    var now = function() {
+            return (new Date()).getTime(); 
+        }; 
+
+    // Public methods
+    // Start or resume
+    this.start = function() {
+            startAt = startAt ? startAt : now();
+        };
+
+    // Stop or pause
+    this.stop = function() {
+            // If running, update elapsed time otherwise keep it
+            lapTime = startAt ? lapTime + now() - startAt : lapTime;
+            startAt = 0; // Paused
+        };
+
+    // Reset
+    this.reset = function() {
+            lapTime = startAt = 0;
+        };
+
+    // Duration
+    this.time = function() {
+            return lapTime + (startAt ? now() - startAt : 0); 
+        };
+};
+
+var x = new clsStopwatch();
+var $time;
+var clocktimer;
+
+function pad(num, size) {
+    var s = "0000" + num;
+    return s.substr(s.length - size);
+}
+
+function formatTime(time) {
+    var h = m = s = ms = 0;
+    var newTime = '';
+    h = Math.floor( time / (60 * 60 * 1000) );
+    time = time % (60 * 60 * 1000);
+    m = Math.floor( time / (60 * 1000) );
+    time = time % (60 * 1000);
+    s = Math.floor( time / 1000 );
+    ms = time % 1000;
+    newTime = pad(h, 2) + ':' + pad(m, 2) + ':' + pad(s, 2);
+    return newTime;
+}
+
+$time = document.getElementById('time');
+update();
+
+function update() {
+    $time.innerHTML = formatTime(x.time());
+}
+
+function start() {
+    clocktimer = setInterval("update()", 1000);
+    x.start();
+}
+
+function stop() {
+    x.stop();
+    clearInterval(clocktimer);
+}
+

@@ -64,7 +64,7 @@
 	    	var timezoneOffset = d.getTimezoneOffset();
 	    	star.token = "#{token /}";
 	    	star.timezone = timezoneOffset;
-			star.baseUrl = "${baseUrl}";	
+			star.baseUrl = "${baseUrl}";
 	    </script>
 		<script src="@{'/public/javascripts/utils.js'}" type="text/javascript"></script>
 		<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
@@ -90,6 +90,22 @@
 		    	    $(window).unbind("scroll");
 		    		$(".parallax").addClass("iframe");
 		    	}
+		    	
+		    	star.eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+		    	star.messageEvent = star.eventMethod == "attachEvent" ? "onmessage" : "message";
+		    	eventer = window[star.eventMethod];
+		    	eventer(star.messageEvent,function(e) {
+		    	    var key = e.message ? "message" : "data";
+		    	    var params = e.data;
+		    	    try{
+			    	    params = JSON.parse(params);
+			    	    if(params.type == "reload"){
+			    	        document.location.reload();
+			    	    }
+		    	    }catch(e){
+		    	    }		    	    
+		    	},false);
+		    	
 		    	
     		    $(document).on("click", ".anchorlink", function(){
    	    	        document.location = $(this).attr("data-href");
@@ -218,11 +234,6 @@
 			<!-- facebook header -->
 			
 
-			
-			<!-- Chat box -->
-			#{if (listing != null && listing.user.isAvailable()) || (usr != null && usr.isAvailable())}
-			#{/if}
-			<!-- Chat box -->				
 			
 			
 			

@@ -41,7 +41,7 @@ public class Listings extends BaseController
         final Listing listing = Listing.get(uuid);
         final Boolean isOwner = listing != null ? listing.user.equals(user) : false;
         final Boolean isTeam = listing != null && user != null ? user.isTeam(listing) : false;
-        final User displayedUser = listing.user;
+        final User displayedUser = listing != null ? listing.user : null;
 
         if ((!isNew && listing == null) || (listing != null && listing.deleted != null && listing.deleted && !isOwner))
         {
@@ -412,8 +412,8 @@ public class Listings extends BaseController
         e.started = new Date();
         e.createdByUser = true;
         e.state = Event.EVENT_STATE_USER_CREATED;
-        e.chatEnabled = true;
-        e.commentsEnabled = false;
+        e.chatEnabled = l.chatEnabled;
+        e.commentsEnabled = l.commentsEnabled;
         e.type = l.type;
         e.created = new Date();
         e.user = l.user;
@@ -425,7 +425,6 @@ public class Listings extends BaseController
         if (customer == null)
             e.privacy = Event.EVENT_VISIBILITY_PUBLIC;
         e.save();
-
         l.started = new Date();
         l.ended = null;
         l.instantBroadcast = e.uuid;

@@ -36,6 +36,7 @@ public class Hangout extends BaseController
     {
         final User user = getLoggedUserNotCache();
         final Event event = Event.get(id);
+
         Boolean isOwner = false;
         if (user != null && event != null)
             isOwner = user.isOwner(event);
@@ -47,9 +48,6 @@ public class Hangout extends BaseController
 
         if (e != null && !e.isFree())
             checkPayment(e, request.url);
-
-        if (user == null && tempName == null)
-            joinRoom(id);
 
         // send rating request if user has not rated this channel
         if (user != null && event != null && !user.isTeam(event) && request.cookies.get(e.uuid) == null)
@@ -69,12 +67,8 @@ public class Hangout extends BaseController
         final String room = id;
         final String baseUrl = getBaseUrl().substring(0, getBaseUrl().length() - 1);
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
-        render(user, name, room, socketIo, baseUrl, event, isOwner, e);
-    }
-
-    public static void joinRoom(String id)
-    {
-        render(id);
+        final String commentTemp = RandomUtil.getUUID();
+        render(user, name, room, socketIo, baseUrl, event, isOwner, e, commentTemp);
     }
 
     public static void joinRoomPost(String name, String id)

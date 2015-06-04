@@ -44,9 +44,9 @@
 					
 					<div class="header-top-dropdown">
 						<div class="btn-group dropdownq">
-							<a class="btn dropdown-toggle margin-top-clear" href="/instant" target="_blank" rel="tooltip" data-placement="bottom" data-original-title="&{'start-instant-chat'}"><i class="fa fa-video-camera fa-flip-horizontal"></i></a>
+							<a class="btn dropdown-toggle margin-top-clear" href="/instant" target="_blank" rel="tooltip" data-placement="bottom" data-original-title="&{'start-instant-chat'}"><i class="fa fa-comments-o"></i></a>
 							<a class="btn dropdown-toggle margin-top-clear" href="/about">&{'about'}</a>
-							<a class="btn dropdown-toggle margin-top-clear" href="/help">&{'help'}</a>
+							<a class="btn dropdown-toggle margin-top-clear" href="/help">&{'tour'}</a>
 							<a class="btn dropdown-toggle margin-top-clear" href="/faq">&{'FAQ'}</a>
 							<a class="btn dropdown-toggle margin-top-clear" href="/contact">&{'contact-us'}</a>
 						</div>
@@ -57,6 +57,7 @@
 							<ul class="dropdown-menu dropdown-menu-right dropdown-animation" style="padding:0px;">
 					            <li><a href="/locale?locale=en&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/en.gif'> English</a></li>
 					            <li><a href="/locale?locale=de&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/de.gif'> Deutsch</a></li>
+					            <li><a href="/locale?locale=sk&url=${request.url.urlEncode()}" ><img class="inline" src='/public/images/flags/sk.gif'> Slovensky</a></li>
 							</ul>							
 						</div>
 						
@@ -72,7 +73,7 @@
 </div>
 
 #{if noheader == null}
-<header class="header fixed clearfix">
+<header class="header #{if nofix}#{/if}#{else}fixed#{/else} clearfix">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-2">
@@ -141,7 +142,7 @@
    								  	   	<li class="#{if request.url.indexOf("search")>=0} active #{/if}"><a href="/search" id="public-btn-logout"><i class="fa fa-search"></i> &{'search'}</a></li>
 
      									#{if user && user.isPublisher()}
-								          	<li class="#{if request.url.indexOf("chat")>=0} active #{/if}"><a href="/chat"><i class="icon-chat"></i> &{'live-chat'}</a></li>
+								          	<li class="#{if request.url.indexOf("chat")>=0} active #{/if}"><a href="/chat"><i class="fa fa-comments-o"></i> &{'live-chat'}</a></li>
 							          	#{/if}	
 
 									 	#{if user}
@@ -190,6 +191,9 @@
 									      	<a href="/login?url=${request.url.urlEncode()}" id="public-btn-logout" title="&{'sign-in'}">
 									      		<i class="black fa fa-power-off fa-1x"> </i> &{'sign-in'}
 									      	</a>
+									      </li>  
+									      <li> 
+									      	<iframe style="overflow:hidden;width:70px;height:40px;display: inline-block;margin:6px 0;" src="/registration/facebook" scrolling="no" seamless frameBorder="0"></iframe>
 									      </li>  
 										#{/if} 	
 										

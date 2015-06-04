@@ -179,8 +179,6 @@ star.initItems = function(prefix, urlParams){
                     $("#spinner"+prefix).hide();
                     $(html).hide().appendTo($("#itemsList"+prefix)).fadeIn(500);
                     $("#moreResults"+prefix).show();
-                    if(typeof FB !== "undefined")
-                        FB.Canvas.setSize();
                 }
                 f(html);
             });

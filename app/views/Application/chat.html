@@ -1,6 +1,6 @@
 #{extends 'main.html' /} 
 #{set 'title'}
-	&{'chat'}
+	&{'live-chat'}
 #{/set}
 
 #{set 'moreScripts'}
@@ -15,11 +15,35 @@
 	#{/if}
 #{/set}
 
+
+
+<!-- Embed modal -->
+<div class="modal" id="embedModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+      	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">&{'cancel'}</span></button>
+        <h3 class="modal-title" id="myModalLabel"><i class="fa fa-code"></i> &{'embed-chat-admin'}</h3>
+      </div>
+      <div class="modal-body">
+      	<label style="font-weight:normal">&{'embed-chat-admin-desc'}</label>
+      	<form action="">
+	      	<textarea rows="6" class="form-control widgr-embed-snippet" maxlength="500" onclick="javascript:$(this).select();"><iframe src="${baseUrl}/chat" seamless frameborder="0" style="width:100%;min-height:700px"></iframe></textarea>
+      	</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default btn-short" data-dismiss="modal">&{'close'}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div class="padding container container-xs-height">
 	<div class="row row-xs-height">
 		<div class="col-xs-12">
 			<h2>
-				<i class="icon-chat"></i> &{'live-chat'}
+				<i class="fa fa-comments-o"></i> &{'live-chat'}
 				#{if user.isAvailable()}
 					<small> 
 						&nbsp;&nbsp;
@@ -28,6 +52,7 @@
 					</small> &nbsp;
 					<a class="btn btn-light-gray btn-sm" href="/available-stop?id=${user.uuid}&url=${request.url.urlEncode()}&#{token /}"><i class="fa fa-power-off"></i> &{'uncheck-me-as-available'}</a>
 				#{/if}		
+				<a class="btn btn-light-gray btn-sm" href="" rel="tooltip" data-original-title="&{'embed-chat-admin'}" data-toggle="modal" data-target="#embedModal"><i class="fa fa-code"></i></a>
 			</h2>
 		
 			#{if !user.isAvailable()}
@@ -55,16 +80,14 @@
 					<div class="input-group">
 						<input id="chat-text2" class="form-control" maxlength="400" placeholder="&{'enter-your-message'}"> 
 						<span class="input-group-btn">
-							<button id="chat-send2" class="btn btn-dark btn-short" style="margin:0px;height:40px"><i class="fa fa-share"></i></button>
-						</span>
-						<span class="input-group-btn">
-							<button id="create-instant-room" class="btn btn-dark btn-short" style="margin:0px;height:40px" title="&{'create-instant-session'}"><i class="fa fa-video-camera"></i></button>
+							<button id="chat-send2" class="btn btn-default btn-short" style="margin:0px;height:40px"><i class="fa fa-share"></i></button>
 						</span>
 					</div>
 				</div>
 				<br/>
-				<label style="font-weight: normal"><input type="checkbox" id="create-instant-room-charging" value="true"> &{'first-free'}</label> &nbsp;
-				<label style="font-weight: normal"><input type="checkbox" id="auto-switch-off" value="true"> &{'auto-switch'}</label>
+				<label style="font-weight: normal"><input type="checkbox" id="auto-switch-off" value="true"> &{'auto-switch'}</label> &nbsp;
+				<a class="create-instant-room" data-paid="true" style="cursor:pointer;margin:0px;height:40px">&{'create-instant-session'} (&{'paid'})</a> &nbsp;
+				<a class="create-instant-room" data-paid="false" style="cursor:pointer;margin:0px;height:40px">&{'create-instant-session'} (&{'free'})</a> &nbsp;
 			</div>
 		</div>	
 		<div class="col-xs-8 team-switch">

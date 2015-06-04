@@ -21,7 +21,7 @@ star.instantRoom = function(){
     var user = star.getRecipientByUuid(star.chatRoomRecipientUser);
     if(user.userUuid.length > 0 && star.listing.length > 0)
     var params = "id="+star.listing+"&uuid="+user.userUuid+"&"+star.token;
-    if($("#create-instant-room-charging").is(":checked")){
+    if($(this).attr("data-paid") == "false"){
         params += "&free=true";
     }
     roomServices.instantRoom(params, function(resp){
@@ -39,7 +39,23 @@ star.instantRoom = function(){
         data.recipientName = star.getRecipientByUuid(star.chatRoomRecipientUser).userName;
         data.recipientAvatar = star.getRecipientByUuid(star.chatRoomRecipientUser).userAvatar;
         socket.emit('chatRoom-message', data);                
-        star.messageSend();
+        
+        var saveFeed = {};
+        saveFeed.type = "save-feed";
+        saveFeed.uuid = star.chatRoom;
+        saveFeed.listing = star.listing;
+        saveFeed.sender = star.userUuid;
+        saveFeed.senderName = star.userName;
+        saveFeed.recipient = star.chatRoomRecipientUser;
+        saveFeed.recipientName = star.getRecipientByUuid(star.chatRoomRecipientUser).userName;
+        //saveFeed.comment = '<span style="font-size:18px;"><a href="'+resp.url+'" target="_blank"><i class="fa fa-phone"></i> '+i18n("join-vide-conference")+'</a>';
+        saveFeed.comment = resp.url;
+        if(star.embedded){
+            star.container[0].contentWindow.postMessage(JSON.stringify(saveFeed), '*');
+        } else {
+            roomServices.saveFeed(saveFeed, function(){
+            });                 
+        }
     });
 }
 
@@ -111,7 +127,7 @@ star.usersRender = function(data) {
             star.users += 1;
         }
         if(star.chatRoomUsers[i].userUuid != star.userUuid){
-            var lbl = star.chatRoomUsers[i].listingTitle;
+            var lbl = "<a target='_blank' href='/listing/"+star.chatRoomUsers[i].listingUuid+"'>"+star.chatRoomUsers[i].listingTitle+"</a>";
             if(star.chatRoomUsers[i].admin)
                 lbl = "<span class='label default-bg'>"+i18n("operator")+"</span>";
             html += '<li  data-lbl="'+lbl+'" data-id="'+star.chatRoomUsers[i].client+'" data-uuid="'+star.chatRoomUsers[i].userUuid+'" data-avatar="'+star.chatRoomUsers[i].userAvatar+'" data-name="'+star.chatRoomUsers[i].userName+'" class="chatroom-user list-item-gray" ><a><img class="img-circle avatar22 margin5" src="/'+star.chatRoomUsers[i].userAvatar+'_32x32">' + star.chatRoomUsers[i].userName + '</a> <br/><small style="color:silver">' + lbl + '</small> <small style="display:none" class="label label-danger widgr-msg-'+star.chatRoomUsers[i].userUuid+'">'+i18n("new-message")+'</small></li>';
@@ -120,11 +136,15 @@ star.usersRender = function(data) {
     if(star.isOwner)
         $(".chat-avatars2").html(html);
     if(isAdminOnline){
+        $(".widgr-instant-session-btn").show();
+        $(".widgr-send-msg-button").hide();
         $(".widgr-chat").show();
         $(".widgr-email").hide();
         $(".widgr-online-status").show();
     }
     else {
+        $(".widgr-instant-session-btn").hide();
+        $(".widgr-send-msg-button").show();
         $(".widgr-online-status").hide();
         $(".widgr-chat").hide();
         $(".widgr-email").show();
@@ -313,10 +333,10 @@ star.messageRender = function(data) {
     var html = '';
     html += '<span style="line-height:32px; font-size:13px; color:gray" ><img class="img-circle avatar32 margin10" style="vertical-align:middle" src="'+star.baseUrl+"/"+data.senderAvatar+'_32x32"><a target="_blank" href="'+star.baseUrl+"/user/id/"+data.senderUuid+'">' + data.senderName + '</a> <span style="float:right;margin-right:10px">'+time+"</span></span>";
     
-    // content
+    // render message content
     html += '<div class="'+style+'" >';
     if(data.type == "room"){
-        html += '<span style="font-size:18px;"><i class="fa fa-phone"></i> <a href="'+data.message+'&tempName='+star.userName+'" target="_blank">'+i18n("join-vide-conference")+'</a>';
+        html += '<span style="font-size:18px;"><a href="'+data.message+'&tempName='+star.userName+'" target="_blank"><i class="fa fa-comments-o"></i> '+i18n("join-vide-conference")+'</a>';
     }
     if(data.type == "message"){
         html += linkify(data.message.replace(/>/g, '&gt;'));
@@ -344,7 +364,7 @@ star.messageRender = function(data) {
             if(star.userUuid != userUuid)
                 star.chatRoomRecipientUser = userUuid;
             var usr = star.getRecipientByUuid(userUuid);
-            var lbl = usr.listingTitle;
+            var lbl = "<a target='_blank' href='/listing/"+usr.listingUuid+"'>"+usr.listingTitle+"</a>";
             star.listing = usr.listingUuid;
             if(usr.admin)
                 lbl = "<span class='label default-bg'>"+i18n("operator")+"</span>";
@@ -405,11 +425,11 @@ star.feedsRender = function(data, btnContainer, clbck){
         html += '<span style="line-height:32px; font-size:13px; color:gray" ><a target="_blank" href="'+star.baseUrl+"/user/id/"+data[i].sender+'">' + data[i].senderName + '</a> <span style="float:right;margin-right:10px">'+ time +"</span></span>";
         if(star.userUuid == data[i].sender){
             html += '<div class="widgr-bubble-left">';
-            html +=  data[i].comment;
+            html +=  linkify(data[i].comment);
             html += '</div>';
         } else {
             html += '<div class="widgr-bubble-right">';
-            html +=  data[i].comment;
+            html +=  linkify(data[i].comment);
             html += '</div>';
         }
     }
@@ -431,14 +451,14 @@ star.sendMail = function(){
     msg.sender = $(".widgr-email-sender").val();
     msg.subject = $(".widgr-email-subject").val();
     msg.body = $(".widgr-email-body").val();
-    if(!msg.sender)
+    if(!msg.sender && !star.logged)
         valid = false;
     if(!msg.subject)
         valid = false;
     if(!msg.body)
         valid = false;
     var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-    if(!re.test(msg.sender))
+    if(!re.test(msg.sender) && !star.logged)
         valid = false;
     
     if(valid){
@@ -535,7 +555,7 @@ $(document).ready(function(){
     });
 
     // create instant room
-    $("#create-instant-room").click(star.instantRoom);
+    $(".create-instant-room").click(star.instantRoom);
     
     // select user
     $(".widgr-chatbox-container").on("click", ".chatroom-user", star.userSwitch);     
@@ -578,6 +598,10 @@ $(document).ready(function(){
             $(".widgr-chatbox").removeClass("opened");
             star.visible = true;
         }
+    });   
+
+    $(".widgr-instant-session-btn").click(function(){
+        $(".widgr-chatbox-trigger").click();
     });   
     
     if(star.logged)

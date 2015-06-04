@@ -1,0 +1,1070 @@
+#Accounts.java
+invalid-value=Nesprávna hodnota
+error-default-message=Vyskytla sa chyba
+you-need-at-least-one-listing=Aby ste sa mohli stať sprostredkovateľom potrebujete aspoň jeden inzerát <a href="/listing/new?action=edit&new=true">Kliknite sem pre vytvorenie</a>
+please-fill-in-information-about-you=Aby ste sa mohli stať sprostredkovateľom vyplňte údaje<a href="/settings?edit=true#about">o Vás</a>
+your-publisher-request-was-submited=Vaša požiadavka bola odoslaná. Čakajte na jej schválenie. Po dokončení validácie Vám bude zaslaná notifikácia.
+#Admin.java
+publisher-request-approved-subject=Vaša požiadavka o sprostredkovateľský účet bola schválená
+publisher-request-approved-message=h3. Vaša požiadavka o sprostredkovateľský účet bola schválená \nOdteraz môžete využívať všetky funkcie
+publisher-request-declined-subject=Vaša požiadavka o sprostredkovateľský účet bola zamietnutá
+publisher-request-declined-message=h3. Vaša požiadavka o sprostredkovateľský účet bola zamietnutá \nProsím skompletizujte údaje o Vás a skúste to znova. V prípade otázok nás môžete kedykoľvek kontaktovať. [Opýtať sa|%s]
+event-reminder-subject=Pripomienka udalosti %s
+event-reminder-message=h3. Pripomienka udalosti %s \n Udalosť [%s|%sevent/%s] začína v čase %s. \nAk si neprajete dostávať ďalšie pripomienky, prihláste sa do nastavení Vášho Widgr účtu pre ich deaktiváciu.
+
+#Application.java
+start-helping-others=<h4>Tri kroky ako sa stať sprostredkovateľom.</h4> Začnite pomáhať ostatným a staňte sa sprostredkovateľom. Pozrite si jednoduchý <a href="/help#publisher">video návod</a> alebo <ul><li><a href="/settings?edit=true#about">Vyplňte údaje o sebe</a></li><li><a href="/listing/new?action=edit&new=true">Vytvorte Váš prvý inzerát</a></li><li><a href='/settings/request-publisher?authenticityToken=%s'>Požiadajte o vytvorenie sprostredkovateľského účtu</a></li></ul>
+click-and-drag-to-create-event=Pre rezerváciu stretnutia vyberte voľné časové okno a tahajte myšou<br/><span style='opacity:0.5'>Polia označené čiernou su už rezervované.</span>
+
+#Attendances.java
+blocked-contact=Tento kontakt je zablokovaný
+you-are-blocked=Odoslanie správy zlyhalo
+
+#BaseController.java
+
+#Check.java
+
+#Comments.java
+
+#Contacts.java
+invalid-email=Nesprávny email
+send-invitation=Odoslať pozvánku
+is-already-registered=Kontakt %s je už zaregistrovaný. <a href='/user/%s'>Pozrieť profil</a>
+invited-you-to-widgr-subject=%s Vám odoslal pozvánku do Widgr
+invitation-sent-to=Pozvánka pre %s bola úspešne odoslaná 
+view-on-widgr=Zobraziť vo Widgr
+
+#Events.java
+limit-reached=Dosiahli ste predplatený limit eventov. <a href='/about#pricing'>Zistiť viac</a>
+event-created=Event bol úspešne vytvorený.
+event-left=Event bol úspešne vytvorený.
+invalid-price=Nesprávna hodnota
+invalid-time-range=Nesprávne časové obdobie
+setup-PayPal-account-warning=Aby ste mohli vytvárať platené eventy, musíte nastaviť svoj PayPal účet. <a href='/settings?edit=true#PayPal'>Nastaviť PayPal účet</a>
+you-have-not-paid-for-current-month=You can't create paid sessions. Your subscription is not activated. <a href='/settings'>Activate your subscription first</a>
+invalid-PayPal-account-warning=Aby ste mohli vytvárať platené eventy, musíte nastaviť svoj PayPal účet. <a href='/settings?edit=true#PayPal'>Nastaviť PayPal účet</a>
+new-event-proposed-for-channel-subject=Požiadavka na nový event pre inzerát %s
+new-event-proposed-for-channel-message=h3. Požiadavka na nový event \n%s vytvoril požiadavku pre event [%s|%s]. Kliknite na odkaz pre jej schválenie / zamietnutie
+you-have-been-invited-subject=Pozvánka pre %s
+you-have-been-invited-message=h3. Pozvánka pre %s \n%s Vás pozval na event [%s|%s]
+your-proposal-declined-subject=Vaša požiadavka pre event bola zamietnutá
+your-proposal-declined-message=h3. Vaša požiadavka pre event bola zamietnutá \n%s zamietol Vašu požiadavky pre event [%s|%s]
+your-proposal-approved-subject=Vaša požiadavka pre event bola schválená
+your-proposal-approved-message=h3. Vaša požiadavka pre event bola schválená \n%s akceptoval Vašu požiadavku pre event [%s|%s] 
+new-event-request-subject=Požiadavka pre rýchly event %s
+new-event-request-message=h3. Požiadavka pre rýchly event \n%s Vám odoslal požiadavku o rýchly event pre [session|%s] pre inzerát %s
+
+#FileuploadController.java
+
+#GoogleOAuth.java
+oauth-successfull=Autorizácia kalendára bola úspešná
+oauth-error=Nepodarilo sa autorizovať
+
+#Hangout.java
+please-rating-subject=Prosím ohodnoťte event
+please-rating-message=Pomôžte iným rozhodnúť sa a ohodnoťte kvalitu eventu [%s|%s].
+invitation-to-video-call-subject=Pozvánka do video chatu
+invitation-to-video-call-message=h3. %s vás pozval do video chatu. \n[Kliknite sem pre pripojenie|%s]
+
+#Listings.java
+invalid-channel-data=Zadali ste nesprávne dáta, prosím skontrolujte Váš vstup.
+
+#Notifications.java
+new-message-subject=Nová správa od %s
+new-message-message=h3. %s \n %s
+message-sent-error=Správa nebola odoslaná, prosím skontrolujte Váš vstup
+message-sent-successfully=Správa bola odoslaná
+
+#PaymentController.java
+event-payment-completed-subject=Nová platba pre event %s
+event-payment-completed-message=h3. Nová platba pre event %s \n %s Vám odoslal platbu pre %s. [Otvoriť detail|%s]
+event-refund-request-subject=Refund request from %s
+event-refund-request-message=h3. Refund request \n%s requested refund for session [%s|%s]. You can issue refund through [Received payments page|%s] \nh4. Refundation message from customer \n%s
+event-refunded-request-subject=Approved refund request for Session %s 
+event-refunded-request-message=h3. Approved refund request for Session %s \nYour refund request for session [%s|%s] has been approved.
+invalid-parameters-try-again=Missing payment id, please try again
+paypal-error=An exception occured while processing your payment. <b>Reason:</b> %s
+
+#Public.java
+
+#Ratings.java
+
+#Registration.java
+user-not-exists=Používateľ neexistuje
+invalid-captcha=Nesprávna hodnota
+invalid-value=Nesprávna hodnota
+bad-characters=Nesprávna znaky na vstupe
+password-min-length=Heslo musí mať aspoň 6 znakov
+password-reset-subject=Vaše heslo bolo zmenené
+password-reset-message=h3. Vaše heslo bolo zmenené \nNew password: *%s* \nOdporúčame zmeniť ho [čo najskôr|%s]
+password-message=Vaše heslo bolo zmenené. Skontrolujte Váš email.
+login-already-used=Účet %s už existuje
+account-activation-subject=Aktivujte svoj účet
+account-activation-message=h3. Vitajte vo Widgr! \n Prosím kliknite na tento odkaz pre dokončenie registrácie. \n[Aktivačná linka|%sregistration/activate?uuid=%s] 
+check-out-your-email-for-activating=Registrácia bola úspešná! Skontrolujte svoj email pre aktiváciu Vášho účtu. <strong>Prosím skontrolujte aj priečinok pre spam.</strong>	
+account.activated-subject=Vitajte!
+account.activated-message=h3. Vitajte! \nVáš účet [%s|%suser/%s] bol úspešne aktivovaný. \n Tu je zopár vecí, ktoré Vám pomôžu začať:\n* [Ako požiadať o event|%shelp#request-session] \n* [Ako požiadať o sprostredkovateľský účet|%shelp#publisher]\n* [Ako prepojiť Váš účet s Facebook|%shelp#facebook]\n* [Ako správne nastaviť PayPal konto|%shelp#paypal] \n* [Ako synchronizovať Váš kalendár s Google Calendar|%shelp#calendar] \n* [a viac ...|%shelp]
+account-successfully-activated=Váš účet bol aktivovaný
+
+#Secure.java
+incorrect-login-or-password=Nesprávne meno alebo heslo
+user-does-not-exist=Používateľ neexistuje
+your-account-is-not-activated=Váš účet nieje aktivovaný, skontrolujte svoj email
+you-have-been-logged-out=Boli ste odhlásený
+
+#ActivityDTO.java
+
+#AttachmentDTO.java
+
+#AttendanceDTO.java
+
+#ChatFeedDTO.java
+
+#CommentDTO.java
+
+#CommentReplyDTO.java
+
+#EventDTO.java
+
+#ListingDTO.java
+
+#UserDTO.java
+
+#DummyTrustManager.java
+
+#EmailNotificationBuilder.java
+
+#EmailProvider.java
+
+#EmailResponse.java
+
+#HotmailSSLSocketFactory.java
+
+#Notification.java
+
+#Auth.java
+
+#CalendarClient.java
+
+#LiveStreams.java
+
+#Account.java
+
+#Activity.java
+
+#Attendance.java
+
+#ChatFeed.java
+
+#Comment.java
+
+#CommentReply.java
+
+#Contact.java
+
+#Event.java
+
+#FileUpload.java
+
+#Listing.java
+
+#ListingFilter.java
+
+#Message.java
+
+#Rating.java
+
+#RatingVote.java
+
+#Search.java
+
+#User.java
+
+#PayPal.java
+
+#CustomTags.java
+
+#Extensions.java
+
+#VelocityTemplate.java
+you-have-been-invited-to-widgr=%s Vás pozval do Widgr
+you-have-been-invited-to-event=Vás pozval na event %s
+regards-html=<br/>S pozdravom, <br/>Váš tím Widgr
+regards=\n\nS pozdravom, \nVáš tím Widgr
+email-what-is-widgr=<h3>Čo je Widgr?</h3>S Widgr môžete nájsť pomoc kedykoľvek od ľudí so skúsenosťami v rôznych oblastiach - učitelia, mentori, doktori, opravári, osobný koučing, hobby nadšenci, a viac.<br/>Môžete si vybrať podľa kvalifikácii, dostupnosti a hodnotení. Môžete nájsť a využiť pomoc ihneď alebo si stretnutie naplánovať  na nejaký čas neskôr.<br/>Stačí vyplniť jednoduchý formulár a začnite používať Widgr už dnes. <a href='%sabout'>Zistiť viac o Widgr</a>
+email-footer=<h4><strong>Ako viem zistiť, že tento email nieje podvod?</strong></h4><p style="font-family: Arial, Helvetica;font-size:12px">Email ktorý je odoslaný od Widgr Vás nikdy nebude žiadať o citlivé informácie ako Vaše heslo. Email, ktorý Vás bude žiadať o odoslanie citlivých údajov je vždy pokusom o podvod. Neodpovedajte a neklikajte na podozrivé odkazy v emailoch</p>
+register-now=Zaregistrovať sa
+security=Ochrana osobných údajov
+help=Pomoc
+contact=Kontakt
+
+#Constants.java
+
+#DateTimeUtils.java
+
+#Externalize.java
+
+#JsonUtils.java
+
+#NetUtils.java
+
+#NumberUtils.java
+
+#ObjectUtils.java
+
+#PostParamsBuilder.java
+
+#RandomUtil.java
+
+#StringUtils.java
+
+#UriUtils.java
+
+#WikiUtils.java
+
+#account.html
+paypal-currency-note=Dôležité. Všetky meny ktoré použijete, musíte mať nastavené ako akceptované meny aj vo vašom PayPal účte.
+connected-to=pripojené k 
+change-profile-picture=Zmeniť profilový obrázok
+reminder-minutes=Notifikovať
+reminder-minutes-desc=minút pred začiatkom eventu
+reminder=Notifikácie
+reminder-help=Povoliť alebo zakázať notifikácie pred začiatkom eventu
+default-currency=Predvolená mena
+google-calendar-id=Google calendar Id
+valid-to=Platné do
+events-left=Sessions left for current billing cycle
+paypal-account=Váš účet PayPal 
+paypal-info=Váš PayPal účet pre prijímanie platieb. Musí byť typu Business alebo Premier
+true=Povolené
+false=Zakázané
+learn-more=Dozvedieť sa viac
+learn-more-about-pricing=Dozvedieť sa viac o cenníku
+cancel-subscription=Zrušiť predplatné
+upgrade-to-plan=Zvýšiť predplatený balík
+per-month=za mesiac
+account-will-be-valid=Typ účtu
+account-will-be-valid-2=bude platné od
+your-subscription-not-activated=Vaše predplatné pre balík %s ešte nieje aktivované. Pre aktivovanie použite PayPal
+standard=Štandard
+publisher=Poskytovateľ
+receiver=Príjemca
+publisherReq=Štandard
+edit=Upraviť
+cancel=Zrušiť
+crop=Orezať
+close=Zavrieť
+change-plan-to=Change plan to
+will-be-applied-after=Will be applied after
+account.account=Účet
+account-name=Názov účtu / spoločnosti
+account-plan=Balík
+account-type=Typ účtu
+publisher-waiting-for-approvement=Requested for Provider account
+become-a-publisher=Staňte sa poskytovateľom
+Account Plan=Balík
+standard=Štandard
+premium=Mesačný Premium
+pro=Mesačný Pro
+user-preferences=Užívateľské nastavenia
+display-name=Meno
+password=Heslo
+change-your-password=Zmena hesla
+locale=jazyk
+timezone=Časová zóna
+hrs=hod
+email-notifications=Email notifikácie
+enable-or-disable-email-notifications=Povoliť alebo zakázať notifikácie emailom.
+facebook-id=Prepojiť s Facebook
+clear-facebook-id=Odpojiť Facebook
+connect-with-your-facebook-account=Prepojte Widgr s Vašim Facebook účtom. Do Widgr sa môžete potom prihlásiť aj pomocou Facebook
+install-widgr-app-to-your-facebook-page=Inštalovať aplikáciu Widgr do Vašej Facebook fan stránky
+first-name=Meno
+last-name=Priezvisko
+language=Jazyk
+email-notification=Email notifikácie
+enabled=Povolené
+disabled=Zakázané
+About You=O Vás
+about=O službe
+experiences=Skúsenosti
+website=Webstránka
+facebook=Facebook
+twitter=Twitter
+linkedIn=LinkedIn
+googlePlus=GooglePlus
+your-calendar=Váš verejný kalendár
+working-hours=Pracovný čas
+hidden-days=Voľné dni
+sync-with-google=Google Calendar
+sync-with-google-cal=Synchronizovať s Google Calendar
+enable-google-calendar-sync=Ak je povolené, budete môcť sychronizovať eventy s google calendar
+enable-google-calendar=Pripojiť k Google calendar
+google-calendar-sync-with=Pripojené ku kalendáru
+google-calendar-status=pripojené
+disable-google-calendar-sync=Odpojiť Google calendar
+start-of-working-hours=Začiatok pracovného ćasu
+end-of-working-hours=Koniec pracovného ćasu
+PayPal-account=PayPal
+PayPal-info=Aby ste mohli vytvárať platené eventy musíte zadať platný Premier alebo Business PayPal účet.
+paypal-refund=Ako povoliť refundácie cez Widgr
+paypal-refund-desc=By default you cannot use Widgr to make refundations to your customers. You would always need to do it through PayPal and do it manually. By granting API access to issue refunds to Widgr you can make then refunds to your customers just with a single click through <a href='/payments'>Received payments page</a> <h4>Steps for granting API access (Only for refunds)</h4> <ul><li>Go to <a target="_blank" href="https://www.paypal.com">paypal.com</a> and log into your PayPal account</li><li>Navigate to Home > Profile > My selling tools </li><li>Click on API access "Update" link</li><li>Click on Add or edit API permissions</li><li>Click on Add new Third Party button</li><li>Type <input type="text" value="sales_api1.wid.gr"> into "Third Party Permission Username field" and click "Lookup"</li><li>Check <strong>"Issue a refund for a specific transaction"</strong> option and click "Add"</li><li>And that's it</li></ul>
+account.currency=Predvolená mena
+currency=Mena
+save=Uložiť
+about-you=O Vás
+about-you-section=Upraviť sekciu "O mne"
+about-you-section-info=Táto sekcia je zobrazená vo Vašom verejnom profile a každom inzeráte
+working-hours-info=Tu môžete nastaviť, v ktorých hodinách ste dostupní
+working-days-info=Tu môžete nastaviť, v ktorých dňoch ste dostupní
+account-info=Ak je vyplnené pridá sa pred Vaše meno
+
+
+
+#payments.html
+payments=Platby
+payments.receivedPayments=Prijaté platby
+payments.sentPayments=Odoslané platby
+payments-receivedPayments-for-this-user=Platby pre
+payments.timeRange=Obdobie
+payments.thisMonth=Tento mesiac
+payments.thisYear=Tento rok
+payments.allTime=Od začiatku
+from=Od
+to=Do
+submit=Odoslať
+payments.income=príjem
+payments.totalSales=Celkový príjem
+payments.totalExpenses=Celkové výdaje
+per-day=za deň
+payments.fee=Poplatok
+payments.transactions=História transakcií
+customer=Zákazník
+event=Event
+date=Dátum
+
+#activities.html
+contacts=Kontakty
+manage=Spravovať
+activities=Aktivity
+
+#publishers.html
+
+#users.html
+
+#about.html
+about-title=Widgr - videohovory - Vzdialené konzultácie - Marketplace - Online mentoring
+contact-us-text=Pomôžte nám vylepšiť Widgr! V prípade otázok sa nás neváhajte čokoľvek spýtať. Oceňujeme každú spätnú väzbu od Vás. Napíšte nám na tento email alebo použite webový formulár.
+pricing-for-customers=Cenník pre užívateľov
+pricing-for-publishers=Cenník pre poskytovateľov
+widgr-share-your-knowledge=widgr<small style="font-size:0.6em"> &middot; Zdieľajte Vaše skúsenosti</small>
+find-help-header=Hľadajte pomoc v rôznych oblastiach
+get-help-header=Získajte radu na jeden klik
+get-paid-header=Staňte sa sprostredkovateľom a začnite poskytovať Vaše skúsenosti ako službu druhým
+about-widgr=O službe Widgr
+about-widgr-subtext=Zdieľajte Vaše skúsenosti
+about-1=Widgr je jednoduchý a pohodlný spôsob ako sa naučiť niečo nové alebo získať konzultácie od expertov cez internet. Nezáleží na tom kto ste, kde ste alebo aký je čas, tu sa stále nájde niekto kto Vám môže pomôcť. 
+about-2=Služba Widgr je miesto kde môžete nájsť ľudí ktorí ponúkajú konzultácie v rôznych doménach. Voláme ich poskytovatelia. Títo poskytovatelia môžu byť súkromné osoby alebo tiež firmy. Widgr marketplace je miesto kde môžete týchto poskytovateľov vyhľadávať a využívať ich služby.
+about-3=Pomocou služby Widgr môžete získať pomoc kedykoľvek a od ľudí s expertízou v rôznych oblastiach - poradcovia, učitelia, doktori, špecialisti na domáce opravy, osobní tréneri, hobby nadšenci a čokoľvek iné.<br/>Môžete si vybrať podľa kvalifikácii, dostupnosti a hodnotení. Môžete nájsť a využiť pomoc ihneď alebo si stretnutie naplánovať  na nejaký čas neskôr. Poskytovalia múžu svoje služby poskytovať zadarmo ale môžu byť tiež platené. Platenie je jednoduché a zabezpečené pomocou PayPal. Ak nebudete so sluźbou spokojní, je tu garancia vrátenia peňazí.
+why-choose-widgr=Vlastnosti
+why-choose-widgr-text=Prečo si vybrať Widgr?
+pricing=Cenník
+basic=Zakladný balík
+free=Zadarmo
+fee-per-paid-event-description=Zadarmo ostane navždy zadarmo, no pre platené eventy, je od základnej ceny odčítaný poplatok za sluźbu.
+from-event-price=z ceny eventu
+fee-per-paid-event=z ceny eventu
+security-description=Všetka komunikácia je štandardne kryptovaná pomocou SSL.
+ssl=SSL kryptovanie
+disk-space=Disk storage is used to store attachments for sessions
+storage=diskového priestoru
+paid-events-per-month=Paid sessions per month
+unlimited-paid-events=Unlimited paid sessions
+unlimited-disk-space=Unlimited disk space
+fill-in-quick-registration-and-start-using-widgr=Fill in quick registration and start using widgr
+widgr-footer-description=Widgr footer description
+success=Success
+contact-sent-message-success=Contact sent message success
+error=Chyba
+contact-sent-message-error=Contact sent message error
+name=Meno
+email-address=Email
+message=Správa
+send=Odoslať
+get-modern-browser=Kompatibilita
+compatibility=<p><strong>Pre plnú kompatibilitu</strong> sa uistie, že používate moderný a aktualizovaný prehliadač<br/>Videohovory sú založené na podpore technológie Webrtc, ktorá nieje podporovaná všetkými prehliadačmi. Skontrolujte podporu svojho prehliadača spustením <a href="/instant">testovacieho videohovoru.</a> Mali by ste sa vidieť na obrazovke. Alebo pre detailné informácie podporu <a target="_blank" href="http://iswebrtcreadyyet.com/">navštívte tento odkaz &raquo;</p>
+
+#calendar.html
+requested-session-for=Poźiadavka pre event
+calendar-msg=<h4>Môj kalendár</h4>Na tejto stránky je kalendár so všetkymi naplánovanými eventami. Nový event môžte jednoducho vytvoriť kliknutím na zvolené časové okno.
+show-google-calendar-events=Zobraziť Google kalendár
+for=Za
+minutes=Minút
+free=Zadarmo
+first-event-is-free=Prvý event zadarmo
+start-time=Začiatok
+end-time=Koniec
+dashboard.guests=Účastníci
+view=Zobraziť
+submit-for-approval=Odoslať na schválenie
+approve=Akceptovať
+decline=Zamietnuť
+delete=Odstrániť
+
+#channels.html
+create-channel=Vytvorte inzerát
+search-title=Vyhľadať inzerát
+by-availability=Zoradiť podľa dostupnosti
+search-channels=Vyhľadať inzeráty
+search-string=Vyhľadávací reťazec
+category=Kategória
+business=Business & Kariéra
+electronics=Počítače & Elektronika
+education=Vzdelávanie
+health=Životný štýl & Zdravie
+food=Jedlo
+fashion=Móda & Krása
+art=Umenie & Hudba
+sport=Fitness & Výživa
+household=Domácnosť, Záhrada
+18plus=18+
+sorting=Zoradiť
+sort-by-reviews=Zoradiť podľa hodnotení
+sort-by-best-match=Zoradiť podľa popisu
+search=Vyhľadávanie
+
+#dashboard.html
+dashboard-description=<h4>What is Dasboard?</h4>On this page you can see your online contacts, latest activities related to your sessions, view new comments, posts and updates. When provider updates something on your scheduled Session it will appear here, so you won't miss anything important.<br/> You can even communicate with all your contacts through posts here just like on Facebook.<br/>Posts related to private sessions will be displayed only to invited users
+lates-posts=Najnovśie príspevky
+upcoming-events=Nadchádzajúce eventy
+previous-events=Predošlé eventy
+
+#upcoming.html
+upcoming-msg=<h4>Nadchádzajúce eventy</h4>Na tejto stránke sú zobrazené všetky Vaše naplánované eventy, ktoré vlastníte alebo na ktoré ste pozvaní.
+nothing-to-display=Zatiaľ žiadne záznamy na zobrazenie
+
+#past.html
+previous-msg=<h4>Predošlé eventy</h4>Na tejto stránke sú zobrazené všetky Vaše predošlé eventy, ktoré vlastníte alebo na ktoré ste boli pozvaní.
+
+#approvements.html
+approvements-msg=<h4>Poźiadavky na eventy</h4>Na tejto stránke sú zobrazené všetky požiadavky na eventy od Vašich zákazníkov. Pre schálenie / zamietnutie jednotlivých požiadaviek kliknite na detail eventu.
+no-requests=Zatiaľ žiadne záznamy na zobrazenie
+
+#manageChannels.html
+msgChannels-msg=<h4>Spravovať inzeráty</h4>Na tejto stránke môžete spravovať všetky Vaše inzeráty
+no-listings=Zatiaľ ste nevytvorili žiaden inzerát
+
+#media.html
+msgMedia-msg=<h4>Knižnicá médií</h4>Na tejto stránke môžete spravovať všetky nahraté súbory
+
+#home.html
+find-help-with=Nájsť pomoc s ...
+home-title=Widgr - video chat - Vzdialené konzultácie - Widgr Marketplace - Online tutoring
+register=Zaregistrovať sa
+for-customers=Widgr pre používateľov
+for-publishers=Widgr for poskytovateľov
+customer-feature-1=Video chat zadarmo
+customer-feature-2=Bez inštalácie
+customer-feature-3=Nájsť pomoc
+provider-feature-1=Video chat pre váš web
+provider-feature-2=Speňažte váš čas
+provider-feature-3=Globálny dosah
+customer-feature-1-desc=Spojenie s vašimi priateľmi nikdy nebolo také jednoduché. Použite ho z ktoréhokoľvek zariadenia s moderným prehliadačom.
+customer-feature-2-desc=Aby ste mohli spustiť videohovor nepotrebujete nič inštalovať. Postačí Vám moderný prehliadač.
+customer-feature-3-desc=Použite <a href="/search">Widgr marketplace</a> pre nájdenie pomoci od expertov, poradcov, špecialistov pre danú oblasť.
+provider-feature-1-desc=Chcete jednoduchý live video chat pre Vašu webovú stránku alebo Facebook stránku? Just embed a HTML snippet in your webpage and you are ready to go.
+provider-feature-2-desc=Zarábajte jednoducho pomocou spoplatnených video hovorov a konzultáciami cez internet s vašimi klientami. 
+provider-feature-3-desc=Získajte nových klientov z celého sveta. Vašej firme dáme globálnu prítomnosť, ktorú si zaslúži.
+common-feature-1=Bez fixných mesačných poplatkov
+common-feature-2=Integrated s PayPal, Facebook a Google calendar
+common-feature-3=Kompatibilné s rôznymi zariadeniami
+widgr-feature-1=interaktívny video chat
+widgr-feature-1-text=Widgr sessions are conducted through live video calls. During the session, you can point your camera to show what you need help with, upload and share files, interactive drawings, If you don't want the Provider to see you, you can always turn off your camera. <a href="/instant" target="_blank">Try instant video call now</a>.
+widgr-feature-2=Flexibilita plánovania
+widgr-feature-2-text=There are two ways to create join session -- instant and scheduled. If a provider's listing has a green "Available now" icon, you are just a few clicks away from getting help instantly. Before taking Session you can use Widgr chat box to get more information about provided Listing from Provider. Otherwise, you can see when providers are available in their calendar and pick a time slot or send a message to request a different time. <br/><a class="link" href="/help#request-session">Learn more</a>
+widgr-feature-3=Možnosti platieb
+widgr-feature-3-text=Sessions that are free don't require a PayPal account. Prices are set by the providers and can be free or charged by the session. Some providers might offer the first session for free. All you need for paying a session is a valid PayPal account.
+widgr-feature-4=Jednoduché platby pomocou PayPal
+widgr-feature-4-text=All payments for paid sessions are currently done through PayPal. If you as a Customer will not be satisfied with the performance of paid session, you can ask for a refund with just few clicks. If you plan to use Widgr as a Provider and offer paid Sessions, all you need is to have a verified Premier or Business account and you can start a new business right away. 
+widgr-feature-5=Vkladanie do Facebook stránok
+widgr-feature-5-text=As with website embedding you can easily integrate your Widgr account with existing Facebook page to make your Widgr account more accesible to your existing Facebook community. If you own a Facebook page, you can install Widgr app to custom tab. With this option, your potential customers are just few clicks away using your services. <br/><a class="link" href="/help#facebook">Learn more</a>
+widgr-feature-6=Integration with Google Calendar
+widgr-feature-6-text=You can easily connect your Widgr account with your Google calendar. With this feature you can better manage your sessions and keep your schedule up to date on every device you use.
+widgr-feature-7=Vkladanie do web stránok
+widgr-feature-7-text=You can include Widgr chatbox directly in your site without any effort. You can use live chat to talk instantly to your visitors to assist them and answer their questions. With this feature your visitors will be able to connect to you over live video within few clicks. <br/><a class="link" href="/help#embed">Learn more</a>
+
+what-is=Čo je Widgr Marketplace?
+good-for=
+find-help=Vyhľadať pomoc
+find-help-message=With Widgr you can get help anytime from people with expertise across a range of topics. Advisors, mentors, teachers, computer experts, home repair specialists and more. No matter who you are, no matter where you are and no matter what time it is, with Widgr you are just few click away from getting help.
+read-more=Dozvedieť sa viac
+get-help=Získať pomoc
+get-help-message=You can choose who to get help from based on qualifications, availability, ratings and reviews. Also, you can choose to get help right away or schedule a session for later. While some Providers offer free sessions, some may be charged. For those just simply use your PayPal to pay securely and fast. 
+get-paid=Zarábať
+get-paid-message=When you know something what might be useful for others you can become a Widgr Provider. Widgr will provide you a simple platform which will help you to connect to your customers. All you need is just PayPal account for receiving payments, and you are ready to start your business by giving remote consultations using Widgr
+instant-video-calls=Instant chat & video calls
+anonymous-peers-no-plugins=Anonymné. Peer-to-peer. Bez potreby pluginov, registrácie alebo platieb. <br/>Podporované prehliadače
+start-now=Začnite ihneď
+you-are-on-the-right-place=Pripojte sa k nám
+fill-in-quick-registration-and-start-using-widgr=Stačí len vyplniť jednoduchú registráciu a môžte používať Widgr ihneď!
+channels-by-category=Inzeráty podľa kategórii
+view-all=Zobraziť všetky
+group-video-chat=GROUP VIDEO CHAT
+group-video-chat-desc=Add up to 5 people to the conversation
+screen-sharing=SCREEN SHARING
+screen-sharing-desc=Easily add anyone's screen to the conversation. Share files or use simple collaborative drawing tool
+no-installation=NO INSTALLATION
+no-installation-desc=You don't need to download or install anything
+
+#comments.html`
+media-library=Knižnica médii
+plain-text=Plain&nbsp;text
+upload-files=Nahrať&nbsp;súbory
+attach-media=Pripojiť&nbsp;súbory
+paid-comment=Platený komentár
+paid-comment-note=<p class="bg-info" style="padding:10px;"><i class="fa fa-key"></i> Tento komentár bude skrytý. Odkryje sa až po realizovaní platby</p>
+paid-comment-info=Tento komentár bude skrytý. Odkryje sa až po realizovaní platby
+share-whats-new=Povedzte, čo je nové
+text=Text
+
+
+latest-posts=Najnovšie príspevky
+
+#contacts.html
+manage-contacts=Spravovať kontakty
+invite-new-user=Pozvite Vašich priateľov pomocou email adresy
+invite-by-email=odoslať
+type-email=Email
+invite=Pozvať
+name=Meno
+status=Stav
+actions=Operácie
+write-a-message=Napísať správu
+blocked=Blokovaný
+following=Nasledovaný
+unblock=Odblokovať
+block=Blokovať
+unfollow=Prestať sledovať
+follow=Sledovať
+remove=Odstrániť
+
+#401.html
+
+#403.html
+
+#404.html
+
+#500.html
+
+#eventsList.html
+waiting=Čaká sa
+
+#embed.html
+embed-login-message=Pre rezeráviu eventov musíte byť registrovaný. <strong><a href="/login?url=%s">Prihláste sa</a></strong> alebo <strong><a href="/registration?url=%s">zaregistrujte tu</a></strong>. Platby za platené eventy sú zabezpečené pomocoy <i><a href="http://www.paypal.com" target="_blank">PayPal</a></i>
+
+#joinRoom.html
+ready-to-join-session=Pripravený pripojiť sa 
+canvas-name=Názov
+open-canvas=Interaktívne kreslenie
+join-vide-conference=Otvoriť videohovor
+your-name=Vaše meno
+join=Pripojiť sa
+or=alebo
+sign-in=Prihlásiť
+
+#room.html
+posts-and-uploads=Zdielanie príspevkov a súborov
+canvas=Kreslenie
+paint=Pero
+eraser=Guma
+undo=Späť
+clear=Zmazať
+save-painting=Uložiť do príspevkov
+share=Zdielať s ostatnými
+extension-needs-to-be-installed=Pridať rozšírenie do Chrome
+extension-needs-to-be-installed-message=Pre zdielanie obrazovky je potrebné nainštalovať do Vášho prehliadača rozšírenie. <a target="_blank" href="https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk">Kliknite sem pre inštaláciu</a>
+share=Zdieľajte s ostatnými
+share-with-more=Zdieľajte videohovor s ostatnými
+share-via-link=Zdieľajte pomocou odkazu <small style='font-weight:normal'>Skopírujte & a vložte pre zdielanie s ostatnými</small>
+send-notification=Pridajte kontakt alebo email
+contact-name-or-email=Meno kontaktu alebo email
+add=Pridať
+mute=Vypnúť mikrofón
+turn-mute=Vypnúť mikrofón
+turn-camera-off=Vypnúť kameru
+share-your-screen=Zdieľajte obrazovku (Len pre Chrome)
+refresh=Obnoviť
+hang-up=Ukočiť&nbsp;hovor
+
+#header.html
+tour=Prezentácia
+sitemap=Mapa stránky
+your-sessions=Môj kalendár
+session-approval=Požiadavky eventov
+waiting-for-approvement=Požiadavka
+manage-channels=Spravovať inzeráty
+share-your-knowledge=Zdielajte vaše skúsenosti
+toggle-navigation=Navigovať
+received-new-message=Received new message
+dashboard=Nástenka
+calendar=Kalendár
+home=Domov
+channels=Inzeráty
+pricing=Cenník
+features=Vlastnosti
+contact-us=Kontaktujte nás
+start-instant-chat=Instant&nbsp;video&nbsp;call
+sign-out=Odhlásiť sa
+profile=Môj profil
+notifications=Správy
+received-payments=Prijaté platby
+sent-payments=Odoslané platby
+settings=Nastavenia
+
+#help.html
+
+#homeRating.html
+
+
+#leftPanel.html
+setup-camera=Set up your camera
+setup-camera-description=Wigdr sessions happen over video conferencing, so be sure that your's works properly
+checkout-tutorials=Check out tutorials
+write-message-for=Write message for
+tips-for-first-timers=Tips for first timers
+get-a-modern-browser=Get a modern browser
+full-experience=To get correct user experience please update your browser to latest. Recommended browsers are <a href="http://www.google.com/chrome/">Google Chrome</a>, <a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a> and <a href="http://www.opera.com/">Opera</a>. Otherwise you can <a href="/about#compatibility">check compatibility of your browser here</a>. 
+set-up-your-camera=Set up your camera
+set-up-your-camera-desc=Wigdr sessions happen over video conferencing, so be sure that yours works properly. You can test your camera by running a <a target="_blank" href="/instant">Test video call</a>. You should be able to see and hear yourself.
+video-tutorials=Video tutorials
+
+#edit.html
+invalid-paypal-account-warning=Pre vytvorenie spoplatnených eventov musíte do nastavení zadať platný PayPal úćet <a href="/settings?edit=true#paypal">Kliknite sem pre pridanie PayPal úćtu</a>
+session-type=Typ inzerátu
+preferred-language=Preferovaný jazyk
+video-recorder-directly=Vytvorte video ukážku pomocou youtube pluginu
+introduction-video=video ukážka bude zobrazená v detaile inzerátu
+p2p-description=Videohovor
+broadcast-description=Broadcasting
+hangout-description=Google hangout conversation
+hangoutAir-description=Broadcasting via Google hangout Air
+privacy-private-description=Event bude prístupný len pre pozvaných účastníkov
+privacy-public-description=Event bude prístupný pre všetkých používateľov
+charging-free-description=Event zadarmo
+charging-paid-description=Prístup do videohovoru bude pre účastníkov spoplatnený
+charging-first-free=Inzerát bude označený ako "prvý zadarmo". Takto môžete svojim zákazníkom ponúknuť prvý event zadarmo.
+charging-time=Predvolená dĺžka eventu
+comments-enable-disable=Povoliť alebo zakázať pridávanie príspevkov pre účastníkov
+chat-enable-disable=Enable or disable interactive Public chat box in Session page
+event-date=Čas eventu
+video-conference=Video conference
+live-broadcast=Live broadcast
+google-hangout=Google hangout
+google-hangout-air=Google hangout air
+privacy=Súkromie
+private=Privátny
+public=Verejný
+charging=Spoplatenie
+paid=Platený
+dashboard.price=Cena
+enable-chat=Povoliť chat
+enable-comments=Povoliť príspevky od užívateľov
+upload-new-picture=Nahrať obrázok
+title=Názov
+tags=Kľúčové slová
+other=Iné
+description=Popis
+introduction-video-url=Video ukážka
+url=Linka
+channel-type=Typ inzerátu
+instant-broadcast=Instant broadcast
+price=Cena
+
+#chat.html
+embed-chat-admin=Vložiť live chat do Vašej webstránky
+embed-chat-admin-desc=Vložte tento html kód do zvolenej lokácie na Vašu webstránku a budete tak mať všetko pre Vašu prácu na jednom mieste.
+incompatible-browser=Upozornenie! Váš prehliadač nepodporuje videohovory
+download-browser=Stiahnite si najnovšiu verziu podporovaného prehliadača
+instant-video-call=Okamžitý videohovor
+or-your-name=Alebo zadajte svoje meno
+sign-facebook=Prihlásiť sa pomocou Facebook (odporúčané)
+watch-intro=Pozrieť ukážku
+we-are-online=Videochat
+first-free=Prvý event zadarmo
+auto-switch=Vypnúť automatické prepínanie okien
+agents=Váš tím
+team-chat=Tím chat
+previous-messages=Staršie správy
+live-chat=Live chat
+msgLiveChat-msg=<h4>Live chat</h4>Táto stránka Vám umožné komunikovať s vašimi klientami naživo. Ak ste vložili widgr do Vašej webstránky, budete môcť monitorovať vaších návštevníkov, čakať na otázku alebo ich kontaktovať ihneď. Ak máte v tíme viac ľudí je to dobré miesto pre Vašu spoločnú komunikáciu a spoluprácu. Stači len zapnúť status "Teraz online". <br/><br/><strong>Dôležité! Ak opustíte túto stránku, Vašim návštevníkom sa budete javiť ako offline.</strong> <br/><a href="/help#embed">Zistite viac ako vložiť widgr chat box do vašej webstránky</a>
+team-members=Členovia tímu
+invite-team-members-by-email=Pozvať ďalšieho člena do Vášho tímu
+administrator=Administrátor
+online=Online
+from=Od
+previous-messages=Staršie správy
+incorrect-input=Prosím opravte vstup
+operator-available=Operátor Vám odpovie za malú chvíľu. Čakajte prosím
+operator=Operátor
+message-sent=Vaša správa bola odoslaná
+new-message=Nová správa
+left-conversation=opustil konverzáciu
+submit=Odoslať
+available=Teraz online
+your-email=Váš email
+subject=Predmet
+message=Vaša správa
+your-name=Zadajte svoje meno
+chat-with=Chatujte s 
+click-to-open-chat=Otvoriť chat
+join-vide-conference=Otvoriť videohovor
+start-chat=Začať chat
+not-logged=You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in with registration form</a>. Or
+not-available-now=We are not online now, you can leave us a message and we will reply you later.
+sign-in-facebook=Sign in or register. Fastest with Facebook
+
+
+#editButtons.html
+website-embed=Vloźte tento inzerát na Vašu webstránku
+embed-listing=Vloźte tento inzerát na Vašu webstránku
+embed-listing-desc=Ak vlastníte webstránku, upravte a vložte tento widget na Vašu stránku. Takto budete môcť komunikovať s vašimi klientami naživo pomocou live chat a to priamo z Vašej stránky. <a href="/help#embedding">Dozvedieť sa viac</a>
+approved=Schválené
+you-can-pay-for-event-before-or-you-can-wait-until-event-starts=Môžte zaplatiť za event vopred alebo zaplatiť až v čase eventu
+pay-for-event-now=Zaplatiť vopred
+join-video-call=Začať videohovor
+start-live-broadcast=Start live broadcast
+stop-live-broadcast=Stop live broadcast
+stop-instant-broadcast=Stop instant broadcast
+start-hangout=Start hangout
+join-hangout=Join hangout
+edit-event=Upraviť&nbsp;event
+add-event=Nový&nbsp;event
+delete-selected-item=Potvrďte Vašu voľbu
+delete-event=Odstrániť&nbsp;event
+star-instant-broadcast=Start instant broadcast
+go-to-private-room=Go to private room
+edit-channel=Upraviť inzerát
+delete-channel=Deaktivovať&nbsp;inzerát
+enable-channel=Aktivovať&nbsp;inzerát
+
+#listing.html
+turn-on-available-now=When activated, You can use simple chat box to communicate with your customers. When activated, customers can request and join session instantly. You will receive notification when new session will be created.
+setup-paypal-account-warning=Ak chcete vytvárať spoplatnené eventy, musíte najprv nastaviť svoj PayPal účet. <a href='/settings#paypal'>Nastaviť PayPal účet</a>
+go-to-profile=Zobraziť profil
+available-now=Online teraz
+schedule-session=Rezervovať event
+schedule-session-later=Rezervovať event
+schedule-session-desc=Vyberte voľné časové okno a rezervujte si event na neskôr
+join-session-now=Začať videohovor
+open-chat=Otvoriť chat s
+this-channel-is-free=Zadarmo
+media=Galéria
+add-more-people=Pozvať ďaľších ľudí
+invite-press=Označte zvolených účastníkov a stlačte odoslať pre odoslanie automatickej pozvánky
+check-me-as-available=Turn on Available Now
+uncheck-me-as-available=Turn off Available
+available-description=With this option enabled, customers can write you live messages using simple chat application
+paid-on=Zaplatené 
+refundation=Vrátenie peňazí
+request-refund=Požiadať o vrátenie
+refund-reason=Uveďte dôvod
+refund-requested=Požiadané o vrátenie
+refunded=Vrátené
+reason-required=Musíte zadať dôvod
+write-reason=Musíte zadať dôvod
+confirm-decline=Potvrďte
+create-new-channel=Nový inzerát
+play-introduction=Spustiť ukážku
+total-price=Celková cena
+min=Min
+request-for-event=Rezervovať event
+request-for-event-instant=Instant videocall
+guests=Účastníci
+add-to-watchlist=Add to watchlist
+remove-from-watchlist=Remove from watchlist
+accepted=Akceptované
+declined=Zrušené
+write-custom-message=Napísať správu
+notify=Notifikovať
+recent-events=Posledné eventy
+all-channels-from=Všetky inzeráty od 
+enter-your-message=Napísať správu
+
+#stream.html
+send=Odoslať
+chat-box=Chat
+
+#listingsList.html
+on-time=V čase
+anonymous=Účastníci
+available-activated=Online teraz
+reviews=Hodnotenia
+create-event=Nový event
+request-event=Rezervovať event
+archived=Deaktivovaný
+
+#main.html
+facebook-header=Facebook custom tab Settings <small>(Visible only to you)</small>
+my-profile=My public profile
+my-calendar=My schedule
+my-channel=My listing
+create-instant-session=Create instant session
+visitors=Visitors
+latest-channels=Najnovšie inzeráty
+links=Odkazy
+online-users=Online 
+recipient=Správa pre
+all=All
+chat=Open chat 
+follow-us=Sledujte nás
+select-page-to-display=Page to display
+channel=Inzerát
+select-channel=Inzerát
+apply=Apply
+policy=Ochrana údajov
+contact=Kontakt
+read-more=Dozvedieť sa viac
+by=Od
+all-rights-reserved=Všetky práva vyhradené
+terms=Podmienky použitia
+about-widgr=O službe Widgr
+
+#inbox.html
+link=Odkaz
+system-notification=info@wid.gr
+invalid-user-name=Nesprávne meno
+Inbox=Schránka správ
+compose-new=Napísať novú
+sent-messages=Odoslané správy
+subject=Predmet
+write-reply=Odpovedať
+message=Správa
+newer=Novšie
+older=Staršie
+
+#payment.html
+important=Dôležité
+you-will-be-redirected-to-PayPal=Budete presmerovaný na službu PayPal pre zrealizovanie platby
+PayPal-payment-message=Aby ste mohli realizovať platbu potrebujete platný PayPal účet. Platba bude odoslaná z odosieľatelového účtu na účet príjemcu.
+PayPal-payment-refund=Ak nebudete spokojný, môžete Poskytovateľa požiadať o vrátenie peňazí do 72 hodín od zrealizovania platby.
+join-event=Prístup do eventu &bdquo;%s&rdquo; je spoplatnený
+PayPal-error=PayPal platba zlyhala. Skúste to znova
+unit-price=Jednotková cena
+total=Celková cena
+total2=Spolu
+checkout-with-PayPal=Zaplatiť pomocou PayPal
+subscribe-with-PayPal=Zaplatiť pomocou PayPal
+pay-with-PayPal=Zaplatiť pomocou PayPal
+
+#userProfile.html
+
+#ratings.html
+yes=Áno
+no=Nie
+user-reviews=Hodnotenia užívateľov
+five-stars=Päť hviezdičiek
+four-stars=Štyri hviezdičky
+three-stars=Tri hviezdičky
+two-stars=Dve hviezdičky
+one-star=Jedna hviezdička
+write-your-review=Napíšte hodnotenie
+add-comment=Pridať hodnotenie
+was-this-review-helpful=Je toto hodnotenie užitočné?
+no-reviews-yet=Zatiaľ žiadne hodnotenia
+
+#raw.html
+
+#password.html
+password-change=Zmena hesla
+password.new=Nové heslo
+password-repeat=Zopakujte nové heslo
+validation-invalidPassword=Nesprávne heslo
+
+#passwordReset.html
+password-reset=Obnoviť heslo
+login=Login
+captcha=Opíšte text
+
+#registration.html
+or-use-registration-form=Alebo použite registračný formulár
+agreement=Odoslaním registrácie súhlasíte s <a href="/terms" target="_blank">Podmienkami použitia</a>
+password-label=aspoň 8 znakov s jedným číslom a dvoma veľkými písmenami
+password-error=Neplatné heslo
+registration=Registrácia
+register-with-facebook=Registrovať pomocou Facebook
+registration.login=Registration.login
+registration-login=Váš email ako login
+validation.login=Nesprávny email
+validation.required=Povinné pole
+validation.passwordMatch=Password does not match
+
+#login.html
+login-register-question=Ešte nemáte účet?
+login-here=Zaregistrujte sa tu
+reset-your-password=Obnovte Vaše heslo
+
+#logout.html
+login.logout=Login.logout
+login.return=Login.return
+
+#time.html
+
+#userAbout.html
+
+#userTop.html
+follow-user=By following user you will see his posts on your Dashboard
+block-user=By blocking user, he won't be able to request sessions from you, invite you to his sessions, join your public sessions or leave you comments or messages
+view-profile=Zobraziť profil
+online=Online
+offline=Offline
+edit-profile=Upraviť profil
+last-online=Naposledy online
+public-calendar=Zobraziť kalendár
+followers=Followers
+
+#wiki.html
+
+#calendar.js
+app.confirmDeleteEvent=Prosím potvrďte
+New event=Nový event
+add-google-event=Konvertujte google event 
+
+#dashboard.js
+
+#facebook.js
+
+#fileUpload.js
+
+#bootstrap-datepicker.js
+
+#bootstrap-tagsinput.min.js.map
+
+#bootstrap-timepicker.min.js
+
+#bootstrap-tooltip.js
+
+#bootstrap-typeahead.js
+
+#bootstrap.js
+
+#bootstrap.min.js
+
+#canvasjs.min.js
+
+#cropper.min.js
+
+#fullcalendar.js
+
+#fullcalendar.min.js
+
+#gcal.js
+
+#i18next-1.7.2.min.js
+
+#jquery-1.6.4.min.js
+
+#jquery-ui.custom.min.js
+
+#jquery.min.js
+
+#npm.js
+
+#simpleWebRtc.js
+
+#simpleWebRtc.min.js
+
+#tags.js
+
+#typeahead.js
+
+#room.js
+left-conversation=opustil konverzáciu
+select-user=Zvoľte používateľa
+unmute=Zapnút mikrofón
+
+#starEvent.js
+waiting-for-approved=Čaká sa schválenie
+select-this-file=Vyberte súbor
+requested=Požiadavka
+new-message=Nová správa
+attachments=Prílohy
+write-a-reply=Odpovedať
+before=Pred
+starts-in=Začína
+days=dní
+p2p=Video call
+broadcast=Broadcast
+instant=Instant broadcast
+hangout=Hangout
+hangoutAir=Hangout on Air
+app.admin=admin
+you=Vy
+you-2=Vy
+on=v
+reply=Odpovedať
+
+#suggest.js
+
+#upload.js
+
+#utils.js
+
+# Activity list
+invitationCreated=Invited <a class=popup-event-edit href=/user/%s>%s</a> to session <a class=popup-event-edit href=/event/%s>%s</a>
+invitationAccepted=Accepted session <a class=popup-event-edit href=/event/%s>%s</a>
+invitationDeclined=Cancelled session <a class=popup-event-edit href=/event/%s>%s</a>
+eventDeleted=Cancelled session <a class=popup-event-edit href=/event/%s>%s</a>
+eventDeletedCust=Cancelled session <a class=popup-event-edit data-event=%s href=#>%s</a>
+eventCreatedUsr=Created session <a class=popup-event-edit href=/event/%s>%s</a>
+eventCreatedCust=Requested new session for listing <a class=popup-event-edit href=/event/%s>%s</a>
+eventMoved=Changed time for session <a class=popup-event-edit href=/event/%s>%s</a>
+eventUpdatedUsr=Updated session <a class=popup-event-edit href=/event/%s>%s</a>
+eventUpdatedCust=Updated session <a class=popup-event-edit href=/event/%s>%s</a>
+eventApproved=Approved session <a class=popup-event-edit href=/event/%s>%s</a>
+eventDeclined=Cancelled session %s
+eventCommented=Added comment on session <a class=popup-event-edit href=/event/%s>%s</a>
+eventCommentedCust=Added comment on session <a class=popup-event-edit href=/event/%s>%s</a>
+eventStarted=Session <a class=popup-event-edit href=/event/%s>%s</a> just started
+
+cal.sun=Neď
+cal.mon=Pon
+cal.tue=Ut
+cal.wed=Str
+cal.thu=Štv
+cal.fri=Pia
+cal.sat=Sob
+cal.sunday=Nedeľa
+cal.monday=Pondelok
+cal.tuesday=Utorok
+cal.wednesday=Streda
+cal.thursday=Štvrtok
+cal.friday=Piatok
+cal.saturday=Sobota
+cal.january=Január
+cal.february=Február
+cal.march=Marec
+cal.april=Apríl
+cal.may=Máj
+cal.june=Jún
+cal.july=Júl
+cal.august=August
+cal.september=September
+cal.october=Október
+cal.november=November
+cal.december=December
+cal.jan=Jan
+cal.feb=Feb
+cal.mar=Mar
+cal.apr=Apr
+cal.may=Máj
+cal.jun=Jún
+cal.jul=Júl
+cal.aug=Aug
+cal.sep=Sep
+cal.oct=Okt
+cal.nov=Nov
+cal.dec=Dec
+cal.today=Dnes
+cal.month=Mesiac
+cal.week=Týždeň
+cal.day=Deň

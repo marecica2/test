@@ -1,44 +1,48 @@
 #{list items:items, as:'item'}
-<div class='event-box2 shadow-blur image-box mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>
-	<div class='overlay-container'>
-		<div style="background:url('${item.listing.imageUrl}_128x128'); height:128px; width:100%; background-size: cover" class="shadow-inset-2"></div>
-        <div style='position:absolute;bottom:5px;right:0px;width:270px'>
-        	<div style='font-weight:bold;' class='white'>${item.listing.title.trimDot(50)}</div>
-        </div>    
-        		
-		<div class='overlay' style='position:fixed; z-index:9999'>
-			<div class='overlay-link'>
-				<a href='/event/${item.uuid}'><i class='fa fa-link'></i></a>
+<div class='event-box2 mb-20 object-non-visible animated object-visible fadeInLeft' data-animation-effect='fadeInLeft' data-effect-delay='300'>
+	<div class="image-box shadow-blur">
+		<div class='overlay-container'>
+			<div style="background:url('${item.listing.imageUrl}_256x256'); height:128px; width:100%; background-size: cover" class="shadow-inset-2"></div>
+	        <div style='position:absolute;bottom:5px;right:0px;width:270px'>
+	        	<div style='font-weight:bold;' class='white'>${item.listing.title.trimDot(50)}</div>
+	        </div>    
+	        	
+			<div class='overlay'>
+				<div class='overlay-link'>
+					<a href='/event/${item.uuid}'><i class='fa fa-link'></i></a>
+				</div>
 			</div>
+	        		
+		</div>	
+		<div class='image-box-body' style='position:relative'>
+		
+	        <div style='position:absolute;top: -34px; width:100%'>
+	        	<img class='avatar64 img-circle' style='border:3px solid #fafafa; float:left; margin-right:10px' src='/${item.customer.avatarUrl}_64x64'>
+	        </div>
+	        
+	        <div style='position:absolute;top:0px;right:0px;width:270px'>
+	        	<small><strong><a href='/user/"+item.createdByLogin+"'>${item.customer.fullName}</a></strong></small>
+	        </div>	
+	        
+	        
+	        
+		
+			<p style='margin-top:20px'>
+				<span><strong>&{'requested'}</strong> ${item.created.format("d MMM, yyyy")} #{time time:item.created/}</span><br/>
+	       		<strong>&{'on-time'}</strong>
+	       		<span>${item.eventStart.format("d MMM, yyyy")}</span>
+	       		<span>#{time time:item.eventStart/}</span> - 
+	       		<span>#{time time:item.eventEnd/}</span>		
+			</p>
+			<p>
+				#{if item.charging != 'free'}
+					${item.price} <small>${item.currency}</small>
+				#{/if}
+				#{else}
+					<strong>&{'free'}</strong>
+				#{/else}
+			</p>
 		</div>
-	</div>	
-	<div class='image-box-body' style='position:relative'>
-	
-        <div style='position:absolute;top: -34px; width:100%'>
-        	<img class='avatar64 img-circle' style='border:3px solid #fafafa; float:left; margin-right:10px' src='/${item.customer.avatarUrl}_64x64'>
-        </div>
-        
-        <div style='position:absolute;top:0px;right:0px;width:270px'>
-        	<small><strong><a href='/user/"+item.createdByLogin+"'>${item.customer.fullName}</a></strong></small>
-        </div>	
-        
-        
-        
-	
-		<p style='margin-top:20px'>
-			<span>&{'on'} ${item.created.format("d MMM, yyyy")} #{time time:item.created/}</span><br/>
-       		<span>${item.eventStart.format("d MMM, yyyy")}</span>
-       		<span>#{time time:item.eventStart/}</span> - 
-       		<span>#{time time:item.eventEnd/}</span>		
-		</p>
-		<p>
-			#{if item.charging != 'free'}
-				${item.price} <small>${item.currency}</small>
-			#{/if}
-			#{else}
-				<strong>&{'free'}</strong>
-			#{/else}
-		</p>
 	</div>
 </div>
 

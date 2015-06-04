@@ -231,11 +231,13 @@ star.getLocale = function() {
     var lc = star.getCookie("widgr-embed-locale");
     if(lc != "")
         locale = lc;
+    if(typeof star.i18nMessages[locale] == "undefined")
+        locale = "en";
     return locale;
 }
 
 star.setLocale = function(code) {
-    star.setCookie("widgr-embed-locale",  code);
+    star.utils.setCookie("widgr-embed-locale",  code);
 }
 
 i18n = function(code) {

@@ -368,20 +368,6 @@ about-2=Widgr ist ein Ort, wo Sie Menschen mit Hilfe einer Vielzahl von Themen f
 about-3=Mit Widgr erhalten Sie Hilfe zu jeder Zeit von Menschen mit Fachwissen in einem Spektrum von Themen - Lehrer, Berater, Ärzte, Heim-Reparatur-Spezialisten, personal trainer, Hobby-Enthusiasten und mehr. <br/>Sie können Hilfe nach Qualifikationen, Ratings und Bewertungen auswahlen. Sie auch können entscheiden ob Sie Hilfe sofort erhalten oder planen eine Sitzung für später. Während einige Sitzungen frei sind, müssen Sie für einige Zahlen. Bezahlen ist einfach mit PayPal.
 why-choose-widgr=Funktionen
 why-choose-widgr-text=Warum Widgr?
-widgr-feature-1=Interaktive Live-video-anrufen
-widgr-feature-1-text=Widgr-Sitzungen werden durch live video Anrufen geführt. Während der Sitzung können Sie Ihre Kamera zeigen was Sie Hilfe benötigen, Sie konnen auch Screensharing und Datei teilen. Wenn Sie möchten nicht dass Anbieter Ihnen sehen wurde, können Sie die Kamera immer ausschalten. <a href="/instant" target="_blank">Try instant video call now</a>.
-widgr-feature-2=Planungsflexibilität
-widgr-feature-2-text=Es gibt zwei Möglichkeiten, sofortige und geplante Sitzungen erstellen. Wenn ein Anbieter ein grünes "Jetzt verfügbar" Symbol hat, sind Sie nur wenige Klicks von Hilfe entfernt. Vor der Sitzung können Sie interaktive Chat benutzen, um weitere Informationen vom Anbieter erhalten. Andernfalls können Sie Plannungszeiten von Anbieter ansichten und ein Zeitfenster wählen oder eine Nachricht senden zu einen anderen Zeitpunkt anfordern. <a class="link" href="/help#request-session">erfahren Sie mehr</a>
-widgr-feature-3=Preisoptionen
-widgr-feature-3-text=Sitzungen, die frei sind erfordern kein PayPal-Konto. Preise sind von den Anbieter festgelegt. Einige Anbieter könnte die erste Sitzung kostenlos anbieten. Alles was Sie brauchen für die Zahlung einer Sitzungs ist ein gültiges PayPal-Konto.
-widgr-feature-4=Einfache Zahlungen und Zurückzahlungen mit PayPal
-widgr-feature-4-text=Alle Zahlungen für kostenpflichtige Sitzungen sind über PayPal durchgeführt. Wenn Sie als Kunde nicht zufrieden mit der Leistung der Anbieter sein, können Sie immer um Geld-zurück bitten. Wenn Sie planen, Widgr als Anbieter benutzer, alles was Sie brauchen ist ein verifiziertes "Premier" oder "Business" PayPal Konto haben und Sie können ein neues Geschäft sofort starten. <a class="link" href="/help#paypal">erfahren Sie mehr</a>
-widgr-feature-5=Integration mit Facebook
-widgr-feature-5-text=Wenn Sie eine Facebook-Seite besitzen, können Sie Widgr app in "Custom tab" installieren. Mit dieser Möglichkeit haben Sie alle Dienstleistungen auf einem Platz. <a class="link" href="/help#facebook">erfahren Sie mehr</a>
-widgr-feature-6=Integration mit Google Kalender
-widgr-feature-6-text=Sie können Ihr Widgr-Konto mit Google Kalender verbinden. Mit dieser Funktion erhalten Sie einen besseren Überblick über Ihre geplanten Sitzungen auf jedem Gerät, das Sie benutzen. <a class="link" href="/help#calendar">erfahren Sie mehr</a>
-widgr-feature-7=Webseite Einfügen
-widgr-feature-7-text=Mit dieser Funktion können Sie das Gespräch-Widget direkt auf Ihrer Website ohne jegliche Anstrengung einschließen. Chat-Widget können Sie sofort sprechen Sie mit Ihren Besuchern, ihnen zu helfen und ihre Fragen beantworten. Mit dieser Funktion werden Ihre Besucher zu Ihnen per live-Video in wenigen Klicks verbinden können.
 pricing=Preise
 basic=Basic
 free=Kostenlos
@@ -472,20 +458,41 @@ no-listings=Sie haben noch kein Kleinanzeige erzeugt
 msgMedia-msg=<h4>Mediathek</h4> Auf dieser Seite können Sie alle Ihre hochgeladenen Dateien zu verwalten.
                                               
 #home.html
+find-help-with=Suche Hilfe mit ...
 home-title=Widgr - teilen Sie Ihr wissen. Instant video-Telefonate - Screen-sharing - keine Installation.                                                          
 register=Jetzt registrieren
 for-customers=<strong>widgr</strong> für Kunden
 for-publishers=<strong> widgr</strong> für Anbieter
-find-everything-on-one-place=Holen Sie sich Hilfe von Experten
-get-help-from-experts=Finden Sie alles auf einem Platz
-easy-use=Einfach zu bedienen
-and-much-more=Und vieles mehr
-offer-your-experience=Bieten Sie Ihr Know-how als neue Dienstleistung
-reach-your-community=Erreichen Sie Ihre Community in sozialen Netzwerken
-get-paid-for-helping=Werden Sie bezahlt, um anderen zu helfen
-feature31=Keine festen monatlichen Gebühren
-feature32=Einfache Zahlung mit PayPal
-feature33=Mobilfreundlich
+customer-feature-1=Free group video chat up to 5 peers
+customer-feature-2=Einfach zu bedienen
+customer-feature-3=Und vieles mehr
+provider-feature-1=Bieten Sie Ihr Know-how als neue Dienstleistung
+provider-feature-2=Erreichen Sie Ihre Community in sozialen Netzwerken
+provider-feature-3=Werden Sie bezahlt, um anderen zu helfen
+customer-feature-1-desc=Connecting with your friends through video chat had never been so easy. Use it from any device where you can run modern web browser.
+customer-feature-2-desc=To run video chat from your device you don't need anything to install. Everything you need is a compatible browser.
+customer-feature-3-desc=You can use <a href="/search">Widgr marketplace</a> to get help from Advisors, mentors, teachers, computer experts, home repair specialists and more.
+provider-feature-1-desc=Want a simple video chat solution on your website or Facebook page? Just embed a HTML snippet in your webpage and you are ready to go.
+provider-feature-2-desc=Receive payments easily by charging a fee for your time and meet your clients for one-on-one video chats. It's never been easier to make money off of your knowledge and skills.
+provider-feature-3-desc=Start taking brand new clients and customers from around the world via video chat. We give your business the global presence it deserves.
+common-feature-1=Keine festen monatlichen Gebühren
+common-feature-2=Einfache Zahlung mit PayPal
+common-feature-3=Mobilfreundlich
+widgr-feature-1=Interaktive Live-video-anrufen
+widgr-feature-1-text=Widgr-Sitzungen werden durch live video Anrufen geführt. Während der Sitzung können Sie Ihre Kamera zeigen was Sie Hilfe benötigen, Sie konnen auch Screensharing und Datei teilen. Wenn Sie möchten nicht dass Anbieter Ihnen sehen wurde, können Sie die Kamera immer ausschalten. <a href="/instant" target="_blank">Try instant video call now</a>.
+widgr-feature-2=Planungsflexibilität
+widgr-feature-2-text=Es gibt zwei Möglichkeiten, sofortige und geplante Sitzungen erstellen. Wenn ein Anbieter ein grünes "Jetzt verfügbar" Symbol hat, sind Sie nur wenige Klicks von Hilfe entfernt. Vor der Sitzung können Sie interaktive Chat benutzen, um weitere Informationen vom Anbieter erhalten. Andernfalls können Sie Plannungszeiten von Anbieter ansichten und ein Zeitfenster wählen oder eine Nachricht senden zu einen anderen Zeitpunkt anfordern. <a class="link" href="/help#request-session">erfahren Sie mehr</a>
+widgr-feature-3=Preisoptionen
+widgr-feature-3-text=Sitzungen, die frei sind erfordern kein PayPal-Konto. Preise sind von den Anbieter festgelegt. Einige Anbieter könnte die erste Sitzung kostenlos anbieten. Alles was Sie brauchen für die Zahlung einer Sitzungs ist ein gültiges PayPal-Konto.
+widgr-feature-4=Einfache Zahlungen und Zurückzahlungen mit PayPal
+widgr-feature-4-text=Alle Zahlungen für kostenpflichtige Sitzungen sind über PayPal durchgeführt. Wenn Sie als Kunde nicht zufrieden mit der Leistung der Anbieter sein, können Sie immer um Geld-zurück bitten. Wenn Sie planen, Widgr als Anbieter benutzer, alles was Sie brauchen ist ein verifiziertes "Premier" oder "Business" PayPal Konto haben und Sie können ein neues Geschäft sofort starten. <a class="link" href="/help#paypal">erfahren Sie mehr</a>
+widgr-feature-5=Integration mit Facebook
+widgr-feature-5-text=Wenn Sie eine Facebook-Seite besitzen, können Sie Widgr app in "Custom tab" installieren. Mit dieser Möglichkeit haben Sie alle Dienstleistungen auf einem Platz. <a class="link" href="/help#facebook">erfahren Sie mehr</a>
+widgr-feature-6=Integration mit Google Kalender
+widgr-feature-6-text=Sie können Ihr Widgr-Konto mit Google Kalender verbinden. Mit dieser Funktion erhalten Sie einen besseren Überblick über Ihre geplanten Sitzungen auf jedem Gerät, das Sie benutzen. <a class="link" href="/help#calendar">erfahren Sie mehr</a>
+widgr-feature-7=Webseite Einfügen
+widgr-feature-7-text=Mit dieser Funktion können Sie das Gespräch-Widget direkt auf Ihrer Website ohne jegliche Anstrengung einschließen. Chat-Widget können Sie sofort sprechen Sie mit Ihren Besuchern, ihnen zu helfen und ihre Fragen beantworten. Mit dieser Funktion werden Ihre Besucher zu Ihnen per live-Video in wenigen Klicks verbinden können.
+
                                               
 what-is=Was ist Widgr Marketplace?
 good-for=gut zu?
@@ -556,7 +563,8 @@ waiting=Warten
 #embed.html
 embed-login-message=Für die Planung und Zahlung für Sitzungen benötigen Sie ein Konto. <a href="/login">Log in</a> oder erstellen Sie ein. Es ist kostenlos! <a href="/registration">Registrieren Sie hier</a>
                                               
-#joinRoom.html                                                       
+#joinRoom.html     
+ready-to-join-session=Sind Sie bereit, Sitzung beizutreten                                               
 canvas-name=Canvas Namen
 open-canvas=Collaborative Zeichnung
 join-vide-conference=Begleiten Sie Videoanruf
@@ -674,13 +682,15 @@ instant-broadcast=Sofortige Sendung
 price=Preis
 
 #chat.html
+embed-chat-admin=Embed live chat panel to your site
+embed-chat-admin-desc=Insert this html snippet in the desired location on your website and you will have everything you need on one place.
 incompatible-browser=Warning! Your browser does not support video calls
 download-browser=Please download latest version of supported browser
 instant-video-call=Instant Videocall
 or-your-name=Or enter your name
 sign-facebook=Sign in with Facebook (recommended)
 watch-intro=Watch intro
-we-are-online=Wir sind Online.
+we-are-online=Live chat
 first-free=First Session free
 auto-switch=Auto user switch off
 agents=Agents 
@@ -784,7 +794,8 @@ enter-your-message=Nachricht schreiben
 send=Senden
 chat-box=Unterhaltung
                                               
-#listingsList.html                                                  
+#listingsList.html                                                 
+on-time=In Zeit 
 anonymous=Anonym
 available-activated="Jetzt verfügbar" aktiviert
 reviews=Bewertungen

@@ -48,7 +48,7 @@
 				<ul>
 				
 					<!-- slide 1 start -->
-					<li data-transition="random" data-slotamount="7" data-masterspeed="500" data-saveperformance="on" data-title="">
+					<li data-transition="random" data-slotamount="7" data-masterspeed="100" data-saveperformance="on" data-title="">
 					
 					<!-- main image -->
 					<img src="images/slider-3-slide-business.jpg">
@@ -58,7 +58,7 @@
 						data-x="0"
 						data-y="70" 
 						data-speed="600"
-						data-start="1200"
+						data-start="500"
 						data-end="9400"
 						data-endspeed="600">&{'for-publishers'}
 					</div>
@@ -80,7 +80,7 @@
 						data-speed="600"
 						data-start="1600"
 						data-end="9400"
-						data-endspeed="600">&{'offer-your-experience'}
+						data-endspeed="600">&{'provider-feature-1'}
 					</div>
 
 					<!-- LAYER NR. 4 -->
@@ -88,7 +88,7 @@
 						data-x="0"
 						data-y="220" 
 						data-speed="600"
-						data-start="1800"
+						data-start="2500"
 						data-end="9400"
 						data-endspeed="600"><i class="icon-check"></i>
 					</div>
@@ -98,9 +98,9 @@
 						data-x="50"
 						data-y="220" 
 						data-speed="600"
-						data-start="1800"
+						data-start="2500"
 						data-end="9400"
-						data-endspeed="600">&{'reach-your-community'}
+						data-endspeed="600">&{'provider-feature-2'}
 					</div>
 
 					<!-- LAYER NR. 6 -->
@@ -108,7 +108,7 @@
 						data-x="0"
 						data-y="270" 
 						data-speed="600"
-						data-start="2000"
+						data-start="3200"
 						data-end="9400"
 						data-endspeed="600"><i class="icon-check"></i>
 					</div>
@@ -118,22 +118,12 @@
 						data-x="50"
 						data-y="270" 
 						data-speed="600"
-						data-start="2000"
+						data-start="3200"
 						data-end="9400"
-						data-endspeed="600">&{'get-paid-for-helping'}
+						data-endspeed="600">&{'provider-feature-3'}
 					</div>
 
 					*{
-					<!-- LAYER NR. 10 -->
-					<div class="tp-caption default_bg sfb medium tp-resizeme"
-						data-x="0"
-						data-y="370" 
-						data-speed="600"
-						data-start="2400"
-						data-end="9400"
-						data-endspeed="600">&{'and-much-more'}
-					</div>
-
 					<!-- LAYER NR. 11 -->
 					<div class="tp-caption sfr tp-resizeme"
 						data-x="right"
@@ -185,7 +175,7 @@
 						data-speed="600"
 						data-start="1600"
 						data-end="9400"
-						data-endspeed="600">&{'find-everything-on-one-place'}
+						data-endspeed="600">&{'customer-feature-1'}
 					</div>
 
 					<!-- LAYER NR. 4 -->
@@ -193,7 +183,7 @@
 						data-x="0"
 						data-y="220" 
 						data-speed="600"
-						data-start="1800"
+						data-start="2500"
 						data-end="9400"
 						data-endspeed="600"><i class="icon-check"></i>
 					</div>
@@ -203,9 +193,9 @@
 						data-x="50"
 						data-y="220" 
 						data-speed="600"
-						data-start="1800"
+						data-start="2500"
 						data-end="9400"
-						data-endspeed="600">&{'get-help-from-experts'}
+						data-endspeed="600">&{'customer-feature-2'}
 					</div>
 
 					<!-- LAYER NR. 6 -->
@@ -213,7 +203,7 @@
 						data-x="0"
 						data-y="270" 
 						data-speed="600"
-						data-start="2000"
+						data-start="3200"
 						data-end="9400"
 						data-endspeed="600"><i class="icon-check"></i>
 					</div>
@@ -223,9 +213,9 @@
 						data-x="50"
 						data-y="270" 
 						data-speed="600"
-						data-start="2000"
+						data-start="3200"
 						data-end="9400"
-						data-endspeed="600">&{'easy-use'}
+						data-endspeed="600">&{'customer-feature-3'}
 					</div>
 
 					*{
@@ -290,7 +280,7 @@
 						data-speed="600"
 						data-start="1600"
 						data-end="9400"
-						data-endspeed="600">&{'feature31'}
+						data-endspeed="600">&{'common-feature-1'}
 					</div>
 
 					<!-- LAYER NR. 4 -->
@@ -310,7 +300,7 @@
 						data-speed="600"
 						data-start="1800"
 						data-end="9400"
-						data-endspeed="600">&{'feature32'}
+						data-endspeed="600">&{'common-feature-2'}
 					</div>
 
 					<!-- LAYER NR. 6 -->
@@ -330,7 +320,7 @@
 						data-speed="600"
 						data-start="2000"
 						data-end="9400"
-						data-endspeed="600">&{'feature33'}
+						data-endspeed="600">&{'common-feature-3'}
 					</div>
 					
 					*{
@@ -376,49 +366,120 @@
 <!-- banner end -->
 
 
-<section class="main-container white-bg" style="padding-top:0px">
+
+<section class="main-container white-bg">
 	<div class="main">
 		<div class="container">
 			<div class="row">
-			
 				<div class="col-sm-12">
 					<form class="form" role="form" method="get" action="/search">
 					    <div class="input-group banner-search">
-					      	<input type="text" placeholder="Find Help with ..." class="form-control" autocomplete="off" size="30" maxlength="100" name="q" id="query-search" value="${request.params.q}" data-provide="typeahead">
+					      	<input type="text" placeholder="&{'find-help-with'}" class="form-control" autocomplete="off" size="30" maxlength="100" name="q" id="query-search" value="${request.params.q}" data-provide="typeahead">
 						    <span class="input-group-btn">
 						    	<button class="btn btn-default btn-short btn-margin" style="height:40px;" id="dialog-invite-button" type="submit"><i style="font-size:1.3em" class="fa fa-search"></i></button>
 						    </span>
 					    </div>
 					</form>					
+				</div>	
+							
+				<div class="col-sm-12">
+					<h1 class="text-center margin-top-clear">&{'for-publishers'}</h1>
+					
+					<div class="row grid-space-10">
+						<div class="col-sm-4">
+							<div class="object-non-visible animated object-visible fadeInUpSmall centered" data-animation-effect="fadeInUpSmall" data-effect-delay="1500">
+								<h2>
+									<i class="icon-chat"></i><br/>
+									&{'provider-feature-1'}
+								</h2>
+								&{'provider-feature-1-desc'}
+								<a href="/help#embed" class="link"><span>&{'learn-more'}</span></a>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="object-non-visible animated object-visible fadeInUpSmall centered" data-animation-effect="fadeInUpSmall" data-effect-delay="2000">
+								<h2>
+									<i class="fa fa-line-chart"></i><br/>
+									&{'provider-feature-2'}
+								</h2>
+								&{'provider-feature-2-desc'}
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="object-non-visible animated object-visible fadeInUpSmall centered" data-animation-effect="fadeInUpSmall" data-effect-delay="2500">
+								<h2>
+									<i class="fa fa-globe"></i><br/>
+									&{'provider-feature-3'}
+								</h2>
+								&{'provider-feature-3-desc'}
+							</div>
+						</div>						
+					</div>						
+				</div>				
+			</div>
+		</div>
+	</div>
+</section>
+
+
+
+<!-- section start -->
+<!-- ================ -->
+<div class="section dark-bg" style="padding:30px">
+	<div class="container">
+		<div class="call-to-action">
+			<div class="row">
+				<div class="col-md-8">
+					<h2 class="title text-center" style="font-size:2.5em">&{'you-are-on-the-right-place'}</h2>
+					<p class="text-center" style="font-size:1.4em;margin-bottom:0px;">&{'fill-in-quick-registration-and-start-using-widgr'}</p>
 				</div>
-				
-				<div class="col-sm-4">
-					<div class="object-non-visible animated object-visible fadeInUpSmall centered" data-animation-effect="fadeInUpSmall" data-effect-delay="1500">
-						<h2>
-							<i class="icon-users"></i><br/>
-							&{'group-video-chat'}
-						</h2>
-						&{'group-video-chat-desc'}
+				<div class="col-md-4">
+					<div class="text-center">
+						<a href="/registration" class="btn btn-default btn-lg"><i class="fa fa-pencil"></i> &nbsp; &{'register-now'}</a>
 					</div>
 				</div>
-				<div class="col-sm-4">
-					<div class="object-non-visible animated object-visible fadeInUpSmall centered" data-animation-effect="fadeInUpSmall" data-effect-delay="2000">
-						<h2>
-							<i class="fa fa-desktop"></i><br/>
-							&{'screen-sharing'}
-						</h2>
-						&{'screen-sharing-desc'}
-					</div>
-				</div>
-				<div class="col-sm-4">
-					<div class="object-non-visible animated object-visible fadeInUpSmall centered" data-animation-effect="fadeInUpSmall" data-effect-delay="2500">
-						<h2>
-							<i class="icon-download"></i><br/>
-							&{'no-installation'}
-						</h2>
-						&{'no-installation-desc'}
-					</div>
-				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- section end -->
+
+<section class="main-container white-bg" style="padding-top:20px">
+	<div class="main">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+					<h1 class="text-center">&{'for-customers'}</h1>
+					<div class="row grid-space-10">
+						<div class="col-sm-4">
+							<div class="object-non-visible animated object-visible fadeInUpSmall centered" data-animation-effect="fadeInUpSmall" data-effect-delay="1500">
+								<h2>
+									<i class="icon-chat"></i><br/>
+									&{'customer-feature-1'}
+								</h2>
+								&{'customer-feature-1-desc'}
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="object-non-visible animated object-visible fadeInUpSmall centered" data-animation-effect="fadeInUpSmall" data-effect-delay="2000">
+								<h2>
+									<i class="fa fa-download"></i><br/>
+									&{'customer-feature-2'}
+								</h2>
+								&{'customer-feature-2-desc'}
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="object-non-visible animated object-visible fadeInUpSmall centered" data-animation-effect="fadeInUpSmall" data-effect-delay="2500">
+								<h2>
+									<i class="icon-search"></i><br/>
+									&{'customer-feature-3'}
+								</h2>
+								&{'customer-feature-3-desc'}
+							</div>
+						</div>						
+					</div>				
+				</div>				
 			</div>
 		</div>
 	</div>
@@ -436,7 +497,7 @@
 				</div>
 				<div class="col-md-4">
 					<div class="text-center">
-						<a href="/instant" target="_blank" class="btn btn-dark btn-lg"><i class="fa fa-video-camera fa-flip-horizontal"></i> &nbsp; &{'start-now'}</a>
+						<a href="/instant" target="_blank" class="btn btn-dark btn-lg"><i class="icon-chat"></i> &nbsp; &{'start-now'}</a>
 					</div>
 					<div class="owl-carousel clients">
 						<div class="client">
@@ -446,10 +507,10 @@
 							<a ><img src="images/opera-logo.png" style="width:50px;height:50px"></a>
 						</div>
 						<div class="client">
-							<a ><img src="images/explorer-logo.png" style="width:50px;height:50px"></a>
+							<a ><img src="images/firefox_logo.png" style="width:50px;height:50px"></a>
 						</div>
 						<div class="client">
-							<a ><img src="images/firefox_logo.png" style="width:50px;height:50px"></a>
+							<a ><img src="images/explorer-logo.png" style="width:50px;height:50px"></a>
 						</div>
 						<div class="client">
 							<a ><img src="images/safari-logo.png" style="width:50px;height:50px"></a>
@@ -462,10 +523,15 @@
 </div>
 <!-- section end -->
 
+
+
 <!-- features -->
 #{include 'features.html' /}
 
 
+
+
+*{
 <!-- main-container start -->
 <!-- ================ -->
 <section class="main-container gray-bg">
@@ -521,39 +587,20 @@
 </section>
 <!-- main-container end -->
 
+}*
 
-<!-- section start -->
-<!-- ================ -->
-<div class="section dark-bg" style="padding:30px">
-	<div class="container">
-		<div class="call-to-action">
-			<div class="row">
-				<div class="col-md-8">
-					<h2 class="title text-center" style="font-size:2.5em">&{'you-are-on-the-right-place'}</h2>
-					<p class="text-center" style="font-size:1.4em;margin-bottom:0px;">&{'fill-in-quick-registration-and-start-using-widgr'}</p>
-				</div>
-				<div class="col-md-4">
-					<div class="text-center">
-						<a href="/registration" class="btn btn-default btn-lg"><i class="fa fa-pencil"></i> &nbsp; &{'register-now'}</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- section end -->
 
 
 <!-- section start -->
 <!-- ================ -->
-<div class="section clearfix">
+<div class="section clearfix gray-bg">
 
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
 
-				<h2>&{'channels-by-category'} <small><a class="link pull-right" href="/search">&{'view-all'}</a></small></h2>
-				<div class="separator-2"></div>
+				<h1 class="text-center">Widgr Marketplace <small><a style="position:absolute;right:0px;top:15px;" href="/search">&{'search'}</a></small></h1>
+				<br/>
 				<div style="text-align:center">
 					<a data-category="business" rel="tooltip" data-placement="top" title="&{'business'}" class="category segoe-bold #{if request.params.category =='business'}black#{/if}" style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-suitcase"></i></a>
 					<a data-category="education" rel="tooltip" data-placement="top" title="&{'education'}" class="category segoe-bold " style="cursor: pointer; font-size: 3em;margin:20px"><i class="fa fa-graduation-cap"></i></a>

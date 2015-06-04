@@ -285,7 +285,7 @@
 					    FB.ui(
 					    {
 						    method: 'feed',
-						    name: '${listing.title}',
+						    name: '${listing.title.escapeJavaScript()}',
 						    link: window.location.href,
 						    picture: '${baseUrl}/${listing.imageUrl.escapeJavaScript()}',
 						    caption: '${listing.user.fullName.escapeJavaScript()}',
@@ -372,7 +372,7 @@
 		
 			#{if listing}
 			<div class="col-md-4 text-center" style="padding:20px">
-				<h3 class="title"><a class="anchor2" href="/listing/${listing.uuid}">${listing.title}</a></h3>
+				<h3 class="title"><a class="" href="/listing/${listing.uuid}">${listing.title}</a></h3>
 				<a href="/user/${usr.login}"><img style="height:60px;width:60px" class="img-circle" src="/${usr.avatarUrl}_64x64"></a>
 				<h4>		
 					#{if usr.isOnline()}
@@ -433,28 +433,26 @@
 				#{if !edit}
 				<div class="text-center">
 					<br/>
-					#{if listing.isAvailable()}
-						<a href="#" class="btn btn-default btn-md btn-short open-chat style-switcher" style="display:none;" rel="tooltip" data-original-title="&{'open-chat'} ${listing.user.getFullName()}"><i class="fa fa-comments-o"></i></a>
-					#{/if}
 					
 					#{if !isOwner}
-						#{if listing.user.isAvailable()}
-							<a href="/instant-room?id=${listing.uuid}&#{token /}" class="btn btn-default btn-short btn-md no-schedule-start style-switcher" style="display:none" rel="tooltip" data-original-title="&{'join-session-now'}"><i class="fa fa-arrow-right"></i> &{'request-for-event-instant'}</a>
-						#{/if}			
+						#{if !fromEvent}
+							<button type="button" class="btn btn-default btn-short btn-lg no-schedule-start widgr-instant-session-btn" style="display:none" rel="tooltip" data-original-title="&{'join-session-now'}"><i class="fa fa-comments-o"></i> &{'request-for-event-instant'}</button>
+						#{/if}
 						
 						<a href="/user/${usr.login}/calendar?channel=${listing.uuid}&#{token /}" class="btn btn-gray btn-short btn-md" rel="tooltip" data-original-title="&{'schedule-session-desc'}"><i class="fa fa-calendar"></i> &{'schedule-session'}</a>
+						<button type="button" class="btn btn-default btn-short btn-md no-schedule-start widgr-instant-session-btn" style="display:none" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-comments-o"></i></button>
 						
 						#{if user}
-							<a href="/mail?action=new&to=${listing.user.login}&url=${request.url}" class="btn btn-gray btn-short btn-md" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-envelope-o"></i></a>
+							<a href="/mail?action=new&to=${listing.user.login}&url=${request.url}" class="btn btn-gray btn-short btn-md widgr-send-msg-button" style="display:none" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-envelope-o"></i></a>
 						#{/if}
 						#{else}
-							<a href="/contact?id=${listing.user.login}" class="btn btn-gray btn-short btn-md open-chat" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-envelope-o"></i></a>
+							<a href="/contact?id=${listing.user.login}" class="btn btn-gray btn-short btn-md widgr-send-msg-button" style="display:none" rel="tooltip" data-original-title="&{'write-message-for'} ${listing.user.firstName}"><i class="fa fa-envelope-o"></i></a>
 						#{/else}
 					#{/if}
 					
 					#{if fromEvent}
 						<a class="btn btn-default btn-lg btn-short" href="/room?id=${event.uuid}&secret=${event.roomSecret}&#{token /}" target="_blank" rel="tooltip" data-original-title="&{'join-video-call'}">
-							<i class="fa fa-video-camera fa-flip-horizontal"></i>&nbsp; &{'join-video-call'}  
+							<i class="fa fa-comments-o"></i>&nbsp; &{'join-video-call'}  
 						</a>					
 					#{/if}					
 				</div>
@@ -645,7 +643,7 @@
 			<div>
     	   	   <h2>
 					#{if listing}
-    	   	   			${listing.title}
+						<a class="" href="/listing/${listing.uuid}">${listing.title}</a>
 	 	    	   	#{/if}
     	   	   	</h2>
     	   	   	<div class="separator-2"></div>

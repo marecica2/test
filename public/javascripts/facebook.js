@@ -9,7 +9,7 @@
 window.fbAsyncInit = function() {
     if($(".page-wrapper")[0] != undefined){
         $(document).ready(function(){
-            FB.Canvas.setSize({ width: 640, height: 800});
+            FB.Canvas.setSize({ width: 640, height: 700});
         });
     }
     
@@ -25,7 +25,7 @@ window.fbAsyncInit = function() {
 $(document).ajaxStop(function () {
     if(typeof FB !== "undefined"){
         if($(".page-wrapper")[0] != undefined){
-            FB.Canvas.setSize({ width: 640, height: $(".page-wrapper").height()+100});
+            FB.Canvas.setSize({ width: 640, height: 700});
         }
     }
 });      

@@ -174,7 +174,7 @@ h1 a:visited, h2 a:visited, h3 a:visited, h4 a:visited, h5 a:visited, h6 a:visit
 	cursor:pointer;
 	margin-bottom:4px;
 	padding:10px;
-	background: #fefefe;
+	background: #fcfcfc;
 }
 
 .list-item-gray:hover {
@@ -353,10 +353,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', end
 }
 
 .listing-image {
+	display:none;
 	min-height:150px;
 }	
 @media screen and (min-width: 820px) {
 	.listing-image {
+		display:inherit;
 		min-height:400px;
 	}	
 	.padding30 {

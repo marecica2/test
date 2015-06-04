@@ -368,20 +368,6 @@ about-2=Widgr is a place where you can find people offering consultations on a w
 about-3=With Widgr you can get help anytime from people with expertise across a range of topics - teachers, counselors, doctors, home repair specialists, personal trainers, hobby enthusiasts, and more.<br/>You can choose who to get help from based on qualifications, ratings and reviews. Also, you can choose to get consultation right away or schedule a session for later. While some sessions are free, you'll need to pay for some. Paying is easy using PayPal.
 why-choose-widgr=Features
 why-choose-widgr-text=Why choose Widgr?
-widgr-feature-1=Interactive live video calls
-widgr-feature-1-text=Widgr sessions are conducted through live video calls. During the session, you can point your camera to show what you need help with, upload and share files, interactive drawings, If you don't want the Provider to see you, you can always turn off your camera. <a href="/instant" target="_blank">Try instant video call now</a>.
-widgr-feature-2=Scheduling flexibility
-widgr-feature-2-text=There are two ways to create join session -- instant and scheduled. If a provider's listing has a green "Available now" icon, you are just a few clicks away from getting help instantly. Before taking Session you can use interactive chat box to get more information about provided Listing from Provider. Otherwise, you can see when providers are available in their calendar and pick a time slot or send a message to request a different time. <a class="link" href="/help#request-session">Learn more</a>
-widgr-feature-3=Pricing options
-widgr-feature-3-text=Sessions that are free don't require a PayPal account. Prices are set by the providers and can be free or charged by the session. Some providers might offer the first session for free. All you need for paying a session is a valid PayPal account.
-widgr-feature-4=Easy payments and refunds with PayPal
-widgr-feature-4-text=All payments for paid sessions are currently done through PayPal. If you as a Customer will not be satisfied with the performance of paid session, you can ask for a refund with just few clicks. If you plan to use Widgr as a Provider and offer paid Sessions, all you need is to have a verified Premier or Business account and you can start a new business right away. <a class="link" href="/help#paypal">Learn more</a>
-widgr-feature-5=Facebook embedding
-widgr-feature-5-text=As with website embedding you can easily integrate your Widgr account with existing Facebook page to make your Widgr account more accesible to your existing Facebook community. If you own a Facebook page, you can install Widgr app to custom tab. With this option, your potential customers are just few clicks away using your services. <a class="link" href="/help#facebook">Learn more</a>
-widgr-feature-6=Integration with Google Calendar
-widgr-feature-6-text=You can easily connect your Widgr account with your Google calendar. With this feature you can better manage your sessions and keep your schedule up to date on every device you use. <a class="link" href="/help#calendar">Learn more</a>
-widgr-feature-7=Website embedding
-widgr-feature-7-text=With this feature you can include talk widget directly in your site without any effort. You can use chat widget to talk instantly to your visitors to assist them and answer their questions. With this feature your visitors will be able to connect to you over live video within few clicks. <a class="link" href="/help#embed">Learn more</a>
 pricing=Pricing
 basic=Basic
 free=Free
@@ -472,20 +458,40 @@ no-listings=You have not created any listing yet
 msgMedia-msg=<h4>Media library</h4>On this page you can manage all your uploaded files.
 
 #home.html
-home-title=Widgr - Instant video calls - Screen sharing - Remote consultations - Marketplace - Online mentoring
+find-help-with=Find Help with ...
+home-title=Widgr - Instant video chat - Screen sharing - Remote consultations - Widgr Marketplace - Online mentoring
 register=Register Now
-for-customers=<strong>widgr</strong> for Customers
-for-publishers=<strong>widgr</strong> for Providers
-find-everything-on-one-place=Get help from experts
-get-help-from-experts=Find everything on one place
-easy-use=Online video calls
-and-much-more=And much more
-offer-your-experience=Offer remote consultations as new Service
-reach-your-community=Embed widgr instant chat to your website or Facebook
-get-paid-for-helping=Get paid for giving consultations
-feature31=No fixed monthly fees
-feature32=Easy payments with PayPal
-feature33=Mobile friendly
+for-customers=Widgr for users
+for-publishers=Widgr for providers
+customer-feature-1=Free group video chat
+customer-feature-2=No installation
+customer-feature-3=Find help
+provider-feature-1=Video chat for your website
+provider-feature-2=Monetize your time
+provider-feature-3=Global reach
+customer-feature-1-desc=Connecting with your friends through video chat had never been so easy. Use it from any device where you can run modern web browser.
+customer-feature-2-desc=To run video chat from your device you don't need anything to install. Everything you need is a compatible browser.
+customer-feature-3-desc=You can use <a href="/search">Widgr marketplace</a> to get help from Advisors, mentors, teachers, computer experts, home repair specialists and more.
+provider-feature-1-desc=Want a simple video chat solution on your website or Facebook page? Just embed a HTML snippet in your webpage and you are ready to go.
+provider-feature-2-desc=Receive payments easily by charging a fee for your time and meet your clients for one-on-one video chats. It's never been easier to make money off of your knowledge and skills.
+provider-feature-3-desc=Start taking brand new clients and customers from around the world via video chat. We give your business the global presence it deserves.
+common-feature-1=No fixed monthly fees
+common-feature-2=Integrated with PayPal, Facebook and Google calendar
+common-feature-3=Mobile friendly 
+widgr-feature-1=Interactive video chat
+widgr-feature-1-text=Widgr sessions are conducted through live video calls. During the session, you can point your camera to show what you need help with, upload and share files, interactive drawings, If you don't want the Provider to see you, you can always turn off your camera. <a href="/instant" target="_blank">Try instant video call now</a>.
+widgr-feature-2=Scheduling flexibility
+widgr-feature-2-text=There are two ways to create join session -- instant and scheduled. If a provider's listing has a green "Available now" icon, you are just a few clicks away from getting help instantly. Before taking Session you can use Widgr chat box to get more information about provided Listing from Provider. Otherwise, you can see when providers are available in their calendar and pick a time slot or send a message to request a different time. <br/><a class="link" href="/help#request-session">Learn more</a>
+widgr-feature-3=Pricing options
+widgr-feature-3-text=Sessions that are free don't require a PayPal account. Prices are set by the providers and can be free or charged by the session. Some providers might offer the first session for free. All you need for paying a session is a valid PayPal account.
+widgr-feature-4=Easy payments with PayPal
+widgr-feature-4-text=All payments for paid sessions are currently done through PayPal. If you as a Customer will not be satisfied with the performance of paid session, you can ask for a refund with just few clicks. If you plan to use Widgr as a Provider and offer paid Sessions, all you need is to have a verified Premier or Business account and you can start a new business right away. 
+widgr-feature-5=Facebook embedding
+widgr-feature-5-text=As with website embedding you can easily integrate your Widgr account with existing Facebook page to make your Widgr account more accesible to your existing Facebook community. If you own a Facebook page, you can install Widgr app to custom tab. With this option, your potential customers are just few clicks away using your services. <br/><a class="link" href="/help#facebook">Learn more</a>
+widgr-feature-6=Integration with Google Calendar
+widgr-feature-6-text=You can easily connect your Widgr account with your Google calendar. With this feature you can better manage your sessions and keep your schedule up to date on every device you use.
+widgr-feature-7=Website embedding
+widgr-feature-7-text=You can include Widgr chatbox directly in your site without any effort. You can use live chat to talk instantly to your visitors to assist them and answer their questions. With this feature your visitors will be able to connect to you over live video within few clicks. <br/><a class="link" href="/help#embed">Learn more</a>
 
 what-is=What is Widgr Marketplace?
 good-for=good for
@@ -557,6 +563,7 @@ waiting=Waiting
 embed-login-message=For scheduling and paying for paid sessions must be registered. <strong><a href="/login?url=%s">Log in</a></strong> or <strong><a href="/registration?url=%s">register here</a></strong>. Payments for paid sessions are secured by <i><a href="http://www.paypal.com" target="_blank">PayPal</a></i>
 
 #joinRoom.html
+ready-to-join-session=Ready to join session 
 canvas-name=Canvas name
 open-canvas=Collaborative drawing
 join-vide-conference=Join video call
@@ -590,7 +597,7 @@ refresh=Reload call
 hang-up=End&nbsp;call
 
 #header.html
-tour=Tour
+tour=Take a tour
 sitemap=Sitemap
 your-sessions=My schedule
 session-approval=Requested sessions
@@ -661,7 +668,7 @@ charging=Charging
 paid=Paid
 dashboard.price=Dashboard.price
 enable-chat=Enable Public chat
-enable-comments=Enable customer comments
+enable-comments=Enable customer comments 
 upload-new-picture=Upload new picture
 title=Title
 tags=Tags
@@ -674,13 +681,15 @@ instant-broadcast=Instant broadcast
 price=Price
 
 #chat.html
+embed-chat-admin=Embed live chat panel to your site
+embed-chat-admin-desc=Insert this html snippet in the desired location on your website and you will have everything you need on one place.
 incompatible-browser=Warning! Your browser does not support video calls
 download-browser=Please download latest version of supported browser
 instant-video-call=Instant Videocall
 or-your-name=Or enter your name
 sign-facebook=Sign in with Facebook (recommended)
 watch-intro=Watch intro
-we-are-online=Chat with Us
+we-are-online=Live chat
 first-free=First Session free
 auto-switch=Auto user switch off
 agents=Team members
@@ -786,6 +795,7 @@ send=Send
 chat-box=Chat
 
 #listingsList.html
+on-time=On time
 anonymous=Guest
 available-activated=Available
 reviews=Reviews

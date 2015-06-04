@@ -188,7 +188,7 @@ star.utils.chatContent = function(star){
         html += '           <img class="widgr-lang-flag" data-lang="sk" src="'+star.baseUrl+'/public/images/flags/sk.gif">';
         html += '       </span>';
     }
-    html += '           &middot; <a href="'+star.baseUrl+'/instant" style="text-decoration:none" target="_blank"><i style="position:relative;top:1px;" class="fa fa-video-camera fa-flip-horizontal"></i> '+i18n('instant-video-call')+'</a>';
+    html += '           &middot; <a href="'+star.baseUrl+'/instant" style="text-decoration:none" target="_blank"><i style="position:relative;top:1px;" class="fa fa-comments-o fa-flip-horizontal"></i> '+i18n('instant-video-call')+'</a>';
     html += '       </div>';
     html += '   </div>';
     
@@ -200,13 +200,20 @@ star.utils.chatContent = function(star){
 };
 
 star.utils.detectWebrtc = function(){
+    var prefix;
+    var version;
+    if (window.mozRTCPeerConnection || navigator.mozGetUserMedia) {
+        prefix = 'moz';
+        version = parseInt(navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1], 10);
+    } else if (window.webkitRTCPeerConnection || navigator.webkitGetUserMedia) {
+        prefix = 'webkit';
+        version = navigator.userAgent.match(/Chrom(e|ium)/) && parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2], 10);
+    }    
     var PC = window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
     var IceCandidate = window.mozRTCIceCandidate || window.RTCIceCandidate;
     var SessionDescription = window.mozRTCSessionDescription || window.RTCSessionDescription;
     var MediaStream = window.webkitMediaStream || window.MediaStream;
-    var screenSharing = window.location.protocol === 'https:' &&
-        ((prefix === 'webkit' && version >= 26) ||
-         (prefix === 'moz' && version >= 33))
+    var screenSharing = window.location.protocol === 'https:' && ((prefix === 'webkit' && version >= 26) || (prefix === 'moz' && version >= 33))
     var AudioContext = window.AudioContext || window.webkitAudioContext;
     var videoEl = document.createElement('video');
     var supportVp8 = videoEl && videoEl.canPlayType && videoEl.canPlayType('video/webm; codecs="vp8", vorbis') === "probably";

@@ -193,9 +193,8 @@ $(document).ready(function() {
                     starCalendar.decorateEvent(event, element, view);
             },
             eventAfterAllRender: function(view){
-                starCalendar.drawLine(view);
-                if(typeof FB != "undefined")
-                    FB.Canvas.setSize({ width: 640, height: $(window.document).height() });
+                //if(typeof starCalendar.listing == "undefined")
+                    starCalendar.drawLine(view);
             }
     };
     
@@ -240,14 +239,17 @@ starCalendar.drawLine = function(view){
     }
 
     var curSeconds = (curTime.getHours() * 60 * 60) + (curTime.getMinutes() * 60) + curTime.getSeconds();
-    var percentOfDay = curSeconds / 86400; //24 * 60 * 60 = 86400, # of seconds in a day
-    var topLoc = Math.floor(parentDiv.height() * percentOfDay);
+    curSeconds = curSeconds - (starCalendar.startHour * 60 * 60);
+    var percentOfDay = curSeconds / ((starCalendar.endHour - starCalendar.startHour) * 60 * 60); 
 
+    var topLoc = Math.floor(parentDiv.height() * percentOfDay);
+    
+    
     timeline.css("top", topLoc + "px");
-    if (curCalView.name == "agendaWeek") { //week view, don't want the timeline to go the whole way across
+    if (curCalView.name == "agendaWeek") { 
         var dayCol = $(".fc-today:visible");
         var left = dayCol.position().left + 1;
-        var width = dayCol.width()-2;
+        var width = dayCol.width();
         timeline.css({
             left: left + "px",
             width: width + "px"

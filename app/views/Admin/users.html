@@ -33,6 +33,7 @@
 					</tr>
 				</thead>
 				#{list items:users, as:'item'}
+					#{if item.role != "superadmin"}
 					<tr>
 						<td>
 							<img class="avatar16" src="/${item.avatarUrl}_32x32">
@@ -73,6 +74,7 @@
 							#{/if}
 						</td>
 					</tr>				
+					#{/if}				
 				#{/list}				
 			</table>
 		</div>

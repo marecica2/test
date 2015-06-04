@@ -282,12 +282,16 @@ public class Application extends BaseController
     public static void chat()
     {
         final User user = getLoggedUser();
-        final User usr = getLoggedUser();
+        if (!user.role.equals(User.ROLE_USER) && !user.isPublisher())
+            forbidden();
+
+        final User usr = user;
         final List<Listing> listings = user != null ? Listing.getForUserAvailable(user) : null;
 
         final String room = user.uuid;
         final String socketIo = getProperty(CONFIG_SOCKET_IO);
-        render(user, usr, room, socketIo, listings);
+        final String baseUrl = getBaseUrlWithoutSlash();
+        render(user, usr, room, socketIo, listings, baseUrl);
     }
 
     public static void manageChannels()
@@ -388,7 +392,7 @@ public class Application extends BaseController
         final List<Contact> followees = Contact.getFollowing(userDisplayed);
         final Contact follow = Contact.isFollowing(user, userDisplayed, followers);
         final Listing listing = channel != null ? Listing.get(channel) : null;
-        final List<Listing> listings = user != null ? Listing.getForUser(user) : null;
+        final List<Listing> listings = user != null ? Listing.getForUserAvailable(user) : null;
 
         if (channel != null)
         {

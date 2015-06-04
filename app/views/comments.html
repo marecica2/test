@@ -36,6 +36,8 @@
 	        data.paid = $("input[name='paidComment']").is(':checked');
 	        data.library = starEvent.library;
 
+	        console.log(data);
+	        
 	        starServices.addComment(data, function(){
 	            $('#comment-form')[0].reset();
 	            $('#images').html("");
@@ -47,7 +49,7 @@
 		        
 		        if(typeof webrtc != "undefined"){
     		        var d = {};
-                    socket_message_broadcast("files-reload", d);
+    		        star.socket_message_broadcast("files-reload", d);
 		        }		        
 	        });
 	    });
@@ -58,7 +60,7 @@
 			        star.loadComments(params, star.dashboard);
     		        var d = {};
     		        if(typeof webrtc != "undefined"){
-                    	socket_message_broadcast("files-reload", d);
+                    	star.socket_message_broadcast("files-reload", d);
     		        }
 		        });
 	        }
@@ -114,7 +116,7 @@
 	});
 </script>
 
-#{if (!edit && isOwner) || (!edit && user && object && object.commentsEnabled)}
+#{if (!edit && isOwner) || (!edit && user && event && event.commentsEnabled)}
 <div class="row">
 <div class="col-md-12">
 
