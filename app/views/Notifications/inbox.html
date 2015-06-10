@@ -41,7 +41,7 @@
 		<br/>
 		<br/>
 		<div class="row">
-			<div class="col-md-2">
+			<div class="col-md-3">
 				<ul class="nav nav-pills nav-stacked" role="tablist">
 					<li #{if !action} class="active" #{/if}><a href="/mail">&{'Inbox'}</a></li>
 					<li #{if action && action.equals("sent")} class="active" #{/if}><a href="/mail?action=sent">&{'sent-messages'}</a></li>
@@ -49,7 +49,7 @@
 				<a href="/mail?action=new" class="btn btn-default btn-block"><i class="fa fa-envelope-o"></i> &{'compose-new'}</a>
 				<br/>		
 			</div>	
- 			<div class="col-md-10">
+ 			<div class="col-md-9">
  			
  			
  			

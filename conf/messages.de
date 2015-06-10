@@ -571,7 +571,7 @@ join-vide-conference=Begleiten Sie Videoanruf
 your-name=Ihren Namen
 join=Beitreten
 or=oder
-sign-in=Einloggen
+sign-in=Anmeldung
                                               
 #room.html                                                           
 posts-and-uploads=File-Sharing
@@ -614,6 +614,7 @@ channels=Kleinanzeigen
 pricing=Preise
 features=Eigenschaften
 contact-us=Kontakt
+faq=Fragen
 start-instant-chat=Instant&nbsp;Video&nbsp;Anruf&nbsp;starten
 sign-out=Austragen
 profile=Mein Profil
@@ -723,6 +724,7 @@ start-chat=Start chat
 not-logged=You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in with registration form</a>. Or
 not-available-now=We are not online now, you can leave us a message and we will reply you later.
 sign-in-facebook=Sign in or register. Fastest with Facebook
+offline-title=Nachricht senden
                                               
 #editButtons.html                                                 
 website-embed=Kleinanzeige auf Ihrer Website einfügen
@@ -804,6 +806,7 @@ request-event=Sitzung anfragen
 archived=Archiviert             
                                               
 #main.html
+error=Fehler
 facebook-header=Facebook custom tab Einstellungen <small>(Sichtbar nur für Sie)</small>
 your-profile=Mein Profil
 my-calendar=Mein Kalender
@@ -834,7 +837,7 @@ link=Link zur Sitzung
 system-notification=info@wid.gr
 invalid-user-name=Ungültiger Benutzername
 Inbox=Inbox
-compose-new=Neue erstellen
+compose-new=Neue Nachricht
 sent-messages=Gesendete Nachrichten
 subject=Betreff
 write-reply=Antworten
@@ -909,7 +912,8 @@ login.return=Login.return
                                               
 #time.html                                                         
                                               
-#userAbout.html                                                    
+#userAbout.html
+about-user=About                                                    
                                               
 #userTop.html                                                      
 follow-user=Durch Benutzer Folgen können Sie seine Beiträge auf Dashboard sehen

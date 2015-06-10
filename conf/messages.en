@@ -613,6 +613,7 @@ channels=Listings
 pricing=Pricing
 features=Features
 contact-us=Contact us
+faq=Faq
 start-instant-chat=Instant&nbsp;video&nbsp;call
 sign-out=Sign out
 profile=Public profile
@@ -722,6 +723,7 @@ start-chat=Start chat
 not-logged=You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in with registration form</a>. Or
 not-available-now=We are not online now, you can leave us a message and we will reply you later.
 sign-in-facebook=Sign in or register. Fastest with Facebook
+offline-title=Write us a message
 
 
 #editButtons.html
@@ -804,6 +806,7 @@ request-event=Schedule session
 archived=Archived
 
 #main.html
+error=Error
 facebook-header=Facebook custom tab Settings <small>(Visible only to you)</small>
 my-profile=My public profile
 my-calendar=My schedule
@@ -910,6 +913,7 @@ login.return=Login.return
 #time.html
 
 #userAbout.html
+about-user=About
 
 #userTop.html
 follow-user=By following user you will see his posts on your Dashboard

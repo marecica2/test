@@ -141,6 +141,7 @@ star.usersRender = function(data) {
         $(".widgr-chat").show();
         $(".widgr-email").hide();
         $(".widgr-online-status").show();
+        $(".widgr-header-title").html(star.chatboxTitle);
     }
     else {
         $(".widgr-instant-session-btn").hide();
@@ -148,6 +149,7 @@ star.usersRender = function(data) {
         $(".widgr-online-status").hide();
         $(".widgr-chat").hide();
         $(".widgr-email").show();
+        $(".widgr-header-title").html(i18n("offline-title"));
     }
     $(".users-count").html(star.users);
     $(".admins-count").html(star.admins);

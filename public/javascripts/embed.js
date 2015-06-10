@@ -132,6 +132,7 @@ star.embedInit = function(){
                     $(".widgr-lang-flag").unbind();
                     $(document).on("click", ".widgr-lang-flag", function(){
                         star.setLocale($(this).attr("data-lang"));
+                        console.log($(this).attr("data-lang"));
                         document.location.reload();
                     });             
                 });             
@@ -311,6 +312,7 @@ star.i18nMessages.en = {
         "start-chat":"Start chat",
         "not-logged":"You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in with registration form</a>. Or",
         "not-available-now":"We are not online now, you can leave us a message and we will reply you later.",
+        "offline-title":"Write us a message",
         "":""
 };
 star.i18nMessages.de = {
@@ -341,20 +343,21 @@ star.i18nMessages.de = {
         "join-vide-conference":"Join Videoanruf",
         "start-chat":"Start chat",
         "not-logged":"You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in with registration form</a>. Or",
-        "not-available-now":"Wir sind nicht online. is not online now, you can leave him message and he will reply you later.",
+        "not-available-now":"Wir sind leider nicht online. is not online now, you can leave him message and he will reply you later.",
+        "offline-title":"Nachricht senden",
         "":""
 };
 star.i18nMessages.sk = {
         "incompatible-browser":"Dôležité! Váš prehliadač nepodporuje videohovory.",
         "download-browser":"Please download latest version of supported browser, ",
-        "instant-video-call":"Instant videocall",
+        "instant-video-call":"Okamžitý videohovor",
         "sign-facebook":"Prihláste sa pomocou Facebook (odporúčané)",
-        "first-free":"Prvé sedenie zadarmo",
+        "first-free":"Prvá konzultácia zadarmo",
         "watch-intro":"Pozrieť ukážku",
         "online":"Online",
         "from":"od",
         "previous-messages":"Staršie správy",
-        "incorrect-input":"Prosím vyplnte formulár",
+        "incorrect-input":"Prosím vyplňte formulár",
         "operator-available":"Operátor Vám bude k dispozícii o pár sekúnd. Prosím čakajte",
         "operator":"Operátor",
         "message-sent":"Vaša správa bola odoslaná",
@@ -372,6 +375,7 @@ star.i18nMessages.sk = {
         "start-chat":"Spustiť chat",
         "not-logged":"Nieste prihlásený. Pre plné použitie je potrebné sa zaregistrovať. <a href='#' class='widgr-iframe-btn'>Použite registračný formulár</a>. Alebo",
         "not-available-now":"Momentálne niesme online. Prosím zanechajte nám správu a my Vám odpovieme hneď ako to len bude možné",
+        "offline-title":"Napíšte nám správu",
         "":""
 };
 

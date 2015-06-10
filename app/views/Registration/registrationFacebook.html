@@ -4,9 +4,19 @@
 	</head>
 	<body>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
 		<script>
 			var star = {};
+		</script>
+		<script type="text/javascript" src="@{'/public/javascripts/utils.js'}"></script>
+		<script>
+			var locale = star.utils.getCookie("_widgr_lang");
+			star.locale = navigator.language;
+	    	if(locale != ""){
+				star.locale = locale;
+	    	}		
+		</script>
+		<script type="text/javascript" src="@{'/public/javascripts/facebook.js'}"></script>
+		<script>
 		    star.fbClbck = function(resp) {
 		        FB.api('/me', function(data) {
 		            $("#firstName").val(data.first_name);

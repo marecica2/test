@@ -2,7 +2,12 @@
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
     js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/"+navigator.language+"/sdk.js#xfbml=1&appId=731388346951866&version=v2.0";
+    var locale = "en_US";
+    if(star.locale == "sk")
+        locale = "sk_SK";
+    if(star.locale == "de")
+        locale = "de_DE";
+    js.src = "https://connect.facebook.net/"+locale+"/sdk.js#xfbml=1&appId=731388346951866&version=v2.0";
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
 

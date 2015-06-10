@@ -500,34 +500,36 @@
 			<div class="separator-2"></div>
 			#{if !edit}
 			
-			<div class="form-group">
-				<label class="col-sm-3 control-label">
-					<i class="icon-info tip" rel="tooltip" data-placement="left" data-original-title="&{'working-hours-info'}"></i> &{'working-hours'}
-				</label>
-			    <div class="col-sm-9">
-			      	<p class="form-control-static">
-			      		${user.workingHourStart} - ${user.workingHourEnd} &{'hrs'}
-			      	</p>
-			    </div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">
-					<i class="icon-info tip" rel="tooltip" data-placement="left" data-original-title="&{'working-days-info'}"></i> &{'hidden-days'}
-				</label>
-			    <div class="col-sm-9">
-			      	<p class="form-control-static">
-						#{if user.hiddenDays != null}
-	 					#{if user.hiddenDays.indexOf("0") >= 0}&{'cal.sunday'}#{/if} 
-	 					#{if user.hiddenDays.indexOf("1") >= 0}&{'cal.monday'}#{/if} 
-	 					#{if user.hiddenDays.indexOf("2") >= 0}&{'cal.tuesday'}#{/if} 
-	 					#{if user.hiddenDays.indexOf("3") >= 0}&{'cal.wednesday'}#{/if} 
-	 					#{if user.hiddenDays.indexOf("4") >= 0}&{'cal.thursday'}#{/if} 
-	 					#{if user.hiddenDays.indexOf("5") >= 0}&{'cal.friday'}#{/if} 
-	 					#{if user.hiddenDays.indexOf("6") >= 0}&{'cal.saturday'}#{/if} 
-	 					#{/if}
-			      	</p>
-			    </div>
-			</div>
+			#{if user.isPublisher()}
+				<div class="form-group">
+					<label class="col-sm-3 control-label">
+						<i class="icon-info tip" rel="tooltip" data-placement="left" data-original-title="&{'working-hours-info'}"></i> &{'working-hours'}
+					</label>
+				    <div class="col-sm-9">
+				      	<p class="form-control-static">
+				      		${user.workingHourStart} - ${user.workingHourEnd} &{'hrs'}
+				      	</p>
+				    </div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">
+						<i class="icon-info tip" rel="tooltip" data-placement="left" data-original-title="&{'working-days-info'}"></i> &{'hidden-days'}
+					</label>
+				    <div class="col-sm-9">
+				      	<p class="form-control-static">
+							#{if user.hiddenDays != null}
+		 					#{if user.hiddenDays.indexOf("0") >= 0}&{'cal.sunday'}#{/if} 
+		 					#{if user.hiddenDays.indexOf("1") >= 0}&{'cal.monday'}#{/if} 
+		 					#{if user.hiddenDays.indexOf("2") >= 0}&{'cal.tuesday'}#{/if} 
+		 					#{if user.hiddenDays.indexOf("3") >= 0}&{'cal.wednesday'}#{/if} 
+		 					#{if user.hiddenDays.indexOf("4") >= 0}&{'cal.thursday'}#{/if} 
+		 					#{if user.hiddenDays.indexOf("5") >= 0}&{'cal.friday'}#{/if} 
+		 					#{if user.hiddenDays.indexOf("6") >= 0}&{'cal.saturday'}#{/if} 
+		 					#{/if}
+				      	</p>
+				    </div>
+				</div>
+			#{/if}			
 			<div class="form-group">
 				<label class="col-sm-3 control-label">
 					<i class="icon-info tip" rel="tooltip" data-placement="left" data-original-title="&{'enable-google-calendar-sync'}"></i> &{'sync-with-google'}
@@ -545,7 +547,7 @@
 						#{if user.googleTokenExpires}
 							&middot;  <span><a href="/google/clear?url=${request.url.urlEncode()}&#{token /}">&{'disable-google-calendar-sync'}</a></span> 
 						#{/if}
-						&middot; <a href="/help#gcal">&{'learn-more'}</a>
+						&middot; <a href="/help#calendar">&{'learn-more'}</a>
 			      	</p>
 			    </div>
 			</div>			
@@ -553,6 +555,8 @@
 			
 			#{/if}
 			#{else}
+			
+			#{if user.isPublisher()}
 			<div class="form-group">
 				<label for="" class="col-sm-2 control-label">&{'start-of-working-hours'}</label>
 			    <div class="col-sm-10">
@@ -641,7 +645,8 @@
 			    	</label>
 			    </div>
 				<div class="error">#{error 'hiddenDays' /}</div>
-			</div>			
+			</div>		
+			#{/if}	
 			
 			<div class="form-group">
 				<label for="" class="col-sm-2 control-label">&{'google-calendar-id'}</label>
