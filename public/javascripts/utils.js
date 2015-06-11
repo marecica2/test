@@ -92,7 +92,7 @@ star.utils.chatContent = function(star){
     
     html += '   <div class="widgr-header widgr-chatbox-trigger" style="text-align:center">';
     html += '       <div class="widgr-trigger"><i class="widgr-icon-trigger '+star.chatboxIcon+'"></i><span class="widgr-online-status blink" style="font-size:13px;color:#5cb85c;position:absolute;top:-12px;right:4px"><i class="fa fa-circle"></i></span></div>';
-    html += '       <strong class="widgr-header-title"><nobr>'+star.chatboxTitle+'</nobr></strong>';
+    html += '       <strong class="widgr-header-title"><nobr>'+i18n('offline-title')+'</nobr></strong>';
     html += '   </div>';
     
     html += '   <div class="widgr-chatbox-content" style="display:none">';
@@ -277,6 +277,30 @@ roomServices.instantRoom = function(params, success, error){
         contentType: "application/json"
     });    
 };
+
+roomServices.instantRoom = function(params, success, error){
+    var data = {};
+    $.ajax({
+        type: "POST",
+        url: "/instant-room-rest?"+params,
+        data: JSON.stringify(data),
+        success: success,
+        error: error,
+        contentType: "application/json"
+    });    
+};
+
+roomServices.sendMessage = function(msg){
+    console.log("posting");
+    $.ajax({
+        type: "POST",
+        url: "/user/message",
+        data: JSON.stringify(msg),
+        success: success,
+        error: error,
+        contentType: "application/json"
+    });       
+}
 
 star.utils.unicode = function(theString) {
     var unicodeString = '';

@@ -470,7 +470,7 @@ star.sendMail = function(){
             if(star.logged)
                 msg.user = star.userUuid;
             msg.recipient = star.ownerUuid;
-            starServices.sendMessage(msg);
+            roomServices.sendMessage(msg);
         }
         var html = "<p>"+i18n("message-sent")+"</p>";
         html += "<p>"+msg.subject+"<br/>";

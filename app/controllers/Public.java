@@ -158,6 +158,7 @@ public class Public extends BaseController
         final String recipientId = jo.get("recipient").getAsString();
 
         User toUser = User.getUserByUUID(recipientId);
+        System.err.println("sending message to " + toUser);
         if (userId != null)
             Notifications.send(toUser.login, subject, body, null, null, null);
         else

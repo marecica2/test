@@ -465,20 +465,20 @@ for-customers=Widgr pre používateľov
 for-publishers=Widgr pre poskytovateľov
 customer-feature-1=Video chat zadarmo
 customer-feature-2=Bez inštalácie
-customer-feature-3=Nájsť pomoc
+customer-feature-3=Vyhľadávanie
 provider-feature-1=Video chat pre váš web
 provider-feature-2=Peniaze za váš čas
 provider-feature-3=Globálny dosah
 customer-feature-1-desc=Spojenie s vašimi priateľmi nikdy nebolo také jednoduché. Použite ho z ktoréhokoľvek zariadenia s moderným prehliadačom.
 customer-feature-2-desc=Aby ste mohli spustiť videohovor nepotrebujete nič inštalovať. Postačí Vám moderný prehliadač.
-customer-feature-3-desc=Použite <a href="/search">Widgr marketplace</a> pre nájdenie pomoci od expertov, poradcov, špecialistov pre danú oblasť.
-provider-feature-1-desc=Chcete jednoduchý live video chat pre Vašu webovú stránku alebo Facebook stránku? Just embed a HTML snippet in your webpage and you are ready to go.
-provider-feature-2-desc=Zarábajte jednoducho pomocou spoplatnených video hovorov a konzultáciami cez internet s vašimi klientami. 
-provider-feature-3-desc=Získajte nových klientov z celého sveta. Vašej firme dáme globálnu prítomnosť, ktorú si zaslúži.
+customer-feature-3-desc=Použite <a href="/search">Widgr marketplace</a> pre vyhľadávanie v našej databáze expertov, poradcov, špecialistov pre danú oblasť.
+provider-feature-1-desc=Jednoduchý live video chat pre váš web alebo Facebook stránku? Stačí zopár krokov a svojím zákazníkom ponúknete novú sluźbu.
+provider-feature-2-desc=Budujte si meno a zarábajte jednoducho pomocou spoplatnených video hovorov a konzultácii cez internet s vašimi klientami. 
+provider-feature-3-desc=Neobmedzujte sa len na jeden trh. Získavajte nových klientov z celého sveta. So službou Widge vaša firma získa globálny dosah.
 common-feature-1=Bez fixných mesačných poplatkov
 common-feature-2=Prepojené s Facebook a Google Calendar
 common-feature-3=Kompatibilné s rôznymi zariadeniami
-widgr-feature-1=interaktívny video chat
+widgr-feature-1=Interaktívny video chat
 widgr-feature-1-text=Widgr eventy sú vedené ako videohovory. Počas eventu tak môžete takisto nahrávať a zdieľať súbory prípadne kresliť náčrty pre lepšiu interaktívnu komunikáciu. Ak nechcete byť poskytovateľom videní, vždy môžete kameru vypnúť. <a href="/instant" target="_blank">Vyskúšajte testovací videohovor</a>.
 widgr-feature-2=Flexibilita plánovania
 widgr-feature-2-text=Sú dva spôsoby ako vytvoriť event -- okamžitý alebo naplánovať na iný čas. Ak má poskytovateľ aktivovaný stav dostupnosti, ste len pár klikov od začatia videohovoru. Predtým ešte môžete získať ďalšie podrobnosti pomocou online chatu. V prípade, že poskytovateľ nieje online, môžete si event naplánovať pomocou kalendára alebo napísať offline správu pre iné požiadavky a otázky. <br/><a class="link" href="/help#request-session">Zistiť viac</a>.
@@ -568,7 +568,7 @@ canvas-name=Názov
 open-canvas=Interaktívne kreslenie
 join-vide-conference=Otvoriť videohovor
 your-name=Vaše meno
-join=Pripojiť sa
+join=Pripojiť sa k videohovoru
 or=alebo
 sign-in=Prihlásenie
 
@@ -631,7 +631,7 @@ settings=Nastavenia
 setup-camera=Set up your camera
 setup-camera-description=Wigdr sessions happen over video conferencing, so be sure that your's works properly
 checkout-tutorials=Check out tutorials
-write-message-for=Write message for
+write-message-for=Napísať správu pre
 tips-for-first-timers=Tips for first timers
 get-a-modern-browser=Get a modern browser
 full-experience=To get correct user experience please update your browser to latest. Recommended browsers are <a href="http://www.google.com/chrome/">Google Chrome</a>, <a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a> and <a href="http://www.opera.com/">Opera</a>. Otherwise you can <a href="/about#compatibility">check compatibility of your browser here</a>. 
