@@ -375,7 +375,8 @@ webrtc.on('readyToCall', function () {
              clearInterval(stopInterval);
          }, 5000);   
          
-         start();
+         if(typeof star.listingUuid != "undefined")
+             start();
      });    
      
 });
@@ -1096,7 +1097,8 @@ function formatTime(time) {
 }
 
 $time = document.getElementById('time');
-update();
+if(typeof star.listingUuid != "undefined")
+    update();
 
 function update() {
     $time.innerHTML = formatTime(x.time());

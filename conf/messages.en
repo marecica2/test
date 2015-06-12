@@ -13,7 +13,7 @@ event-reminder-subject=Reminder for Session %s
 event-reminder-message=h3. Reminder for Session %s \nThis notification has been sent to remind you that Session [%s|%sevent/%s] will start on %s. \nIf you do not wish to receive these notifications, log into to Widgr and go Settings page to disable notifications.
 
 #Application.java
-start-helping-others=<h4>Three steps for becoming a Widgr Provider.</h4> Start helping others and become a Provider. Follow these three steps or <a href="/help#publisher">watch a video tutorial</a><ul><li><a href="/settings?edit=true#about">Fill information about you</a></li><li><a href="/listing/new?action=edit&new=true">Create your first Listing</a></li><li><a href='/settings/request-publisher?authenticityToken=%s'>Click here to request for provider account </a></li></ul>
+start-helping-others=<h4>Three steps for becoming a Widgr Provider.</h4> Start helping others and become a Provider. Follow these three steps or <a href="/help#publisher">watch a video tutorial</a><ul><li><a href="/settings?edit=true#about">Fill information about you</a></li><li><a href="/listing/new?action=edit&new=true&url=/listings">Create your first Listing</a></li><li><a href='/settings/request-publisher?authenticityToken=%s'>Click here to request for provider account </a></li></ul>
 click-and-drag-to-create-event=Select a free time slot and start dragging to create a request for a new session. <br/><span style='opacity:0.5'>Session marked with solid black color means, that this time slot is already reserved.</span>
 
 #Attendances.java

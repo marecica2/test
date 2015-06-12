@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import models.Account;
 import models.AccountPlan;
@@ -129,8 +131,14 @@ public class Accounts extends BaseController
         {
             validation.required(lastName);
             validation.maxSize(lastName, 20);
-            validation.match("lastName", lastName, "[A-Za-z]+").message("bad-characters");
-            validation.match("firstName", firstName, "[A-Za-z]+").message("bad-characters");
+            Pattern pattern = Pattern.compile("\\w+", Pattern.UNICODE_CHARACTER_CLASS);
+            Matcher matcher = pattern.matcher(firstName);
+            if (!matcher.matches())
+                validation.addError("firstName", Messages.get("bad-characters"));
+            matcher = pattern.matcher(lastName);
+            if (!matcher.matches())
+                validation.addError("lastName", Messages.get("bad-characters"));
+
         }
         if (accName != null)
             validation.maxSize(accName, 30);

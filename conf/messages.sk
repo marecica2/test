@@ -13,7 +13,7 @@ event-reminder-subject=Pripomienka udalosti %s
 event-reminder-message=h3. Pripomienka udalosti %s \n Udalosť [%s|%sevent/%s] začína v čase %s. \nAk si neprajete dostávať ďalšie pripomienky, prihláste sa do nastavení Vášho Widgr účtu pre ich deaktiváciu.
 
 #Application.java
-start-helping-others=<h4>Tri kroky ako sa stať poskytovateľom.</h4> Začnite pomáhať ostatným a staňte sa poskytovateľom. Pozrite si jednoduchý <a href="/help#publisher">video návod</a> alebo <ul><li><a href="/settings?edit=true#about">Vyplňte údaje o sebe</a></li><li><a href="/listing/new?action=edit&new=true&url=/">Vytvorte Váš prvý inzerát</a></li><li><a href='/settings/request-publisher?authenticityToken=%s'>Požiadajte o vytvorenie poskytovateľského účtu</a></li></ul>
+start-helping-others=<h4>Tri kroky ako sa stať poskytovateľom.</h4> Začnite pomáhať ostatným a staňte sa poskytovateľom. Pozrite si jednoduchý <a href="/help#publisher">video návod</a> alebo <ul><li><a href="/settings?edit=true#about">Vyplňte údaje o sebe</a></li><li><a href="/listing/new?action=edit&new=true&url=/listings">Vytvorte Váš prvý inzerát</a></li><li><a href='/settings/request-publisher?authenticityToken=%s'>Požiadajte o vytvorenie poskytovateľského účtu</a></li></ul>
 click-and-drag-to-create-event=Pre rezerváciu stretnutia vyberte voľné časové okno a tahajte myšou<br/><span style='opacity:0.5'>Polia označené čiernou su už rezervované.</span>
 
 #Attendances.java
@@ -628,16 +628,16 @@ settings=Nastavenia
 
 
 #leftPanel.html
-setup-camera=Set up your camera
-setup-camera-description=Wigdr sessions happen over video conferencing, so be sure that your's works properly
-checkout-tutorials=Check out tutorials
+setup-camera=Nastavte si kameru
+setup-camera-description=Konzultácie prebiehajú pomocou online videohovoru, takže skontrolujte, či Vaša kamera funguje správne
+checkout-tutorials=Pozrite si naše tutoriály
 write-message-for=Napísať správu pre
-tips-for-first-timers=Tips for first timers
-get-a-modern-browser=Get a modern browser
-full-experience=To get correct user experience please update your browser to latest. Recommended browsers are <a href="http://www.google.com/chrome/">Google Chrome</a>, <a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a> and <a href="http://www.opera.com/">Opera</a>. Otherwise you can <a href="/about#compatibility">check compatibility of your browser here</a>. 
-set-up-your-camera=Set up your camera
-set-up-your-camera-desc=Wigdr sessions happen over video conferencing, so be sure that yours works properly. You can test your camera by running a <a target="_blank" href="/instant">Test video call</a>. You should be able to see and hear yourself.
-video-tutorials=Video tutorials
+tips-for-first-timers=Tipy pre nováčikov
+get-a-modern-browser=Používajte moderný prehliadač
+full-experience=Aby všetko fungovalo ako má, uistite sa, že používate moderný a aktualizovaný prehliadač. Odporúčané prehliadače sú <a href="http://www.google.com/chrome/">Google Chrome</a>, <a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a> a <a href="http://www.opera.com/">Opera</a>. Prípadne môžete <a href="/about#compatibility">skontrolovať kompatibilitu Vášho prehliadača tu</a>. 
+set-up-your-camera=Nastavte si kameru
+set-up-your-camera-desc=Konzultácie prebiehajú pomocou online videohovoru, takže sa uistite, či Vaša kamera a mikrofón pracujú správne. Skontrolujte vaše zariadenia a kompatibilitu prehliadača spustením <a target="_blank" href="/instant">testovacieho videohovoru</a>. Mali by ste sa vidiet na kamere.
+video-tutorials=Video tutoriály
 
 #edit.html
 invalid-paypal-account-warning=Pre vytvorenie spoplatnených eventov musíte do nastavení zadať platný PayPal úćet <a href="/settings?edit=true#paypal">Kliknite sem pre pridanie PayPal úćtu</a>
@@ -686,7 +686,7 @@ embed-chat-admin=Vložiť live chat do Vašej webstránky
 embed-chat-admin-desc=Vložte tento html kód do zvolenej lokácie na Vašu webstránku a budete tak mať všetko pre Vašu prácu na jednom mieste.
 incompatible-browser=Upozornenie! Váš prehliadač nepodporuje videohovory
 download-browser=Stiahnite si najnovšiu verziu podporovaného prehliadača
-instant-video-call=Okamžitý videohovor
+instant-video-call=Spustiť videohovor
 or-your-name=Alebo zadajte svoje meno
 sign-facebook=Prihlásiť sa pomocou Facebook (odporúčané)
 watch-intro=Pozrieť ukážku
@@ -697,7 +697,7 @@ agents=Váš tím
 team-chat=Tím chat
 previous-messages=Staršie správy
 live-chat=Live chat
-msgLiveChat-msg=<h4>Live chat</h4>Táto stránka Vám umožné komunikovať s vašimi klientami naživo. Ak ste vložili widgr do Vašej webstránky, budete môcť monitorovať vaších návštevníkov, čakať na otázku alebo ich kontaktovať ihneď. Ak máte v tíme viac ľudí je to dobré miesto pre Vašu spoločnú komunikáciu a spoluprácu. Stači len zapnúť status "Teraz online". <br/><br/><strong>Dôležité! Ak opustíte túto stránku, Vašim návštevníkom sa budete javiť ako offline.</strong> <br/><a href="/help#embed">Zistite viac ako vložiť widgr chat box do vašej webstránky</a>
+msgLiveChat-msg=<h4>Live chat</h4>Táto stránka Vám umožní komunikovať s vašimi klientami naživo. Ak ste vložili widgr do Vašej webstránky, budete môcť monitorovať vaších návštevníkov, čakať na otázku alebo ich kontaktovať ihneď. Ak máte v tíme viac ľudí je to dobré miesto pre Vašu spoločnú komunikáciu a spoluprácu. Stači len zapnúť status "Teraz online". <br/><br/><strong>Dôležité! Ak opustíte túto stránku, Vašim návštevníkom sa budete javiť ako offline.</strong> <br/><a href="/help#embed">Zistite viac ako vložiť widgr chat box do vašej webstránky</a>
 team-members=Členovia tímu
 invite-team-members-by-email=Pozvať ďalšieho člena do Vášho tímu
 administrator=Administrátor
@@ -723,7 +723,7 @@ start-chat=Začať chat
 not-logged=Nieste prihlásený. Pre plné použitie je potrebné sa zaregistrovať. <a href='#' class='widgr-iframe-btn'>Použite registračný formulár</a>. Alebo
 not-available-now=Momentálne niesme online. Prosím zanechajte nám správu a my Vám odpovieme hneď ako to len bude možné.
 sign-in-facebook=Prihláste sa alebo registrujte. Najrýchlejšie pomocou Facebook
-offline-title=Napíšte nám správu
+offline-title=Poslať správu
 
 
 #editButtons.html
@@ -780,7 +780,7 @@ play-introduction=Spustiť ukážku
 total-price=Celková cena
 min=Min
 request-for-event=Rezervovať event
-request-for-event-instant=Okamžitý videohovor
+request-for-event-instant=Spustiť videohovor
 guests=Účastníci
 add-to-watchlist=Add to watchlist
 remove-from-watchlist=Remove from watchlist
@@ -995,7 +995,7 @@ write-a-reply=Odpovedať
 before=Pred
 starts-in=Začína
 days=dní
-p2p=Video call
+p2p=Videohovor
 broadcast=Broadcast
 instant=Instant broadcast
 hangout=Hangout

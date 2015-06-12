@@ -74,6 +74,26 @@ img {
 	height:inherit;
 }
 
+.controls {
+	font-size: 20px;
+	padding: 10px;
+	width: 50px;
+	border-radius: 50px !important;
+	border: 0px;
+	margin-left: 5px;
+}
+
+.controls.btn-dark {
+	background: none;
+}
+
+.controls:hover {
+	font-size: 42px;
+	width: 80px;
+	border-radius: 80px !important;
+	border: 0px;
+}
+
 @media screen and (max-width: 820px) {
 	.input-group {
 		margin-bottom:15px;
@@ -89,6 +109,23 @@ img {
 	.centered {
 		text-align: center;
 	}
+	
+	.controls {
+		font-size: 12px;
+		padding: 13px;
+		width: 10px;
+		border-radius: 50px !important;
+		border: 0px;
+		margin-left: 5px;
+	}
+
+	.controls:hover {
+		font-size: 22px;
+		border-radius: 80px !important;
+		border: 0px;
+	}
+
+
 }
 
 

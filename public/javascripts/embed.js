@@ -308,7 +308,7 @@ star.i18nMessages.en = {
         "or-your-name":"Or enter your name", 
         "chat-with":"Chat with",
         "click-to-open-chat":"Open chat",
-        "join-vide-conference":"Join video call",
+        "join-vide-conference":"Join videocall",
         "start-chat":"Start chat",
         "not-logged":"You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in with registration form</a>. Or",
         "not-available-now":"We are not online now, you can leave us a message and we will reply you later.",
@@ -340,7 +340,7 @@ star.i18nMessages.de = {
         "or-your-name":"Eingeben Sie Ihre Name", 
         "chat-with":"Chat mit",
         "click-to-open-chat":"Chat offnen",
-        "join-vide-conference":"Join Videoanruf",
+        "join-vide-conference":"Videoanruf",
         "start-chat":"Start chat",
         "not-logged":"You are not logged in. To use some features you would need an account. Just <a href='#' class='widgr-iframe-btn'>sign in with registration form</a>. Or",
         "not-available-now":"Wir sind leider nicht online. is not online now, you can leave him message and he will reply you later.",
@@ -350,7 +350,7 @@ star.i18nMessages.de = {
 star.i18nMessages.sk = {
         "incompatible-browser":"Dôležité! Váš prehliadač nepodporuje videohovory.",
         "download-browser":"Please download latest version of supported browser, ",
-        "instant-video-call":"Okamžitý videohovor",
+        "instant-video-call":"Spustiť videohovor",
         "sign-facebook":"Prihláste sa pomocou Facebook (odporúčané)",
         "first-free":"Prvá konzultácia zadarmo",
         "watch-intro":"Pozrieť ukážku",
@@ -375,7 +375,7 @@ star.i18nMessages.sk = {
         "start-chat":"Spustiť chat",
         "not-logged":"Nieste prihlásený. Pre plné použitie je potrebné sa zaregistrovať. <a href='#' class='widgr-iframe-btn'>Použite registračný formulár</a>. Alebo",
         "not-available-now":"Momentálne niesme online. Prosím zanechajte nám správu a my Vám odpovieme hneď ako to len bude možné",
-        "offline-title":"Napíšte nám správu",
+        "offline-title":"Poslať správu",
         "":""
 };
 

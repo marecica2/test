@@ -1,7 +1,7 @@
 #Accounts.java                                                   
 invalid-value=Ungültiger Wert
 error-default-message=Da ging etwas schief. Ausnahme wurde gespeichert.
-you-need-at-least-one-listing=Um ein Publisher werden müssen Sie  mindestens eine Kleinanzeige erstellen.<a href="/listing/new?action=edit&new=true"> Klicken Sie hier um eine erstellen</a>
+you-need-at-least-one-listing=Um ein Publisher werden müssen Sie  mindestens eine Kleinanzeige erstellen.<a href="/listing/new?action=edit&new=true&url=/listings"> Klicken Sie hier um eine erstellen</a>
 please-fill-in-information-about-you=Um ein Publisher müssen Sie in Informationen über Sie zu füllen.
 your-publisher-request-was-submited=Ihre Anbieter-Anfrage wurde geschickt. Bitte geben Sie uns etwas Zeit, um Ihre Anfrage zu überprüfen. Nach Abschluss der Überprüfung werden Sie per e-Mail benachrichtigt werden.
 #Admin.java                                                          

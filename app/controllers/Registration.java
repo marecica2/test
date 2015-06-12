@@ -128,10 +128,6 @@ public class Registration extends BaseController
     {
         checkAuthenticity();
         validation.required(login);
-        validation.required(firstName);
-        validation.match("firstName", firstName, "[A-Za-z]+").message("bad-characters");
-        validation.required(lastName);
-        validation.match("lastName", lastName, "[A-Za-z]+").message("bad-characters");
         validation.email(login).message("validation.login");
         validation.required(captcha);
 
@@ -147,6 +143,17 @@ public class Registration extends BaseController
         if (!matcher.matches())
             validation.addError("password", Messages.get("password-error"));
         validation.equals(passwordRepeat, password).message("validation.passwordMatch");
+
+        // first last name
+        validation.required(firstName);
+        validation.required(lastName);
+        pattern = Pattern.compile("\\w+", Pattern.UNICODE_CHARACTER_CLASS);
+        matcher = pattern.matcher(firstName);
+        if (!matcher.matches())
+            validation.addError("firstName", Messages.get("bad-characters"));
+        matcher = pattern.matcher(lastName);
+        if (!matcher.matches())
+            validation.addError("lastName", Messages.get("bad-characters"));
 
         final Object cap = Cache.get("captcha." + uuid);
         if (captcha != null && cap != null)
