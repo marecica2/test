@@ -1,3 +1,7 @@
+if(!star.utils.detectWebrtc().support){
+    $(".widgr-compatibilty-warning").show();
+}
+
 var socket = io.connect(star.server_host);
 var content = document.getElementById("content");
 var callSound = null;
@@ -23,6 +27,8 @@ star.drawing = false;
 star.commentsDialog = false;
 star.users = [];
 
+
+
 var webrtc = null;
 webrtc = new SimpleWebRTC({
     localVideoEl: 'localVideo',
@@ -41,6 +47,7 @@ usr.avatar = star.avatar;
 usr.admin = star.isOwner;
 usr.login = star.login;
 usr.uuid = star.userUuid;
+
 
 $('#joinModal').modal({show:true});
 
@@ -148,6 +155,23 @@ webrtc.on('readyToCall', function () {
          $("#controls-camera").click();
      });     
 
+     // maximize mimize peer
+     $(document).on("click", ".user-elm", function(){
+         var id = $(this).attr("data-id");
+         var local = $(this).attr("data-local");
+         if(star.selectedId == null || star.selectedId != id){
+             star.selectedId = id;
+             star.switchAuto = false;
+             star.maximizeMimize(id, local);
+             $(this).attr("data-reverse", "false");
+         } else {
+             star.selectedId = null;
+             star.switchAuto = true;
+             star.maximizeMimize(id, local);
+             $(this).attr("data-reverse", "true");
+         }
+     });
+     
      // muting unmuting
      $("#controls-mute").click(function(){
          if(star.muted == false){
@@ -231,23 +255,6 @@ webrtc.on('readyToCall', function () {
              var height = $(".peer-controls[data-id='"+id+"']").height() + 5;
              $(".peer-controls[data-id='"+id+"']").css("top", "-"+height+"px");
              $(".peer-controls[data-id='"+id+"']").show();
-         }
-     });
-     
-     // maximize mimize peer
-     $(document).on("click", ".user-elm", function(){
-         var id = $(this).attr("data-id");
-         var local = $(this).attr("data-local");
-         if(star.selectedId == null || star.selectedId != id){
-             star.selectedId = id;
-             star.switchAuto = false;
-             star.maximizeMimize(id, local);
-             $(this).attr("data-reverse", "false");
-         } else {
-             star.selectedId = null;
-             star.switchAuto = true;
-             star.maximizeMimize(id, local);
-             $(this).attr("data-reverse", "true");
          }
      });
      
@@ -363,9 +370,6 @@ webrtc.on('readyToCall', function () {
              
          $(".ready-join-session").remove();
          $(".control-buttons").show();
-         usr.peer = getPeerId();
-         usr.client = getPeerId();
-         socket.emit('user_joined', usr);
          joinRoom(room, joinRoomCallback);        
          
          // show invite modal when there is only one user
@@ -394,6 +398,15 @@ webrtc.on('connectionReady', function (id) {
     $(webrtc.getLocalVideoContainer()).parent().wrap("<div data-id='"+id+"' data-local='true' style='position:relative;' id='video-element-"+id+"' class='user-elm'></div>");
     $(webrtc.getLocalVideoContainer()).parent().parent().append("<div id='localVolume' class='volumeBar'></div>");
     webrtc.getLocalVideoContainer().play();
+    
+    var currentUser = {};
+    currentUser.peer = id;
+    currentUser.avatar = star.userAvatar;
+    currentUser.user = i18n("you");
+    currentUser.login = star.userUuid;
+    star.singleUserRender(currentUser);
+    $(".user-elm").click();
+    $(".user-elm").click();
 });
 
 
@@ -488,53 +501,64 @@ star.usersRender = function(data) {
     users = [];
     star.users = userList;
     for(var i = 0; i < userList.length; i++) {
-        html = "";
         users.push(userList[i]);
         var peerId = userList[i].peer;
-        
-        // dropdown + peer controls
-        html += "<div class='video-dropdown' data-id='"+peerId+"'><i class='fa fa-chevron-down color-link-light'></i></div>"
-        html += "<div class='peer-controls' data-id='"+peerId+"' style='display:none;z-index:9999;opacity:0.8'>";
-        if(typeof userList[i].avatar != "undefined"){
-            html += "<a class='btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' href='/user/"+userList[i].login+"' target='_blank' >"
-                html += "<i class='icon-user'></i> "+i18n("view-profile");
-            html += "</a> ";
-        }
-        html += "<button class='peer-mute btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' data-type='audio' data-name='" + userList[i].user + "' data-id='"+peerId+"'>"
-        html += "   <i class='icon-mute'></i> "+i18n("mute");
-        html += "</button> ";
-        html += "</div>";
+        var currentUser = userList[i];
+        star.singleUserRender(currentUser);
+    }
+}
 
-        html += "<div id='user-item-"+peerId+"' data-id='"+peerId+"' style='position:relative;' title='"+userList[i].user+"'>";
-        
-        // peer labels
-        html += "<div style='position:absolute;top:5px;left:5px;z-index:9999;'>";
-        html += "   <div style='display:none' class='peer-label-screenshare peer-control-lbl btn-success' data-id='"+peerId+"'><i class='fa fa-desktop'></i></div>"
-        html += "   <div style='display:none' class='peer-label-muted peer-control-lbl btn-danger' data-id='"+peerId+"'><i class='icon-mute'></i></div>"
-        html += "   <div style='display:none' class='peer-label-camera peer-control-lbl btn-danger' data-id='"+peerId+"'><i class='fa fa-eye-slash'></i></div>"
-        html += "</div>";
-                   
-        // peer avatar
-        html += "<div id='"+ peerId +"_video_small' class='peer-avatar'>";
-        html += "   <div class='peer-avatar-label'>" + (userList[i].usr != undefined ? userList[i].usr.name : userList[i].user);
-        if(userList[i].avatar != undefined && userList[i].avatar != null)
-            html += "       <br/><img src='"+userList[i].avatar+"_32x32' class='img-circle'>";
-        html += "   </div>";
-        html += "</div>";
-        html += "</div>";
-        
-        function closure(elm, html) {
-            $("#video-element-"+elm).waitUntilExists(function(){
-                $("#video-element-"+elm).prepend(html);
-            });
-        };
-        closure(peerId, html);
+star.singleUserRender = function(currentUser){
+    html = "";
+    // dropdown + peer controls
+    html += "<div class='video-dropdown' data-id='"+currentUser.peer+"'><i class='fa fa-chevron-down color-link-light'></i></div>"
+    html += "<div class='peer-controls' data-id='"+currentUser.peer+"' style='display:none;z-index:9999;opacity:0.8'>";
+    if(typeof currentUser.avatar != "undefined"){
+        html += "<a class='btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' href='/user/"+currentUser.login+"' target='_blank' >"
+            html += "<i class='icon-user'></i> "+i18n("view-profile");
+        html += "</a> ";
     }
+    html += "<button class='peer-mute btn margin-clear btn-short btn-dark avatar-mute-btn btn-peer' data-type='audio' data-name='" + currentUser.user + "' data-id='"+currentUser.peer+"'>"
+    html += "   <i class='icon-mute'></i> "+i18n("mute");
+    html += "</button> ";
+    html += "</div>";
+
+    html += "<div id='user-item-"+currentUser.peer+"' data-id='"+currentUser.peer+"' style='position:relative;' title='"+currentUser.user+"'>";
     
-    // check if buttons should be enabled or disabled  
-    if(webrtc.webrtc.peers.length == 0 ){
-    } else {
-    }
+    // peer labels
+    html += "<div style='position:absolute;top:5px;left:5px;z-index:9999;'>";
+    html += "   <div style='display:none' class='peer-label-screenshare peer-control-lbl btn-success' data-id='"+currentUser.peer+"'><i class='fa fa-desktop'></i></div>"
+    html += "   <div "+(!currentUser.muted?"style='display:none'":"")+" class='peer-label-muted peer-control-lbl btn-danger' data-id='"+currentUser.peer+"'><i class='icon-mute'></i></div>"
+    html += "   <div "+(!currentUser.cameraOff?"style='display:none'":"")+" class='peer-label-camera peer-control-lbl btn-danger' data-id='"+currentUser.peer+"'><i class='fa fa-eye-slash'></i></div>"
+    html += "</div>";
+               
+    // peer avatar
+    html += "<div id='"+ currentUser.peer +"_video_small' class='peer-avatar'>";
+    html += "   <div class='peer-avatar-label'>" + (currentUser.usr != undefined ? currentUser.usr.name : currentUser.user);
+    if(currentUser.avatar != undefined && currentUser.avatar != null)
+        html += "       <br/><img src='"+currentUser.avatar+"_32x32' class='img-circle'>";
+    html += "   </div>";
+    html += "</div>";
+    html += "</div>";
+    
+    function closure(elm, html) {
+        $("#video-element-"+elm).waitUntilExists(function(){
+            $("#video-element-"+elm).prepend(html);
+        });
+        
+        setTimeout(function(){ 
+            if(currentUser.cameraOff){
+                $(".peer-label-camera[data-id='"+elm+"']").show();
+                if(star.maximizedId != elm)
+                    $(".videoContainer", "#video-element-"+elm).hide();
+                if(star.maximizedId != elm)
+                    $("#"+elm+"_video_small").show();
+                $("#"+elm+"_video_small").addClass("displayed");
+                $("#container_"+elm+"_video_incoming").addClass("hidden");
+            }       
+        }, 1000); 
+    };
+    closure(currentUser.peer, html);    
 }
 
 // mimize maximized video
@@ -978,19 +1002,23 @@ function peers(){
 }
 
 function joinRoomCallback(err, r){
-    setTimeout(function(){ 
-        //$(".user-elm:not([data-local])").click();
-        var data = {};
-        data.id = getPeerId();
-        data.muted = star.muted;
-        star.socket_message_broadcast("mute-broadcast", data);
-        
-        data = {};
-        data.id = getPeerId();
-        data.cameraoOff = star.cameraoOff;
-        star.socket_message_broadcast("camera-broadcast", data);    
-    }, 2000);    
+    usr.peer = getPeerId();
+    usr.client = getPeerId();
+    usr.muted = star.muted;
+    usr.cameraOff = star.cameraoOff;
+    socket.emit('user_joined', usr);
     
+//    setTimeout(function(){ 
+//        var data = {};
+//        data.id = getPeerId();
+//        data.muted = star.muted;
+//        star.socket_message_broadcast("mute-broadcast", data);
+//        
+//        data = {};
+//        data.id = getPeerId();
+//        data.cameraoOff = star.cameraoOff;
+//        star.socket_message_broadcast("camera-broadcast", data);    
+//    }, 2000);    
 }
 
 function joinRoom(room, joinRoomCallback){

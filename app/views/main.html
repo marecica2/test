@@ -110,6 +110,9 @@
 			    	    if(params.type == "reload"){
 			    	        document.location.reload();
 			    	    }
+			    	    if(params.type == "redirect"){
+			    	        document.location = "/login";
+			    	    }
 		    	    }catch(e){
 		    	    }		    	    
 		    	},false);

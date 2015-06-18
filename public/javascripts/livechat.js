@@ -586,7 +586,7 @@ $(document).ready(function(){
     // chat open
     $(document).on("click", ".widgr-iframe-btn", function(){
         $(".widgr-chat").hide();
-        $(".widgr-chat").after('<iframe class="widgr-chat-iframe widgr-embedded-iframe" style="width:100%" src="'+star.baseUrl+'/registration" seamless frameBorder="0"></iframe>');
+        $(".widgr-chat").after('<iframe class="widgr-chat-iframe widgr-embedded-iframe" style="height:400px;width:100%" src="'+star.baseUrl+'/registration" seamless frameBorder="0"></iframe>');
     });                    
 
     // open close chatbox

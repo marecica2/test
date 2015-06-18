@@ -285,7 +285,7 @@ if (window.mozRTCPeerConnection || navigator.mozGetUserMedia) {
 
 star.i18nMessages = {};
 star.i18nMessages.en = {
-        "incompatible-browser":"Warning! Your browser does not support video calls.",
+        "incompatible-browser":"Your browser does not support video calls.",
         "download-browser":"Please download latest version of supported browser, ",
         "instant-video-call":"Instant videocall",
         "sign-facebook":"Sign in with Facebook (recommended)",
@@ -316,7 +316,7 @@ star.i18nMessages.en = {
         "":""
 };
 star.i18nMessages.de = {
-        "incompatible-browser":"Warning! Your browser does not support video calls.",
+        "incompatible-browser":"Your browser does not support video calls.",
         "download-browser":"Please download latest version of supported browser, ",
         "instant-video-call":"Instant videocall",
         "sign-facebook":"Sign in with Facebook (recommended)",        
@@ -348,7 +348,7 @@ star.i18nMessages.de = {
         "":""
 };
 star.i18nMessages.sk = {
-        "incompatible-browser":"Dôležité! Váš prehliadač nepodporuje videohovory.",
+        "incompatible-browser":"Váš prehliadač nepodporuje videohovory.",
         "download-browser":"Please download latest version of supported browser, ",
         "instant-video-call":"Spustiť videohovor",
         "sign-facebook":"Prihláste sa pomocou Facebook (odporúčané)",

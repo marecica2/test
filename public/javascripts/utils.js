@@ -132,7 +132,7 @@ star.utils.chatContent = function(star){
     
     html += '       <div class="widgr-chat" style="padding:15px;padding-bottom:0px">';
     html += '           <div class="widgr-compatibilty-warning" style="color:red;font-weight:bold;text-align:center;display:none">'+i18n('incompatible-browser')+'</div>';
-    html += '           <div class="widgr-compatibilty-warning" style="text-align:center;display:none">'+i18n('download-browser')+' <a href="https://www.google.com/chrome/browser/desktop/">Google Chrome</a>, <a href="https://www.mozilla.org/en-US/firefox/products/">Firefox</a>, <a href="http://www.opera.com">Opera</a></div>';
+    html += '           <div class="widgr-compatibilty-warning" style="font-size:12px;text-align:center;display:none">'+i18n('download-browser')+' <a href="https://www.google.com/chrome/browser/desktop/">Google Chrome</a>, <a href="https://www.mozilla.org/en-US/firefox/products/">Firefox</a>, <a href="http://www.opera.com">Opera</a><br/><br/></div>';
     if(!star.logged){
         html += '       <div>';
         html += '           <table class="" style="width:100%; border-collapse:collapse">';
@@ -142,7 +142,7 @@ star.utils.chatContent = function(star){
         html += '               <tr><td>&nbsp;</td></tr>';
         html += '               <tr>';
         html += '                   <td style="font-size:12px;width:100%">'+i18n('sign-facebook')+'</td>';
-        html += '                   <td style=""><iframe class="widgr-chat-iframe widgr-embedded-iframe2" style="overflow:hidden;width:80px;height:28px" src="'+star.baseUrl+'/registration/facebook" scrolling="no" seamless frameBorder="0"></iframe></td>';
+        html += '                   <td style=""><iframe class="widgr-chat-iframe widgr-embedded-iframe2" style="overflow:hidden;width:100px;height:28px" src="'+star.baseUrl+'/registration/facebook" scrolling="no" seamless frameBorder="0"></iframe></td>';
         html += '               </tr>';
         html += '               <tr><td>&nbsp;</td></tr>';
         html += '               <tr class="widgr-start-chat-container">';

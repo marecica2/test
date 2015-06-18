@@ -238,7 +238,12 @@ public class Registration extends BaseController
 
         checkUser = User.getUserByLogin(login);
         if (checkUser != null)
+        {
             validation.addError("login", Messages.get("login-already-used", login));
+            boolean fbError = true;
+            System.err.println("login already used but not connected with facebook");
+            render("Registration/registrationFacebookRefresh.html", fbError);
+        }
 
         if (!validation.hasErrors())
         {
@@ -298,9 +303,12 @@ public class Registration extends BaseController
         {
             boolean success = Secure.authenticateFacebookMethod(request.params.get("id"), request.params.get("signedRequest"));
             if (success)
+            {
                 render("Registration/registrationFacebookRefresh.html");
-            else
+            } else
+            {
                 forbidden();
+            }
         } catch (Exception e)
         {
             e.printStackTrace();

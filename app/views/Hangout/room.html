@@ -230,13 +230,14 @@
 				</div>
 			</div>
 				
-			<div class="ready-join-session" style="position: absolute; width:100%; top:50%;z-index: 10000">
+			<div class="ready-join-session" style="position: absolute; width:100%; top:30%;z-index: 10000">
 				<h2 class="white-link text-shadow2" style="color:white">&{'ready-to-join-session', } #{if event}&bdquo;${event.listing.title}&rdquo;#{/if} ?</h2>
+				<div class="widgr-compatibilty-warning label label-danger" style="display:none">&{'incompatible-browser'}</div>
 				<form class="form-inline">
 					<div class="form-group webrtc-ready" style="display:none">
 						<button type="button" id="controls-mute-ready" class=" text-shadow btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'mute'}"><i class="icon-sound"></i></button>
 						<button type="button" id="controls-camera-ready" class=" text-shadow btn btn-dark btn-medium" rel="tooltip" data-placement="bottom" data-original-title="&{'turn-camera-off'}"><i class="fa fa-eye-slash"></i></button>
-						<input type="text" id="input-name" class="form-control" placeholder="&{'your-name'}" style="display:none">
+						<input type="text" id="input-name" class="sform-control" placeholder="&{'your-name'}" style="display:none;padding:8px;position:relative;top:1px">
 						<button type="button" id="btn-call-start" class="btn btn-default dialog-close shadow-small" data-dismiss="modal">&{'join'}</button>
 					</div>
 				</form>

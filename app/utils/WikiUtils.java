@@ -25,7 +25,6 @@ public class WikiUtils
 
             MarkupParser parser = new MarkupParser(new ConfluenceLanguage());
             parser.setBuilder(builder);
-
             parser.parse(content);
             String htmlContent = writer.toString();
             htmlContent = htmlContent.replaceAll("\\[mailto:(.+?)\\]", "<a href=\"mailto:$1\">$1</a>");
@@ -46,7 +45,6 @@ public class WikiUtils
         {
             content = content.replaceAll("<\\s*a\\s+.*?href\\s*=\\s*'(\\S*?)'.*?>(.*?)</a>", "[$2|$1]");
             content = content.replaceAll("<\\s*a\\s+.*?href\\s*=\\s*\"(\\S*?)\".*?>(.*?)</a>", "[$2|$1]");
-
             InputSource inputSource = new InputSource(new ByteArrayInputStream(content.getBytes("UTF-8")));
             StringWriter writer = new StringWriter();
             ConfluenceDocumentBuilder builder = new ConfluenceDocumentBuilder(writer);

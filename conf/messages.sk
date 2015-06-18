@@ -192,7 +192,7 @@ you-have-been-invited-to-event=Vás pozval na event %s
 regards-html=<br/>S pozdravom, <br/>Váš tím služby Widgr
 regards=\n\nS pozdravom, \nVáš tím služby Widgr
 email-what-is-widgr=<h3>Čo je Widgr?</h3>So službou Widgr môžete nájsť pomoc kedykoľvek od ľudí so skúsenosťami v rôznych oblastiach - učitelia, mentori, doktori, opravári, osobný koučing, hobby nadšenci, a viac.<br/>Môžete si vybrať podľa kvalifikácii, dostupnosti a hodnotení. Môžete nájsť a využiť pomoc ihneď alebo si stretnutie naplánovať  na nejaký čas neskôr.<br/>Stačí vyplniť jednoduchý formulár a začnite používať Widgr už dnes. <a href='%sabout'>Zistiť viac o Widgr</a>
-email-footer=<h4><strong>Ako viem zistiť, že tento email nieje podvod?</strong></h4><p style="font-family: Arial, Helvetica;font-size:12px">Email ktorý je odoslaný od Widgr Vás nikdy nebude žiadať o citlivé informácie ako Vaše heslo. Email, ktorý Vás bude žiadať o odoslanie citlivých údajov je vždy pokusom o podvod. Neodpovedajte a neklikajte na podozrivé odkazy v emailoch</p>
+email-footer=<h4><strong>Ako viem zistiť, že tento email nieje podvod?</strong></h4><p style="font-family: Arial, Helvetica;font-size:12px">Email ktorý je odoslaný službou Widgr Vás nikdy nebude žiadať o citlivé informácie ako Vaše heslo. Email, ktorý Vás bude žiadať o odoslanie citlivých údajov je pokusom o zneužitie Vášho účtu. Neodpovedajte a neklikajte na podozrivé odkazy v emailoch</p>
 register-now=Zaregistrovať sa
 security=Ochrana osobných údajov
 help=Pomoc
@@ -589,7 +589,7 @@ share-via-link=Zdieľajte pomocou odkazu <small style='font-weight:normal'>Skop�
 send-notification=Pridajte kontakt alebo email
 contact-name-or-email=Meno kontaktu alebo email
 add=Pridať
-mute=Vypnúť mikrofón
+mute=Stíšiť
 turn-mute=Vypnúť mikrofón
 turn-camera-off=Vypnúť kameru
 share-your-screen=Zdieľajte obrazovku (Len pre Chrome)
@@ -684,7 +684,7 @@ price=Cena
 #chat.html
 embed-chat-admin=Vložiť live chat do Vašej webstránky
 embed-chat-admin-desc=Vložte tento html kód do zvolenej lokácie na Vašu webstránku a budete tak mať všetko pre Vašu prácu na jednom mieste.
-incompatible-browser=Upozornenie! Váš prehliadač nepodporuje videohovory
+incompatible-browser=Váš prehliadač nepodporuje videohovory
 download-browser=Stiahnite si najnovšiu verziu podporovaného prehliadača
 instant-video-call=Spustiť videohovor
 or-your-name=Alebo zadajte svoje meno
@@ -917,7 +917,7 @@ about-user=O užívateľovi
 #userTop.html
 follow-user=By following user you will see his posts on your Dashboard
 block-user=By blocking user, he won't be able to request sessions from you, invite you to his sessions, join your public sessions or leave you comments or messages
-view-profile=Zobraziť profil
+view-profile=Profil
 online=Online
 offline=Offline
 edit-profile=Upraviť profil
